@@ -291,11 +291,7 @@ function cargarPantallaHTML(data) {
 	cantidadDetalle = data.detalle.length;
 	indiceContacto = 1;	
 	indiceRealContacto = 1 ;
-	/*indiceContacto = 0;	
-	indiceRealContacto = 0;*/
-	
-	console.log("cantidadDetalle: " + cantidadDetalle);
-	
+		
 	//Llenar detalle de contactos
 	for(i=0; i < cantidadDetalle; i++) {
 		var det = data.detalle[i];
@@ -450,6 +446,16 @@ function dinamicaVerPantallaSocioNegocio() {
 		deshabilitarControl(comentarios);
 		deshabilitarControl(activo);
 		
+		deshabilitarControl(id_contacto_0);
+		deshabilitarControl(contacto_0);
+		deshabilitarControl(cargo_0);
+		deshabilitarControl(activo_0);
+		deshabilitarControl(emailfactura_0);
+		deshabilitarControl(btnAgregarTelefono_0);
+		deshabilitarControl(btnAgregarEmail_0);
+		deshabilitarControl(asignadoDef_0);
+		deshabilitarControl(btnEliminarContacto_0);
+		
 		for(i=0; i < cantidadDetalle; i++) {		
 			deshabilitarControl($('#contacto_' + i));
 			deshabilitarControl($('#cargo_' + i));
@@ -498,6 +504,16 @@ function dinamicaVerPantallaSocioNegocio() {
 		habilitarControl(listaPrecio);
 		habilitarControl(comentarios);
 		habilitarControl(activo);
+		
+		habilitarControl(id_contacto_0);
+		habilitarControl(contacto_0);
+		habilitarControl(cargo_0);
+		habilitarControl(activo_0);
+		habilitarControl(emailfactura_0);
+		habilitarControl(btnAgregarTelefono_0);
+		habilitarControl(btnAgregarEmail_0);
+		habilitarControl(asignadoDef_0);
+		habilitarControl(btnEliminarContacto_0);
 		
 		for(i=0; i < cantidadDetalle; i++) {		
 			habilitarControl($('#contacto_' + i));

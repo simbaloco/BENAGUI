@@ -25,7 +25,7 @@ public class MyBatisConfiguration {
     @Bean(name = "dataSource", destroyMethod = "")
     public DataSource oracleJndiDataSource() throws IllegalArgumentException, NamingException {
         JndiObjectFactoryBean bean = new JndiObjectFactoryBean();
-        bean.setJndiName("java:/RepMySqlDSLocal");
+        bean.setJndiName("java:/RepMySqlDS");
         bean.setProxyInterface(DataSource.class);
         bean.setLookupOnStartup(false);
         bean.afterPropertiesSet();
