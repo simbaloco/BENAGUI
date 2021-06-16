@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragments/layout}" lang="en">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script th:src="@{/js/maestros/gui-mantenimiento-catalogo-dependiente.js}" ></script>   
+</head>
+
+<body>
+	<div layout:fragment="content" th:remove="tag">
+		<label id="tipoCatalogo" th:text=${tipoCatalogo} hidden="hidden"></label>
+		
+			<!-- Modal NUEVO/EDITAR se quita el tabindex=-1 para que funcione el autofocus -->
+	        <div class="modal fade bd-example-modal-lg" id="catalogoDependienteModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	            <div class="modal-dialog modal-lg  box bg-box modal-content" role="document">
+	                <div class="box-body">
+						<div class="card">
+							<label id="idDataCatalogo" hidden="hidden"></label>
+							
+		                    <div class="modal-header card-header">
+		                        <h6 class="modal-title" id="exampleModalLabel"><span id="titulo"></span></h6>
+		                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		                            <span aria-hidden="true" style="color:#5990e0">&times;</span>
+		                        </button>
+		                    </div>
+		
+		                    <div class="box-body">
+		                        <form id="form_validado_CatalogoDependiente" class="needs-validation" novalidate enctype="multipart/form-data" style="padding:0px 15px 0px 15px">
+		                        
+		                            <div class="row">
+		                            
+		                                <div class="col-md-2" id="divCodigo">
+		                                	<label id="lblCodigo" class="label" for="codigoModal">C&oacute;digo:</label>
+				                            <input id="codigoModal" type="text" class="form-control" required="required" maxlength="3">
+				                            <div class="invalid-feedback">
+				                            	Ingrese un código válido.
+				                            </div>
+				                        </div>
+				                        
+				                        <div class="col-md-4">
+					                        <label id="lblMarca" class="label" for="marcaModal">Marca de <span id="titMarca"></span>:</label>
+									 		<select id="marcaModal" class="form-control" required="required">
+										 		<option value="" selected>-- SELECCIONAR --</option>
+										 		<option th:each="item : ${listaMarcaModal}"
+													th:value="${item.codigo}" 
+													th:text="${item.descripcion}">
+												</option>
+										 	</select>
+										 	<div class="invalid-feedback">
+					                            Ingrese una marca válida.
+					                        </div>
+									 	</div>
+									 	<div class="col-md-5"></div>
+									 	<div class="col-md-1" id="divActivo">
+				                        	<label id="lblActivo" class="label" for="seccion">Activo:</label>
+				                            <input id="activoModal" type="checkbox" class="form-check">
+				                        </div>	
+									 	
+				                    </div>
+				                    
+				                    <div class="row">
+				                    
+				                    	<div class="col-md-12">
+				                            <label id="lblDescripcion" class="label" for="descripcionModal">Descripci&oacute;n:</label>
+				                            <input id="descripcionModal" type="text" class="form-control" required="required" maxlength="250">
+				                           	<div class="invalid-feedback">
+				                            	Ingrese una descripción válida.
+				                            </div>             
+				                        </div>	
+				                        				                    	                            
+				                  	</div>
+				                  	
+		                        </form>
+		                    </div>
+		
+		                    <div class="modal-footer" style="border-top: none">
+		                        <button id="btnGrabarModal" type="button" class="btn btn-primary">
+		                            <span style="padding-right: 6px;"><i class="fas fa-save" ></i></span>Guardar
+		                        </button>
+		
+		                        <button id="btnCerrarModal" type="button" class="btn btn-primary" data-dismiss="modal">	
+		                       		<span style="padding-right: 6px;"><i class="fas fa-backspace" ></i></span>Cerrar
+		                        </button>
+		                    </div>
+		                </div>
+	                </div>
+	            </div>
+	        </div>
+	        	        
+			<div class="kahaxi_titulo">
+		        <div class="kahaxi_titulo_container">
+		            <div class="kahaxi_titulo_logo"><i class="fas fa-search"></i></div>
+		            <div class="kahaxi_titulo_text">MANTENIMIENTO DE <span id="titBusqueda"></span></div>
+		        </div>
+		        <div class="subrayado"></div>
+		        <br>
+		    </div>
+		    
+		    <div class="box bg-box" id="accordionPrincipal">
+		    	<div class="box-body">
+		    		<div class="card">
+		                <div class="card-header" id="headingOne">
+					        <h2 class="mb-0">
+						        <button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseOne"  aria-expanded="true" aria-controls="collapseOne">
+				                    <i class="fas fa-angle-up"></i><span>Criterios de búsqueda</span>
+				                    <div class="subrayado"></div>
+				                </button>
+			                </h2>
+			            </div>
+	                
+		                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionPrincipal">
+		                	<div class="card-body">
+		                    <form id="formCatalogoDependiente" class="needs-validation" novalidate>
+						 	 	<div class="row">
+							 		<div class="col-md-3">
+							 			<label class="label" for="campoBuscar">Ingrese criterios para buscar:</label>
+							 			<input class="form-control" maxlength="20" size="50" type="text" id="campoBuscar" placeholder="Ingrese código o descripción para buscar..."/>
+							        </div>
+							        
+							        <div class="col-md-2">
+								        <label class="label" for="marca">Marca de <span id="titMarcaBus"></span></label>
+						                <select id="marca" class="form-control">
+						                	<option value="" selected>-- TODOS --</option>
+						                	<option th:each="item : ${listaMarca}"
+												th:value="${item.codigo}" 
+												th:text="${item.descripcion}">
+											</option>
+						                </select>
+						            </div>	 		
+							 		
+							 		<div class="col-md-7 alineacion-derecha">
+							 		<label></label>
+							 		<div>
+								 		<button  type="button" id="btnLimpiar" class="btn btn-outline-primary btn-sm">
+							            	<span class="mr-2"><i class="fas fa-eraser"></i></span>Limpiar
+							            </button>
+							                
+							            <button  type="button" id="btnNuevo" class="btn btn-outline-primary btn-sm">
+					                    	<span class="mr-2"><i class="fas fa-plus-square"></i></span>Nuevo
+					                    </button >
+						            </div>
+							 	</div>
+							    </div>
+							</form>
+							</div>
+	                	</div>
+	            	</div>
+	          	</div>
+	        </div>
+	        
+	        <div class="box bg-box" id="accordionPrincipal">
+		    	<div class="box-body">
+		    		
+			        <div class="card ">
+				        <div class="card-body">
+				             	<div class="table-responsive">
+					    			<table id="tablaCatalogoDependiente" class="table table-bordered dt-responsive order-column" style="width:100%; ">
+								        <thead align="center">
+								            <tr>
+								                <th>Item</th>
+								                <th>C&oacute;digo</th>
+								                <th>Descripci&oacute;n</th>
+								                <th>Marca de <span id="titMarcaDetalle"></span></th>
+								                <th>Usuario de Creación</th>
+							                	<th>Fecha de Creación</th>
+								                <th>Activo</th>
+								                <th style="display: none">Id DataCatalogo</th>
+								                <th>Editar</th>
+								            </tr>
+								        </thead>
+								        <tbody>
+					               		</tbody>
+					    			</table>		
+				  				</div>
+			            </div>
+			        </div>
+	        	</div>
+	        </div>
+				
+	
+	</div>
+	
+</body>
+
+</html>

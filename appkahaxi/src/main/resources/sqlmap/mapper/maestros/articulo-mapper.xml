@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pe.gob.repuestera.repository.maestros.ArticuloMapper">
+    
+    <!-- *************** RESULTMAPS ******************* -->
+    <resultMap id="articulo" type="ArticuloModel">
+        <result property="codigoArticulo" 			column="COD_ARTICULO" />
+        <result property="codigoEstandar" 			column="COD_ESTANDAR" />
+        <result property="codigoAntiguo" 			column="COD_ANTIGUO" />
+        <result property="codigoBarras" 			column="COD_BARRAS" />
+        <result property="descripcion" 				column="DESCRIPCION" />
+        <result property="codigoMarcaArticulo" 		column="COD_MARCA_ARTICULO" />
+        <result property="descripcionMarcaArticulo" column="DESC_MARCA_ARTICULO" />
+        <result property="codigoTipo" 				column="COD_TIPO" />
+        <result property="descripcionTipo" 			column="DESC_TIPO" />        
+        <result property="codigoSeccion" 			column="COD_SECCION" />
+        <result property="descripcionSeccion" 		column="DESC_SECCION" />
+        <result property="codigoUnidadMedida" 		column="COD_UND_MEDIDA" />
+        <result property="descripcionUnidadMedida" 	column="DESC_UND_MEDIDA" />
+        <result property="codigoMarcaVehiculo" 		column="COD_MARCA_VEHICULO" />
+        <result property="descripcionMarcaVehiculo" column="DESC_MARCA_VEHICULO" />
+        <result property="codigoModelo" 			column="COD_MODELO" />
+        <result property="descripcionModelo" 		column="DESC_MODELO" />
+        <result property="codigoMotor" 				column="COD_MOTOR" />
+        <result property="descripcionMotor" 		column="DESC_MOTOR" />
+        <result property="codigoAplicacion" 		column="COD_APLICACION" />
+        <result property="descripcionAplicacion" 	column="DESC_APLICACION" /> 
+        <result property="stock" 					column="STOCK" />
+        <result property="ultimoPrecioCompra" 		column="ULT_PRECIO_COMPRA" />
+        <result property="precioVentaUnitario" 		column="PRECIO_VTA_UNITARIO" />
+        <result property="precioReferencia" 		column="PRECIO_REFERENCIA" />
+        <result property="observaciones" 			column="OBSERVACIONES" />
+        <result property="imagen" 					column="IMAGEN"/>
+        <result property="activo" 					column="ACTIVO" />
+        <result property="codigoUsuarioRegistra" 	column="COD_USU_REGISTRA" />
+        <result property="fechaRegistro" 			column="FEC_REGISTRO" /> 
+        <result property="codigoUsuarioModifica" 	column="COD_USU_MODIFICA" />
+        <result property="fechaModificacion" 		column="FEC_MODIFICACION" /> 
+        <result property="flagOcAsociada" 			column="FLAG_OC_ASOCIADA" /> 
+    </resultMap>
+    
+    
+    <!-- ********************* PARAMETERMAPS ********************* -->
+    <parameterMap id="buscarArticuloParams" type="hashmap">
+        <parameter property="COD_ARTICULO"        	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap> 
+    
+   <parameterMap id="buscarArticuloLikeParams" type="hashmap">
+        <parameter property="DATO_BUSCAR"        	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_CLIENTE"        	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="listarArticulosParams" type="hashmap">
+        <parameter property="DATO_BUSCAR"        	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_MARCA_ARTICULO"   	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_TIPO"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_SECCION"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_UND_MEDIDA"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap> 
+        
+    <parameterMap id="registrarArticuloParams" type="hashmap">
+        <parameter property="COD_ESTANDAR"			jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_ANTIGUO"			jdbcType="VARCHAR"  mode="IN"/>        
+        <parameter property="COD_BARRAS"			jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="DESCRIPCION"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_MARCA_ARTICULO"    jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_TIPO"        		jdbcType="VARCHAR"  mode="IN"/>       
+        <parameter property="COD_SECCION"          	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_UND_MEDIDA"        jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_MARCA_VEHICULO"    jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_MODELO"          	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_MOTOR"          	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_APLICACION"        jdbcType="VARCHAR"  mode="IN"/>         
+        <parameter property="OBSERVACIONES"     	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="IMAGEN"          		jdbcType="BLOB"  	mode="IN"/>
+        <parameter property="ACTIVO"          		jdbcType="INTEGER" 	mode="IN"/>
+        <parameter property="USUARIO_REGISTRA"		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="modificarArticuloParams" type="hashmap">
+    	<parameter property="COD_ARTICULO"			jdbcType="VARCHAR"  mode="IN"/>
+    	<parameter property="COD_ESTANDAR"			jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_ANTIGUO"			jdbcType="VARCHAR"  mode="IN"/>        
+        <parameter property="COD_BARRAS"			jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="DESCRIPCION"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_MARCA_ARTICULO"    jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_TIPO"        		jdbcType="VARCHAR"  mode="IN"/>       
+        <parameter property="COD_SECCION"          	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_UND_MEDIDA"        jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_MARCA_VEHICULO"    jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_MODELO"          	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_MOTOR"          	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_APLICACION"        jdbcType="VARCHAR"  mode="IN"/>         
+        <parameter property="OBSERVACIONES"     	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="IMAGEN"          		jdbcType="BLOB"  	mode="IN"/>
+        <parameter property="ACTIVO"          		jdbcType="INTEGER" 	mode="IN"/>
+        <parameter property="USUARIO_MODIFICA"		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+      
+        
+    
+    <!-- ************************* QUERYS ******************************* -->
+    <select id="listarArticulos" parameterMap="listarArticulosParams" resultMap="articulo" statementType="CALLABLE">
+    	{CALL SP_LISTAR_ARTICULOS(?,?,?,?,?,?,?) }
+    </select>
+    
+    <select id="buscarArticulo" parameterMap="buscarArticuloParams" resultMap="articulo" statementType="CALLABLE">
+    	{CALL SP_BUSCAR_ARTICULO(?,?,?) }
+    </select>
+      
+    <insert id="registrarArticulo" parameterMap="registrarArticuloParams" statementType="CALLABLE">
+    	{CALL SP_REGISTRAR_ARTICULO(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
+    </insert> 
+   	
+   	<update id="modificarArticulo" parameterMap="modificarArticuloParams" statementType="CALLABLE">
+    	{CALL SP_MODIFICAR_ARTICULO(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
+    </update> 
+   	
+   	<select id="buscarArticuloLike" parameterMap="buscarArticuloLikeParams" resultMap="articulo" statementType="CALLABLE">
+    	{CALL SP_BUSCAR_ARTICULO_LIKE(?,?,?,?) }
+    </select>   
+   	
+    
+</mapper>

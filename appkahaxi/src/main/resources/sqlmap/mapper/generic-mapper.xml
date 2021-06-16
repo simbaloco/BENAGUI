@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pe.gob.repuestera.repository.GenericMapper">
+
+    
+    <resultMap id="combo" type="ComboModel">
+        <result property="codigo"		column="CODIGO" />
+        <result property="descripcion" 	column="DESCRIPCION" />
+    </resultMap>
+    
+    <resultMap id="menu" type="MenuModel">    
+        <result property="id"				column="N_ID" />
+        <result property="nivel" 			column="N_NIVEL" />
+        <result property="idPadre" 			column="N_ID_PADRE" />
+        <result property="url" 				column="V_URL" />
+        <result property="descripcion" 		column="V_DESCRIPCION" />
+        <result property="icono"	 		column="V_ICONO" />
+        <result property="activo" 			column="N_ACTIVO" />
+    </resultMap>
+    
+    <resultMap id="parametros" type="ParametrosGeneralesModel">    
+        <result property="codParametro"		column="COD_PARAMETRO" />
+        <result property="descParametro" 	column="DESC_PARAMETRO" />
+        <result property="valor" 			column="VALOR" />
+        <result property="tipoCampo" 		column="TIPO_CAMPO" />
+    </resultMap>
+        
+    
+    <parameterMap id="comboParams" type="hashmap">
+        <parameter property="COD_MAESTRO"         	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="comboPadreParams" type="hashmap" >
+        <parameter property="COD_MAESTRO"         	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_CATALOGO_PADRE"    jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_PADRE"         	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="loginParams" type="hashmap">
+        <parameter property="USERNAME"         		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="parametrosParams" type="hashmap">
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="parametricaParams" type="hashmap">
+        <parameter property="PREFIJO"         		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_GENERADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="buscarTcParams" type="hashmap">
+        <parameter property="DIA"         			jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="MES"         			jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="ANIO"         			jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="registrarTcParams" type="hashmap">
+        <parameter property="DIA"         			jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="MES"         			jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="ANIO"         			jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="TIPO_CAMBIO"         	jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="USUARIO_REGISTRA"      jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+        
+    <parameterMap id="comboPaisParams" type="hashmap">
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="comboUbigeoParams" type="hashmap">
+    	<parameter property="COD_DEPARTAMENTO"      jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_PROVINCIA"         jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_TIPO"			    jdbcType="INTEGER"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="comboVendedorParams" type="hashmap">
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="comboListaPrecioParams" type="hashmap">
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <select id="cargarCombo" parameterMap="comboParams" resultMap="combo" statementType="CALLABLE">
+      {CALL SP_CARGAR_COMBO_MAESTRO(?,?,?) }
+    </select>
+    
+    <select id="cargarComboPadre" parameterMap="comboPadreParams" resultMap="combo" statementType="CALLABLE">
+      {CALL SP_CARGAR_COMBO_MAESTRO_PADRE(?,?,?,?,?) }
+    </select>
+        
+    <select id="cargarMenu" parameterMap="loginParams" resultMap="menu" statementType="CALLABLE">
+      {CALL SP_CARGAR_MENU(?,?,?) }
+    </select>
+    
+    <select id="cargarParametrosGenerales" parameterMap="parametrosParams" resultMap="parametros" statementType="CALLABLE">
+      {CALL SP_OBTENER_PARAMETROS_GENERALES(?,?) }
+    </select>
+    
+    <select id="buscarTc" parameterMap="buscarTcParams" resultType="BigDecimal" statementType="CALLABLE">
+        {CALL SP_BUSCAR_TC(?,?,?,?,?) }
+    </select>
+    
+    <insert id="registrarTc" parameterMap="registrarTcParams" statementType="CALLABLE">
+        {CALL SP_REGISTRAR_TC(?,?,?,?,?,?,?) }
+    </insert>
+       
+    
+    <select id="cargarComboPais" parameterMap="comboPaisParams" resultMap="combo" statementType="CALLABLE">
+      {CALL SP_CARGAR_COMBO_PAIS(?,?) }
+    </select>
+    
+    <select id="cargarComboUbigeo" parameterMap="comboUbigeoParams" resultMap="combo" statementType="CALLABLE">
+      {CALL SP_CARGAR_COMBO_UBIGEO(?,?,?,?,?) }
+    </select>
+    
+    <select id="cargarComboVendedor" parameterMap="comboVendedorParams" resultMap="combo" statementType="CALLABLE">
+      {CALL SP_CARGAR_COMBO_VENDEDOR(?,?) }
+    </select>
+    
+    <select id="cargarComboListaPrecio" parameterMap="comboListaPrecioParams" resultMap="combo" statementType="CALLABLE">
+      {CALL SP_CARGAR_COMBO_LISTA_PRECIOS(?,?) }
+    </select>
+    
+</mapper>

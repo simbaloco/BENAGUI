@@ -1,0 +1,207 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 29/10/2018, 08:55:05 AM
+    Author     : vbendezu
+*/
+
+
+.menu_bar {
+	display:none;
+}
+
+.contenedor_menu {
+	width:100%;
+	background:#0c5460;
+}
+
+@media screen and (max-width:800px ) {
+	.menu ul {
+    position: relative;
+	}
+	
+	 .menu > li {
+  		display: block !important;
+	  	position: absolute;
+	}
+ 	
+	.contenedor_menu {
+		width:35%;
+		height:100%;
+		left:-100%;
+		margin:0;
+		position: absolute;
+		z-index: 100;
+	}
+	
+	.menu_bar {
+		display:flex;
+		width:100%;
+		background:#f8f9fa;
+		height:45px;
+		flex-flow: row nowrap;
+        justify-content: flex-start;
+	}
+}
+
+
+.menu {
+  margin: 0;
+  color: #fff;
+}
+
+.menu * {
+ color: #fff;
+ }
+ 
+ .menu > li {
+  display: inline-block;
+  position: relative;
+}
+/*
+.menu li a {
+ display: inline-block;
+ padding: 0.125rem 0.55rem;
+ text-decoration: none;
+ }*/
+
+.menu li:hover {
+	/*color: #fff;
+	z-index: 20;*/
+  background: #0489B1;
+  cursor: pointer;
+  font-weight: bold; 
+ }
+ 
+ .menu li a:hover {
+	color: #fff;
+	text-decoration: none;
+ }
+ 
+ /*  
+.menu li:hover ul {
+  z-index: 20;
+  display: block;
+  position:absolute;
+  left: 0;
+  top:100%;
+  font-style: normal;
+  font-weight: normal; 
+  border-top: solid 4px #6ec4fbd6; //este no va
+ }*/
+ 
+.menu ul {
+ z-index: 20;
+ display: block;
+ position:absolute;
+ left: 0;
+ top:100%;
+ font-style: normal;
+ font-weight: normal;
+ border-top: solid 0.25rem #6ec4fbd6;
+ background: #0c5460;
+ }
+ 
+ .menu ul:before {
+ position: absolute;
+ top: -0.875rem;
+ left: 0; /*right: 2.5rem; si alineamos el menú a la derecha*/
+ color: #6ec4fbd6;
+ }
+ 
+ .menu ul li {
+ display: block;
+ max-height: 3.125rem; /*Es el tamaño que tendrá cada item del listado abierto*/
+ opacity: 1;
+ -webkit-transition: max-height 0.5s, opacity 0.5s;
+ transition: max-height 0.5s, opacity 0.5s;
+ white-space: nowrap;
+ }
+ 
+ .menu li .closed li{
+ overflow: hidden;
+ max-height: 0;
+ opacity: 0;
+ -webkit-transition: max-height 0.5s, opacity 0.5s;
+ transition: max-height 0.5s, opacity 0.5s;
+ }
+ 
+ .menu svg{
+ 	 margin-right: 10px;
+ }
+ 
+
+/****************************************************************/
+ 
+ 
+.navbar{
+    background: #c0c0c0!important;
+}
+
+.navbar-brand{
+    color:#004370 !important;
+    font-weight: bold; 
+    margin:0px 15px;
+}
+
+.dropdown{
+    border-radius:0;
+    border:0;
+}
+.dropdown-menu{
+    background: #ced4da; /* #0c73cc; */
+    border:0;
+    top:80%;
+    border-radius:0px 0px 5px 5px;
+}
+.dropdown-item:hover{
+    background:#085ca5;
+    color:#fff;
+}
+.dropdown-menu a{
+    color: #fff;
+} 
+.navbar .nav-item .nav-link{
+    color:#0000ff!important; 
+    
+}
+.navbar .nav-item .nav-link:hover .navbar .nav-item .nav-link{
+    color:red !important;
+    
+}
+/* Footer */
+
+footer{
+   	background-color: #424558;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    text-align: center;
+    color: #CCC;
+}
+
+footer p {
+    padding: 10.5px;
+    margin: 0px;
+    line-height: 100%;
+}
+
+.clickable{
+    cursor: pointer;   
+}
+
+.panel-heading span {
+	margin-top: -20px;
+	font-size: 15px;
+}
+
+
+.ui-panel .ui-panel-titlebar {
+    padding: 0.3em 1em;
+    font-size: 12px
+}

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <head th:replace="fragments/scripts :: scripts"/>
+    
+    <title>Repuestera Kahaxi</title>    
+</head>
+
+<body style="background-color: transparent">
+    <ul th:each="parametro : ${session.listaParametrosGenerales}" hidden="hidden" >
+		<li th:text="${parametro.codParametro + '/' + parametro.descParametro + '/' + parametro.valor + '/' + parametro.tipoCampo}"></li>
+	</ul>
+        
+    <th:block th:replace="fragments/header :: header"/>
+    <th:block th:replace="fragments/menu :: menu"/>
+    <div class="container-fluid">
+        <th:block layout:fragment="content" />
+    </div>
+    <!-- <th:block th:replace="fragments/footer :: footer"/> -->
+</body>
+</html>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  layout:decorate="~{fragments/layout}" lang="en">
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<script th:src="@{/js/factura/gui-nueva-factura-directa.js}" ></script>
+</head>
+
+<body>
+
+<div layout:fragment="content" th:remove="tag">
+
+	<input type="text" id="codigoCliente" hidden="hidden"/>
+
+	<label id="numeroDocumento" th:text=${numeroDocumento} hidden="hidden"></label>
+	<label id="opcion" th:text=${opcion} hidden="hidden"></label>
+	<label id="datoBuscar" th:text=${datoBuscar} hidden="hidden"></label>
+	<label id="fechaDesde" th:text=${fechaDesde} hidden="hidden"></label>
+	<label id="fechaHasta" th:text=${fechaHasta} hidden="hidden"></label>
+	<label id="estadoParam" th:text=${estadoParam} hidden="hidden"></label>
+	<label id="volverParam" th:text=${volver} hidden="hidden"></label>
+	
+	<div class="kahaxi_titulo">
+
+		<div class="kahaxi_titulo_container">
+			<div class="kahaxi_titulo_logo"><i class="fas fa-cash-register"></i></div>
+			<div class="kahaxi_titulo_text"><span id="titulo"></span> FACTURA</div>
+		</div>
+
+		<div class="subrayado">
+		</div>
+
+		<br>
+	</div>
+
+	<div class="box bg-box" id="accordionCabeceraFactura">
+
+		<div class="box-body">
+
+			<div class="card">
+
+				<div class="card-header" id="headingCabeceraFactura">
+					<h2 class="mb-0">
+						<button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseCabeceraFactura" aria-expanded="true" aria-controls="collapseCabeceraFactura">
+							<i class="fas fa-angle-up"></i><span>Factura </span><span class="font-weight-bold" id="codigo"></span>
+							<div class="subrayado"></div>
+						</button>
+					</h2>
+				</div>
+
+				<div id="collapseCabeceraFactura" class="collapse show" aria-labelledby="headingCabeceraFactura" data-parent="#accordionCabeceraFactura">
+
+					<div class="box-body">
+
+						<form id="formFactura" class="needs-validation" novalidate>
+
+							<div class="row">
+								<div class="col-md-2">
+									<div id="referenciaDiv" style="display: none ">
+										<label class="label" for="nroDocReferencia">Nro. Doc. Referencia:</label>
+										<input class="form-control" type="text" id="nroDocReferencia" readonly="readonly" />
+									</div>
+								</div>
+
+								<div class="col-md-10">
+								</div>
+							</div>
+
+							<div class="row">
+
+								<div class="col-md-2">
+									<label class="label" for="campoBuscar">Ingrese criterios para buscar:</label>
+									<input class="form-control sinCaracteresEspeciales" maxlength="20" size="50" type="text" id="campoBuscar" placeholder="Ingrese DNI/RUC o Nombre/Razón Social para buscar..."/>
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="documentoCliente">DNI/RUC:</label>
+									<input class="form-control" maxlength="20" size="15" type="text" id="documentoCliente" readonly="readonly" tabindex="-1" />
+								</div>
+
+								<div class="col-md-4">
+									<label class="label" for="nombreCliente">Nombre/Raz&oacute;n Social:</label>
+									<input class="form-control" maxlength="250" size="50" type="text" id="nombreCliente" readonly="readonly" tabindex="-1"/>
+								</div>
+
+								<div class="col-md-4">
+									<label class="label" for="direccion">Direcci&oacute;n:</label>
+									<input class="form-control" maxlength="250" size="50" type="text" id="direccion" readonly="readonly" tabindex="-1"/>
+								</div>
+
+							</div>
+
+							<div class="row">
+
+								<div class="col-md-2">
+									<label class="label" for="fecConta">Fecha de contabilización:</label>
+									<div class="input-group date" id="fecConta" data-target-input="nearest">
+										<input type="text" class="form-control datetimepicker-input" data-target="#fecConta" required="required" readonly="readonly"/>
+										<div class="input-group-append" data-target="#fecConta" data-toggle="datetimepicker">
+											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+										</div>
+										<div class="invalid-feedback">
+											Ingrese Fecha de contabilización
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="fecDocumento">Fecha de documento:</label>
+									<div class="input-group date" id="fecDocumento" data-target-input="nearest">
+										<input type="text" class="form-control datetimepicker-input readonly" data-target="#fecDocumento" required="required"/>
+										<div class="input-group-append" data-target="#fecDocumento" data-toggle="datetimepicker">
+											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+										</div>
+										<div class="invalid-feedback">
+											Ingrese Fecha de documento
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="fecVencimiento">Fecha de vencimiento:</label>
+									<div class="input-group date" id="fecVencimiento" data-target-input="nearest">
+										<input type="text" class="form-control datetimepicker-input readonly" data-target="#fecVencimiento" required="required"/>
+										<div class="input-group-append" data-target="#fecVencimiento" data-toggle="datetimepicker">
+											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+										</div>
+										<div class="invalid-feedback">
+											Ingrese Fecha de vencimiento
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="tipoMoneda">Moneda:</label>
+									<select id="tipoMoneda" class="form-control">
+										<option th:each="item : ${listaMoneda}"
+									            th:value="${item.codigo}" 
+									            th:text="${item.descripcion}">
+									    </option>
+									</select>
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="condPago">Condición Pago:</label>
+									<select id="condPago" class="form-control">
+										<option th:each="item : ${listaCondPago}"
+									            th:value="${item.codigo}" 
+									            th:text="${item.descripcion}">
+									    </option>
+									</select>
+								</div>
+
+								<div class="col-md-2" id="divDias" style="display: none">
+									<label class="label" for="dias">Días de crédito:</label>
+									<select id="dias" class="form-control">
+										<option th:each="item : ${listaDias}"
+									            th:value="${item.codigo}" 
+									            th:text="${item.descripcion}">
+									    </option>
+									</select>
+								</div>
+
+							</div>
+
+							<div class="row">
+
+								<div class="col-md-2">
+									<label class="label" for="tipoCambio">Tipo de Cambio:</label>
+									<input class="form-control" maxlength="250" size="50" type="text" id="tipoCambio" readonly="readonly" tabindex="-1"/>
+								</div>
+
+								<div class="col-md-1">
+									<label class="label" for="serie">Serie:</label>
+									<input class="form-control" maxlength="250" size="50" type="text" id="serie" tabindex="-1" required="required"/>
+									<div class="invalid-feedback">
+										Ingrese Serie
+									</div>
+								</div>
+								<div class="col-md-1">
+									<label class="label" for="correlativo">Correlativo:</label>
+									<input class="form-control" maxlength="250" size="50" type="text" id="correlativo" tabindex="-1" required="required"/>
+									<div class="invalid-feedback">
+										Ingrese Correlativo
+									</div>
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="estadoPago">Estado Pago:</label>
+									<select id="estadoPago" class="form-control" required="required">
+										<option th:each="item : ${listaEstadoPago}"
+									            th:value="${item.codigo}" 
+									            th:text="${item.descripcion}">
+									    </option>
+									</select>
+									<div class="invalid-feedback">
+										Seleccione Estado Pago
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+
+								<div class="col-md-10">
+								</div>
+
+								<div class="col-md-1">
+									<div class="text-center">
+										<button type="button" id="btnLimpiar" class="btn btn-primary my-1">
+											<span class="mr-2"><i class="fas fa-eraser"></i></span>Limpiar
+										</button>
+									</div>
+								</div>
+
+								<div class="col-md-1">
+									<div class="text-center">
+										<button type="button" id="btnVolver" class="btn btn-primary" style="display: none">
+											<span class="mr-2"><i class="fas fa-backspace"></i></span>Volver
+										</button>
+									</div>
+								</div>
+
+							</div>
+
+						</form>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="box bg-box" id="accordionDetalleFactura">
+
+		<div class="box-body">
+
+			<div class="card">
+
+				<div class="card-header" id="headingDetalleFactura">
+					<button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseDetalleFactura" aria-expanded="true" aria-controls="collapseDetalleFactura">
+						<i class="fas fa-angle-up"></i><span>Detalle de la Factura</span>
+						<div class="subrayado"></div>
+					</button>
+				</div>
+
+				<div id="collapseDetalleFactura" class="collapse show" aria-labelledby="headingDetalleFactura" data-parent="#accordionDetalleFactura">
+
+					<div class="card-body">
+
+						<div class="row">
+
+							<div class="col-md-10">
+							</div>
+
+							<div class="col-md-2 alineacion-derecha">
+								<button type="button" id="btnAgregarArticulo" class="btn btn-primary btn-md" title="Agregar artículo" style="display: none">
+									<span class="mr-2"><i class="fas fa-plus-square"></i></span>
+								</button>
+
+								<button type="button" id="btnEliminarTodosArticulos" class="btn btn-danger btn-md" title="Eliminar todos los artículos" style="display: none">
+									<span class="mr-2"><i class="far fa-trash-alt"></i></span>
+								</button>
+							</div>
+						</div>
+
+						<div class="row">
+
+							<div class="col-md-12">
+
+								<div class="table-responsive">
+
+									<table id="tableDetalle" class="table table-hover table-striped table-bordered dt-responsive">
+
+										<thead class="text-center">
+											<tr>
+												<th width="2%">Item</th>
+												<th id="codArticulo" width="5%">C&oacute;digo Artículo</th>
+												<th id="descripcionArticulo" width="28%">Descripci&oacute;n</th>
+												<th id="marca" width="10%">Marca</th>
+												<th id="codAlmacen" width="5%">Almacén</th>
+												<th id="cantidad" width="5%" >Cantidad</th>
+												<th id="precioUnitario" width="10%" >PU</th>
+												<th id="igvDetalle" width="5%" style="text-align: right;">IGV</th>
+												<th id="subTotal" width="20%" style="text-align: right;">Sub-Total</th>
+												<th class="eliminar" width="5%">Eliminar</th>
+											</tr>
+										</thead>
+
+										<tbody>
+										</tbody>
+
+									</table>
+
+									<table id="tableNuevoDetalle" style="display:none;">
+										<tbody>
+										<tr>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td>
+												<div class="text-center">
+													<button class="btn-delete btn btn-danger btn-xs">
+														<span><i class="fas fa-trash-alt"></i></span>
+													</button>
+												</div>
+											</td>
+										</tr>
+										</tbody>
+									</table>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card">
+
+				<div class="card-body">
+
+					<div class="row">
+
+						<div class="col-md-10">
+
+						</div>
+
+						<div class="col-md-2">
+
+							<div>
+								<label class="label" for="subTotalOC">SubTotal</label>
+							</div>
+							<div>
+								<span class="simbolo-moneda input-symbol-dolar">
+									<input class="form-control alineacion-derecha" maxlength="10" type="text" id="subTotalOC" readonly="readonly"/>
+								</span>
+							</div>
+
+							<div>
+								<label class="label" for="igv">IGV</label>
+							</div>
+							<div>
+								<span class="simbolo-moneda input-symbol-dolar">
+				            			<input class="alineacion-derecha form-control" maxlength="10" type="text" id="igv" readonly="readonly"/>
+								</span>
+							</div>
+
+							<div>
+								<label class="label" for="total">Total</label>
+							</div>
+							<div>
+								<span class="simbolo-moneda input-symbol-dolar">
+									<input class="form-control alineacion-derecha" maxlength="10" type="text" id="total" readonly="readonly"/>
+								</span>
+							</div>
+
+						</div>
+
+					</div>
+
+					<div class="row">
+						<div class="col-md-12">
+							<label class="label"></label>
+						</div>
+					</div>
+
+					<div class="row">
+
+						<div class="col-md-10">
+						</div>
+
+						<div class="col-md-1">
+							<div class="text-right">
+								<button type="button" id="btnAnular" class="btn btn-primary my-1" style="display: none">
+									<span class="mr-2"><i class="fas fa-trash"></i></span>Anular
+								</button>
+							</div>
+						</div>
+
+						<div class="col-md-1">
+							<button type="button" id="btnGrabar" class="btn btn-primary my-1">
+								<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
+							</button>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,227 @@
+package pe.gob.repuestera.service.impl.reportes;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import pe.gob.repuestera.exception.ErrorControladoException;
+import pe.gob.repuestera.model.VentaCabModel;
+import pe.gob.repuestera.repository.reportes.ReporteMapper;
+import pe.gob.repuestera.service.reportes.ReporteService;
+import pe.gob.repuestera.util.Constante;
+
+@Service
+public class ReporteServiceImpl implements ReporteService{
+
+	private static final Logger logger = LogManager.getLogger(ReporteServiceImpl.class);
+	
+	@Autowired
+	private ReporteMapper reporteMapper;
+	
+
+	@Override
+	public VentaCabModel obtenerCabeceraCotizacionVenta(String numeroDocumento) throws Exception {
+		logger.info("entrando obtenerCabeceraCotizacionVenta.......");
+        VentaCabModel cotizacionVentaCab = null;
+        logger.info("numeroDocumento--->" + numeroDocumento);            
+        // seteando parámetros
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_NRO_DOCUMENTO, numeroDocumento);
+        // ejecutando la query
+        cotizacionVentaCab = reporteMapper.obtenerCabeceraCotizacionVenta(params);
+        logger.info("obtenerCabeceraCotizacionVenta........obteniendo el retorno");		
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        logger.info("obtenerCabeceraCotizacionVenta.......FLAG_RESULTADO------>" + flagResultado);
+		logger.info("obtenerCabeceraCotizacionVenta.......MENSAJE_RESULTADO--->" + mensajeResultado);
+        
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+ 			logger.info("obtenerCabeceraCotizacionVenta ----> success!!!");
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+		
+		return cotizacionVentaCab;
+	}
+
+	@Override
+	public List<HashMap> obtenerDetalleCotizacionVenta(String numeroDocumento) throws Exception {
+		logger.info("entrando obtenerDetalleCotizacionVenta.......");
+		List<HashMap> listaDetalleCotizacionVenta = null;
+        logger.info("numeroDocumento--->" + numeroDocumento);            
+        // seteando parámetros
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_NRO_DOCUMENTO, numeroDocumento);
+        // ejecutando la query
+        listaDetalleCotizacionVenta = reporteMapper.obtenerDetalleCotizacionVenta(params);
+        logger.info("obtenerDetalleCotizacionVenta........obteniendo el retorno");		
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        logger.info("obtenerDetalleCotizacionVenta.......FLAG_RESULTADO------>" + flagResultado);
+		logger.info("obtenerDetalleCotizacionVenta.......MENSAJE_RESULTADO--->" + mensajeResultado);
+        
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+ 			logger.info("obtenerDetalleCotizacionVenta ----> success!!!");
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+		
+		return listaDetalleCotizacionVenta;
+	}
+
+	@Override
+	public void generarReporte(String nombreJrxml, String nombreArchivo, Map<String, Object> parametros, List<HashMap> lista, HttpServletResponse response) throws Exception {
+		logger.info("entrando generarReporte.......");
+        try {
+        	// ARMANDO EL REPORTE
+    		JasperPrint jasperPrint = generarReporte(nombreJrxml, lista, parametros);
+    		// GENERANDO REPORTE PDF
+    		response.setContentType("application/x-pdf");
+    		response.setHeader("Content-disposition", "inline; filename=" + nombreArchivo);
+    		final OutputStream outStream = response.getOutputStream();
+    		JasperExportManager.exportReportToPdfStream(jasperPrint, outStream);
+        }catch (Exception e) {
+        	throw new Exception(e.toString());
+		}
+		
+		logger.info("fin generarReporte.......");
+	}
+
+	@Override
+	public void enviarReportePorCorreo(String nombreJrxml, String nombreArchivo, String email, Map<String, Object> parametros, List<HashMap> lista, HttpServletResponse response) throws Exception {
+		logger.info("entrando enviarReportePorCorreo.......");
+        try {
+        	// ENVIANDO EL REPORTE POR MAIL
+    		JasperPrint jasperPrint = generarReporte(nombreJrxml, lista, parametros);
+    		// ENMVIANDO REPORTE PDF POR MAIL
+    		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    		JasperExportManager.exportReportToPdfStream(jasperPrint, baos);
+    		DataSource aAttachment =  new ByteArrayDataSource(baos.toByteArray(), "application/pdf");
+    		
+    		String asunto = "COTIZACION - SOLICITUD DE CONFIRMACION DE CORREO";
+    	    String nombreUsuario = "XXX";
+    	    //String rutaRaiz = request.getSession().getServletContext().getRealPath("");
+    	    String mensaje = "<html><head><meta http-equiv=Content-Type content=text/html; charset=utf-8/></head><body><table align=center width=610 cellspacing=0 cellpadding=0 border=0 style='position:relative; font-size:12px; font-family:Arial, Helvetica, sans-serif; color: #00486A; background: #ffffff; border: solid 1px #bdcbcd; -moz-border-radius: 20px 20px 20px 20px; -ms-border-radius: 20px 20px 20px 20px; -webkit-border-radius: 20px 20px 20px 20px; border-radius: 20px 20px 20px 20px; padding:5px;''>"
+    	                    + "<tbody><tr><td align=center bgcolor=#ffffff><img width=220 height=60 src='cid:identifier1234'/>"
+    	                    + "</td><td align=center bgcolor=#ffffff style='text-align: left; font-size:18px; padding-left:20px; color:#121D89;''><br>KAHAXI EIRL</td>"
+    	                    + "</tr><tr><td valign=middle align=center colspan=2>"
+    	                    + "<br><br><p style='text-align: left; font-size:14px; padding-left:20px; color:#121D89;'>Estimado(a) <b> "+ nombreUsuario +" </b>, <br/><br/>"
+    	                    + "Si has recibido un mensaje de este tipo, significa que te hemos enviado una cotización.<br/><br/>"
+    	                    + "</p>"
+    	                    + "<p style='text-align: left; font-size:14px; padding-left:20px; color:#121D89;''>Atentamente,<br>"+"KAHAXI"
+    	                    + "<br></p><p style='text-align: left; font-size:10px; padding-left:20px; color:#DF0101;''>"
+    	                    + "'Esta notificación ha sido enviada automáticamente. Por favor, no responda este correo.'</b></p><br/>"
+    	                    + "</td></tr><tr></tr><tr><td valign=middle height=50 bgcolor=#bdcbcd align=center style='font-size:11px; -moz-border-radius: 0px 0px 20px 20px; -ms-border-radius: 0px 0px 20px 20px; -webkit-border-radius: 0px 0px 20px 20px; border-radius: 0px 0px 20px 20px; padding:5px;' colspan=2 >"
+    	                    + "<table width=570 cellspacing=0 cellpadding=0 border=0 align=center><tbody><tr>"
+    	                    + "<td width=100% valign=middle align=left style='padding:5px; font-size:10px;'><b>KAHAXI</b><br/>"
+    	                    + "</td><td width=100% valign=top align=right ></td></tr></tbody></table></td></tr></tbody></table></body></html>";
+    	   
+    	    Properties prop = new Properties();
+    	    prop.put("mail.smtp.host", "smtp.gmail.com");
+            prop.put("mail.smtp.port", "587");
+            prop.put("mail.smtp.auth", "true");
+            prop.put("mail.smtp.starttls.enable", "true"); //TLS
+    	    
+            Session session = Session.getInstance(prop,
+                    new javax.mail.Authenticator() {
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication("kahaxi.mail@gmail.com", "kahaxi1234");
+                        }
+                    });
+           
+        	MimeBodyPart attachmentBP = new MimeBodyPart();
+            attachmentBP.setFileName("yo.pdf");
+            attachmentBP.setDataHandler(new DataHandler(aAttachment));
+            
+        	BodyPart texto = new MimeBodyPart();
+    	    texto.setContent( mensaje, "text/html; charset=utf-8" );
+    	    
+        	MimeMultipart multiParte = new MimeMultipart();
+    	    multiParte.addBodyPart(texto);
+    	    multiParte.addBodyPart(attachmentBP);
+    	    
+        	MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress("ventas@kahaxi.com"));
+            message.setRecipients(Message.RecipientType.TO, generarDestinatarios(email));
+            message.setSubject(asunto);
+            message.setContent(multiParte);
+            
+            logger.info("sending...");
+            // Send message
+            Transport.send(message);
+            logger.info("Sent message successfully....");
+        }catch (Exception e) {
+        	throw new Exception(e.toString());
+		}
+		
+		logger.info("fin enviarReportePorCorreo.......");
+	}
+		
+	private JasperPrint generarReporte(String nombreJrxml, List<HashMap> lista, Map<String, Object> parametros) throws JRException, IOException{
+		logger.info("inicio generarReporte....");
+		// GENERANDO EL REPORTE
+		JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(lista);
+		InputStream inputStream = this.getClass().getResourceAsStream(nombreJrxml);
+		logger.info("compilnadoi el reporte....");
+		JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
+		logger.info("fin compilacion del reporte....inicio fill");
+		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
+		
+		logger.info("fin  fill");
+		return jasperPrint;
+	}
+	
+	private InternetAddress[] generarDestinatarios(String listaEmail) throws AddressException {
+		String[] recipientList = listaEmail.split(",");
+        InternetAddress[] recipientAddress = new InternetAddress[recipientList.length];
+        int counter = 0;
+        for (String recipient : recipientList) {
+            recipientAddress[counter] = new InternetAddress(recipient.trim());
+            counter++;
+        }
+        
+        return recipientAddress;
+	}
+}

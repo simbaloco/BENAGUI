@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragments/layout}" lang="en">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script th:src="@{/js/maestros/gui-mantenimiento-igv.js}" ></script>
+    
+</head>
+
+
+<body>
+    <div layout:fragment="content" th:remove="tag">
+        
+        <!-- Modal NUEVO/EDITAR se quita el tabindex=-1 para que funcione el autofocus -->
+        <div class="modal fade bd-example-modal-sm" id="igvModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm box bg-box modal-content" role="document">
+                <div class="box-body">
+					<div class="card">
+						<div class="modal-header card-header">
+	                        <h6 class="modal-title" id="exampleModalLabel">Modificar IGV</h6>
+	                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                            <span aria-hidden="true" style="color:#5990e0">&times;</span>
+	                        </button>
+	                    </div>
+	
+	                    <div class="box-body">
+		                	<form id="form-validado-igv" class="needs-validation" novalidate style="padding:0px 15px 0px 15px">
+						 	 	
+						 	 	<div class="row">
+						 	 	
+							 		<div class="col-md-12">
+							 			<label class="label" for="igvModal">IGV:</label>
+							 			<input class="form-control" maxlength="5" type="text" id="igv" onkeypress="return soloDecimales(event, this);" required="required" />
+							 			<div class="invalid-feedback">
+			                                Ingrese el IGV
+			                            </div>
+							        </div>
+							        							        
+							    </div>  
+							                              
+	                    	</form>
+	                    </div>
+
+	                    <div class="modal-footer" style="border-top: none">
+	                        <button id="btnGrabarModal" type="button" class="btn btn-primary">
+	                            <span style="padding-right: 6px;"><i class="fas fa-save" ></i></span>Guardar
+	                        </button>
+	                        
+	                        <button id="btnCerrarModal" type="button" class="btn btn-primary" data-dismiss="modal">	
+		                    	<span style="padding-right: 6px;"><i class="fas fa-backspace" ></i></span>Cerrar
+		                    </button>
+	                    </div>
+	                </div>
+                </div>
+            </div>
+        </div>	        
+	    
+	    	    	      
+    </div>
+</body>
+
+</html>

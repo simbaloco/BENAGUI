@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragments/layout}" lang="en">
+
+<head>
+    <title>Repuestera Kahaxi</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+</head>
+
+<body>
+    <div layout:fragment="content" th:remove="tag">
+        <strong>Ocurrió un error inesperado: </strong><p th:text=${mensajeError}></p>
+    </div>
+</body>
+</html>

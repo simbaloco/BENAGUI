@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pe.gob.repuestera.repository.maestros.CatalogoMapper">
+    
+    <!-- *************** RESULTMAPS ******************* -->
+    <resultMap id="catalogo" type="CatalogoModel">
+    	<result property="idDataCatalogo"	column="ID_DATA_CATALOGO" />
+        <result property="codMaestro"		column="COD_MAESTRO" />
+        <result property="codData" 			column="CODIGO" />
+        <result property="descData" 		column="DESCRIPCION" />
+        <result property="codCatalogoPadre" column="COD_CATALOGO_PADRE" />
+        <result property="codDataPadre" 	column="COD_DATA_PADRE" />
+        <result property="activo" 			column="ACTIVO" />
+        <result property="userRegistra" 	column="USER_REGISTRA" />
+        <result property="userModifica" 	column="USER_MODIFICA" />
+        <result property="fechaRegistro" 	column="FECHA_REGISTRO" />
+        <result property="marcaDescripcion" column="MARCA_DESCRIPCION" />
+        <result property="flagSunat" 		column="FLAG_SUNAT" /> 
+    </resultMap>
+        
+     <!-- ********************* PARAMETERMAPS ********************* -->
+    <parameterMap id="buscarIgvParams" type="hashmap">
+    	<parameter property="COD_MAESTRO"         	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="modificarIgvParams" type="hashmap">
+    	<parameter property="COD_MAESTRO"         	jdbcType="VARCHAR"  mode="IN"/>
+    	<parameter property="IGV"         			jdbcType="VARCHAR"  mode="IN"/>
+    	<parameter property="USUARIO_MODIFICA"      jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="buscarDataCatalogoLikeParams" type="hashmap">
+    	<parameter property="COD_MAESTRO"         	jdbcType="VARCHAR"  mode="IN"/>
+    	<parameter property="COD_CATALOGO_PADRE"    jdbcType="VARCHAR"  mode="IN"/>
+    	<parameter property="COD_DATA_PADRE"        jdbcType="VARCHAR"  mode="IN"/>
+    	<parameter property="DATO_CLIENTE"      	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="buscarDataCatalogoParams" type="hashmap">
+    	<parameter property="ID_DATA_CATALOGO"      jdbcType="INTEGER"  mode="IN"/>
+    	<parameter property="COD_MAESTRO"      		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="registrarDataCatalogoParams" type="hashmap">
+        <parameter property="COD_MAESTRO"			jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_DATA"				jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="DESC_DATA"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_CATALOGO_PADRE"    jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_DATA_PADRE"        jdbcType="VARCHAR"  mode="IN"/>        
+        <parameter property="ACTIVO"        		jdbcType="INTEGER"  mode="IN"/>
+        <parameter property="FLAG_SUNAT"	        jdbcType="INTEGER"  mode="IN"/>
+        <parameter property="USUARIO_REGISTRA" 		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="modificarDataCatalogoParams" type="hashmap">
+        <parameter property="ID_DATA_CATALOGO"		jdbcType="INTEGER"  mode="IN"/>
+        <parameter property="COD_MAESTRO"			jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_DATA"				jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="DESC_DATA"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_CATALOGO_PADRE"    jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_DATA_PADRE"        jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="ACTIVO"        		jdbcType="INTEGER"  mode="IN"/>
+        <parameter property="USUARIO_MODIFICA" 		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="buscarFlagSunatParams" type="hashmap">
+    	<parameter property="COD_MAESTRO"         	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    
+    <select id="buscarIgv" parameterMap="buscarIgvParams" resultType="String" statementType="CALLABLE">
+        {CALL SP_BUSCAR_IGV(?,?,?) }
+    </select>
+    
+    <insert id="modificarIgv" parameterMap="modificarIgvParams" statementType="CALLABLE">
+        {CALL SP_REGISTRAR_IGV(?,?,?,?,?) }
+    </insert>
+    
+    
+    <select id="buscarDataCatalogoLike" parameterMap="buscarDataCatalogoLikeParams" resultMap="catalogo" statementType="CALLABLE">
+    	{CALL SP_BUSCAR_DATA_CATALOGO_LIKE(?,?,?,?,?,?) }
+    </select>
+    
+    <select id="buscarDataCatalogo" parameterMap="buscarDataCatalogoParams" resultMap="catalogo" statementType="CALLABLE">
+    	{CALL SP_BUSCAR_DATA_CATALOGO(?,?,?,?) }
+    </select>
+    
+    <insert id="registrarDataCatalogo" parameterMap="registrarDataCatalogoParams" statementType="CALLABLE">
+    	{CALL SP_REGISTRAR_DATA_CATALOGO(?,?,?,?,?,?,?,?,?,?) }
+    </insert> 
+   	
+   	<update id="modificarDataCatalogo" parameterMap="modificarDataCatalogoParams" statementType="CALLABLE">
+    	{CALL SP_MODIFICAR_DATA_CATALOGO(?,?,?,?,?,?,?,?,?,?) }
+    </update> 
+    
+    <select id="buscarFlagSunat" parameterMap="buscarFlagSunatParams" resultType="Integer" statementType="CALLABLE">
+    	{CALL SP_CARGAR_FLAG_SUNAT_MAESTRO(?,?,?) }
+    </select>
+    
+    
+</mapper>

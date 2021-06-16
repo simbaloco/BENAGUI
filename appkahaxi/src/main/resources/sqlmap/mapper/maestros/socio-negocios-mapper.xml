@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pe.gob.repuestera.repository.maestros.SocioNegociosMapper">
+    
+    <!-- *************** RESULTMAPS ******************* -->
+    <resultMap id="socioNegocios" type="SocioNegociosModel">
+        <result property="codigoSocio" 				column="COD_SN" />
+        <result property="codigoTipoSocio" 			column="COD_TIPO_SN" />
+        <result property="codigoTipoDocumento" 		column="COD_TIPO_DOCUMENTO" />
+        <result property="descripcionTipoDocumento"	column="DESCRIPCION_TIPO_DOC" />
+        <result property="codigoTipoPersona" 		column="COD_TIPO_PERSONA" />        
+        <result property="numeroDocumento" 			column="NRO_DOCUMENTO" />
+        <result property="nombreRazonSocial" 		column="NOMBRE_RAZON_SOCIAL" />
+        <result property="razonSocial" 				column="RAZON_SOCIAL" />
+        <result property="nombres" 					column="NOMBRES" />
+        <result property="apePaterno" 				column="APELLIDO_PATERNO" />
+        <result property="apeMaterno" 				column="APELLIDO_MATERNO" />
+        <result property="direccionFiscal" 			column="DIRECCION_FISCAL" />
+        <result property="direccionDespacho" 		column="DIRECCION_DESPACHO" />  
+        <result property="direccionDespacho2" 		column="DIRECCION_DESPACHO2" /> 
+        <result property="direccionDespacho3" 		column="DIRECCION_DESPACHO3" /> 
+        <result property="direccionDespacho4" 		column="DIRECCION_DESPACHO4" /> 
+        <result property="direccionDespacho5" 		column="DIRECCION_DESPACHO5" /> 
+        <result property="contacto"					column="CONTACTO" />       
+        <result property="email" 					column="EMAIL" />
+        <result property="celular" 					column="CELULAR" />   
+        <result property="telefonoFijo" 			column="TELEFONO_FIJO" />   
+        <result property="codigoPais" 				column="COD_PAIS" />
+        <result property="codigoDepartamento" 		column="COD_DEPARTAMENTO" />
+        <result property="codigoProvincia" 			column="COD_PROVINCIA" />
+        <result property="codigoDistrito" 			column="COD_DISTRITO" />
+        <result property="vendedor" 				column="VENDEDOR" />
+        <result property="comentarios" 				column="COMENTARIOS" />
+        <result property="codigoCondicionPago" 		column="COD_CONDICION_PAGO" />
+        <result property="codigoDiasCredito" 		column="COD_DIAS" />
+        <result property="listaPrecios" 			column="LISTA_PRECIOS" />
+        <result property="codigoMoneda" 			column="COD_MONEDA" />
+        <result property="activo" 					column="ACTIVO" />
+        <result property="codigoUsuarioRegistra" 	column="COD_USU_REGISTRA" />
+        <result property="fechaRegistro" 			column="FEC_REGISTRO" />
+        <result property="codigoUsuarioModifica" 	column="COD_USU_MODIFICA" />
+        <result property="fechaModificacion" 		column="FEC_MODIFICACION" />
+        <result property="nombreRazonSocial" 		column="NOMBRE_RAZON_SOCIAL" />
+        <result property="telefono" 				column="TELEFONO" />
+        <result property="ubigeo" 					column="UBIGEO" />
+	</resultMap>	
+	
+	<resultMap id="socionegociosContactos" type="SocioNegociosContactoModel">
+        <result property="codigoSocio" 				column="COD_SN" />
+        <result property="idContactoSN" 			column="ID_CONTACTO_SN" />
+        <result property="nombreContacto" 			column="NOMBRE_CONTACTO" />
+        <result property="cargoContacto"			column="CARGO_CONTACTO" />
+        <result property="telefono" 				column="TELEFONO" />        
+        <result property="email" 					column="EMAIL" />
+        <result property="emailFactura" 			column="EMAILFACTURA" />
+        <result property="predeterminado" 			column="PREDETERMINADO" />
+        <result property="activo" 					column="ACTIVO" />
+        <result property="codigoUsuarioRegistra" 	column="COD_USU_REGISTRA" />
+        <result property="fechaRegistro" 			column="FEC_REGISTRO" />
+        <result property="codigoUsuarioModifica" 	column="COD_USU_MODIFICA" />
+        <result property="fechaModificacion" 		column="FEC_MODIFICACION" />
+	</resultMap>	
+    
+    
+    <!-- ********************* PARAMETERMAPS ********************* -->
+    <parameterMap id="buscarSnLikeParams" type="hashmap">
+        <parameter property="TIPO_SN"        		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="DATO_BUSCAR"        	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="listarSnParams" type="hashmap">
+        <parameter property="TIPO_SN"        		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="DATO_BUSCAR"        	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="TIPO_DOCUMENTO"   		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap> 
+    
+    <parameterMap id="registrarSocioNegocioParams" type="hashmap">
+        <parameter property="COD_SN"				jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="PREFIJO"				jdbcType="VARCHAR"  mode="IN"/>        
+        <parameter property="COD_TIPO_SN"			jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_TIPO_DOCUMENTO"    jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_TIPO_PERSONA"    	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="NRO_DOCUMENTO"        	jdbcType="VARCHAR"  mode="IN"/>  
+        <parameter property="RAZON_SOCIAL"			jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="NOMBRES"				jdbcType="VARCHAR"  mode="IN"/>        
+        <parameter property="APELLIDO_PATERNO"		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="APELLIDO_MATERNO"     	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="DIRECCION_FISCAL"    	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="DIRECCION_DESPACHO1"   jdbcType="VARCHAR"  mode="IN"/>    
+        <parameter property="DIRECCION_DESPACHO2"   jdbcType="VARCHAR"  mode="IN"/>    
+        <parameter property="DIRECCION_DESPACHO3"   jdbcType="VARCHAR"  mode="IN"/>    
+        <parameter property="DIRECCION_DESPACHO4"   jdbcType="VARCHAR"  mode="IN"/>    
+        <parameter property="DIRECCION_DESPACHO5"   jdbcType="VARCHAR"  mode="IN"/>       
+        <parameter property="EMAIL"    				jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="CELULAR"				jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="TELEFONO_FIJO"			jdbcType="VARCHAR"  mode="IN"/>        
+        <parameter property="COD_PAIS"				jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_DEPARTAMENTO"      jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_PROVINCIA"    		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_DISTRITO"        	jdbcType="VARCHAR"  mode="IN"/>  
+        <parameter property="UBIGEO"        		jdbcType="VARCHAR"  mode="IN"/>  
+        <parameter property="VENDEDOR"     			jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COMENTARIOS"    		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_CONDICION_PAGO"    jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_DIAS"				jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="LISTA_PRECIOS"         jdbcType="INTEGER"  mode="IN"/>        
+        <parameter property="ACTIVO"     			jdbcType="INTEGER"  mode="IN"/>
+        <parameter property="DATA_JSON"          	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="USUARIO_REGISTRA"		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="buscarSocioNegocioParams" type="hashmap">
+        <parameter property="COD_SN"        		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap> 
+        
+    <!-- ************************* QUERYS ******************************* -->
+    <select id="buscarSnLike" parameterMap="buscarSnLikeParams" resultMap="socioNegocios" statementType="CALLABLE">
+    	{CALL SP_BUSCAR_SN_LIKE(?,?,?,?) }
+    </select>
+    
+    <select id="listarSocioNegocio" parameterMap="listarSnParams" resultMap="socioNegocios" statementType="CALLABLE">
+    	{CALL SP_LISTAR_SOCIO_NEGOCIO(?,?,?,?,?) }
+    </select>
+    
+    <insert id="registrarSocioNegocio" parameterMap="registrarSocioNegocioParams" statementType="CALLABLE">
+    	{CALL SP_REGISTRAR_SOCIO_NEGOCIO(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
+    </insert> 
+    
+    <select id="buscarSocioNegocio" parameterMap="buscarSocioNegocioParams" resultMap="socioNegocios" statementType="CALLABLE">
+    	{CALL SP_BUSCAR_SOCIO_NEGOCIO_CAB(?,?,?) }
+    </select>
+    
+    <select id="buscarSocioNegocioContacto" parameterMap="buscarSocioNegocioParams" resultMap="socionegociosContactos" statementType="CALLABLE">
+    	{CALL SP_BUSCAR_SOCIO_NEGOCIO_CONTACTOS(?,?,?) }
+    </select>
+    
+</mapper>

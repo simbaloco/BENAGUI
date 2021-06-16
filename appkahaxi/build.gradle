@@ -1,0 +1,113 @@
+buildscript {
+    ext {
+        springBootVersion = '2.4.2'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+plugins {
+    id 'org.springframework.boot' version '2.4.2'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'war'
+    id 'eclipse' 
+}
+
+
+group = 'pe.gob.repuestera'
+//version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spring.io/snapshot' }
+    maven { url 'https://repo.spring.io/milestone' }
+}
+
+configurations {
+    all*.exclude module : 'spring-boot-starter-logging'
+    providedRuntime
+}
+ext {
+    set('springCloudVersion', 'Greenwich.RELEASE')
+}
+
+dependencies {
+	// SPRING-BOOT
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+	// SPRING SECURITY
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	// LOMBOK
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	// MYBATIS
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.0'
+	// LOG4J
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: '2.1.7.RELEASE'
+	// JASPER REPORTS
+    compile group: 'net.sf.jasperreports', name: 'jasperreports', version: '6.8.0'
+    compile group: 'com.lowagie', name: 'itext', version: '2.1.7'
+    // JQUERY
+    compile group: 'org.webjars', name: 'jquery', version: '3.3.1'
+    compile group: 'org.webjars', name: 'jquery-ui', version: '1.12.1'
+    compile group: 'org.webjars.bower', name: 'malihu-custom-scrollbar-plugin', version: '3.1.5'
+    // JQUERY BLOCKUI
+    compile group: 'org.webjars', name: 'jquery-blockui', version: '2.70'
+    // BOOTSTRAP
+    compile group: 'org.webjars', name: 'bootstrap', version: '4.5.2'
+    //compile group: 'org.webjars', name: 'bootstrap-datetimepicker', version: '2.4.2'
+    implementation group: 'org.webjars', name: 'tempusdominus-bootstrap-4', version: '5.1.2'
+    //implementation group: 'org.webjars.npm', name: 'tempusdominus-bootstrap-4', version: '5.39.0'
+    
+
+    // DATATABLES
+    compile group: 'org.webjars.bower', name: 'datatables', version: '1.10.19'
+    //compile group: 'org.webjars.bower', name: 'datatables.net-responsive', version: '2.2.3'
+    //compile group: 'org.webjars.bower', name: 'datatables.net-responsive-bs4', version: '2.2.3'
+    // THYMELEAF
+    compile group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '2.3.0'
+    // para usar etiquetas thymeleaf con spring security
+    compile group: 'org.thymeleaf', name: 'thymeleaf-spring5', version: '3.0.11.RELEASE'
+    compile group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity5', version: '3.0.4.RELEASE'
+    // SOPORTE
+    compile group: 'org.webjars', name: 'popper.js', version: '1.14.1'
+    compile group: 'org.webjars.npm', name: 'core-js', version: '2.6.5'
+    compile group: 'org.webjars.bower', name: 'pdfmake', version: '0.1.36'
+    compile group: 'org.webjars', name: 'momentjs', version: '2.22.2'
+    compile group: 'org.webjars', name: 'bootstrap-notify', version: '3.1.3-1'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
+    
+    // FONT AWESOME
+    compile group: 'org.webjars', name: 'font-awesome', version: '5.7.2'
+    // POI
+    compile group: 'org.apache.poi', name: 'poi', version: '4.0.1'
+    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '4.0.1'
+    compile group: 'org.apache.poi', name: 'poi-ooxml-schemas', version: '4.0.1'
+    compile group: 'org.apache.xmlbeans', name: 'xmlbeans', version: '3.0.2'
+    // BOOTBOX
+    compile group: 'org.webjars', name: 'bootbox', version: '5.4.0'
+    //MYSQL
+    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.19'
+    
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+test {
+    useJUnitPlatform()
+}

@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+</head>
+
+<sec:authentication property="principal.usuariodetails" var="u"/>
+
+<body>
+<th:block th:fragment="header">
+    <script th:src="@{/js/cargarMenu.js}"> </script>
+    <div>
+        <div id="headPanel" >
+	        <div id="headPanel_top" style="max-width: 100%">
+	            <div style="position: relative; width:100%; padding: 1px">
+	                <table style="width: 100%; border: 0">
+	                    <tr>
+	                        <td width="65%" id="titulo_interno">SISTEMA DE GESTIÓN EMPRESARIAL - REPUESTERA KAHAXI</td>
+	                        <td width="35%" id="txt_nav">
+	                            <span sec:authorize="isAuthenticated()" style="display: inline-block;">
+				                    | Usuario: <span sec:authentication="principal.nombres"></span> <span sec:authentication="principal.apePaterno"></span> <span sec:authentication="principal.apeMaterno"></span>|
+				                    Roles: <span sec:authentication="principal.authorities"></span> |
+				                    <a th:href="@{/logout}">
+				                    	<button class='btn btn-danger btn-xs'>
+				                    		<span><i class="fas fa-sign-out-alt"></i></span>
+				                    	</button>
+				                    </a>
+				                </span>
+	                        </td>
+	                    </tr>
+	                </table>
+	            </div>
+	        </div>
+	    </div>
+    </div>
+</th:block>
+</body>

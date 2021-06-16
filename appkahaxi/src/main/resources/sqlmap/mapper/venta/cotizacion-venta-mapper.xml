@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pe.gob.repuestera.repository.venta.CotizacionVentaMapper">
+
+    
+    <!-- *************** RESULTMAPS ******************* -->
+    <resultMap id="ventaCab" type="VentaCabModel">
+        <result property="numeroDocumento" 			column="NRO_DOCUMENTO" />
+        <result property="username" 				column="USERNAME" />
+        <result property="nombreUsuario" 			column="NOMBRE_USUARIO" />
+        <result property="codigoCliente" 			column="COD_CLIENTE" />
+        <result property="nroDocCliente" 			column="NRO_DOC_CLIENTE" />
+        <result property="nombreCliente" 			column="NOMBRE_CLIENTE" />
+        <result property="direccionFiscal" 			column="DIRECCION_FISCAL" />
+        <result property="email" 					column="EMAIL" />
+        <result property="celular" 					column="CELULAR" />
+        <result property="fechaContabilizacion" 	column="FEC_CONTABILIZACION" />
+        <result property="fechaValidoHasta" 		column="FEC_VALIDO_HASTA" />
+        <result property="codigoTipoMoneda" 		column="COD_TIPO_MONEDA" />
+        <result property="descripcionTipoMoneda"	column="DESC_TIPO_MONEDA" />
+        <result property="codigoCondPago" 			column="COD_COND_PAGO" />
+        <result property="descripcionCondPago"		column="DESC_COND_PAGO" />
+        <result property="codigoDias" 				column="COD_DIAS" />
+        <result property="descripcionDias" 			column="DESC_COD_DIAS" />
+        <result property="codigoEstado" 			column="COD_ESTADO" />
+        <result property="descripcionEstado"		column="DESC_ESTADO" />
+        <result property="nroRequerimiento"			column="NRO_REQUERIMIENTO" />
+        <result property="asunto"					column="ASUNTO" />
+        <result property="tipoCambio"				column="TIPO_CAMBIO" />
+        <result property="observaciones"			column="OBSERVACIONES" />
+        <result property="numeroDocumentoRef"		column="NRO_DOC_REFERENCIA" />
+        <result property="subTotal"					column="SUBTOTAL" />
+        <result property="descuento"				column="DESCUENTO" />
+        <result property="igv"						column="IGV" />
+        <result property="total" 					column="TOTAL" />
+        <result property="codigoEstadoProceso"		column="COD_ESTADO_PROCESO" />
+        <result property="activo"					column="ACTIVO" />
+        <result property="fechaRegistro"			column="FEC_REGISTRO" />
+    </resultMap>
+    
+    <resultMap id="ventaDet" type="VentaDetModel">
+        <result property="codArticulo" 			column="COD_ARTICULO" />
+        <result property="codEstandar" 			column="COD_ESTANDAR" />
+        <result property="descripcionArticulo" 	column="DESCRIPCION" />
+        <result property="marca" 				column="MARCA_PRODUCTO" />
+        <result property="cantidad" 			column="CANTIDAD" />
+        <result property="precioUnitario"		column="PRECIO_UNITARIO" />
+        <result property="precioReferencia"		column="PRECIO_REFERENCIA" />
+        <result property="precioIgv"			column="PRECIO_IGV" />
+        <result property="porcentajeDcto"		column="PORC_DCTO" />
+        <result property="precioConDcto"		column="PRECIO_CON_DCTO" />
+        <result property="subTotal" 			column="SUB_TOTAL" />
+    </resultMap>
+    
+    
+    <!-- ********************* PARAMETERMAPS ********************* -->
+    <parameterMap id="listarCotizacionVentaParams" type="hashmap">
+        <parameter property="DATO_BUSCAR"        	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="NRO_DOCUMENTO"     	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="NRO_REQUERIMIENTO"     jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_REPUESTO"     		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_ESTADO"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_DESDE"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_HASTA"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap> 
+        
+    <parameterMap id="buscarCotizacionVentaParams" type="hashmap">
+        <parameter property="NRO_DOCUMENTO"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap> 
+    
+    <parameterMap id="registrarCotizacionVentaParams" type="hashmap">
+        <parameter property="COD_CLIENTE"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="USUARIO"				jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_CONTABILIZACION"   jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_VALIDO_HASTA"      jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_TIPO_MONEDA"       jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_COND_PAGO"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_DIAS"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_ESTADO"        	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="NRO_REQUERIMIENTO"     jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="ASUNTO"     			jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="TIPO_CAMBIO"          	jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="OBSERVACIONES"     	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="NRO_DOCUMENTO_REF"     jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="PORC_DCTO_TOTAL"       jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="SUB_TOTAL"          	jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="DCTO"          		jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="IGV"          			jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="TOTAL"          		jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="DATA_JSON"          	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="NRO_DOCUMENTO"       	jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="actualizarCotizacionVentaParams" type="hashmap">
+        <parameter property="NRO_DOCUMENTO"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="USUARIO"				jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_ESTADO"        	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="OBSERVACIONES"     	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="eliminarCotizacionVentaParams" type="hashmap">
+        <parameter property="NRO_DOCUMENTO"			jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="USUARIO"				jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+     
+        
+    <!-- ************************* QUERYS ******************************* -->
+    <!-- este SP es invocado desde el buscador de cotizaciones de venta -->
+    <select id="listarCotizacionesVenta" parameterMap="listarCotizacionVentaParams" resultMap="ventaCab" statementType="CALLABLE">
+    	{CALL SP_LISTAR_COTIZACIONES_VENTA(?,?,?,?,?,?,?,?,?) }
+    </select>
+    
+    <!-- este SP es invocado al pulsar ver/editar sobre una cotización del listado. Trae la cabecera -->
+    <select id="buscarCotizacionVentaCab" parameterMap="buscarCotizacionVentaParams" resultMap="ventaCab" statementType="CALLABLE">
+    	{CALL SP_BUSCAR_COTI_VENTA_CAB(?,?,?) }
+    </select>
+    
+    <!-- este SP es invocado al pulsar ver/editar sobre una cotización del listado. Trae el detalle -->
+    <select id="buscarCotizacionVentaDet" parameterMap="buscarCotizacionVentaParams" resultMap="ventaDet" statementType="CALLABLE">
+    	{CALL SP_BUSCAR_COTI_VENTA_DET(?,?,?) }
+    </select>
+         
+    <!-- este SP es invocado al grabar una cotización. Graba la cabecera -->
+    <insert id="registrarCotizacionVenta" parameterMap="registrarCotizacionVentaParams" statementType="CALLABLE">
+    	{CALL SP_REGISTRAR_COTIZACION_VENTA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
+    </insert> 
+   	
+   	<!-- este SP es invocado al grabar una cotización. Graba la cabecera -->
+    <update id="actualizarCotizacionVenta" parameterMap="actualizarCotizacionVentaParams" statementType="CALLABLE">
+    	{CALL SP_ACTUALIZAR_COTIZACION_VENTA(?,?,?,?,?,?) }
+    </update> 
+   	      	
+</mapper>

@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  layout:decorate="~{fragments/layout}" lang="en">
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<script th:src="@{/js/guiaremision/gui-nueva-guia-remision.js}" ></script>
+</head>
+
+<body>
+
+<div layout:fragment="content" th:remove="tag">
+
+	<input type="text" id="codigoCliente" hidden="hidden"/>
+
+	<label id="numeroDocumento" th:text=${numeroDocumento} hidden="hidden"></label>
+	<label id="opcion" th:text=${opcion} hidden="hidden"></label>
+	<label id="datoBuscar" th:text=${datoBuscar} hidden="hidden"></label>
+	<label id="fechaDesde" th:text=${fechaDesde} hidden="hidden"></label>
+	<label id="fechaHasta" th:text=${fechaHasta} hidden="hidden"></label>
+	<label id="estadoParam" th:text=${estadoParam} hidden="hidden"></label>
+	<label id="volverParam" th:text=${volver} hidden="hidden"></label>
+
+	<div class="modal fade" id="guiasPorOrdenCompraModal" role="dialog" aria-labelledby="guiasPorOrdenCompraModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-personalizado-medium modal-sm" role="document" >
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<h6 class="modal-title" id="guiasPorOrdenCompraModalLabel">Seleccionar Guía de Remisión - <span id="modalCodigoOrdenCompra"></span></h6>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true" style="color:#5990e0">&times;</span>
+					</button>
+				</div>
+
+				<div class="modal-body">
+
+					<div class="card">
+
+						<div class="card-header">
+							<span class="font-weight-bold">Seleccione las Guías de Remisión a las que se les va a generar la factura</span>
+						</div>
+
+						<div>
+
+							<div class="card-body">
+
+								<div class="row">
+
+									<div class="col-md-12">
+
+										<div class="table-responsive">
+
+											<table id="tableDetalleGuias" class="table table-hover table-striped table-bordered dt-responsive">
+
+												<thead class="text-center">
+												<tr>
+													<th id="codigoGuiaRemision" width="20%" style="text-align: left;">Nro. Guía de Remision</th>
+													<th id="serieCorrelativoGuiaRemision" width="20%" style="text-align: left;">Serie-Correlativo</th>
+													<th id="subTotalGuiaRemision" width="15%" style="text-align: right;">SubTotal</th>
+													<th id="igvGuiaRemision" width="15%" style="text-align: right;">IGV</th>
+													<th id="totalGuiaRemision" width="15%" style="text-align: right;">Total</th>
+													<th width="15%">Seleccionar</th>
+												</tr>
+												</thead>
+
+												<tbody>
+												</tbody>
+
+											</table>
+
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+					</div>
+
+
+				</div>
+
+				<div class="modal-footer" style="border-top: none">
+					<button id="btnAceptarModal" type="button" class="btn btn-outline-primary">
+						<span class="mr-2"><i class="fas fa-save" ></i></span>Aceptar
+					</button>
+
+					<button id="btnCerrarModal" type="button" class="btn btn-outline-primary" data-dismiss="modal">
+						<span class="mr-2"><i class="fas fa-backspace" ></i></span>Cerrar
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="facturasPorGuiaRemisionModal" role="dialog" aria-labelledby="facturasPorGuiaRemisionModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-personalizado-medium modal-sm" role="document" >
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<h6 class="modal-title" id="facturasPorGuiaRemisionModalLabel">Seleccionar Factura - <span id="modalCodigoGuiaRemision"></span></h6>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true" style="color:#5990e0">&times;</span>
+					</button>
+				</div>
+
+				<div class="modal-body">
+
+					<div class="card">
+
+						<div class="card-header">
+							<span class="font-weight-bold">Seleccione la Factura que desea consultar</span>
+						</div>
+
+						<div>
+
+							<div class="card-body">
+
+								<div class="row">
+
+									<div class="col-md-12">
+
+										<div class="table-responsive">
+
+											<table id="tableDetalleFactura" class="table table-hover table-striped table-bordered dt-responsive">
+
+												<thead class="text-center">
+												<tr>
+													<th id="codigoFactura" width="20%" style="text-align: left;">Nro Factura</th>
+													<th id="fechaDocumento" width="10%" style="text-align: left;">Fec. Documento</th>
+													<th id="fechaContabilizacion" width="10%" style="text-align: right;">Fec. Contabilización</th>
+													<th id="serieCorrelativo" width="20%" style="text-align: right;">Serie-Correlativo</th>
+													<th id="subtotalFactura" width="10%" style="text-align: right;">Subtotal</th>
+													<th id="igvFactura" width="10%" style="text-align: right;">IGV</th>
+													<th id="totalFactura" width="10%" style="text-align: right;">Total</th>
+													<th id="estadoPago" width="10%" style="text-align: right;">Estado Pago</th>
+												</tr>
+												</thead>
+
+												<tbody>
+												</tbody>
+
+											</table>
+
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+					</div>
+
+
+				</div>
+
+				<div class="modal-footer" style="border-top: none">
+
+					<button id="btnCerrarListaFacturaModal" type="button" class="btn btn-outline-primary" data-dismiss="modal">
+						<span class="mr-2"><i class="fas fa-backspace" ></i></span>Cerrar
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="kahaxi_titulo">
+
+		<div class="kahaxi_titulo_container">
+			<div class="kahaxi_titulo_logo"><i class="fas fa-cash-register"></i></div>
+			<div class="kahaxi_titulo_text"><span id="titulo"></span> GUIA REMISIÓN</div>
+		</div>
+
+		<div class="subrayado">
+		</div>
+
+		<br>
+	</div>
+
+	<div class="box bg-box" id="accordionCabeceraGuiaRemision">
+
+		<div class="box-body">
+
+			<div class="card">
+
+				<div class="card-header" id="headingCabeceraGuiaRemision">
+					<h2 class="mb-0">
+						<button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseCabeceraGuiaRemision" aria-expanded="true" aria-controls="collapseCabeceraGuiaRemision">
+							<i class="fas fa-angle-up"></i><span>Entrada de Mercadería (Guía de Remisión) </span><span class="font-weight-bold" id="codigo"></span>
+							<div class="subrayado"></div>
+						</button>
+					</h2>
+				</div>
+
+				<div id="collapseCabeceraGuiaRemision" class="collapse show" aria-labelledby="headingCabeceraGuiaRemision" data-parent="#accordionCabeceraGuiaRemision">
+
+					<div class="box-body">
+
+						<form id="formGuiaRemision" class="needs-validation" novalidate>
+
+							<div class="row">
+
+								<div class="col-md-2">
+									<label class="label" for="OCReferencia">OC Referencia</label>
+									<input class="form-control" maxlength="20" size="50" type="text" id="OCReferencia" th:value="${numeroDocumento}" readonly="readonly" tabindex="-1" />
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="documentoCliente">DNI/RUC:</label>
+									<input class="form-control" maxlength="20" size="15" type="text" id="documentoCliente" readonly="readonly" tabindex="-1" />
+								</div>
+
+								<div class="col-md-4">
+									<label class="label" for="nombreCliente">Nombre/Raz&oacute;n Social:</label>
+									<input class="form-control" maxlength="250" size="50" type="text" id="nombreCliente" readonly="readonly" tabindex="-1"/>
+								</div>
+
+								<div class="col-md-4">
+									<label class="label" for="direccion">Direcci&oacute;n:</label>
+									<input class="form-control" maxlength="250" size="50" type="text" id="direccion" readonly="readonly" tabindex="-1"/>
+								</div>
+
+							</div>
+
+							<div class="row">
+
+								<div class="col-md-2">
+									<label class="label" for="fecConta">Fecha de contabilización:</label>
+									<div class="input-group date" id="fecConta" data-target-input="nearest">
+										<input type="text" class="form-control datetimepicker-input" data-target="#fecConta" required="required" readonly="readonly"/>
+										<div class="input-group-append" data-target="#fecConta" data-toggle="datetimepicker">
+											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+										</div>
+										<div class="invalid-feedback">
+											Ingrese Fecha de contabilización
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="fecDocumento">Fecha de documento:</label>
+									<div class="input-group date" id="fecDocumento" data-target-input="nearest">
+										<input type="text" class="form-control datetimepicker-input readonly" data-target="#fecDocumento" required="required" />
+										<div class="input-group-append" data-target="#fecDocumento" data-toggle="datetimepicker">
+											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+										</div>
+										<div class="invalid-feedback">
+											Ingrese Fecha de documento
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="fecEntrega">Fecha de recepción:</label>
+									<div class="input-group date" id="fecEntrega" data-target-input="nearest">
+										<input type="text" class="form-control datetimepicker-input readonly" data-target="#fecEntrega" required="required" />
+										<div class="input-group-append" data-target="#fecEntrega" data-toggle="datetimepicker">
+											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+										</div>
+										<div class="invalid-feedback">
+											Ingrese Fecha de recepción
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="tipoMoneda">Moneda:</label>
+									<select id="tipoMoneda" class="form-control">
+										<option th:each="item : ${listaMoneda}"
+									            th:value="${item.codigo}" 
+									            th:text="${item.descripcion}">
+									    </option>
+									</select>
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="condPago">Condición Pago:</label>
+									<select id="condPago" class="form-control">
+										<option th:each="item : ${listaCondPago}"
+									            th:value="${item.codigo}" 
+									            th:text="${item.descripcion}">
+									    </option>
+									</select>
+								</div>
+
+								<div class="col-md-2" id="divDias" style="display: none">
+									<label class="label" for="dias">Días:</label>
+									<select id="dias" class="form-control">
+										<option th:each="item : ${listaDias}"
+									            th:value="${item.codigo}" 
+									            th:text="${item.descripcion}">
+									    </option>
+									</select>
+								</div>
+
+							</div>
+
+							<div class="row">
+
+								<div class="col-md-2">
+									<label class="label" for="tipoCambio">Tipo de Cambio:</label>
+									<input class="form-control" maxlength="250" size="50" type="text" id="tipoCambio" readonly="readonly" tabindex="-1"/>
+								</div>
+
+								<div class="col-md-1">
+									<label class="label" for="serie">Serie:</label>
+									<input class="form-control" maxlength="250" size="50" type="text" id="serie" tabindex="-1" required="required"/>
+									<div class="invalid-feedback">
+										Ingrese Serie
+									</div>
+								</div>
+								<div class="col-md-1">
+									<label class="label" for="correlativo">Correlativo:</label>
+									<input class="form-control" maxlength="250" size="50" type="text" id="correlativo" tabindex="-1" required="required"/>
+									<div class="invalid-feedback">
+										Ingrese Correlativo
+									</div>
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="motivoTraslado">Motivo de traslado:</label>
+									<select id="motivoTraslado" class="form-control">
+										<option th:each="item : ${listaMotivosTraslado}"
+									            th:value="${item.codigo}" 
+									            th:text="${item.descripcion}">
+									    </option>
+									</select>
+								</div>
+							</div>
+
+							<div class="row">
+
+								<div class="col-md-6">
+								</div>
+
+								<div class="col-md-2">
+									<div class="text-right">
+										<button type="button" id="btnGenerarFactura" class="btn btn-primary my-1" style="display: none">
+											<span class="mr-2"><i class="fas fa-coins"></i></span>Generar Factura
+										</button>
+									</div>
+								</div>
+
+								<div class="col-md-2">
+									<div class="text-right">
+										<button type="button" id="btnIrFactura" class="btn btn-primary my-1" style="display: none">
+											<span class="mr-2"><i class="fas fa-coins"></i></span>Ir a la Factura
+										</button>
+									</div>
+								</div>
+
+								<div class="col-md-1">
+									<div class="text-center">
+										<button type="button" id="btnLimpiar" class="btn btn-primary my-1">
+											<span class="mr-2"><i class="fas fa-eraser"></i></span>Limpiar
+										</button>
+									</div>
+								</div>
+
+								<div class="col-md-1">
+									<div class="text-center">
+										<button type="button" id="btnVolver" class="btn btn-primary" style="display: none">
+											<span class="mr-2"><i class="fas fa-backspace"></i></span>Volver
+										</button>
+									</div>
+								</div>
+
+							</div>
+
+						</form>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="box bg-box" id="accordionDetalleGuiaRemision">
+
+		<div class="box-body">
+
+			<div class="card">
+
+				<div class="card-header" id="headingDetalleGuiaRemision">
+					<button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseDetalleGuiaRemision" aria-expanded="true" aria-controls="collapseDetalleGuiaRemision">
+						<i class="fas fa-angle-up"></i><span>Detalle de la Guía de Remisión</span>
+						<div class="subrayado"></div>
+					</button>
+				</div>
+
+				<div id="collapseDetalleGuiaRemision" class="collapse show" aria-labelledby="headingDetalleGuiaRemision" data-parent="#accordionDetalleGuiaRemision">
+
+					<div class="card-body">
+
+						<div class="row">
+
+							<div class="col-md-12">
+
+								<div class="table-responsive">
+
+									<table id="tableDetalle" class="table table-hover table-striped table-bordered dt-responsive">
+
+										<thead class="text-center">
+											<tr>
+												<th width="2%">Item</th>
+												<th id="codArticulo" width="5%">C&oacute;digo Artículo</th>
+												<th id="descripcionArticulo" width="28%">Descripci&oacute;n</th>
+												<th id="marca" width="10%">Marca</th>
+												<th id="codAlmacen" width="5%">Almacén</th>
+												<th id="cantidad" width="5%" >Cantidad</th>
+												<th id="cantidadPendiente" width="5%" >Cantidad Pendiente</th>
+												<th id="precioUnitario" width="10%" >PU</th>
+												<th id="igvDetalle" width="5%" style="text-align: right;">IGV</th>
+												<th id="subTotal" width="20%" style="text-align: right;">Sub-Total</th>
+												<th id="lineaReferencia" class="d-none" width="0%">Linea Referencia</th>
+												<th class="eliminar" width="5%">Eliminar</th>
+											</tr>
+										</thead>
+
+										<tbody>
+										</tbody>
+
+									</table>
+
+									<table id="tableNuevoDetalle" style="display:none;">
+										<tbody>
+										<tr>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td class="d-none"></td>
+											<td>
+												<div class="text-center">
+													<button class="btn-delete btn btn-danger btn-xs">
+														<span><i class="fas fa-trash-alt"></i></span>
+													</button>
+												</div>
+											</td>
+										</tr>
+										</tbody>
+									</table>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card">
+
+				<div class="card-body">
+
+					<div class="row">
+
+						<div class="col-md-10">
+
+						</div>
+
+						<div class="col-md-2">
+
+							<div>
+								<label class="label" for="subTotalOC">SubTotal</label>
+							</div>
+							<div>
+								<span class="simbolo-moneda input-symbol-dolar">
+									<input class="form-control alineacion-derecha" maxlength="10" type="text" id="subTotalOC" readonly="readonly"/>
+								</span>
+							</div>
+
+							<div>
+								<label class="label" for="igv">IGV</label>
+							</div>
+							<div>
+								<span class="simbolo-moneda input-symbol-dolar">
+				            			<input class="alineacion-derecha form-control" maxlength="10" type="text" id="igv" readonly="readonly"/>
+								</span>
+							</div>
+
+							<div>
+								<label class="label" for="total">Total</label>
+							</div>
+							<div>
+								<span class="simbolo-moneda input-symbol-dolar">
+									<input class="form-control alineacion-derecha" maxlength="10" type="text" id="total" readonly="readonly"/>
+								</span>
+							</div>
+
+						</div>
+
+					</div>
+
+					<div class="row">
+						<div class="col-md-12">
+							<label class="label"></label>
+						</div>
+					</div>
+
+					<div class="row">
+
+						<div class="col-md-10">
+						</div>
+
+						<div class="col-md-1">
+							<div class="text-right">
+								<button type="button" id="btnAnular" class="btn btn-primary my-1" style="display: none">
+									<span class="mr-2"><i class="fas fa-trash"></i></span>Anular
+								</button>
+							</div>
+						</div>
+
+						<div class="col-md-1">
+							<button type="button" id="btnGrabar" class="btn btn-primary my-1">
+								<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
+							</button>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+</div>
+
+</body>
+</html>
