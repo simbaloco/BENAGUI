@@ -1043,6 +1043,27 @@ public class PrincipalController {
 		return retorno;
 	}
 	
+	@GetMapping("/parametros-generales")
+	public String cargarParametrosGenerales(Model model) {
+		String retorno;
+
+		try {
+			logger.info("entrando al método cargarParametrosGenerales");
+			
+			List<ParametrosGeneralesModel> listaParametrosGenerales = genericService.cargarParametrosGenerales();
+			session.setAttribute("listaParametrosGenerales", listaParametrosGenerales);
+			
+			retorno = Constante.PAGINA_PARAMETROS_GENERALES;
+			
+			logger.info("saliendo del método cargarParametrosGenerales" + listaParametrosGenerales);
+		}catch (Exception e) {
+			// TODO: handle exception
+			retorno = Constante.PAGINA_ERROR;
+			model.addAttribute("mensajeError", e.toString());
+		}
+		return retorno;
+	}
+	
 	
 
 }

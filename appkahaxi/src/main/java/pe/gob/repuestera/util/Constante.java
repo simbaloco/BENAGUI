@@ -4,7 +4,7 @@ public class Constante {
 	
 	public static final String USUARIO = "usuario";
 	
-	/* VALORES PARA LA TABLA DE CATÁLOGOS */
+	/* VALORES PARA LA TABLA DE CATÃ�LOGOS */
 	public static final String CATALOGO_MARCA_ARTICULO  = "01";
 	public static final String CATALOGO_TIPO 			= "02";
 	public static final String CATALOGO_SECCION 		= "03";
@@ -33,7 +33,7 @@ public class Constante {
 	public static final String COD_TIPO_SOCIO_PROVEEDOR = "02";
 	
 	
-	/*** VALORES PARA LAS PÁGINAS HTML ***/
+	/*** VALORES PARA LAS PÃ�GINAS HTML ***/
 	/* GENERAL */
 	public static final String PAGINA_LOGIN = "login";
 	public static final String PAGINA_PRINCIPAL = "paginas/principal";
@@ -49,6 +49,7 @@ public class Constante {
 	public static final String PAGINA_NUEVO_CLIENTE = "paginas/maestros/nuevo-socio-negocio";
 	public static final String PAGINA_BUSCAR_PROVEEDOR = "paginas/maestros/mantenimiento-proveedor";
 	public static final String PAGINA_NUEVO_PROVEEDOR = "paginas/maestros/nuevo-proveedor";
+	public static final String PAGINA_PARAMETROS_GENERALES = "paginas/maestros/buscar-parametros-generales";
 	/* CATALOGOS */
 	public static final String PAGINA_BUSCAR_IGV = "paginas/maestros/buscar-igv";
 	public static final String PAGINA_MANTENIMIENTO_DATA_CATALOGO = "paginas/maestros/mantenimiento-data-catalogo";
@@ -184,6 +185,8 @@ public class Constante {
 	public static final String PARAM_SP_COD_CONDICION_PAGO	= "COD_CONDICION_PAGO"; 
 	public static final String PARAM_SP_LISTA_PRECIOS		= "LISTA_PRECIOS"; 
 	public static final String PARAM_SP_COD_MONEDA			= "COD_MONEDA";	
+	public static final String PARAM_SP_COD_PARAMETRO		= "COD_PARAMETRO";	
+	public static final String PARAM_SP_VALOR				= "VALOR";	
 	
 		
 	/* PARAMETROS DE RETORNO DE LOS SP */
@@ -192,7 +195,7 @@ public class Constante {
 	public static final String PARAM_LISTADO 			= "LISTADO";
 	
 	
-	/* PARAMETROS DE ENTRADA PARA LOS MÉTODOS DE LOS CONTROLLER */
+	/* PARAMETROS DE ENTRADA PARA LOS MÃ‰TODOS DE LOS CONTROLLER */
 	public static final String PARAM_ID_ARTICULO = "idArticulo";
 	public static final String PARAM_COD_CLIENTE = "codCliente";
 	public static final String PARAM_COD_MAESTRO_CONTROLLER = "codMaestro";
@@ -256,7 +259,7 @@ public class Constante {
 	public static final String PARAM_COD_DATA_CATALOGO = "codDataCatalogo";
 	public static final String PARAM_TIPO_CATALOGO = "tipoCatalogo";
 	
-	/* NÚMEROS PARA USO GENERAL */
+	/* NÃšMEROS PARA USO GENERAL */
 	public static final Integer CERO = 0;
 	public static final Integer UNO = 1;
 	public static final Integer DOS = 2;
@@ -269,7 +272,7 @@ public class Constante {
 	public static final String COD_ESTADO_GENERADO_GUIA_REMISION = "01";
 	public static final String COD_ESTADO_CANCELADO_GUIA_REMISION = "02";
 
-	public static final String ERROR_CONTROADO_NO_EXISTEN_FACTURAS = "Aún no existen facturas asociadas";
+	public static final String ERROR_CONTROADO_NO_EXISTEN_FACTURAS = "AÃºn no existen facturas asociadas";
 	
 
 }

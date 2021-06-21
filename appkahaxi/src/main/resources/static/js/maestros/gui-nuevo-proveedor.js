@@ -557,7 +557,7 @@ function inicializarEventos() {
 	});
 	
 	btnGrabar.on("click", function(e) {
-		console.log("btnGrabar:");	
+		console.log("btnGrabar:");
 		grabarSocioNegocio(e);
 	});
 	
@@ -818,62 +818,61 @@ function obtenerValoresMatriz(){
 		
 	for (i = 0; i < indiceContacto; i++) {
 		
-			indiceTel = obtenerCantidad('telefono', i);
-			indiceEma = obtenerCantidad('email', i);
+		indiceTel = obtenerCantidad('telefono', i);
+		indiceEma = obtenerCantidad('email', i);
 					
-			array[i] = {};
-			telefonoVal = '';
-			emailVal = '';
+		array[i] = {};
+		telefonoVal = '';
+		emailVal = '';
 			
-			if (document.getElementById("contacto_" + i)){
-				array[i]['nombreContacto'] = $('#contacto_' + i).val();			
-			}
+		if (document.getElementById("contacto_" + i)){
+			array[i]['nombreContacto'] = $('#contacto_' + i).val();			
+		}
 			
-			if (document.getElementById("id_contacto_" + i)){
-				array[i]['idContactoSN'] = $('#id_contacto_' + i).val();
-			}
+		if (document.getElementById("id_contacto_" + i)){
+			array[i]['idContactoSN'] = $('#id_contacto_' + i).val();
+		}
 			
-			if (document.getElementById("cargo_" + i)){
-				array[i]['cargoContacto'] = $('#cargo_' + i).val();
-			}
+		if (document.getElementById("cargo_" + i)){
+			array[i]['cargoContacto'] = $('#cargo_' + i).val();
+		}
 			
-			if (document.getElementById("emailfactura_" + i)){
-				array[i]['emailFactura'] = $('#emailfactura_' + i).val();
-			}
+		if (document.getElementById("emailfactura_" + i)){
+			array[i]['emailFactura'] = $('#emailfactura_' + i).val();
+		}
 			
-			if (document.getElementById("asignadoDef_" + i)){
-				if ($('#asignadoDef_' + i).is(':checked')){
+		if (document.getElementById("asignadoDef_" + i)){
+			if ($('#asignadoDef_' + i).is(':checked')){
 					array[i]['predeterminado'] = 1;
-				} 
-				else{
-					array[i]['predeterminado'] = 0;
-				}
+			} 
+			else{
+				array[i]['predeterminado'] = 0;
 			}
+		}
 			
-			if (document.getElementById("activo_" + i)){
-				array[i]['activo'] = $('#activo_' + i).val();
-			}
+		if (document.getElementById("activo_" + i)){
+			array[i]['activo'] = $('#activo_' + i).val();
+		}
 				
-			for (j = 0; j <= indiceTel; j++) {
+		for (j = 0; j <= indiceTel; j++) {
 				
-				if ( document.getElementById( "telContacto_" + i + "_" + j)) {
-					if ($('#telContacto_' + i + "_" + j).val() != ''){
+			if ( document.getElementById( "telContacto_" + i + "_" + j)) {
+				if ($('#telContacto_' + i + "_" + j).val() != ''){
 						telefonoVal = telefonoVal + $('#telContacto_' + i + "_" + j).val() + ";";
-					}
 				}
 			}
+		}
 			
-			array[i]['telefono'] = telefonoVal;
-			
-			for (j = 0; j <= indiceEma; j++) {
-				if ( document.getElementById( "emailContacto_" + i + "_" + j)) {
-					if ($('#emailContacto_' + i + "_" + j).val() != ''){
-						emailVal = emailVal + $('#emailContacto_' + i + "_" + j).val() + ";";
-					}
-				}
-			}		
-			array[i]['email'] = emailVal;	
+		array[i]['telefono'] = telefonoVal;
 		
+		for (j = 0; j <= indiceEma; j++) {
+			if ( document.getElementById( "emailContacto_" + i + "_" + j)) {
+				if ($('#emailContacto_' + i + "_" + j).val() != ''){
+					emailVal = emailVal + $('#emailContacto_' + i + "_" + j).val() + ";";
+				}
+			}
+		}		
+		array[i]['email'] = emailVal;	
 				
 	};
 	

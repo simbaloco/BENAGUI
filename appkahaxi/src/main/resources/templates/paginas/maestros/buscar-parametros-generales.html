@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  layout:decorate="~{fragments/layout}" lang="en">
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<script th:src="@{/js/maestros/gui-buscar-parametros-generales.js}" ></script>
+</head>
+
+<body>
+
+<div layout:fragment="content" th:remove="tag">
+		
+	<div class="kahaxi_titulo">
+
+		<div class="kahaxi_titulo_container">
+			<div class="kahaxi_titulo_logo"><i class="far fa-edit"></i></div>
+			<div class="kahaxi_titulo_text">MANTENIMIENTO DE PARÁMETROS GENERALES</div>
+		</div>
+
+		<div class="subrayado">
+		</div>
+
+		<br>
+	</div>
+
+	<div class="box bg-box" id="accordionParametrosGenerales">
+
+		<div class="box-body">
+
+			<div class="card">
+
+				<div class="card-header quitar-contornos" id="headingParametrosGenerales">
+					<h2 class="mb-0">
+						<button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseParametrosGenerales" aria-expanded="true" aria-controls="collapseParametrosGenerales">
+							<i class="fas fa-angle-up"></i><span>Actualizar valores</span><span class="font-weight-bold" id="codigo"></span>
+							<div class="subrayado"></div>
+						</button>
+					</h2>
+				</div>
+
+				<div id="collapseParametrosGenerales" class="collapse show" aria-labelledby="headingParametrosGenerales" data-parent="#accordionParametrosGenerales">
+
+					<div class="box-body">
+
+						<form id="formParametrosGenerales" class="needs-validation" novalidate>
+						 	
+							<div class="row">
+														
+								<div class="col-md-6" th:each="parametro : ${session.listaParametrosGenerales}">
+									<label class="label" th:text="${parametro.descParametro}"></label>
+									<input th:id= "label_ + ${parametro.codParametro}" th:value="${parametro.descParametro}" class="control" hidden="hidden">
+							        <input th:id="${parametro.codParametro}" class="form-control" type="text" th:value="${parametro.valor}" th:name="${parametro.tipoCampo}" required="required" ></input>
+							        <div th:id= "valida_ + ${parametro.codParametro}" class="invalid-feedback"></div>
+							   	</div>
+								
+							</div>
+							
+						</form>
+
+					</div>
+
+				</div>
+				
+				<div class="card-body">				
+					
+					<div class="row">
+
+						<div class="col-md-6">
+						</div>
+
+						<div class="col-md-6 alineacion-derecha">
+							<div>															
+								<button type="button" id="btnGrabar" class="btn btn-primary my-1">
+									<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
+								</button>	
+								
+								<button type="button" id="btnCerrar" class="btn btn-primary">
+				                	<span class="mr-2"><i class="fas fa-backspace"></i></span>Cerrar
+							    </button>															
+							</div>
+						</div>
+
+					</div>
+					
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+</div>
+
+</body>
+</html>

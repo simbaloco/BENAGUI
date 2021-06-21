@@ -102,6 +102,15 @@
         <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
     </parameterMap>
     
+    <parameterMap id="actualizarParametrosGeneralesParams" type="hashmap">
+        <parameter property="DATA_JSON"          	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="USUARIO_REGISTRA"      jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    
+    
     <select id="cargarCombo" parameterMap="comboParams" resultMap="combo" statementType="CALLABLE">
       {CALL SP_CARGAR_COMBO_MAESTRO(?,?,?) }
     </select>
@@ -142,5 +151,9 @@
     <select id="cargarComboListaPrecio" parameterMap="comboListaPrecioParams" resultMap="combo" statementType="CALLABLE">
       {CALL SP_CARGAR_COMBO_LISTA_PRECIOS(?,?) }
     </select>
+    
+    <insert id="actualizarParametrosGenerales" parameterMap="actualizarParametrosGeneralesParams" statementType="CALLABLE">
+    	{CALL SP_ACTUALIZAR_PARAMETROS_GENERALES(?,?,?,?) }
+    </insert>
     
 </mapper>
