@@ -26,4 +26,6 @@ public interface GenericService {
 	public BigDecimal buscarTc(Integer dia, Integer mes, Integer anio) throws Exception;
 	public void registrarTc(TipoCambioModel registro, String usuario) throws Exception;
 	public void actualizarParametrosGenerales(GenericModel registro, String usuario) throws Exception;
+	public List<MenuModel> cargarOpcionesMenu(int idPerfil) throws Exception;
+	public List<ComboModel> cargarComboListaPerfil() throws Exception;
 }

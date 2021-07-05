@@ -14,8 +14,10 @@ public class UsuarioModel {
 	private String apePaterno;
 	private String apeMaterno;
 	private Integer activo;
+	private String perfiles;
     private String codigoUsuarioRegistra;
-    private Date fechaRegistro;
+    private String fechaRegistro;
     private String codigoUsuarioModifica;
-    private Date fechaModiifcacion;
+    private Date fechaModificacion;
+    private Integer opcion;
 }

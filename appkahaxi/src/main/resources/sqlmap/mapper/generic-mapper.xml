@@ -18,6 +18,9 @@
         <result property="descripcion" 		column="V_DESCRIPCION" />
         <result property="icono"	 		column="V_ICONO" />
         <result property="activo" 			column="N_ACTIVO" />
+        <result property="have_children"	column="B_HAVE_CHILDREN" />
+        <result property="check"			column="N_CHECK" />
+        <result property="nivelMaximo" 		column="N_NIVEL_MAXIMO" />        
     </resultMap>
     
     <resultMap id="parametros" type="ParametrosGeneralesModel">    
@@ -109,6 +112,16 @@
         <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
     </parameterMap>
     
+    <parameterMap id="cargarOpcionesMenuParams" type="hashmap">
+        <parameter property="ID_PERFIL"        		jdbcType="INTEGER"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="comboListaPerfilParams" type="hashmap">
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
     
     
     <select id="cargarCombo" parameterMap="comboParams" resultMap="combo" statementType="CALLABLE">
@@ -155,5 +168,13 @@
     <insert id="actualizarParametrosGenerales" parameterMap="actualizarParametrosGeneralesParams" statementType="CALLABLE">
     	{CALL SP_ACTUALIZAR_PARAMETROS_GENERALES(?,?,?,?) }
     </insert>
+    
+    <select id="cargarOpcionesMenu" parameterMap="cargarOpcionesMenuParams" resultMap="menu" statementType="CALLABLE">
+      {CALL SP_CARGAR_OPCIONES_MENU(?,?,?) }
+    </select>
+    
+    <select id="cargarComboListaPerfil" parameterMap="comboListaPerfilParams" resultMap="combo" statementType="CALLABLE">
+      {CALL SP_CARGAR_COMBO_LISTA_PERFIL(?,?) }
+    </select>
     
 </mapper>

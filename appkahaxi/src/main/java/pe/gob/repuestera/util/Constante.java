@@ -44,12 +44,13 @@ public class Constante {
 	public static final String PAGINA_MANTENIMIENTO_ORDEN_COMPRA = "paginas/compras/mantenimiento-orden-compra";
 	/* MAESTROS */
 	public static final String PAGINA_BUSCAR_ARTICULOS = "paginas/maestros/buscar-articulos";
-	public static final String PAGINA_BUSCAR_USUARIOS = "paginas/maestros/buscar-usuarios";
+	public static final String PAGINA_MANTENIMIENTO_USUARIOS = "paginas/maestros/mantenimiento-usuario";
 	public static final String PAGINA_BUSCAR_CLIENTE = "paginas/maestros/mantenimiento-socio-negocio";
 	public static final String PAGINA_NUEVO_CLIENTE = "paginas/maestros/nuevo-socio-negocio";
 	public static final String PAGINA_BUSCAR_PROVEEDOR = "paginas/maestros/mantenimiento-proveedor";
 	public static final String PAGINA_NUEVO_PROVEEDOR = "paginas/maestros/nuevo-proveedor";
 	public static final String PAGINA_PARAMETROS_GENERALES = "paginas/maestros/buscar-parametros-generales";
+	public static final String PAGINA_MANTENIMIENTO_PERFILES = "paginas/maestros/mantenimiento-perfil";
 	/* CATALOGOS */
 	public static final String PAGINA_BUSCAR_IGV = "paginas/maestros/buscar-igv";
 	public static final String PAGINA_MANTENIMIENTO_DATA_CATALOGO = "paginas/maestros/mantenimiento-data-catalogo";
@@ -187,7 +188,12 @@ public class Constante {
 	public static final String PARAM_SP_COD_MONEDA			= "COD_MONEDA";	
 	public static final String PARAM_SP_COD_PARAMETRO		= "COD_PARAMETRO";	
 	public static final String PARAM_SP_VALOR				= "VALOR";	
-	
+	public static final String PARAM_SP_ID_PERFIL			= "ID_PERFIL";
+	public static final String PARAM_SP_IDENTIFICADOR		= "IDENTIFICADOR";
+	public static final String PARAM_SP_MENU				= "MENU";
+	public static final String PARAM_SP_PASSWORD 			= "PASSWORD";
+	public static final String PARAM_SP_PERFILES			= "PERFILES";
+	public static final String PARAM_SP_OPCION 				= "OPCION";
 		
 	/* PARAMETROS DE RETORNO DE LOS SP */
 	public static final String PARAM_FLAG_RESULTADO 	= "FLAG_RESULTADO";
@@ -209,6 +215,8 @@ public class Constante {
 	public static final String PARAM_COD_UND_MEDIDA = "codUndMedida";
 	public static final String PARAM_COD_DEPARTAMENTO_CONTROLLER = "codDepartamento";
 	public static final String PARAM_COD_PROVINCIA_CONTROLLER = "codProvincia";
+	public static final String PARAM_ID_PERFIL = "idPerfil";
+	public static final String PARAM_USERNAME = "username";
 	
 	/*public static final String PARAM_COD_MARCA_VEHICULO = "codMarcaVehiculo";
 	public static final String PARAM_COD_MODELO = "codModelo";

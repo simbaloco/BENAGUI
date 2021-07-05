@@ -30,4 +30,6 @@ public interface GenericMapper {
 	public BigDecimal buscarTc(Map params);
 	public void registrarTc(Map params);
 	public void actualizarParametrosGenerales(Map params);
+	public List<MenuModel> cargarOpcionesMenu(Map params);
+	public List<ComboModel> cargarComboListaPerfil(Map params) throws Exception;
 }

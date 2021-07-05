@@ -40,11 +40,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	            .antMatchers("/", "/index", "/login").permitAll()
 	            /*****************************************************************************/
 	            //.antMatchers("/principal*").access("hasRole('USER') or hasRole('ADMIN')")
-	            .antMatchers("/principal*").hasAnyRole("ADMIN","USER")
+	           // .antMatchers("/principal*").hasAnyRole("ADMIN","USER")
 	            //.antMatchers("/articulos").access("hasRole('ADMIN')")
-	            .antMatchers("/articulos").hasRole("ADMIN")	            
-		        .antMatchers("/compras").hasAnyRole("ADMIN","USER")
-		        .antMatchers("/ventas").hasAnyRole("ADMIN","USER")
+	            //.antMatchers("/articulos").hasRole("ADMIN")	 
+		        //.antMatchers("/compras").hasAnyRole("ADMIN","USER")
+	            //.antMatchers("/articulos").hasRole("USER")
+		       // .antMatchers("/ventas").hasAnyRole("ADMIN","USER")
 		        /****************************************************************************/
 	    	    .anyRequest()
 	    	    .authenticated()

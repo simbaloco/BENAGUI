@@ -61,7 +61,7 @@
         <result property="fechaRegistro" 			column="FEC_REGISTRO" />
         <result property="codigoUsuarioModifica" 	column="COD_USU_MODIFICA" />
         <result property="fechaModificacion" 		column="FEC_MODIFICACION" />
-	</resultMap>	
+	</resultMap>
     
     
     <!-- ********************* PARAMETERMAPS ********************* -->

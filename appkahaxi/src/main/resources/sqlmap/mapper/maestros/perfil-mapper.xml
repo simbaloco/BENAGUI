@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pe.gob.repuestera.repository.maestros.PerfilMapper">
+    
+    <!-- *************** RESULTMAPS ******************* -->
+    <resultMap id="perfil" type="PerfilModel">
+        <result property="idPerfil"					column="ID_PERFIL" />
+        <result property="identificador" 			column="AUTHORITY" />
+        <result property="activo" 					column="ACTIVO" />
+        <result property="codigoUsuarioRegistra" 	column="COD_USU_REGISTRA" />
+        <result property="fechaRegistro" 			column="FEC_REGISTRO" />
+        <result property="codigoUsuarioModifica" 	column="COD_USU_MODIFICA" />
+        <result property="fechaModificacion" 		column="FEC_MODIFICACION" />
+        <result property="check" 					column="CHECK" />
+    </resultMap>
+    
+    <resultMap id="perfilOpciones" type="PerfilOpcionesModel">
+        <result property="id"						column="ID" />
+        <result property="idPerfil" 				column="ID_PERFIL" />
+        <result property="idMenu" 					column="ID_MENU" />        
+        <result property="activo" 					column="ACTIVO" />
+        <result property="codigoUsuarioRegistra" 	column="COD_USU_REGISTRA" />
+        <result property="fechaRegistro" 			column="FEC_REGISTRO" />
+        <result property="codigoUsuarioModifica" 	column="COD_USU_MODIFICA" />
+        <result property="fechaModificacion" 		column="FEC_MODIFICACION" /> 
+    </resultMap>
+    
+    <!-- ********************* PARAMETERMAPS ********************* -->
+    <parameterMap id="listarPerfilesParams" type="hashmap">
+    	<parameter property="DATO_BUSCAR"        	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="registrarPerfilParams" type="hashmap">
+    	<parameter property="ID_PERFIL"				jdbcType="INTEGER"  mode="IN"/>     
+        <parameter property="IDENTIFICADOR"			jdbcType="VARCHAR"  mode="IN"/>     
+        <parameter property="ACTIVO"          		jdbcType="INTEGER" 	mode="IN"/>
+        <parameter property="MENU"		          	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="USUARIO_REGISTRA"		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="buscarPerfilParams" type="hashmap">
+        <parameter property="ID_PERFIL"        		jdbcType="INTEGER"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap> 
+    
+    <parameterMap id="cargarPerfilUsuarioParams" type="hashmap">
+        <parameter property="USERNAME"        		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap> 
+    
+    
+    <!-- ************************* QUERYS ******************************* -->
+    <select id="listarPerfiles" parameterMap="listarPerfilesParams" resultMap="perfil" statementType="CALLABLE">
+    	{CALL SP_LISTAR_PERFIL(?,?,?) }
+    </select>
+    
+    <insert id="registrarPerfil" parameterMap="registrarPerfilParams" statementType="CALLABLE">
+    	{CALL SP_REGISTRAR_PERFIL(?,?,?,?,?,?,?) }
+    </insert> 
+    
+    <select id="buscarPerfil" parameterMap="buscarPerfilParams" resultMap="perfil" statementType="CALLABLE">
+    	{CALL SP_BUSCAR_PERFIL(?,?,?) }
+    </select> 
+   	
+   	<select id="cargarPerfilUsuario" parameterMap="cargarPerfilUsuarioParams" resultMap="perfil" statementType="CALLABLE">
+    	{CALL SP_CARGAR_PERFILES_USUARIO(?,?,?) }
+    </select> 
+    
+</mapper>

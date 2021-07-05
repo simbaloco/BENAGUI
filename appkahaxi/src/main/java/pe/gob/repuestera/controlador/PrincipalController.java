@@ -453,12 +453,31 @@ public class PrincipalController {
     }
 	
 	@GetMapping("/usuarios")
-    public String cargarBuscarUsuarios(Model model) {
+    public String cargarMantenimientoUsuarios(Model model) {
 		String retorno;
 		try {
-			logger.info("entrando al método cargarBuscarUsuarios");
-			retorno = Constante.PAGINA_BUSCAR_USUARIOS;
-			logger.info("saliendo del método cargarBuscarUsuarios");
+			logger.info("entrando al método cargarMantenimientoUsuarios");
+			
+			List<ComboModel> listaPerfil = genericService.cargarComboListaPerfil();
+			model.addAttribute("listaPerfil", listaPerfil);
+			
+			retorno = Constante.PAGINA_MANTENIMIENTO_USUARIOS;
+			logger.info("saliendo del método cargarMantenimientoUsuarios");
+		}catch (Exception e) {
+			// TODO: handle exception
+			retorno = Constante.PAGINA_ERROR;
+			model.addAttribute("mensajeError", e.toString());
+		}
+		return retorno;
+    }
+	
+	@GetMapping("/perfiles")
+    public String cargarMantenimientoPerfiles(Model model) {
+		String retorno;
+		try {
+			logger.info("entrando al método cargarMantenimientoPerfiles");
+			retorno = Constante.PAGINA_MANTENIMIENTO_PERFILES;
+			logger.info("saliendo del método cargarMantenimientoPerfiles");
 		}catch (Exception e) {
 			// TODO: handle exception
 			retorno = Constante.PAGINA_ERROR;

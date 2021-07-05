@@ -123,5 +123,15 @@ public class PrincipalRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     
+    @GetMapping ("/buscarOpciones/{idPerfil}")
+    public ResponseEntity<List<MenuModel>> cargarOpcionesMenu(@PathVariable(Constante.PARAM_ID_PERFIL) int idPerfil) throws Exception {
+        logger.info("entrando cargarOpcionesMenu.......");
+    	List<MenuModel> listadoMenu = genericService.cargarOpcionesMenu(idPerfil);
+    	
+        logger.info("fin cargarOpcionesMenu.......");
+    	
+        return new ResponseEntity<List<MenuModel>>(listadoMenu, HttpStatus.OK);      
+    }
+    
     
 }

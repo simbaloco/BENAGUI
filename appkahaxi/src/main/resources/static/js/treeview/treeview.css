@@ -1,0 +1,29 @@
+* { margin: 0; padding: 0; }
+
+#page-wrap {
+    margin: auto 0;
+}
+
+.treeview {
+    margin: 10px 0 0 20px;
+}
+
+ul {
+    list-style: none;
+}
+
+.treeview li {
+    /*background: url(http://jquery.bassistance.de/treeview/images/treeview-default-line.gif) 0 0 no-repeat;*/
+    padding: 2px 0 2px 16px;
+}
+
+.treeview > li:first-child > label {
+    /* style for the root element - IE8 supports :first-child
+    but not :last-child ..... */
+
+}
+
+.treeview li.last {
+    background-position: 0 -1766px;
+}
+

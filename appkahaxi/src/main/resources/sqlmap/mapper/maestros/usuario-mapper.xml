@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pe.gob.repuestera.repository.maestros.UsuarioMapper">
+    
+    <!-- *************** RESULTMAPS ******************* -->
+    <resultMap id="usuario" type="UsuarioModel">
+        <result property="username"					column="V_USERNAME" />
+        <result property="password" 				column="V_PASSWORD" />
+        <result property="nombres"					column="V_NOMBRES" />
+        <result property="apePaterno" 				column="V_APE_PATERNO" />
+        <result property="apeMaterno"				column="V_APE_MATERNO" />        
+        <result property="activo" 					column="N_ACTIVO" />
+        <result property="codigoUsuarioRegistra" 	column="COD_USU_REGISTRA" />
+        <result property="fechaRegistro" 			column="FEC_REGISTRO" />
+        <result property="codigoUsuarioModifica" 	column="COD_USU_MODIFICA" />
+        <result property="fechaModificacion" 		column="FEC_MODIFICACION" />
+    </resultMap>
+    
+    <!-- ********************* PARAMETERMAPS ********************* -->
+    <parameterMap id="listarUsuariosParams" type="hashmap">
+    	<parameter property="DATO_BUSCAR"        	jdbcType="VARCHAR"  mode="IN"/>
+    	<parameter property="ID_PERFIL"	        	jdbcType="INTEGER"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="registrarUsuarioParams" type="hashmap">
+    	<parameter property="OPCION"				jdbcType="INTEGER"  mode="IN"/>
+    	<parameter property="USERNAME"				jdbcType="VARCHAR"  mode="IN"/>     
+        <parameter property="PASSWORD"				jdbcType="VARCHAR"  mode="IN"/> 
+        <parameter property="NOMBRES"				jdbcType="VARCHAR"  mode="IN"/>     
+        <parameter property="APELLIDO_PATERNO"		jdbcType="VARCHAR"  mode="IN"/> 
+        <parameter property="APELLIDO_MATERNO"		jdbcType="VARCHAR"  mode="IN"/>    
+        <parameter property="ACTIVO"          		jdbcType="INTEGER" 	mode="IN"/>
+        <parameter property="PERFILES"	          	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="USUARIO_REGISTRA"		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="buscarUsuarioParams" type="hashmap">
+        <parameter property="USERNAME"        		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    
+    <!-- ************************* QUERYS ******************************* -->
+    <select id="listarUsuarios" parameterMap="listarUsuariosParams" resultMap="usuario" statementType="CALLABLE">
+    	{CALL SP_LISTAR_USUARIO(?,?,?,?) }
+    </select>
+    
+    <insert id="registrarUsuario" parameterMap="registrarUsuarioParams" statementType="CALLABLE">
+    	{CALL SP_REGISTRAR_USUARIO(?,?,?,?,?,?,?,?,?,?,?) }
+    </insert> 
+    
+    <select id="buscarUsuario" parameterMap="buscarUsuarioParams" resultMap="usuario" statementType="CALLABLE">
+    	{CALL SP_BUSCAR_USUARIO(?,?,?) }
+    </select>
+   	
+   	
+    
+</mapper>

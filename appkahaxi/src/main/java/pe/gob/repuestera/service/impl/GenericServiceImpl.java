@@ -376,5 +376,63 @@ public class GenericServiceImpl implements GenericService{
 		}
 		
 	}
+
+	@Override
+	public List<MenuModel> cargarOpcionesMenu(int idPerfil) throws Exception {
+		
+		logger.info("entrando cargarOpcionesMenu.......");
+    	List<MenuModel> listadoMenu = null;
+         
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_ID_PERFIL, idPerfil);
+        
+        listadoMenu = genericMapper.cargarOpcionesMenu(params);
+        
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        logger.info("cargarOpcionesMenu.......FLAG_RESULTADO------>" + flagResultado);
+		logger.info("cargarOpcionesMenu.......MENSAJE_RESULTADO--->" + mensajeResultado);
+        
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+			logger.info("cargarOpcionesMenu ===> " + listadoMenu.toString());
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+		} else {
+			throw new Exception(mensajeResultado);
+		}
+		return listadoMenu;
+		
+	}
+	
+	@Override
+	public List<ComboModel> cargarComboListaPerfil() throws Exception {
+		
+		logger.info("entrando cargarComboListaPerfil.......");
+		Map<String, Object> params = new HashMap();
+		List<ComboModel> comboList;
+		
+        // obteniendo la lista
+		comboList = genericMapper.cargarComboListaPerfil(params);
+		
+        // evaluando el retorno
+		String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        logger.info("cargarComboListaPerfil.......FLAG_RESULTADO------>" + flagResultado);
+ 		logger.info("cargarComboListaPerfil.......MENSAJE_RESULTADO--->" + mensajeResultado);
+ 		
+ 		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+ 			logger.info("cargarComboListaPerfil ----> success!!!");
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+ 		
+ 		return comboList;
+		
+	}
 	
 }
