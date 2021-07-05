@@ -1,5 +1,7 @@
 package pe.gob.repuestera.model;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -13,4 +15,5 @@ public class ParametrosGeneralesModel {
 	private String userRegistra;
 	private String userModifica;
 	private String fechaRegistro;
+	
 }

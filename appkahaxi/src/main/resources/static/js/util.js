@@ -213,6 +213,11 @@ var ParametrosGenerales = {
 		RANGO_DIAS_FECHA_VALIDEZ			: ""
 }
 
+var TipoCampo = {
+		ENTERO		: "E",
+		ALFANUMERICO: "A"
+};
+
 function is_chrome(){
 	return navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
 }

@@ -13,12 +13,14 @@ import org.springframework.stereotype.Service;
 
 import pe.gob.repuestera.exception.ErrorControladoException;
 import pe.gob.repuestera.model.ComboModel;
+import pe.gob.repuestera.model.GenericModel;
 import pe.gob.repuestera.model.MenuModel;
 import pe.gob.repuestera.model.ParametrosGeneralesModel;
 import pe.gob.repuestera.model.TipoCambioModel;
 import pe.gob.repuestera.repository.GenericMapper;
 import pe.gob.repuestera.service.GenericService;
 import pe.gob.repuestera.util.Constante;
+import pe.gob.repuestera.util.JsonUtils;
 
 @Service
 public class GenericServiceImpl implements GenericService{
@@ -27,7 +29,8 @@ public class GenericServiceImpl implements GenericService{
 	
 	@Autowired
 	private GenericMapper genericMapper;
-	
+	@Autowired
+	private JsonUtils jsonUtils;
 
 	@Override
 	public List<ComboModel> cargarCombo(String codMaestro) throws Exception {
@@ -188,12 +191,7 @@ public class GenericServiceImpl implements GenericService{
 	@Override
 	public void registrarTc(TipoCambioModel registro, String usuario) throws Exception{
 		logger.info("entrando registrarTc.......");
-        // preparando para insertar en la CABECERA
-    	logger.info("usuario--->" + usuario);
-        logger.info("dia--->" + registro.getDia());
-        logger.info("mes--->" + registro.getMes());
-        logger.info("anio--->" + registro.getAnio());
-        logger.info("tc--->" + registro.getTc());
+        
         // seteando parámetros
         Map<String, Object> params = new HashMap();
         params.put(Constante.PARAM_SP_USUARIO_REGISTRA, usuario);
@@ -201,10 +199,10 @@ public class GenericServiceImpl implements GenericService{
         params.put(Constante.PARAM_SP_MES, registro.getMes());
         params.put(Constante.PARAM_SP_ANIO, registro.getAnio());
         params.put(Constante.PARAM_SP_TIPO_CAMBIO, registro.getTc());
+        
         // REGISTRANDO COTIZACION DE VENTA
         genericMapper.registrarTc(params);
-        // evaluando el retorno
-        logger.info("registrarTc........obteniendo el retorno");		
+        		
         String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
         String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
         logger.info("registrarTc.......FLAG_RESULTADO------>" + flagResultado);
@@ -348,4 +346,35 @@ public class GenericServiceImpl implements GenericService{
  		return comboList;
 		
 	}
+
+	@Override
+	public void actualizarParametrosGenerales(GenericModel registro, String usuario) throws Exception {
+		
+		logger.info("entrando actualizarParametrosGenerales......." + registro.getLista());
+		
+		String dataJSON = jsonUtils.obtenerJson(registro.getLista());
+		
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_USUARIO_REGISTRA, usuario);
+        params.put(Constante.PARAM_SP_DATA_JSON, dataJSON);
+        
+        genericMapper.actualizarParametrosGenerales(params);
+        		
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        logger.info("actualizarParametrosGenerales.......FLAG_RESULTADO------>" + flagResultado);
+		logger.info("actualizarParametrosGenerales.......MENSAJE_RESULTADO--->" + mensajeResultado);
+		
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+ 			logger.info("actualizarParametrosGenerales ----> success!!!");
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+		}
+		
+	}
+	
 }

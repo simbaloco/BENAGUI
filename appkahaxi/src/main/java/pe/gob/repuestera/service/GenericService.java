@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.security.core.Authentication;
 
 import pe.gob.repuestera.model.ComboModel;
+import pe.gob.repuestera.model.GenericModel;
 import pe.gob.repuestera.model.MenuModel;
 import pe.gob.repuestera.model.ParametrosGeneralesModel;
 import pe.gob.repuestera.model.TipoCambioModel;
@@ -24,4 +25,5 @@ public interface GenericService {
 	public String generarCodigo(String prefijo) throws Exception;
 	public BigDecimal buscarTc(Integer dia, Integer mes, Integer anio) throws Exception;
 	public void registrarTc(TipoCambioModel registro, String usuario) throws Exception;
+	public void actualizarParametrosGenerales(GenericModel registro, String usuario) throws Exception;
 }

@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import pe.gob.repuestera.model.ComboModel;
+import pe.gob.repuestera.model.GenericModel;
 import pe.gob.repuestera.model.MenuModel;
+import pe.gob.repuestera.model.ParametrosGeneralesModel;
 import pe.gob.repuestera.model.TipoCambioModel;
 import pe.gob.repuestera.model.UsuarioModel;
 import pe.gob.repuestera.service.GenericService;
@@ -106,6 +108,19 @@ public class PrincipalRestController {
         
         return new ResponseEntity<>(comboList, HttpStatus.OK);
         
+    }
+    
+    @PostMapping ("/actualizarParametrosGenerales")
+    public ResponseEntity<String> actualizarParametrosGenerales(@RequestPart("registro") GenericModel registro) throws Exception {
+        
+    	logger.info("entrando actualizarParametrosGenerales......." + registro);
+        
+        String usuario = ((UsuarioModel)session.getAttribute("usuarioLogueado")).getUsername();
+        genericService.actualizarParametrosGenerales(registro, usuario);
+        
+        logger.info("fin actualizarParametrosGenerales");
+        
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     
     

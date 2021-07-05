@@ -29,4 +29,5 @@ public interface GenericMapper {
 	public String generarCodigo(@Param("codigo") String codigo);
 	public BigDecimal buscarTc(Map params);
 	public void registrarTc(Map params);
+	public void actualizarParametrosGenerales(Map params);
 }

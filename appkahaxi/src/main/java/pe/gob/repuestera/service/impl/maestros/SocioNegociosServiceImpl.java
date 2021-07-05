@@ -13,6 +13,7 @@ import pe.gob.repuestera.controlador.rest.maestros.ArticuloRestController;
 import pe.gob.repuestera.exception.ErrorControladoException;
 import pe.gob.repuestera.model.CompraCabModel;
 import pe.gob.repuestera.model.CompraDetModel;
+import pe.gob.repuestera.model.ParametrosGeneralesModel;
 import pe.gob.repuestera.model.SocioNegociosContactoModel;
 import pe.gob.repuestera.model.SocioNegociosModel;
 import pe.gob.repuestera.repository.maestros.SocioNegociosMapper;
@@ -99,6 +100,8 @@ public class SocioNegociosServiceImpl implements SocioNegociosService{
 		logger.info("SocioNegocioCabModel ===> " + socioNegocioModel.toString());
 		logger.info("usuario ===> " + usuario);
 
+		List<ParametrosGeneralesModel> lista;
+		
 		String dataJSON = jsonUtils.obtenerJson(socioNegocioModel.getDetalle());
 		
 		logger.info("List<ContactoSNModel> ===> " + dataJSON);
