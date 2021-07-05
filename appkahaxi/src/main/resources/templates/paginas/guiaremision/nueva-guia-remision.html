@@ -187,7 +187,7 @@
 
 			<div class="card">
 
-				<div class="card-header" id="headingCabeceraGuiaRemision">
+				<div class="card-header quitar-contornos" id="headingCabeceraGuiaRemision">
 					<h2 class="mb-0">
 						<button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseCabeceraGuiaRemision" aria-expanded="true" aria-controls="collapseCabeceraGuiaRemision">
 							<i class="fas fa-angle-up"></i><span>Entrada de Mercadería (Guía de Remisión) </span><span class="font-weight-bold" id="codigo"></span>
@@ -389,16 +389,9 @@
 
 			<div class="card">
 
-				<div class="card-header" id="headingDetalleGuiaRemision">
-					<button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseDetalleGuiaRemision" aria-expanded="true" aria-controls="collapseDetalleGuiaRemision">
-						<i class="fas fa-angle-up"></i><span>Detalle de la Guía de Remisión</span>
-						<div class="subrayado"></div>
-					</button>
-				</div>
-
 				<div id="collapseDetalleGuiaRemision" class="collapse show" aria-labelledby="headingDetalleGuiaRemision" data-parent="#accordionDetalleGuiaRemision">
 
-					<div class="card-body">
+					<div class="card-body quitar-contornos-tabla">
 
 						<div class="row">
 
@@ -475,29 +468,29 @@
 						<div class="col-md-2">
 
 							<div>
-								<label class="label" for="subTotalOC">SubTotal</label>
+								<label class="label" for="subtotalGR">SubTotal</label>
 							</div>
 							<div>
 								<span class="simbolo-moneda input-symbol-dolar">
-									<input class="form-control alineacion-derecha" maxlength="10" type="text" id="subTotalOC" readonly="readonly"/>
+									<input class="form-control alineacion-derecha" maxlength="10" type="text" id="subtotalGR" readonly="readonly"/>
 								</span>
 							</div>
 
 							<div>
-								<label class="label" for="igv">IGV</label>
+								<label class="label" for="igvGR">IGV</label>
 							</div>
 							<div>
 								<span class="simbolo-moneda input-symbol-dolar">
-				            			<input class="alineacion-derecha form-control" maxlength="10" type="text" id="igv" readonly="readonly"/>
+				            			<input class="alineacion-derecha form-control" maxlength="10" type="text" id="igvGR" readonly="readonly"/>
 								</span>
 							</div>
 
 							<div>
-								<label class="label" for="total">Total</label>
+								<label class="label" for="totalGR">Total</label>
 							</div>
 							<div>
 								<span class="simbolo-moneda input-symbol-dolar">
-									<input class="form-control alineacion-derecha" maxlength="10" type="text" id="total" readonly="readonly"/>
+									<input class="form-control alineacion-derecha" maxlength="10" type="text" id="totalGR" readonly="readonly"/>
 								</span>
 							</div>
 

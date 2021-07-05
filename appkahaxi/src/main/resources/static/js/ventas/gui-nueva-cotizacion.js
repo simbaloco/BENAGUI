@@ -1077,21 +1077,13 @@ function validar(){
 	var cantidad;
 	var precio;
 		
-	// verificando que se haya buscado un cliente
-	if(documentoCliente.val() == CADENA_VACIA){
-		mostrarMensajeValidacion("Debe buscar un cliente", campoBuscar);
-		return false;
-	}
-	
 	// verificando que se hayan ingresado por lo menos un item al detalle de la cotizacion
-	console.log("****indiceFilaDataTableDetalle--->" + indiceFilaDataTableDetalle + "<----");
 	var contadorVacios = 0;
 	// recorriendo todos los detalles
 	for(i=0; i<(indiceFilaDataTableDetalle+1);i++){
 		codigo = $('#codigo_' + i).val();
 		descripcion = $('#descripcion_' + i).val();
-		console.log("codigo-->" + codigo);
-		console.log("descripcion-->" + descripcion);
+		
 		// contar la cantidad de filas sin código de artículo
 		if(codigo == CADENA_VACIA && descripcion == CADENA_VACIA){
 			contadorVacios++;	
@@ -1115,9 +1107,16 @@ function validar(){
 			if(cantidad == CADENA_VACIA){
 				mostrarMensajeValidacion('Debe ingresar la cantidad.', null, '#cantidad_' + i);
 				return false;
+			}else if(convertirMonedaANumero(cantidad) == 0){
+				mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $('#cantidad_' + i));
+				return false;
 			}
+			
 			if(precio == CADENA_VACIA){
 				mostrarMensajeValidacion('Debe ingresar el precio.', null, '#precio_' + i);
+				return false;
+			}else if(convertirMonedaANumero(precio) == 0){
+				mostrarDialogoInformacion('Debe ingresar un precio mayor a cero.', Boton.WARNING, $('#precio_' + i));
 				return false;
 			}
 		}

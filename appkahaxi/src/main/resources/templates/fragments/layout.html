@@ -16,7 +16,7 @@
 		<li th:text="${parametro.codParametro + '/' + parametro.descParametro + '/' + parametro.valor + '/' + parametro.tipoCampo}"></li>
 	</ul>
         
-    <th:block th:replace="fragments/header :: header"/>
+    <th:block th:replace="fragments/header :: header" />
     <th:block th:replace="fragments/menu :: menu"/>
     <div class="container-fluid">
         <th:block layout:fragment="content" />

@@ -34,9 +34,9 @@ var tableDetalle;
 var tableNuevoDetalle;
 
 var observaciones;
-var subTotalOC;
-var igv;
-var total;
+var subtotalGR;
+var igvGR;
+var totalGR;
 
 var btnGrabar;
 
@@ -103,9 +103,9 @@ function inicializarVariables() {
 	tableNuevoDetalle = $("#tableNuevoDetalle");
 
 	observaciones = $("#observaciones");
-	subTotalOC = $("#subTotalOC");
-	igv = $("#igv");
-	total = $("#total");
+	subtotalGR = $("#subtotalGR");
+	igvGR = $("#igvGR");
+	totalGR = $("#totalGR");
 
 	btnGrabar = $("#btnGrabar");
 
@@ -126,14 +126,177 @@ function inicializarVariables() {
 function inicializarComponentes() {
 
 	habilitarAnimacionAcordion();
+	habilitarMarquee();
 	construirFechasPicker();
 	restringirSeleccionFechas();
-
-	obtenerIGV();
-	inicializarTablaDetalle(false);
 	habilitarAutocompletarBuscarCampos();
 	inicializarEventos();
 }
+
+function inicializarPantalla() {
+	inicializarTablaDetalle(false);
+	
+	if(opcion.text() == Opcion.NUEVO) {
+
+		cargarPantallaConDatosOrdenCompra();
+		inicializarFechaContabilidad();
+		//obtenerTipoCambio();
+	}else if(opcion.text() == Opcion.VER) {
+		cargarPantallaConDatosGuiaRemision();
+	}
+
+}
+
+function habilitarAnimacionAcordion() {
+	$(".collapse").on('show.bs.collapse', function(){
+    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-up');
+    }).on('hide.bs.collapse', function(){
+    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-down');
+    });
+}
+
+function habilitarMarquee(){
+	var timeout_ = null;
+	$(".marquee").on("mouseover", function() {
+		var interval_val = 2;    
+		var this_ = this;
+    	timeout_ = setInterval(function() {
+      		$(this_).scrollLeft(interval_val);
+      		interval_val++;
+    		}, 25);
+  	});
+
+  	$(".marquee").on("mouseout", function() {
+    	clearInterval(timeout_);
+    	$(this).scrollLeft(0);
+  	});	
+}
+
+function construirFechasPicker() {
+
+	fecConta.datetimepicker({
+		locale: 		'es',
+		format: 		'L',
+		ignoreReadonly:  true
+	});
+
+	fecDocumento.datetimepicker({
+		locale: 		'es',
+		format: 		'L',
+		ignoreReadonly:  true
+	});
+
+	fecEntrega.datetimepicker({
+		locale: 		'es',
+		format: 		'L',
+		ignoreReadonly:  true
+	});
+}
+
+function restringirSeleccionFechas() {
+
+	fecConta.datetimepicker('maxDate', new Date());
+
+	fecDocumento.on("change.datetimepicker", function (e) {
+		fecEntrega.datetimepicker('minDate', e.date);
+	});
+
+	fecConta.on("change.datetimepicker", function (e) {
+		fecDocumento.datetimepicker('maxDate', e.date);
+		fecEntrega.datetimepicker('maxDate', e.date);
+	});
+}
+
+
+
+function habilitarAutocompletarBuscarCampos() {
+
+	OCReferencia.autocomplete({
+
+		source: function( request, response ) {
+
+			$.ajax({
+				type:"Get",
+				contentType : "application/json",
+				accept: 'text/plain',
+				url : '/appkahaxi/buscarSnLike/' + TipoSocioNegocios.PROVEEDOR + '/' + request.term,
+				data : null,
+				dataType: 'json',
+				beforeSend: function(xhr) {
+					loadding(true);
+				},
+				success:function(resultado){
+
+					response($.map(resultado,function(item) {
+						var AC = new Object();
+						AC.label = item.numeroDocumento + ' - ' + item.nombreRazonSocial;
+						AC.value = request.term;
+						AC.codigoSocio 			= item.codigoSocio;
+						AC.numeroDocumento 		= item.numeroDocumento;
+						AC.nombreRazonSocial	= item.nombreRazonSocial;
+						AC.direccionFiscal 		= item.direccionFiscal;
+						return AC;
+					}));
+
+					loadding(false);
+				},
+				error: function (xhr, error, code){
+
+					mostrarMensajeError(xhr.responseText);
+					loadding(false);
+				}
+			});
+		},
+
+		minLength: 3,
+		select: function(event, ui) {
+
+			codigoCliente.val(ui.item.codigoSocio);
+			documentoCliente.val(ui.item.numeroDocumento);
+			nombreCliente.val(ui.item.nombreRazonSocial);
+			direccion.val(ui.item.direccionFiscal);
+			OCReferencia.val(CADENA_VACIA);
+			fecConta.focus();
+		}
+	});
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function inicializarEventos() {
 
@@ -191,6 +354,32 @@ function inicializarEventos() {
 
 }
 
+function inicializarTablaDetalle(paginacion) {
+
+	dataTableDetalle = tableDetalle.DataTable({
+
+		"responsive"	: false,
+		"scrollCollapse": false,
+		"ordering"      : false,
+		"dom"           :   "<'row'<'col-sm-12'rt>>" +
+			"<'row'<'col-sm-4 'l><'col-sm-8 'p>>",
+		"paging"	    : paginacion,
+		"lengthMenu"	: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+		"deferRender"   : true,
+		"autoWidth"		: false,
+		"fnRowCallback":
+			function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+				var index = iDisplayIndexFull + 1;
+				$('td:eq(0)', nRow).html(index);
+				return nRow;
+			},
+		"language"  : {
+			"url": "/appkahaxi/language/Spanish.json"
+		}
+	});
+
+}
+
 
 function volver(){
 	var params;
@@ -230,20 +419,7 @@ function obtenerIGV(){
 	});
 }
 
-function inicializarPantalla() {
 
-	if(opcion.text() == Opcion.NUEVO) {
-
-		cargarPantallaConDatosOrdenCompra();
-		inicializarFechaContabilidad();
-		obtenerTipoCambio();
-	}
-
-	if(opcion.text() == Opcion.VER) {
-		cargarPantallaConDatosGuiaRemision();
-	}
-
-}
 
 function cargarPantallaConDatosGuiaRemision() {
 
@@ -393,9 +569,9 @@ function cargarPantallaHTMLGuiaRemision(data) {
 	correlativo.val(data.correlativo);
 	motivoTraslado.val(data.codigoMotivoTraslado);
 	tipoCambio.val(data.tipoCambio);
-	subTotalOC.val(data.subTotal);
-	igv.val(data.igv);
-	total.val(data.total);
+	subtotalGR.val(data.subTotal);
+	igvGR.val(data.igv);
+	totalGR.val(data.total);
 	OCReferencia.val(data.ordenCompra);
 
 	cantidadDetalleDuplicado = data.detalle.length;
@@ -430,9 +606,9 @@ function cargarPantallaHTMLOrdenCompra(data) {
 	tipoMoneda.val(data.codigoTipoMoneda);
 	condPago.val(data.codigoCondPago);
 	dias.val(data.codigoDias);
-	subTotalOC.val(data.subTotal);
-	igv.val(data.igv);
-	total.val(data.total);
+	subtotalGR.val(data.subTotal);
+	igvGR.val(data.igv);
+	totalGR.val(data.total);
 
 	cantidadDetalleDuplicado = data.detalle.length;
 
@@ -460,134 +636,8 @@ function cargarPantallaHTMLOrdenCompra(data) {
 	inicializarTablaDetalle(true);
 }
 
-function habilitarAnimacionAcordion() {
 
-	$(".collapse.show").each(function(){
 
-		$(this).prev(".card-header").find(".fas").addClass("fa-angle-up").removeClass("fa-angle-down");
-	});
-
-	$(".collapse").on('show.bs.collapse', function(){
-
-		$(this).prev(".card-header").find(".fas").removeClass("fa-angle-down").addClass("fa-angle-up");
-	}).on('hide.bs.collapse', function(){
-
-		$(this).prev(".card-header").find(".fas").removeClass("fa-angle-up").addClass("fa-angle-down");
-	});
-}
-
-function construirFechasPicker() {
-
-	fecConta.datetimepicker({
-		locale: 		'es',
-		format: 		'L',
-		ignoreReadonly:  true
-	});
-
-	fecDocumento.datetimepicker({
-		locale: 		'es',
-		format: 		'L',
-		ignoreReadonly:  true
-	});
-
-	fecEntrega.datetimepicker({
-		locale: 		'es',
-		format: 		'L',
-		ignoreReadonly:  true
-	});
-}
-
-function restringirSeleccionFechas() {
-
-	fecConta.datetimepicker('maxDate', new Date());
-
-	fecDocumento.on("change.datetimepicker", function (e) {
-		fecEntrega.datetimepicker('minDate', e.date);
-	});
-
-	fecConta.on("change.datetimepicker", function (e) {
-		fecDocumento.datetimepicker('maxDate', e.date);
-		fecEntrega.datetimepicker('maxDate', e.date);
-	});
-}
-
-function inicializarTablaDetalle(paginacion) {
-
-	dataTableDetalle = tableDetalle.DataTable({
-
-		"responsive"	: false,
-		"scrollCollapse": false,
-		"ordering"      : false,
-		"dom"           :   "<'row'<'col-sm-12'rt>>" +
-			"<'row'<'col-sm-4 'l><'col-sm-8 'p>>",
-		"paging"	    : paginacion,
-		"lengthMenu"	: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
-		"deferRender"   : true,
-		"autoWidth"		: false,
-		"fnRowCallback":
-			function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-				var index = iDisplayIndexFull + 1;
-				$('td:eq(0)', nRow).html(index);
-				return nRow;
-			},
-		"language"  : {
-			"url": "/appkahaxi/language/Spanish.json"
-		}
-	});
-
-}
-
-function habilitarAutocompletarBuscarCampos() {
-
-	OCReferencia.autocomplete({
-
-		source: function( request, response ) {
-
-			$.ajax({
-				type:"Get",
-				contentType : "application/json",
-				accept: 'text/plain',
-				url : '/appkahaxi/buscarSnLike/' + TipoSocioNegocios.PROVEEDOR + '/' + request.term,
-				data : null,
-				dataType: 'json',
-				beforeSend: function(xhr) {
-					loadding(true);
-				},
-				success:function(resultado){
-
-					response($.map(resultado,function(item) {
-						var AC = new Object();
-						AC.label = item.numeroDocumento + ' - ' + item.nombreRazonSocial;
-						AC.value = request.term;
-						AC.codigoSocio 			= item.codigoSocio;
-						AC.numeroDocumento 		= item.numeroDocumento;
-						AC.nombreRazonSocial	= item.nombreRazonSocial;
-						AC.direccionFiscal 		= item.direccionFiscal;
-						return AC;
-					}));
-
-					loadding(false);
-				},
-				error: function (xhr, error, code){
-
-					mostrarMensajeError(xhr.responseText);
-					loadding(false);
-				}
-			});
-		},
-
-		minLength: 3,
-		select: function(event, ui) {
-
-			codigoCliente.val(ui.item.codigoSocio);
-			documentoCliente.val(ui.item.numeroDocumento);
-			nombreCliente.val(ui.item.nombreRazonSocial);
-			direccion.val(ui.item.direccionFiscal);
-			OCReferencia.val(CADENA_VACIA);
-			fecConta.focus();
-		}
-	});
-}
 
 function agregarFilaEnTablaDetalle(data) {
 
@@ -721,13 +771,13 @@ function calcularResumenGuiaRemision(){
 
 	});
 
-	var igvVal = parseFloat(subTotal*valorIGV).toFixed(2);
+	var igvVal = parseFloat(subTotal*(ParametrosGenerales.IGV/100)).toFixed(2);
 	var totalVal = parseFloat(subTotal) + parseFloat(igvVal);
 	var totalVal = parseFloat(totalVal).toFixed(2);
 
-	subTotalOC.val(subTotal);
-	igv.val(igvVal);
-	total.val(totalVal);
+	subtotalGR.val(subTotal);
+	igvGR.val(igvVal);
+	totalGR.val(totalVal);
 }
 
 function grabarGuiaRemision() {
@@ -799,9 +849,9 @@ function registrarGuiaRemision(){
 	var condPagoVal 			= condPago.val();
 	var tipoCambioVal			= tipoCambio.val();
 	var codigoMotivoTraslado	= motivoTraslado.val().trim();
-	var subTotalVal 			= subTotalOC.val().trim();
-	var igvVal 					= igv.val();
-	var totalVal 				= total.val().trim();
+	var subTotalVal 			= subtotalGR.val().trim();
+	var igvVal 					= igvGR.val();
+	var totalVal 				= totalGR.val().trim();
 	var detalle 				= tableToJSON(tableDetalle);
 	var diasVal					= null;
 
@@ -1354,9 +1404,9 @@ function convertirMontosASoles() {
 		$('#subTotal_' + i).val($('#subTotal_' + i).val() * tc);
 	}
 
-	subTotalOC.val(subTotalOC.val() * tc);
-	igv.val(igv.val() * tc);
-	total.val(total.val() * tc);
+	subtotalGR.val(subtotalGR.val() * tc);
+	igvGR.val(igvGR.val() * tc);
+	totalGR.val(totalGR.val() * tc);
 }
 
 function convertirMontosADolares() {
@@ -1370,9 +1420,9 @@ function convertirMontosADolares() {
 		$('#subTotal_' + i).val($('#subTotal_' + i).val() / tc);
 	}
 
-	subTotalOC.val(subTotalOC.val() / tc);
-	igv.val(igv.val() / tc);
-	total.val(total.val() / tc);
+	subtotalGR.val(subtotalGR.val() / tc);
+	igvGR.val(igvGR.val() / tc);
+	totalGR.val(totalGR.val() / tc);
 }
 
 function obtenerTipoCambio() {
@@ -1433,7 +1483,7 @@ function calcularCantidadKeyUp(control, fila) {
 	var subTotal = parseFloat(cantidad * precio).toFixed(2);
 
 	$('#subTotal_' + fila).val(subTotal);
-	$('#igv_' + fila).val((subTotal * valorIGV).toFixed(2));
+	$('#igv_' + fila).val((subTotal * (ParametrosGenerales.IGV/100)).toFixed(2));
 	$('#cantidadPend_' + fila).val(cantidad);
 
 	calcularResumenGuiaRemision();
@@ -1447,7 +1497,7 @@ function calcularCantidadNuevaGuia(control, fila) {
 	var subTotal = parseFloat(cantidad * precio).toFixed(2);
 
 	$('#subTotal_' + fila).val(subTotal);
-	$('#igv_' + fila).val((subTotal * valorIGV).toFixed(2));
+	$('#igv_' + fila).val((subTotal * (ParametrosGenerales.IGV/100)).toFixed(2));
 	$('#cantidadPend_' + fila).val(cantidad);
 
 	calcularResumenGuiaRemision();

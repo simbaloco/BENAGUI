@@ -911,46 +911,57 @@ function grabarOrdenCompra(event) {
 }
 
 function validarDetalleOrden(){
-
-	if(indiceFilaDataTableDetalle == null || indiceFilaDataTableDetalle == -1){
-		mostrarDialogoInformacion("Debe ingresar items a la orden", Boton.WARNING, $('#btnAgregarArticulo'));
-		return false;
+	var codigo;
+	var descripcion;
+	var cantidad;
+	var precio;
+	
+	// verificando que se hayan ingresado por lo menos un item al detalle de la cotizacion
+	var contadorVacios = 0;
+	// recorriendo todos los detalles
+	for(i=0; i<(indiceFilaDataTableDetalle+1);i++){
+		codigo = $('#codigo_' + i).val();
+		descripcion = $('#descripcion_' + i).val();
+		
+		// contar la cantidad de filas sin código de artículo
+		if(codigo == CADENA_VACIA && descripcion == CADENA_VACIA){
+			contadorVacios++;	
+		}
 	}
-
-	for(i=0; i< ( indiceFilaDataTableDetalle + 1) ; i++) {
-
-		if($('#codigo_' + i).val() != undefined ) {
-
-			var codigo = $('#codigo_' + i).val().trim();
-			var descripcion = $('#descripcion_' + i).val().trim();
-			var cantidad = $('#cantidad_' + i).val().trim();
-			var precio = $('#precio_' + i).val().trim();
-
-			if (codigo == CADENA_VACIA || descripcion == CADENA_VACIA) {
-				mostrarDialogoInformacion('Debe ingresar el código.', Boton.WARNING, $('#codigo_' + i));
+	// si la cantidad de filas vacías es igual al contador de filas, mostrar mensaje
+	if(contadorVacios == (indiceFilaDataTableDetalle + 1)){
+		mostrarMensajeValidacion("Debe ingresar items a la orden de compra", null, '#buscarArticulo_' + indiceFilaDataTableDetalle);
+		return false;	
+	}
+	
+	
+	// verificando que no hayan detalles con cantidad y precio vacíos
+	for(i=0; i<(indiceFilaDataTableDetalle+1);i++){
+		codigo = $('#codigo_' + i).val().trim();
+		descripcion = $('#descripcion_' + i).val().trim();
+		cantidad = $('#cantidad_' + i).val().trim();
+		precio = $('#precio_' + i).val().trim();
+		
+		if(codigo != CADENA_VACIA && descripcion != CADENA_VACIA){
+			if(cantidad == CADENA_VACIA){
+				mostrarMensajeValidacion('Debe ingresar la cantidad.', null, '#cantidad_' + i);
 				return false;
-			}
-			if (cantidad == CADENA_VACIA) {
-				mostrarDialogoInformacion('Debe ingresar la cantidad.', Boton.WARNING, $('#cantidad_' + i));
-				return false;
-			}
-			if (precio == CADENA_VACIA) {
-				mostrarDialogoInformacion('Debe ingresar el precio.', Boton.WARNING, $('#precio_' + i));
-				return false;
-			}
-
-			if(convertirMonedaANumero(cantidad) == 0){
+			}else if(convertirMonedaANumero(cantidad) == 0){
 				mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $('#cantidad_' + i));
 				return false;
 			}
-
-			if(convertirMonedaANumero(precio) == 0){
+			
+			if(precio == CADENA_VACIA){
+				mostrarMensajeValidacion('Debe ingresar el precio.', null, '#precio_' + i);
+				return false;
+			}else if(convertirMonedaANumero(precio) == 0){
 				mostrarDialogoInformacion('Debe ingresar un precio mayor a cero.', Boton.WARNING, $('#precio_' + i));
 				return false;
 			}
-
+			
 		}
 	}
+	
 	return true;
 }
 
@@ -1504,111 +1515,3 @@ function convertirMontosADolares() {
 	igvOC.val(convertirNumeroAMoneda(igv));
 	totalOC.val(convertirNumeroAMoneda(total));
 }
-
-
-/*******************************  */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function reiniciarFechaContaDesdeHasta(){
-
-	var fecContabilizacion = new Date();
-	var fecContaHastaVal = moment(fecContabilizacion).add(30 , 'day');
-	fecConta.datetimepicker('date', moment().format('DD/MM/YYYY'));
-	fecHasta.datetimepicker('date', fecContaHastaVal);
-	fecEntrega.datetimepicker('date', null);
-}
-
-
-
-
-
-

@@ -242,3 +242,9 @@ input.form-control.input-validation-error {
 .textoCheckboxTop {
 	padding-top: 10px !important;
 }
+
+.fijo {
+    width: 100%;
+    position: fixed;
+    top: 0;
+}
