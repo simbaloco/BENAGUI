@@ -581,9 +581,13 @@ function duplicarPantallaCotizacionVenta(numDocReferencia) {
 	habilitarControl(condPago);
 	habilitarControl(dias);
 	deshabilitarControl(estado);
-	habilitarControl(dctoTotal);
-    habilitarControl(chkDctoTotal);
-    habilitarControl(nroRequerimiento);
+	// evaluando para mostrar dcto total
+	console.log("dctoTotal-->" + dctoTotal.val() + "<---");
+	if(dctoTotal.val() != CADENA_VACIA){
+		habilitarControl(dctoTotal);
+	}
+	habilitarControl(chkDctoTotal);
+	habilitarControl(nroRequerimiento);
 	habilitarControl(asunto);
 	habilitarControl(observaciones);
 	habilitarControl(campoBuscar);
@@ -1060,6 +1064,7 @@ function grabarCotizacionVenta(event){
 		event.preventDefault();
 		
 		if(validar()){
+			console.log("validar() es true");
 			// aqui llamo al 1er modal
 			validarRequerimiento(event);
 		}
@@ -1072,57 +1077,102 @@ function grabarCotizacionVenta(event){
 }
 
 function validar(){
-	var codigo;
-	var descripcion;
 	var cantidad;
 	var precio;
+	var flag = false;
+	var exitEach = false;
+	var exitIterator = false;
 		
 	// verificando que se hayan ingresado por lo menos un item al detalle de la cotizacion
 	var contadorVacios = 0;
 	// recorriendo todos los detalles
-	for(i=0; i<(indiceFilaDataTableDetalle+1);i++){
-		codigo = $('#codigo_' + i).val();
-		descripcion = $('#descripcion_' + i).val();
-		
-		// contar la cantidad de filas sin código de artículo
-		if(codigo == CADENA_VACIA && descripcion == CADENA_VACIA){
-			contadorVacios++;	
-		}
-	}
+	var $headers = tableDetalle.find("th").not(':first').not(':last');
+	tableDetalle.DataTable().rows().iterator('row', function(context, index){
+
+		var node = $(this.row(index).node());
+		$cells = node.find("td").not(':first').not(':last');
+
+		$cells.each(function(cellIndex) {
+			if($($headers[cellIndex]).attr('id') == 'codArticulo') {
+				
+				if($(this).find("input").val() == CADENA_VACIA || $(this).find("input").val() == UNDEFINED){
+					contadorVacios++;
+				}
+			}
+		});
+	});
+	
 	// si la cantidad de filas vacías es igual al contador de filas, mostrar mensaje
 	if(contadorVacios == (indiceFilaDataTableDetalle + 1)){
 		mostrarMensajeValidacion("Debe ingresar items a la cotización", null, '#buscarArticulo_' + indiceFilaDataTableDetalle);
 		return false;	
 	}
 	
-	
 	// verificando que no hayan detalles con cantidad y precio vacíos
-	for(i=0; i<(indiceFilaDataTableDetalle+1);i++){
-		codigo = $('#codigo_' + i).val().trim();
-		descripcion = $('#descripcion_' + i).val().trim();
-		cantidad = $('#cantidad_' + i).val().trim();
-		precio = $('#precio_' + i).val().trim();
+	tableDetalle.DataTable().rows().iterator('row', function(context, index){
 		
-		if(codigo != CADENA_VACIA && descripcion != CADENA_VACIA){
-			if(cantidad == CADENA_VACIA){
-				mostrarMensajeValidacion('Debe ingresar la cantidad.', null, '#cantidad_' + i);
-				return false;
-			}else if(convertirMonedaANumero(cantidad) == 0){
-				mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $('#cantidad_' + i));
-				return false;
+		if(exitEach == true){
+			exitIterator = true;
+		}
+
+		var node = $(this.row(index).node());
+		$cells = node.find("td").not(':first').not(':last');
+
+		flag = false;
+		
+		$cells.each(function(cellIndex) {
+			console.log("valor de flag al iniciar new recorrido-->" + flag);
+			// verificamos que estamos en una fila con código (es decir, con datos para validar)
+			if($($headers[cellIndex]).attr('id') == 'codArticulo') {
+				
+				if($(this).find("input").val() != CADENA_VACIA && $(this).find("input").val() != UNDEFINED){
+					flag = true;	
+				}
 			}
 			
-			if(precio == CADENA_VACIA){
-				mostrarMensajeValidacion('Debe ingresar el precio.', null, '#precio_' + i);
-				return false;
-			}else if(convertirMonedaANumero(precio) == 0){
-				mostrarDialogoInformacion('Debe ingresar un precio mayor a cero.', Boton.WARNING, $('#precio_' + i));
-				return false;
+			// evaluamos la CANTIDAD				
+			if($($headers[cellIndex]).attr('id') == 'cantidad') {
+				// siempre y cuando hayan datos (flag TRUE)
+				if(flag == true){
+					cantidad = $(this).find("input").val();
+					
+					if(cantidad == CADENA_VACIA){
+						mostrarMensajeValidacion('Debe ingresar la cantidad.', $(this).find("input"));
+						exitEach = true;
+						return false;
+					}else if(convertirMonedaANumero(cantidad) == 0){
+						mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $(this).find("input"));
+						exitEach = true;
+						return false;
+					}
+				}
 			}
-		}
+			
+			// evaluamos el PRECIO	
+			if($($headers[cellIndex]).attr('id') == 'precioUnitario') {
+				// siempre y cuando hayan datos (flag TRUE)
+				if(flag == true){
+					precio = $(this).find("input").val();
+					
+					if(precio == CADENA_VACIA){
+						mostrarMensajeValidacion('Debe ingresar el precio.', $(this).find("input"));
+						exitEach = true;
+						return false;
+					}else if(convertirMonedaANumero(precio) == 0){
+						mostrarDialogoInformacion('Debe ingresar un precio mayor a cero.', Boton.WARNING, $(this).find("input"));
+						exitEach = true;
+						return false;
+					}
+				}
+			}
+		});
+	});
+		
+	if(exitIterator == true){
+		return false;
+	}else{
+		return true;	
 	}
-	
-	return true;
 }
 
 function validarRequerimiento(event){
@@ -1857,18 +1907,40 @@ function calcularActivarDctoTotal(){
 	var cantidad;
 	var precio;
 	var subTotal;
-	for(i=0; i<(indiceFilaDataTableDetalle+1);i++){
-		console.log("*** dentro del for")
-		// 1.1 recalculando el subtotal x cada fila
-		cantidad = Number($('#cantidad_' + i).val());
-		precio = Number($('#precio_' + i).val());
-		subTotal = cantidad * precio;
-		$('#subTotal_' + i).val(convertirNumeroAMoneda(subTotal));
-		// 1.2 deshabilitar el campo dcto x cada fila
-		habilitarControlSoloLectura(null, '#porcDcto_' + i);
-		$('#porcDcto_' + i).addClass("atenuar-input-disabled");
-		$('#precioDcto_' + i).addClass("atenuar-input-disabled");
-	}
+	
+	var $headers = tableDetalle.find("th").not(':first').not(':last');
+	tableDetalle.DataTable().rows().iterator('row', function(context, index){
+
+		var node = $(this.row(index).node());
+		$cells = node.find("td").not(':first').not(':last');
+
+		$cells.each(function(cellIndex) {
+			// 1.1 recalculando el subtotal x cada fila
+			if($($headers[cellIndex]).attr('id') == 'cantidad') {
+				cantidad = Number($(this).find("input").val());
+			}
+			if($($headers[cellIndex]).attr('id') == 'precioUnitario') {
+				precio = Number($(this).find("input").val());
+			}
+			
+			if($($headers[cellIndex]).attr('id') == 'subTotal') {
+				subTotal = cantidad * precio;
+				$(this).find("input").val(convertirNumeroAMoneda(subTotal));
+			}
+			
+			// 1.2 deshabilitar el campo dcto x cada fila
+			if($($headers[cellIndex]).attr('id') == 'porcentajeDcto') {
+				habilitarControlSoloLectura(null, $(this).find("input"));
+				$(this).find("input").addClass("atenuar-input-disabled");
+			}
+			
+			if($($headers[cellIndex]).attr('id') == 'precioConDcto') {
+				$(this).find("input").addClass("atenuar-input-disabled");
+			}
+			
+		});
+	});
+	
 	calcularResumenCotizacion();
 }
 
@@ -1878,19 +1950,42 @@ function calcularDesactivarDctoTotal(){
 	var precio;
 	var subTotal;
 	var dcto;
-	for(i=0; i<(indiceFilaDataTableDetalle+1);i++){
-		// 1.1 recalculando el subtotal x cada fila (aplicando dcto x fila)
-		cantidad = Number($('#cantidad_' + i).val());
-		precio = Number($('#precio_' + i).val());
-		dcto = Number($('#porcDcto_' + i).val());
-		subTotal = cantidad * precio;
-		subTotal = subTotal - (subTotal * dcto/100);
-		$('#subTotal_' + i).val(convertirNumeroAMoneda(subTotal));
-		// 1.2 habilitar el campo dcto x cada fila
-		deshabilitarControlSoloLectura(null, '#porcDcto_' + i);
-		$('#porcDcto_' + i).removeClass("atenuar-input-disabled");
-		$('#precioDcto_' + i).removeClass("atenuar-input-disabled");
-	}
+	
+	var $headers = tableDetalle.find("th").not(':first').not(':last');
+	tableDetalle.DataTable().rows().iterator('row', function(context, index){
+
+		var node = $(this.row(index).node());
+		$cells = node.find("td").not(':first').not(':last');
+
+		$cells.each(function(cellIndex) {
+			// 1.1 recalculando el subtotal x cada fila
+			if($($headers[cellIndex]).attr('id') == 'cantidad') {
+				cantidad = Number($(this).find("input").val());
+			}
+			if($($headers[cellIndex]).attr('id') == 'precioUnitario') {
+				precio = Number($(this).find("input").val());
+			}
+			
+			if($($headers[cellIndex]).attr('id') == 'subTotal') {
+				subTotal = cantidad * precio;
+				subTotal = subTotal - (subTotal * dcto/100);
+				$(this).find("input").val(convertirNumeroAMoneda(subTotal));
+			}
+			
+			// 1.2 deshabilitar el campo dcto x cada fila
+			if($($headers[cellIndex]).attr('id') == 'porcentajeDcto') {
+				dcto = Number($(this).find("input").val());
+				deshabilitarControlSoloLectura(null, $(this).find("input"));
+				$(this).find("input").removeClass("atenuar-input-disabled");
+			}
+			
+			if($($headers[cellIndex]).attr('id') == 'precioConDcto') {
+				$(this).find("input").removeClass("atenuar-input-disabled");
+			}
+			
+		});
+	});
+	
 	calcularResumenCotizacion();
 }
 
@@ -1906,19 +2001,37 @@ function convertirMontosASoles(){
 	var dcto;
 	var igv;
 	var total;
-	for(i=0; i<(indiceFilaDataTableDetalle+1);i++){
-		nvoPrecio = Number(convertirMonedaANumero($('#precio_' + i).val())) * tc;
-		nvoPrecioRef = Number(convertirMonedaANumero($('#precioRef_' + i).val())) * tc;
-		nvoPrecioIgv = Number(convertirMonedaANumero($('#precioIgv_' + i).val())) * tc;
-		nvoPrecioDcto = Number(convertirMonedaANumero($('#precioDcto_' + i).val())) * tc;
-		nvoSubTotal = Number(convertirMonedaANumero($('#subTotal_' + i).val())) * tc;
-		
-		$('#precio_' + i).val(convertirNumeroAMoneda(nvoPrecio));
-		$('#precioRef_' + i).val(convertirNumeroAMoneda(nvoPrecioRef));
-		$('#precioIgv_' + i).val(convertirNumeroAMoneda(nvoPrecioIgv));
-		$('#precioDcto_' + i).val(convertirNumeroAMoneda(nvoPrecioDcto));
-		$('#subTotal_' + i).val(convertirNumeroAMoneda(nvoSubTotal));
-	}
+	
+	var $headers = tableDetalle.find("th").not(':first').not(':last');
+	tableDetalle.DataTable().rows().iterator('row', function(context, index){
+
+		var node = $(this.row(index).node());
+		$cells = node.find("td").not(':first').not(':last');
+
+		$cells.each(function(cellIndex) {
+			if($($headers[cellIndex]).attr('id') == 'precioUnitario') {
+				nvoPrecio = Number(convertirMonedaANumero($(this).find("input").val())) * tc;
+				$(this).find("input").val(convertirNumeroAMoneda(nvoPrecio));
+			}
+			if($($headers[cellIndex]).attr('id') == 'precioReferencia') {
+				nvoPrecioRef = Number(convertirMonedaANumero($(this).find("input").val())) * tc;
+				$(this).find("input").val(convertirNumeroAMoneda(nvoPrecioRef));
+			}
+			if($($headers[cellIndex]).attr('id') == 'precioIgv') {
+				nvoPrecioIgv = Number(convertirMonedaANumero($(this).find("input").val())) * tc;
+				$(this).find("input").val(convertirNumeroAMoneda(nvoPrecioIgv));
+			}
+			if($($headers[cellIndex]).attr('id') == 'precioConDcto') {
+				nvoPrecioDcto = Number(convertirMonedaANumero($(this).find("input").val())) * tc;
+				$(this).find("input").val(convertirNumeroAMoneda(nvoPrecioDcto));
+			}
+			if($($headers[cellIndex]).attr('id') == 'subTotal') {
+				nvoSubTotal = Number(convertirMonedaANumero($(this).find("input").val())) * tc;
+				$(this).find("input").val(convertirNumeroAMoneda(nvoSubTotal));
+			}
+		});
+	});
+	
 	subTotal = Number(convertirMonedaANumero(subTotalCoti.val())) * tc;
 	dcto = Number(convertirMonedaANumero(dctoCoti.val())) * tc;
 	igv = Number(convertirMonedaANumero(igvCoti.val())) * tc;
@@ -1942,19 +2055,37 @@ function convertirMontosADolares(){
 	var dcto;
 	var igv;
 	var total;
-	for(i=0; i<(indiceFilaDataTableDetalle+1);i++){
-		nvoPrecio = Number(convertirMonedaANumero($('#precio_' + i).val())) / tc;
-		nvoPrecioRef = Number(convertirMonedaANumero($('#precioRef_' + i).val())) / tc;
-		nvoPrecioIgv = Number(convertirMonedaANumero($('#precioIgv_' + i).val())) / tc;
-		nvoPrecioDcto = Number(convertirMonedaANumero($('#precioDcto_' + i).val())) / tc;
-		nvoSubTotal = Number(convertirMonedaANumero($('#subTotal_' + i).val())) / tc;
-		
-		$('#precio_' + i).val(convertirNumeroAMoneda(nvoPrecio));
-		$('#precioRef_' + i).val(convertirNumeroAMoneda(nvoPrecioRef));
-		$('#precioIgv_' + i).val(convertirNumeroAMoneda(nvoPrecioIgv));
-		$('#precioDcto_' + i).val(convertirNumeroAMoneda(nvoPrecioDcto));
-		$('#subTotal_' + i).val(convertirNumeroAMoneda(nvoSubTotal));
-	}
+	
+	var $headers = tableDetalle.find("th").not(':first').not(':last');
+	tableDetalle.DataTable().rows().iterator('row', function(context, index){
+
+		var node = $(this.row(index).node());
+		$cells = node.find("td").not(':first').not(':last');
+
+		$cells.each(function(cellIndex) {
+			if($($headers[cellIndex]).attr('id') == 'precioUnitario') {
+				nvoPrecio = Number(convertirMonedaANumero($(this).find("input").val())) / tc;
+				$(this).find("input").val(convertirNumeroAMoneda(nvoPrecio));
+			}
+			if($($headers[cellIndex]).attr('id') == 'precioReferencia') {
+				nvoPrecioRef = Number(convertirMonedaANumero($(this).find("input").val())) / tc;
+				$(this).find("input").val(convertirNumeroAMoneda(nvoPrecioRef));
+			}
+			if($($headers[cellIndex]).attr('id') == 'precioIgv') {
+				nvoPrecioIgv = Number(convertirMonedaANumero($(this).find("input").val())) / tc;
+				$(this).find("input").val(convertirNumeroAMoneda(nvoPrecioIgv));
+			}
+			if($($headers[cellIndex]).attr('id') == 'precioConDcto') {
+				nvoPrecioDcto = Number(convertirMonedaANumero($(this).find("input").val())) / tc;
+				$(this).find("input").val(convertirNumeroAMoneda(nvoPrecioDcto));
+			}
+			if($($headers[cellIndex]).attr('id') == 'subTotal') {
+				nvoSubTotal = Number(convertirMonedaANumero($(this).find("input").val())) / tc;
+				$(this).find("input").val(convertirNumeroAMoneda(nvoSubTotal));
+			}
+		});
+	});
+	
 	subTotal = Number(convertirMonedaANumero(subTotalCoti.val())) / tc;
 	dcto = Number(convertirMonedaANumero(dctoCoti.val())) / tc;
 	igv = Number(convertirMonedaANumero(igvCoti.val())) / tc;
