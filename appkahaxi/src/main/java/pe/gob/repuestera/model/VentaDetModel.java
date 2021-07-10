@@ -17,10 +17,10 @@ public class VentaDetModel {
 	private Integer cantidad;
     private BigDecimal precioUnitario;
     private BigDecimal precioReferencia;
-    private BigDecimal precioIgv;
     private Integer porcentajeDcto;
     private BigDecimal precioConDcto;
     private BigDecimal subTotal;
+    private BigDecimal subTotalIgv;
     private Integer activo;
     private String codigoUsuarioRegistra;
     private Date fechaRegistro;

@@ -48,10 +48,10 @@
         <result property="cantidad" 			column="CANTIDAD" />
         <result property="precioUnitario"		column="PRECIO_UNITARIO" />
         <result property="precioReferencia"		column="PRECIO_REFERENCIA" />
-        <result property="precioIgv"			column="PRECIO_IGV" />
         <result property="porcentajeDcto"		column="PORC_DCTO" />
         <result property="precioConDcto"		column="PRECIO_CON_DCTO" />
         <result property="subTotal" 			column="SUB_TOTAL" />
+        <result property="subTotalIgv"			column="SUB_TOTAL_IGV" />
     </resultMap>
     
     

@@ -148,7 +148,6 @@ public class CotizacionVentaServiceImpl implements CotizacionVentaService{
         logger.info("DETALLE---->" + dataJSON);        
         // seteando parámetros
         Map<String, Object> params = new HashMap();
-        params.put(Constante.PARAM_SP_NRO_DOCUMENTO, registro.getNumeroDocumento());
         params.put(Constante.PARAM_SP_COD_CLIENTE, registro.getCodigoCliente());
         params.put(Constante.PARAM_SP_USUARIO, usuario);
         params.put(Constante.PARAM_SP_FEC_CONTABILIZACION, registro.getFechaContabilizacion());
