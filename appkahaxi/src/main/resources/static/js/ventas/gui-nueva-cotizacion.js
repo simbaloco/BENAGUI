@@ -885,9 +885,9 @@ function cantidadKeyUp(control, fila){
 	var precio = Number($('#precio_' + fila).val());
 	
 	var subTotal = cantidad * precio;
-	var pvuConIgv = subTotal + (subTotal * (ParametrosGenerales.IGV/100));
+	var subTotalIgv = subTotal + (subTotal * (ParametrosGenerales.IGV/100));
 	
-	$('#subTotalIgv_' + fila).val(convertirNumeroAMoneda(pvuConIgv));
+	$('#subTotalIgv_' + fila).val(convertirNumeroAMoneda(subTotalIgv));
 	$('#subTotal_' + fila).val(convertirNumeroAMoneda(subTotal));
 	
 	calcularResumenCotizacion();
@@ -909,9 +909,9 @@ function precioKeyUp(control, fila){
 	var precio = Number(control.value);
 	
 	var subTotal = cantidad * precio;
-	var pvuConIgv = subTotal + (subTotal * (ParametrosGenerales.IGV/100));
+	var subTotalIgv = subTotal + (subTotal * (ParametrosGenerales.IGV/100));
 	
-	$('#subTotalIgv_' + fila).val(convertirNumeroAMoneda(pvuConIgv));
+	$('#subTotalIgv_' + fila).val(convertirNumeroAMoneda(subTotalIgv));
 	$('#subTotal_' + fila).val(convertirNumeroAMoneda(subTotal));
 	
 	calcularResumenCotizacion();
