@@ -874,6 +874,15 @@ function buscarArticuloKeyUp(e, control, fila){
 				
 				$('#precioRef_' + fila).val(convertirNumeroAMoneda(precioRef));
 				$('#cantidad_' + fila).focus();
+				
+				var key = window.Event ? event.which : event.keyCode;
+				
+				if(key != 13){
+					console.log("NO ES ENTER...");	
+					if ($('#cantidad_' + fila).val() > 0){						
+						cantidadKeyUp($('#cantidad_' + fila)[0], fila);
+					}				
+				}
 		    }
 	    });
 	}
@@ -881,9 +890,9 @@ function buscarArticuloKeyUp(e, control, fila){
 
 function cantidadKeyUp(control, fila){
 	console.log("cantidadKeyUp...");
-	var cantidad = Number(control.value);
-	var precio = Number($('#precio_' + fila).val());
 	
+	var cantidad = Number(control.value);
+	var precio = Number($('#precio_' + fila).val());		
 	var subTotal = cantidad * precio;
 	var subTotalIgv = subTotal + (subTotal * (ParametrosGenerales.IGV/100));
 	
