@@ -203,10 +203,13 @@ function inicializarTabla(){
                 }
              ],
              "fnRowCallback":
-                 function(nRow, aData, iDisplayIndex, iDisplayIndexFull){
+                 function(row, aData, iDisplayIndex, iDisplayIndexFull){
                      var index = iDisplayIndexFull + 1;
-                     $('td:eq(0)', nRow).html(index);
-                     return nRow;
+                     $('td:eq(0)', row).html(index);
+					
+					// modificando el tamaño de los caracteres del listado 
+					$(row).addClass("listado-tam-caracteres");
+                     return row;
                  },
              "language"  : {
                 "url": "/appkahaxi/language/Spanish.json"

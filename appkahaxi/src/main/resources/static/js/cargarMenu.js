@@ -48,11 +48,12 @@ $(document).ready(function () {
         console.log("Icono", opcion.icono);
         //console.log("idDominio", idDominio);
         //console.log("idLista", idLista);
-        var paddingleft = 20 + 5 * opcion.nivel;
+        var paddingleft = 20 + 7 * opcion.nivel;
 
-		var insertHtml = 	"<li class='closed' style='padding: 10px 20px;padding-left:" + paddingleft + "px;'>" +
-	        					"<a href='" + "#" + idLista + "'><span class='" + opcion.icono + "'></span>" + opcion.descripcion + "</a> " +
-	        					"<ul class='collapse' id='" + idLista + "'></ul>" +
+		var insertHtml = 	"<li class='closed' style='padding:10px 25px 10px 0;'>" +
+	        					"<a  href='#' style='padding-left:" + paddingleft + "px;'><span class='" + opcion.icono + "'></span>" + opcion.descripcion + "</a> " +
+								"<ul class='collapse nav-submenu'  id='" + idLista + "'></ul>" +
+	        					/*"<ul class='collapse nav-submenu' style='box-shadow:0 0 30px rgb(255 255 255 / 40%);' id='" + idLista + "'></ul>" +*/
         					"</li>";
 
         $(idDominio).append(insertHtml);
@@ -68,10 +69,10 @@ $(document).ready(function () {
         var attrlink = opcion.url;
         //console.log("attrlink--->" + attrlink);
         
-        var paddingleft = 20 + 5 * opcion.nivel;
+        var paddingleft = 20 + 10 * opcion.nivel;
 
-        var insertHtml = 	"<li style='padding: 10px 20px;padding-left:" + paddingleft + "px;'>" +
-        						"<a id='" + idHijo + "'>" + opcion.descripcion + "</a>" +
+        var insertHtml = 	"<li>" +
+        						"<a id='" + idHijo + "' style='padding: 10px 20px;padding-left:" + paddingleft + "px;'>" + opcion.descripcion + "</a>" +
         					"</li>";
 
         $(idDominio).append(insertHtml);

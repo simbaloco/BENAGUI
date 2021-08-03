@@ -21,11 +21,11 @@
 	            <div style="position: relative; width:100%; padding: 1px">
 	                <table style="width: 100%; border: 0">
 	                    <tr>
-	                        <td width="65%" id="titulo_interno">SISTEMA DE GESTIÓN EMPRESARIAL - REPUESTERA KAHAXI</td>
-	                        <td width="35%" id="txt_nav">
-	                            <span sec:authorize="isAuthenticated()" style="display: inline-block;">
-				                    | Usuario: <span sec:authentication="principal.nombres"></span> <span sec:authentication="principal.apePaterno"></span> <span sec:authentication="principal.apeMaterno"></span>|
-				                    Roles: <span sec:authentication="principal.authorities"></span> |
+	                        <td width="75%" id="titulo_interno">SISTEMA DE GESTIÓN EMPRESARIAL - REPUESTERA KAHAXI</td>
+	                        <td width="25%" id="txt_nav">
+	                            <span sec:authorize="isAuthenticated()" style="display: inline-block;text-transform:uppercase;font-size:11px;font-weight:bold">
+				                   <span sec:authentication="principal.nombres"></span> <span sec:authentication="principal.apePaterno"></span> 
+				                   <!-- <span sec:authentication="principal.apeMaterno"></span> | Roles: <span sec:authentication="principal.authorities"></span> | -->
 				                    <a th:href="@{/logout}">
 				                    	<button class='btn btn-danger btn-xs'>
 				                    		<span><i class="fas fa-sign-out-alt"></i></span>

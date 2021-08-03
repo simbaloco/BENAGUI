@@ -8,49 +8,103 @@ and open the template in the editor.
     Author     : vbendezu
 */
 
-
+.menu * {
+ color: #fff;
+ }
+ 
 .menu_bar {
 	display:none;
 }
-
-.contenedor_menu {
-	width:100%;
-	background:#0c5460;
-}
-
-@media screen and (max-width:800px ) {
-	.menu ul {
-    position: relative;
-	}
-	
-	 .menu > li {
-  		display: block !important;
-	  	position: absolute;
-	}
- 	
-	.contenedor_menu {
-		width:35%;
-		height:100%;
-		left:-100%;
-		margin:0;
-		position: absolute;
-		z-index: 100;
-	}
-	
-	.menu_bar {
-		display:flex;
-		width:100%;
-		background:#f8f9fa;
-		height:45px;
-		flex-flow: row nowrap;
-        justify-content: flex-start;
-	}
-}
-
-
+ 
 .menu {
-  margin: 0;
-  color: #fff;
+	margin: 0;
+	color: #fff;
+	font-size:12px;
+	font-weight:bold;
+	width:100%;
+	background:#375779;
+	text-transform:uppercase; 
+	padding: 5px 0px 37px 0px;
+}
+ 
+ 
+.menu > li {
+	float:left;
+	background: #375779;
+}
+ 
+.menu li a {
+ display: block;
+ color:#FFF;
+ font-style: normal;
+ font-weight: bold;
+/* background: #375779;	*/
+}
+
+.menu li a:hover {
+	color: #ccdff4;
+	text-decoration: none;
+}
+
+.menu li ul {
+ z-index: 20;
+ display: block;
+ position:absolute;
+ font-style: normal;
+ font-weight: bold;
+ border-top: solid 0.17rem  #a6c7ec;
+ background: #5a7999;
+ text-transform: none;	
+ margin:10px 0 0 0;
+}
+
+
+.menu li:hover > ul {
+	display:block;
+}
+
+.menu li ul li {
+	position:relative;
+}
+ 
+.menu li ul li ul {
+	right:-215px;
+	top:0;
+	min-width:215px;
+}
+
+.menu li a:not(:only-child):after {
+  padding-left: 5px;
+  content: ' ▾';
+}
+
+.menu svg{
+ 	 margin-right: 10px;
+}
+
+.nav-submenu {
+  width:auto;
+  position: absolute;
+  z-index: 1;
+  box-shadow:0 0 30px rgb(255 255 255 / 43%);
+  width: auto;
+  display: none;
+}
+
+
+
+/*
+
+
+.menu li ul li > ul{
+	left: 100%;
+    position: absolute;
+    top: 0;
+    margin-top: -1px;
+}
+
+.menu li ul li > a{
+	display:block;
 }
 
 .menu * {
@@ -61,60 +115,34 @@ and open the template in the editor.
   display: inline-block;
   position: relative;
 }
-/*
-.menu li a {
- display: inline-block;
- padding: 0.125rem 0.55rem;
- text-decoration: none;
- }*/
 
-.menu li:hover {
-	/*color: #fff;
-	z-index: 20;*/
-  background: #0489B1;
+.menu li a:not(:last-child) {
+	display: inline;
+}
+
+
+.menu li:hover {	
   cursor: pointer;
-  font-weight: bold; 
  }
  
  .menu li a:hover {
-	color: #fff;
+	color: #ccdff4;
 	text-decoration: none;
  }
  
- /*  
-.menu li:hover ul {
-  z-index: 20;
-  display: block;
-  position:absolute;
-  left: 0;
-  top:100%;
-  font-style: normal;
-  font-weight: normal; 
-  border-top: solid 4px #6ec4fbd6; //este no va
- }*/
  
-.menu ul {
- z-index: 20;
- display: block;
- position:absolute;
- left: 0;
- top:100%;
- font-style: normal;
- font-weight: normal;
- border-top: solid 0.25rem #6ec4fbd6;
- background: #0c5460;
- }
+
  
  .menu ul:before {
  position: absolute;
  top: -0.875rem;
- left: 0; /*right: 2.5rem; si alineamos el menú a la derecha*/
+ left: 0; 
  color: #6ec4fbd6;
  }
  
  .menu ul li {
  display: block;
- max-height: 3.125rem; /*Es el tamaño que tendrá cada item del listado abierto*/
+ max-height: 3.125rem;
  opacity: 1;
  -webkit-transition: max-height 0.5s, opacity 0.5s;
  transition: max-height 0.5s, opacity 0.5s;
@@ -134,74 +162,94 @@ and open the template in the editor.
  }
  
 
-/****************************************************************/
- 
- 
-.navbar{
-    background: #c0c0c0!important;
+
+
+
+
+.nav-submenu {
+  width:auto;
+  position: absolute;
+  z-index: 1;
+  box-shadow:0 0 30px rgb(255 255 255 / 40%);
+  width: auto;
+  display: none;
 }
 
-.navbar-brand{
-    color:#004370 !important;
-    font-weight: bold; 
-    margin:0px 15px;
+.nav-submenu li {
+   width: 100%;
+   white-space: nowrap;
 }
+*/
 
-.dropdown{
-    border-radius:0;
-    border:0;
-}
-.dropdown-menu{
-    background: #ced4da; /* #0c73cc; */
-    border:0;
-    top:80%;
-    border-radius:0px 0px 5px 5px;
-}
-.dropdown-item:hover{
-    background:#085ca5;
-    color:#fff;
-}
-.dropdown-menu a{
-    color: #fff;
-} 
-.navbar .nav-item .nav-link{
-    color:#0000ff!important; 
-    
-}
-.navbar .nav-item .nav-link:hover .navbar .nav-item .nav-link{
-    color:red !important;
-    
-}
-/* Footer */
 
-footer{
-   	background-color: #424558;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 80px;
-    text-align: center;
-    color: #CCC;
-}
 
-footer p {
-    padding: 10.5px;
-    margin: 0px;
-    line-height: 100%;
-}
 
-.clickable{
-    cursor: pointer;   
-}
 
-.panel-heading span {
-	margin-top: -20px;
-	font-size: 15px;
+@media screen and (min-width: 800px) {
+  .nav-menu {
+    display: block !important;
+  }  
 }
 
 
-.ui-panel .ui-panel-titlebar {
-    padding: 0.3em 1em;
-    font-size: 12px
+@media screen and (max-width:799px ) {
+	
+	.nav-submenu {
+	    position: static;
+	    box-shadow:none;
+	}
+	
+	.menu li{
+		width:100%;		
+	}
+	
+	.menu > li {
+  		display: block !important;
+  		
+	  /*	position: absolute;*/
+	}
+	
+	.menu li ul{
+		position: static;
+	}
+		
+	.menu li > ul{
+		box-shadow: 5px 5px 25px rgb(0 0 0 / 30%);
+		border-top:none;
+	}	
+ 	
+	.contenedor_menu {
+		width:36%;
+		height:100vh;
+		left:-100%;
+		margin:0;
+		position: absolute;
+		z-index: 100;
+		border-top:solid 0.17rem  #a6c7ec;
+		background: #375779;
+	}
+	
+	.menu_bar {
+		display:flex;
+		width:100%;
+		background:#375779 !important;
+		/*height:45px;*/
+		flex-flow: row nowrap;
+        justify-content: flex-start;
+        font-weight: bold;
+        color:#fff;
+	}
+	
+	.menu li ul li ul {
+		right:-150px;
+		top:0;
+		min-width:150px;
+	}
+
 }
+
+
+
+
+
+

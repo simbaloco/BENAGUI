@@ -389,6 +389,9 @@ function inicializarTabla(){
                  function(nRow, aData, iDisplayIndex, iDisplayIndexFull){
                      var index = iDisplayIndexFull + 1;
                      $('td:eq(0)', nRow).html(index);
+					
+					// modificando el tamaño de los caracteres del listado 
+					$(nRow).addClass("listado-tam-caracteres");
                      return nRow;
                  },
              "language"  : {

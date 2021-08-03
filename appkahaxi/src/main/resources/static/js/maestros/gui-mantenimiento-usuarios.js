@@ -207,7 +207,7 @@ function inicializarTabla(){
                 {
                     "width": "20px",
                     "targets": [8],
-                    "className": "dt-body-left",
+                    "className": "dt-body-center",
                     "orderable": false,
 					"render":
                     function (data, type, row ) {
@@ -223,10 +223,13 @@ function inicializarTabla(){
                 }
              ],
              "fnRowCallback":
-                 function(nRow, aData, iDisplayIndex, iDisplayIndexFull){
-                     var index = iDisplayIndexFull + 1;
-                     $('td:eq(0)', nRow).html(index);
-                     return nRow;
+                 function(row, aData, iDisplayIndex, iDisplayIndexFull){
+                    var index = iDisplayIndexFull + 1;
+                    $('td:eq(0)', row).html(index);
+					
+					// modificando el tamaño de los caracteres del listado 
+					$(row).addClass("listado-tam-caracteres");
+                    return row;
                  },
              "language"  : {
                 "url": "/appkahaxi/language/Spanish.json"
@@ -385,8 +388,8 @@ function dinamicaListarOpciones(id){
 	treeOpciones.find(".treeview").remove();
 	
 	buscarOpciones(id);
-	divtreeOpciones.show(1000);
-	divlabelOpciones.show(10000);
+	divtreeOpciones.show(500);
+	divlabelOpciones.show(500);
 }
 
 function buscarOpciones(idPerfil) {

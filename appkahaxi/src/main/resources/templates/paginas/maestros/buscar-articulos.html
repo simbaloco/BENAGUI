@@ -182,25 +182,24 @@
 		                       		<div class="row">	    
 		                       			<div class="col-sm-2"></div> 
 		                       			         	
-		                            	<div class="col-sm-9"> 
+		                            	<div class="col-sm-10"> 
 					                    	<input type='file' id="selectorImagen" accept=".jpg, .png, .jpeg" hidden="hidden"/>
 					                        
-					                        <div class="alineacion-derecha">	
+					                        <div class="text-center">	
 						                        <button type="button" id="btnCargarImg" class="btn btn-primary my-1" title="Cargar Imagen" style="margin-right: 10px;">
 						                        	<i class="fas fa-upload"></i>
 										        </button>
 										                    	                        			
-						                        <button type="button" id="btnQuitarImg" class="btn btn-primary my-1" title="Borrar Imagen" style="margin-right: 10px;">
+						                        <button type="button" id="btnQuitarImg" class="btn btn-danger my-1" title="Borrar Imagen" style="margin-right: 10px;">
 						                        	<i class="fas fa-trash-alt"></i>
 										        </button>
 					                    	</div>
-								       		<label id="nombreArchivoModal" class="label"></label>
+								       		<label id="nombreArchivoModal" class="label" style="width: 100%"></label>
 								       					                    	
 						    				<img id="imagenModal" 
 						    					style="width: 100%; height: auto; max-height: 90%; border: 1px ; margin-left: auto;margin-right: auto; display: block;"/>
 					            		</div>
-					            		   
-					            		<div class="col-sm-1"></div>  
+					            		 
 					            	</div>
 					            	
 				               	</div>
@@ -237,7 +236,8 @@
 		<div class="box bg-box" id="accordionPrincipal">
 		    	<div class="box-body">
 		    		<div class="card">
-		                <div class="card-header" id="headingOne">
+		    		
+		                <div class="card-header quitar-contornos" id="headingOne">
 					        <h2 class="mb-0">
 						        <button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseOne"  aria-expanded="true" aria-controls="collapseOne">
 				                    <i class="fas fa-angle-up"></i><span>Criterios de búsqueda</span>
@@ -245,7 +245,7 @@
 				                </button>
 			                </h2>
 			            </div>
-	                
+			            
 		                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionPrincipal">
 		                	<div class="card-body">
 		                    <form id="formArticulo" class="needs-validation" novalidate>
@@ -321,8 +321,8 @@
 			        <div class="card ">
 				        <div class="card-body">
 				             	<div class="table-responsive">
-					    			<table id="tablaArticulo" class="table table-bordered dt-responsive order-column" style="width:100%; ">
-								        <thead align="center">
+					    			<table id="tablaArticulo" class="table table-bordered dt-responsive order-column">
+								        <thead class="text-center">
 								            <tr>
 								            	<th>Item</th>
 								                <th>C&oacute;digo</th>
