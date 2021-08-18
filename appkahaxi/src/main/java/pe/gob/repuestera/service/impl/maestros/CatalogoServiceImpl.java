@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import pe.gob.repuestera.exception.ErrorControladoException;
 import pe.gob.repuestera.model.CatalogoModel;
 import pe.gob.repuestera.repository.maestros.CatalogoMapper;
-import pe.gob.repuestera.service.impl.compra.OrdenCompraServiceImpl;
+
 import pe.gob.repuestera.service.maestros.CatalogoService;
 import pe.gob.repuestera.util.Constante;
 
@@ -20,7 +20,7 @@ import pe.gob.repuestera.util.Constante;
 @Service
 public class CatalogoServiceImpl implements CatalogoService {
 	
-	private static final Logger logger = LogManager.getLogger(OrdenCompraServiceImpl.class);
+	private static final Logger logger = LogManager.getLogger(CatalogoServiceImpl.class);
 	
 	@Autowired
 	private CatalogoMapper catalogoMapper;

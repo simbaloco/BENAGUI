@@ -54,7 +54,7 @@
         <result property="cargoContacto"			column="CARGO_CONTACTO" />
         <result property="telefono" 				column="TELEFONO" />        
         <result property="email" 					column="EMAIL" />
-        <result property="emailFactura" 			column="EMAILFACTURA" />
+        <result property="emailFactura" 			column="EMAILCOMPROBANTE_PAGO" />
         <result property="predeterminado" 			column="PREDETERMINADO" />
         <result property="activo" 					column="ACTIVO" />
         <result property="codigoUsuarioRegistra" 	column="COD_USU_REGISTRA" />

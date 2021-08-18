@@ -172,9 +172,10 @@ input.disabled-input {
  }
  .input-symbol-sol:before {
      position: absolute;
-     top: 0;
+     top: 5px;
      content:"SOL ";
      left: 5px;
+     z-index: 1;
  }
 
 .listado-symbol-sol {
@@ -185,9 +186,10 @@ input.disabled-input {
  
  .listado-symbol-sol:before {
      position: initial;
-     top: 0;
+     top: 5px;
      content:"SOL ";
      left: 5px;
+     z-index: 1;
  }
  
 .input-symbol-dolar {
@@ -201,9 +203,10 @@ input.disabled-input {
  }
  .input-symbol-dolar:before {
      position: absolute;
-     top: 0;
+     top: 5px;
      content:"USD ";
      left: 5px;
+     z-index: 1;
  }
  
 .listado-symbol-dolar {
@@ -213,9 +216,10 @@ input.disabled-input {
  }
  .listado-symbol-dolar:before {
      position: initial;
-     top: 0;
+     top: 5px;
      content:"USD ";
      left: 5px;
+     z-index: 1;
  }
  
 input.form-control.input-validation-error {

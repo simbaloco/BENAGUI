@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="pe.gob.repuestera.repository.compra.factura.ComprobantePagoMapper">
+
+    
+    <!-- *************** RESULTMAPS ******************* -->
+    <resultMap id="comprobantePagoCab" type="ComprobantePagoCabModel">
+        <result property="numeroDocumento" 			column="NRO_DOCUMENTO" />
+        <result property="serie" 			        column="SERIE" />
+        <result property="correlativo" 			    column="CORRELATIVO" />
+        <result property="ordenCompra"			    column="NRO_ORDEN_COMPRA" />
+        <result property="username" 				column="USERNAME" />
+        <result property="nombreUsuario" 			column="NOMBRE_USUARIO" />
+        <result property="codigoCliente" 			column="COD_CLIENTE" />
+        <result property="nroDocCliente" 			column="NRO_DOC_CLIENTE" />
+        <result property="nombreCliente" 			column="NOMBRE_CLIENTE" />
+        <result property="direccionFiscal" 			column="DIRECCION_FISCAL" />
+        <result property="email" 					column="EMAIL" />
+        <result property="celular" 					column="CELULAR" />
+        <result property="fechaContabilizacion" 	column="FEC_CONTABILIZACION" />
+        <result property="fechaDocumento" 		    column="FEC_DOCUMENTO" />
+        <result property="fechaVencimiento" 		column="FEC_VENCIMIENTO" />
+        <result property="codigoTipoMoneda" 		column="COD_TIPO_MONEDA" />
+        <result property="descripcionTipoMoneda"	column="DESC_TIPO_MONEDA" />
+        <result property="codigoCondPago" 			column="COD_COND_PAGO" />
+        <result property="descripcionCondPago"		column="DESC_COND_PAGO" />
+        <result property="codigoDias" 				column="COD_DIAS" />
+        <result property="descripcionDias" 			column="DESC_COD_DIAS" />
+        <result property="codigoEstadoPago" 		column="COD_ESTADO_PAGO" />
+        <result property="descripcionEstadoPago"	column="DESC_ESTADO_PAGO" />
+        <result property="codigoEstado" 			column="COD_ESTADO" />
+        <result property="descripcionEstado"		column="DESC_ESTADO" />
+        <result property="tipoCambio"				column="TIPO_CAMBIO" />
+        <result property="subTotal"					column="SUBTOTAL" />
+        <result property="igv"						column="IGV" />
+        <result property="total" 					column="TOTAL" />
+        <result property="codigoEstadoProceso"		column="COD_ESTADO_PROCESO" />
+        <result property="activo"					column="ACTIVO" />
+        <result property="fechaRegistroFormato"		column="FEC_REGISTRO" />
+    </resultMap>
+
+    <resultMap id="comprobantePagoDet" type="ComprobantePagoDetModel">
+        <result property="codGuiaRemision" 		column="NRO_GUIA_REMISION" />
+        <result property="linea" 			    column="LINEA" />
+        <result property="lineaReferencia" 	    column="LINEA_REFERENCIA" />
+        <result property="codArticulo" 			column="COD_ARTICULO" />
+        <result property="codEstandar" 			column="COD_ESTANDAR" />
+        <result property="descripcionArticulo" 	column="DESCRIPCION" />
+        <result property="marca" 				column="MARCA_PRODUCTO" />
+        <result property="codAlmacen" 			column="COD_ALMACEN" />
+        <result property="cantidad" 			column="CANTIDAD" />
+        <result property="precioUnitario"		column="PRECIO_UNITARIO" />
+        <result property="subTotal" 			column="SUB_TOTAL" />
+        <result property="subTotalIgv"		    column="SUB_TOTAL_IGV" />
+    </resultMap>
+
+    <!-- ********************* PARAMETERMAPS ********************* -->
+    <parameterMap id="buscarComprobantePagoCompraParams" type="hashmap">
+        <parameter property="NRO_DOCUMENTO"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+
+    <parameterMap id="listarComprobantePagoCompraPorGuiaRemisionParams" type="hashmap">
+        <parameter property="NRO_GUIA_REMISION"     jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+
+    <parameterMap id="listarComprobantePagoCompraParams" type="hashmap">
+        <parameter property="DATO_BUSCAR"        	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="NRO_COMPROBANTE_PAGO"  jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="NRO_ORDEN_COMPRA"     	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_REPUESTO"     		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_ESTADO"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_DESDE"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_HASTA"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+
+    <parameterMap id="registrarComprobantePagoCompraParams" type="hashmap">
+        <parameter property="SERIE"       	        jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="CORRELATIVO"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_CLIENTE"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="USUARIO"				jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="NRO_ORDEN_COMPRA"		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_CONTABILIZACION"   jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_DOCUMENTO"         jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_VENCIMIENTO"       jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_TIPO_MONEDA"       jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_COND_PAGO"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_DIAS"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_ESTADO_PAGO"       jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_ESTADO"            jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="TIPO_CAMBIO"          	jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="SUB_TOTAL"          	jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="IGV"          			jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="TOTAL"          		jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="DATA_JSON"          	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="NRO_DOCUMENTO"       	jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+
+    <parameterMap id="actualizarComprobantePagoCompraParams" type="hashmap">
+        <parameter property="NRO_DOCUMENTO"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="USUARIO"				jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_ESTADO_PAGO"       jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+
+    <parameterMap id="anularComprobantePagoCompraParams" type="hashmap">
+        <parameter property="NRO_DOCUMENTO"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="USUARIO"       	    jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+        
+    <!-- ************************* QUERYS ******************************* -->
+    <select id="listarComprobantePagoCompra" parameterMap="listarComprobantePagoCompraParams" resultMap="comprobantePagoCab" statementType="CALLABLE">
+        {CALL SP_LISTAR_COMPROBANTE_PAGO_COMPRA(?,?,?,?,?,?,?,?,?) }
+    </select>
+
+    <select id="listarComprobantePagoCompraPorGuiaRemision" parameterMap="listarComprobantePagoCompraPorGuiaRemisionParams" resultMap="comprobantePagoCab" statementType="CALLABLE">
+        {CALL SP_LISTAR_COMPROBANTE_PAGO_COMPRA_POR_GUIA_REMISION(?,?,?) }
+    </select>
+
+    <select id="buscarComprobantePagoCompraCab" parameterMap="buscarComprobantePagoCompraParams" resultMap="comprobantePagoCab" statementType="CALLABLE">
+        {CALL SP_BUSCAR_COMPROBANTE_PAGO_COMPRA_CAB(?,?,?) }
+    </select>
+
+    <select id="buscarComprobantePagoCompraDet" parameterMap="buscarComprobantePagoCompraParams" resultMap="comprobantePagoDet" statementType="CALLABLE">
+        {CALL SP_BUSCAR_COMPROBANTE_PAGO_COMPRA_DET(?,?,?) }
+    </select>
+
+    <insert id="registrarComprobantePagoCompra" parameterMap="registrarComprobantePagoCompraParams" statementType="CALLABLE">
+        {CALL SP_REGISTRAR_COMPROBANTE_PAGO_COMPRA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
+    </insert>
+
+    <update id="actualizarComprobantePagoCompra" parameterMap="actualizarComprobantePagoCompraParams" statementType="CALLABLE">
+        {CALL SP_ACTUALIZAR_COMPROBANTE_PAGO_COMPRA(?,?,?,?,?) }
+    </update>
+
+    <insert id="anularComprobantePagoCompra" parameterMap="anularComprobantePagoCompraParams" statementType="CALLABLE">
+        {CALL SP_ANULAR_COMPROBANTE_PAGO_COMPRA(?,?,?,?) }
+    </insert>
+
+</mapper>

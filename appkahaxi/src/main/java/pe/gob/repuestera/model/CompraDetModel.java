@@ -18,8 +18,8 @@ public class CompraDetModel {
 	private Integer cantidad;
     private Integer cantidadPendiente;
     private BigDecimal precioUnitario;
-    private BigDecimal igvDetalle;
     private BigDecimal subTotal;
+    private BigDecimal subTotalIgv;
     private Integer activo;
     private String codigoUsuarioRegistra;
     private Date fechaRegistro;
@@ -28,4 +28,5 @@ public class CompraDetModel {
     // soporte para los listados
     private String descripcionArticulo;
     private String marca;
+    private String codEstandar;
 }

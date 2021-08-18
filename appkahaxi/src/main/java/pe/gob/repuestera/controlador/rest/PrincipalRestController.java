@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import pe.gob.repuestera.model.ComboModel;
 import pe.gob.repuestera.model.GenericModel;
 import pe.gob.repuestera.model.MenuModel;
-import pe.gob.repuestera.model.ParametrosGeneralesModel;
 import pe.gob.repuestera.model.TipoCambioModel;
 import pe.gob.repuestera.model.UsuarioModel;
 import pe.gob.repuestera.service.GenericService;

@@ -131,7 +131,7 @@ public class PrincipalController {
 			model.addAttribute("listaDias", listaDias);
 			model.addAttribute("listaEstado", listaEstado);
 			
-			retorno = Constante.PAGINA_BUSCAR_COMPRAS;
+			retorno = Constante.PAGINA_NUEVA_ORDEN_COMPRA;
 			logger.info("saliendo del método cargarOrdenCompra");
 		}catch (Exception e) {
 			// TODO: handle exception
@@ -172,22 +172,30 @@ public class PrincipalController {
 		return retorno;
 	}
 
-	@GetMapping("/nueva-guia-remision")
-	public String cargarGuiaRemision(Model model, @RequestParam(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento,
+	@GetMapping("/cargar-guia-remision-compra")
+	public String cargarGuiaRemisionCompra(Model model, @RequestParam(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento,
 									 @RequestParam(Constante.PARAM_OPCION) String opcion,
 									 @RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar,
+									 @RequestParam(Constante.PARAM_NRO_GUIA_REMISION) String nroGuiaRemision,
+									 @RequestParam(Constante.PARAM_NRO_ORDEN_COMPRA) String nroOrdenCompra,
+									 @RequestParam(Constante.PARAM_COD_REPUESTO) String codRepuesto,
 									 @RequestParam(Constante.PARAM_FECHA_DESDE) String fechaDesde,
 									 @RequestParam(Constante.PARAM_FECHA_HASTA) String fechaHasta,
 									 @RequestParam(Constante.PARAM_ESTADO) String estadoParam,
 									 @RequestParam(Constante.PARAM_VOLVER) String volver) {
+		
 		String retorno;
 		try {
-			logger.info("entrando al método cargarGuiaRemision, OPCION--->" + opcion + "/numeroDocumento-->" + numeroDocumento + "/datoBuscar-->" + datoBuscar
+			logger.info("entrando al método cargarGuiaRemisionCompra, OPCION--->" + opcion + "/numeroDocumento-->" + numeroDocumento + "/datoBuscar-->" + datoBuscar
+					+ "/nroGuiaRemision-->" + nroGuiaRemision + "/nroOrdenCompra-->" + nroOrdenCompra + "/codRepuesto-->" + codRepuesto 
 					+ "/fechaDesde-->" + fechaDesde + "/fechaHasta-->" + fechaHasta
 					+ "/estadoParam-->" + estadoParam + "/volver-->" + volver);
 			model.addAttribute("numeroDocumento", numeroDocumento);
 			model.addAttribute("opcion", opcion);
 			model.addAttribute("datoBuscar", datoBuscar);
+			model.addAttribute("nroGuiaRemision", nroGuiaRemision);
+			model.addAttribute("nroOrdenCompra", nroOrdenCompra);
+			model.addAttribute("codRepuesto", codRepuesto);
 			model.addAttribute("fechaDesde", fechaDesde);
 			model.addAttribute("fechaHasta", fechaHasta);
 			model.addAttribute("estadoParam", estadoParam);
@@ -203,8 +211,8 @@ public class PrincipalController {
 			model.addAttribute("listaDias", listaDias);
 			model.addAttribute("listaMotivosTraslado", listaMotivosTraslado);
 			
-			retorno = Constante.PAGINA_NUEVA_GUIA_REMISION;
-			logger.info("saliendo del método cargarGuiaRemision");
+			retorno = Constante.PAGINA_CARGAR_GUIA_REMISION_COMPRA;
+			logger.info("saliendo del método cargarGuiaRemisionCompra");
 		}catch (Exception e) {
 			// TODO: handle exception
 			retorno = Constante.PAGINA_ERROR;
@@ -213,25 +221,32 @@ public class PrincipalController {
 		return retorno;
 	}
 	
-	@GetMapping("/mantenimiento-guia-remision")
-	public String cargarMantenimientoGuiaRemision(Model model, @RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar,
-												 @RequestParam(Constante.PARAM_FECHA_DESDE) String fechaDesde,
-												 @RequestParam(Constante.PARAM_FECHA_HASTA) String fechaHasta,
-												 @RequestParam(Constante.PARAM_ESTADO) String estadoParam) {
+	@GetMapping("/mantenimiento-guia-remision-compra")
+	public String cargarMantenimientoGuiaRemisionCompra(Model model, @RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar,
+															   @RequestParam(Constante.PARAM_NRO_GUIA_REMISION) String nroGuiaRemision,
+															   @RequestParam(Constante.PARAM_NRO_ORDEN_COMPRA) String nroOrdenCompra,
+															   @RequestParam(Constante.PARAM_COD_REPUESTO) String codRepuesto,
+															   @RequestParam(Constante.PARAM_FECHA_DESDE) String fechaDesde,
+															   @RequestParam(Constante.PARAM_FECHA_HASTA) String fechaHasta,
+															   @RequestParam(Constante.PARAM_ESTADO) String estadoParam) {
 		String retorno;
 		try {
-			logger.info("entrando al método cargarMantenimientoGuiaRemision, datoBuscar-->" + datoBuscar
+			logger.info("entrando al método cargarMantenimientoGuiaRemisionCompra, datoBuscar-->" + datoBuscar
+					+ "/nroGuiaRemision-->" + nroGuiaRemision + "/nroOrdenCompra-->" + nroOrdenCompra + "/codRepuesto-->" + codRepuesto 
 					+ "/fechaDesde-->" + fechaDesde + "/fechaHasta-->" + fechaHasta
 					+ "/estadoParam-->" + estadoParam);
 			model.addAttribute("datoBuscar", datoBuscar);
+			model.addAttribute("nroGuiaRemision", nroGuiaRemision);
+			model.addAttribute("nroOrdenCompra", nroOrdenCompra);
+			model.addAttribute("codRepuesto", codRepuesto);
 			model.addAttribute("fechaDesde", fechaDesde);
 			model.addAttribute("fechaHasta", fechaHasta);
 			model.addAttribute("estadoParam", estadoParam);
 			List<ComboModel> listaEstado = genericService.cargarCombo(Constante.CATALOGO_ESTADO_DOC);
 			model.addAttribute("listaEstado", listaEstado);
 			
-			retorno = Constante.PAGINA_MANTENIMIENTO_GUIA_REMISION;
-			logger.info("saliendo del método cargarMantenimientoGuiaRemision");
+			retorno = Constante.PAGINA_MANTENIMIENTO_GUIA_REMISION_COMPRA;
+			logger.info("saliendo del método cargarMantenimientoGuiaRemisionCompra");
 		}catch (Exception e) {
 			// TODO: handle exception
 			retorno = Constante.PAGINA_ERROR;
@@ -241,25 +256,32 @@ public class PrincipalController {
 	}
 
 
-	@GetMapping("/mantenimiento-factura")
-	public String cargarMantenimientoFactura(Model model, @RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar,
-												  @RequestParam(Constante.PARAM_FECHA_DESDE) String fechaDesde,
-												  @RequestParam(Constante.PARAM_FECHA_HASTA) String fechaHasta,
-												  @RequestParam(Constante.PARAM_ESTADO) String estadoParam) {
+	@GetMapping("/mantenimiento-comprobante-pago-compra")
+	public String cargarMantenimientoComprobantePagoCompra(Model model, @RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar,
+														  @RequestParam(Constante.PARAM_NRO_COMPROBANTE_PAGO) String nroComprobantePago,
+														  @RequestParam(Constante.PARAM_NRO_ORDEN_COMPRA) String nroOrdenCompra,
+														  @RequestParam(Constante.PARAM_COD_REPUESTO) String codRepuesto,
+														  @RequestParam(Constante.PARAM_FECHA_DESDE) String fechaDesde,
+														  @RequestParam(Constante.PARAM_FECHA_HASTA) String fechaHasta,
+														  @RequestParam(Constante.PARAM_ESTADO) String estadoParam) {
 		String retorno;
 		try {
-			logger.info("entrando al método cargarMantenimientoFactura, datoBuscar-->" + datoBuscar
+			logger.info("entrando al método cargarMantenimientoComprobantePagoCompra, datoBuscar-->" + datoBuscar
+					+ "/nroComprobantePago-->" + nroComprobantePago + "/nroOrdenCompra-->" + nroOrdenCompra + "/codRepuesto-->" + codRepuesto 
 					+ "/fechaDesde-->" + fechaDesde + "/fechaHasta-->" + fechaHasta
 					+ "/estadoParam-->" + estadoParam);
 			model.addAttribute("datoBuscar", datoBuscar);
+			model.addAttribute("nroComprobantePago", nroComprobantePago);
+			model.addAttribute("nroOrdenCompra", nroOrdenCompra);
+			model.addAttribute("codRepuesto", codRepuesto);
 			model.addAttribute("fechaDesde", fechaDesde);
 			model.addAttribute("fechaHasta", fechaHasta);
 			model.addAttribute("estadoParam", estadoParam);
 			List<ComboModel> listaEstado = genericService.cargarCombo(Constante.CATALOGO_ESTADO_DOC);
 			model.addAttribute("listaEstado", listaEstado);
 
-			retorno = Constante.PAGINA_MANTENIMIENTO_FACTURA;
-			logger.info("saliendo del método cargarMantenimientoFactura");
+			retorno = Constante.PAGINA_MANTENIMIENTO_COMPROBANTE_PAGO_COMPRA;
+			logger.info("saliendo del método cargarMantenimientoComprobantePagoCompra");
 		}catch (Exception e) {
 			// TODO: handle exception
 			retorno = Constante.PAGINA_ERROR;
@@ -268,8 +290,8 @@ public class PrincipalController {
 		return retorno;
 	}
 
-	@GetMapping("/nueva-factura-directa")
-	public String cargarFacturaDirecta(Model model, @RequestParam(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento,
+	@GetMapping("/nuevo-comprobante-pago-compra-directo")
+	public String cargarComprobantePagoCompraDirecto(Model model, @RequestParam(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento,
 									 @RequestParam(Constante.PARAM_OPCION) String opcion,
 									 @RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar,
 									 @RequestParam(Constante.PARAM_FECHA_DESDE) String fechaDesde,
@@ -278,7 +300,7 @@ public class PrincipalController {
 									 @RequestParam(Constante.PARAM_VOLVER) String volver) {
 		String retorno;
 		try {
-			logger.info("entrando al método cargarFacturaDirecta, OPCION--->" + opcion + "/numeroDocumento-->" + numeroDocumento + "/datoBuscar-->" + datoBuscar
+			logger.info("entrando al método cargarComprobantePagoCompraDirecto, OPCION--->" + opcion + "/numeroDocumento-->" + numeroDocumento + "/datoBuscar-->" + datoBuscar
 					+ "/fechaDesde-->" + fechaDesde + "/fechaHasta-->" + fechaHasta
 					+ "/estadoParam-->" + estadoParam + "/volver-->" + volver);
 			model.addAttribute("numeroDocumento", numeroDocumento);
@@ -293,14 +315,16 @@ public class PrincipalController {
 			List<ComboModel> listaCondPago = genericService.cargarCombo(Constante.CATALOGO_CONDICION_PAGO);
 			List<ComboModel> listaDias = genericService.cargarCombo(Constante.CATALOGO_DIAS_PC);
 			List<ComboModel> listaEstadoPago = genericService.cargarCombo(Constante.CATALOGO_ESTADO_PAGO);
+			List<ComboModel> listaComprobantePago = genericService.cargarCombo(Constante.CATALOGO_COMPROBANTE_PAGO);
 
 			model.addAttribute("listaMoneda", listaMoneda);
 			model.addAttribute("listaCondPago", listaCondPago);
 			model.addAttribute("listaDias", listaDias);
 			model.addAttribute("listaEstadoPago", listaEstadoPago);
+			model.addAttribute("listaComprobantePago", listaComprobantePago);
 
-			retorno = Constante.PAGINA_NUEVA_FACTURA_DIRECTA;
-			logger.info("saliendo del método cargarFacturaDirecta");
+			retorno = Constante.PAGINA_NUEVO_COMPROBANTE_PAGO_DIRECTO_COMPRA;
+			logger.info("saliendo del método cargarComprobantePagoCompraDirecto");
 		}catch (Exception e) {
 			// TODO: handle exception
 			retorno = Constante.PAGINA_ERROR;
@@ -309,8 +333,8 @@ public class PrincipalController {
 		return retorno;
 	}
 
-	@GetMapping("/nueva-factura-asociada")
-	public String cargarFacturaAsociada(Model model,
+	@GetMapping("/nuevo-comprobante-pago-compra-asociado")
+	public String cargarComprobantePagoCompraAsociado(Model model,
 										@RequestParam(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento,
 									    @RequestParam(Constante.PARAM_OPCION) String opcion,
 									    @RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar,
@@ -323,7 +347,7 @@ public class PrincipalController {
 
 		try {
 
-			logger.info("entrando al método cargarFacturaAsociada, OPCION--->" + opcion + "/numeroDocumento-->" + numeroDocumento + "/datoBuscar-->" + datoBuscar
+			logger.info("entrando al método cargarComprobantePagoCompraAsociado, OPCION--->" + opcion + "/numeroDocumento-->" + numeroDocumento + "/datoBuscar-->" + datoBuscar
 					+ "/fechaDesde-->" + fechaDesde + "/fechaHasta-->" + fechaHasta
 					+ "/estadoParam-->" + estadoParam + "/volver-->" + volver + "/guias-->" + guias);
 
@@ -346,8 +370,8 @@ public class PrincipalController {
 			model.addAttribute("listaDias", listaDias);
 			model.addAttribute("listaEstadoPago", listaEstadoPago);
 
-			retorno = Constante.PAGINA_NUEVA_FACTURA_ASOCIADA;
-			logger.info("saliendo del método cargarFacturaAsociada");
+			retorno = Constante.PAGINA_NUEVO_COMPROBANTE_PAGO_ASOCIADO_COMPRA;
+			logger.info("saliendo del método cargarComprobantePagoCompraAsociado");
 		}catch (Exception e) {
 			// TODO: handle exception
 			retorno = Constante.PAGINA_ERROR;

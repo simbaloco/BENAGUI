@@ -4,44 +4,45 @@ public class Constante {
 	
 	public static final String USUARIO = "usuario";
 	
-	/* VALORES PARA LA TABLA DE CATÃƒï¿½LOGOS */
-	public static final String CATALOGO_MARCA_ARTICULO  = "01";
-	public static final String CATALOGO_TIPO 			= "02";
-	public static final String CATALOGO_SECCION 		= "03";
-	public static final String CATALOGO_UND_MEDIDA 		= "04";
-	public static final String CATALOGO_MARCA_VEHICULO	= "05";
-	public static final String CATALOGO_MODELO 			= "06";
-	public static final String CATALOGO_MOTOR 			= "07";
-	public static final String CATALOGO_APLICACION		= "08";	
-	public static final String CATALOGO_ESTADO_COTI		= "11";
-	public static final String CATALOGO_ESTADO_DOC		= "12";
-	public static final String CATALOGO_ESTADO_PAGO		= "33";
-	public static final String CATALOGO_CONDICION_PAGO	= "20";
-	public static final String CATALOGO_DIAS_PC			= "21";
-	public static final String CATALOGO_MONEDA 			= "22";
-	public static final String CATALOGO_TIPO_SN 		= "23";
-	public static final String CATALOGO_TIPO_PERSONA 	= "24";
-	public static final String CATALOGO_TIPO_DOC_IDENT 	= "25";	
-	public static final String CATALOGO_TIPO_OPE_INV 	= "26";
-	public static final String CATALOGO_TIPO_DOC_SYSTEM	= "27";
-	public static final String CATALOGO_TIPO_DOC_SUNAT 	= "28";	
-	public static final String CATALOGO_IGV 			= "31";
-	public static final String CATALOGO_MOTIVO_TRASLADO	= "32";
+	/* VALORES PARA LA TABLA DE CATÁLOGOS */
+	public static final String CATALOGO_MARCA_ARTICULO  	= "01";
+	public static final String CATALOGO_TIPO 				= "02";
+	public static final String CATALOGO_SECCION 			= "03";
+	public static final String CATALOGO_UND_MEDIDA 			= "04";
+	public static final String CATALOGO_MARCA_VEHICULO		= "05";
+	public static final String CATALOGO_MODELO 				= "06";
+	public static final String CATALOGO_MOTOR 				= "07";
+	public static final String CATALOGO_APLICACION			= "08";	
+	public static final String CATALOGO_ESTADO_COTI			= "11";
+	public static final String CATALOGO_ESTADO_DOC			= "12";
+	public static final String CATALOGO_ESTADO_PAGO			= "33";
+	public static final String CATALOGO_COMPROBANTE_PAGO	= "34";
+	public static final String CATALOGO_CONDICION_PAGO		= "20";
+	public static final String CATALOGO_DIAS_PC				= "21";
+	public static final String CATALOGO_MONEDA 				= "22";
+	public static final String CATALOGO_TIPO_SN 			= "23";
+	public static final String CATALOGO_TIPO_PERSONA 		= "24";
+	public static final String CATALOGO_TIPO_DOC_IDENT 		= "25";	
+	public static final String CATALOGO_TIPO_OPE_INV 		= "26";
+	public static final String CATALOGO_TIPO_DOC_SYSTEM		= "27";
+	public static final String CATALOGO_TIPO_DOC_SUNAT 		= "28";	
+	public static final String CATALOGO_IGV 				= "31";
+	public static final String CATALOGO_MOTIVO_TRASLADO		= "32";
 	
 	/* VALORES PARA LA TABLA SOCIOS DE NEGOCIO */
 	public static final String COD_TIPO_SOCIO_CLIENTE  	= "01";
 	public static final String COD_TIPO_SOCIO_PROVEEDOR = "02";
 	
 	
-	/*** VALORES PARA LAS PÃƒï¿½GINAS HTML ***/
+	/*** VALORES PARA LAS PÁGINAS HTML ***/
 	/* GENERAL */
 	public static final String PAGINA_LOGIN = "login";
 	public static final String PAGINA_PRINCIPAL = "paginas/principal";
 	public static final String PAGINA_ERROR = "paginas/error/error";
 	public static final String PAGINA_ACCESS_DENIED = "paginas/error/access-denied";
 	/* COMPRAS */
-	public static final String PAGINA_BUSCAR_COMPRAS = "paginas/compras/nueva-orden-compra";
-	public static final String PAGINA_MANTENIMIENTO_ORDEN_COMPRA = "paginas/compras/mantenimiento-orden-compra";
+	public static final String PAGINA_NUEVA_ORDEN_COMPRA = "paginas/compras/ordencompra/nueva-orden-compra";
+	public static final String PAGINA_MANTENIMIENTO_ORDEN_COMPRA = "paginas/compras/ordencompra/mantenimiento-orden-compra";
 	/* MAESTROS */
 	public static final String PAGINA_BUSCAR_ARTICULOS = "paginas/maestros/buscar-articulos";
 	public static final String PAGINA_MANTENIMIENTO_USUARIOS = "paginas/maestros/mantenimiento-usuario";
@@ -56,16 +57,16 @@ public class Constante {
 	public static final String PAGINA_MANTENIMIENTO_DATA_CATALOGO = "paginas/maestros/mantenimiento-data-catalogo";
 	public static final String PAGINA_MANTENIMIENTO_CATALOGO_DEPENDIENTE = "paginas/maestros/mantenimiento-catalogo-dependiente";
 	/* VENTAS */
-	public static final String PAGINA_MANTENIMIENTO_COTIZACION = "paginas/ventas/mantenimiento-cotizacion";
-	public static final String PAGINA_NUEVA_COTIZACION = "paginas/ventas/nueva-cotizacion";
-	public static final String PAGINA_NUEVA_ORDEN_VENTA = "paginas/ventas/nueva-orden-venta";
+	public static final String PAGINA_MANTENIMIENTO_COTIZACION = "paginas/ventas/cotizacion/mantenimiento-cotizacion";
+	public static final String PAGINA_NUEVA_COTIZACION = "paginas/ventas/cotizacion/nueva-cotizacion";
+	public static final String PAGINA_NUEVA_ORDEN_VENTA = "paginas/ventas/cotizacion/nueva-orden-venta";
 	/* GUIA REMISION */
-	public static final String PAGINA_NUEVA_GUIA_REMISION = "paginas/guiaremision/nueva-guia-remision";
-	public static final String PAGINA_MANTENIMIENTO_GUIA_REMISION = "paginas/guiaremision/mantenimiento-guia-remision";
-	/* FACTURA */
-	public static final String PAGINA_NUEVA_FACTURA_DIRECTA = "paginas/factura/nueva-factura-directa";
-	public static final String PAGINA_NUEVA_FACTURA_ASOCIADA = "paginas/factura/nueva-factura-asociada";
-	public static final String PAGINA_MANTENIMIENTO_FACTURA = "paginas/factura/mantenimiento-factura";
+	public static final String PAGINA_CARGAR_GUIA_REMISION_COMPRA = "paginas/compras/guiaremision/cargar-guia-remision";
+	public static final String PAGINA_MANTENIMIENTO_GUIA_REMISION_COMPRA = "paginas/compras/guiaremision/mantenimiento-guia-remision";
+	/* COMPROBANTE PAGO */
+	public static final String PAGINA_NUEVO_COMPROBANTE_PAGO_DIRECTO_COMPRA = "paginas/compras/factura/nuevo-comprobante-pago-directo";
+	public static final String PAGINA_NUEVO_COMPROBANTE_PAGO_ASOCIADO_COMPRA = "paginas/compras/factura/nuevo-comprobante-pago-asociado";
+	public static final String PAGINA_MANTENIMIENTO_COMPROBANTE_PAGO_COMPRA = "paginas/compras/factura/mantenimiento-comprobante-pago";
 
 	/*** VALORES PARA CONTROL DE FLUJO DENTRO DE LOS CONTROLLERS ***/
 	/* RESULTADOS */
@@ -78,57 +79,58 @@ public class Constante {
 	public static final String ENVIAR_CODIGO 	= "true";
 	
 	/* PARAMETROS PARA INVOCAR A LOS SP */
-	public static final String PARAM_SP_ID_DATA_CATALOGO 	= "ID_DATA_CATALOGO";
-	public static final String PARAM_SP_COD_MAESTRO 		= "COD_MAESTRO";
-	public static final String PARAM_SP_COD_DATA 			= "COD_DATA";
-	public static final String PARAM_SP_DESC_DATA 			= "DESC_DATA";
-	public static final String PARAM_SP_COD_CATALOGO_PADRE 	= "COD_CATALOGO_PADRE";
-	public static final String PARAM_SP_COD_DATA_PADRE 		= "COD_DATA_PADRE";
-	public static final String PARAM_SP_COD_PADRE 			= "COD_PADRE";
-	public static final String PARAM_SP_FLG_SUNAT			= "FLAG_SUNAT";
-	public static final String PARAM_SP_ACTIVO				= "ACTIVO";
-	public static final String PARAM_SP_COD_USU_REGISTRA	= "COD_USU_REGISTRA";
-	public static final String PARAM_SP_COD_USU_MODIFICA	= "COD_USU_MODIFICA";	
-	public static final String PARAM_SP_USERNAME 			= "USERNAME";
-	public static final String PARAM_SP_NRO_DOCUMENTO		= "NRO_DOCUMENTO";
-	public static final String PARAM_SP_COD_GUIA_REMISION   = "COD_GUIA_REMISION";
-    public static final String PARAM_SP_COD_CLIENTE	 		= "COD_CLIENTE";
-	public static final String PARAM_SP_SERIE	 			= "SERIE";
-	public static final String PARAM_SP_CORRELATIVO	 		= "CORRELATIVO";
-	public static final String PARAM_SP_ORDEN_COMPRA	 	= "ORDEN_COMPRA";
-	public static final String PARAM_SP_FEC_DOCUMENTO	 	= "FEC_DOCUMENTO";
-    public static final String PARAM_SP_USUARIO				= "USUARIO";
-    public static final String PARAM_SP_DATO_BUSCAR			= "DATO_BUSCAR";
-    public static final String PARAM_SP_FEC_CONTABILIZACION	= "FEC_CONTABILIZACION";
-    public static final String PARAM_SP_FEC_VALIDO_HASTA	= "FEC_VALIDO_HASTA";
-	public static final String PARAM_SP_FEC_ENTREGA			= "FEC_ENTREGA";
-	public static final String PARAM_SP_FEC_VENCIMIENTO		= "FEC_VENCIMIENTO";
-    public static final String PARAM_SP_FEC_DESDE			= "FEC_DESDE";
-    public static final String PARAM_SP_FEC_HASTA			= "FEC_HASTA";
-    public static final String PARAM_SP_COD_TIPO_MONEDA		= "COD_TIPO_MONEDA";
-    public static final String PARAM_SP_COD_COND_PAGO		= "COD_COND_PAGO";
-    public static final String PARAM_SP_COD_DIAS			= "COD_DIAS";
-    public static final String PARAM_SP_COD_ESTADO			= "COD_ESTADO";
-	public static final String PARAM_SP_COD_ESTADO_PAGO		= "COD_ESTADO_PAGO";
-	public static final String PARAM_SP_COD_MOTIVO_TRASLADO	= "COD_MOTIVO_TRASLADO";
-	public static final String PARAM_SP_NRO_REQUERIMIENTO	= "NRO_REQUERIMIENTO";
-	public static final String PARAM_SP_COD_REPUESTO		= "COD_REPUESTO";
-    public static final String PARAM_SP_ASUNTO				= "ASUNTO";
-    public static final String PARAM_SP_TIPO_CAMBIO			= "TIPO_CAMBIO";
-    public static final String PARAM_SP_OBSERVACIONES		= "OBSERVACIONES";
-    public static final String PARAM_SP_NRO_DOCUMENTO_REF	= "NRO_DOCUMENTO_REF";
-    public static final String PARAM_SP_PORC_DCTO_TOTAL		= "PORC_DCTO_TOTAL";
-    public static final String PARAM_SP_SUB_TOTAL			= "SUB_TOTAL";
-    public static final String PARAM_SP_DCTO          		= "DCTO";
-    public static final String PARAM_SP_IGV					= "IGV";
-    public static final String PARAM_SP_TOTAL				= "TOTAL";
-    public static final String PARAM_SP_USUARIO_REGISTRA	= "USUARIO_REGISTRA";
-    public static final String PARAM_SP_USUARIO_MODIFICA	= "USUARIO_MODIFICA";
-    public static final String PARAM_SP_CANTIDAD			= "CANTIDAD";
-    public static final String PARAM_SP_PRECIO_UNITARIO		= "PRECIO_UNITARIO";
-    public static final String PARAM_SP_PORC_DCTO			= "PORC_DCTO";
-    public static final String PARAM_SP_PRECIO_CON_DCTO		= "PRECIO_CON_DCTO";
-    public static final String PARAM_SP_DATA_JSON			= "DATA_JSON";
+	public static final String PARAM_SP_ID_DATA_CATALOGO 		= "ID_DATA_CATALOGO";
+	public static final String PARAM_SP_COD_MAESTRO 			= "COD_MAESTRO";
+	public static final String PARAM_SP_COD_DATA 				= "COD_DATA";
+	public static final String PARAM_SP_DESC_DATA 				= "DESC_DATA";
+	public static final String PARAM_SP_COD_CATALOGO_PADRE 		= "COD_CATALOGO_PADRE";
+	public static final String PARAM_SP_COD_DATA_PADRE 			= "COD_DATA_PADRE";
+	public static final String PARAM_SP_COD_PADRE 				= "COD_PADRE";
+	public static final String PARAM_SP_FLG_SUNAT				= "FLAG_SUNAT";
+	public static final String PARAM_SP_ACTIVO					= "ACTIVO";
+	public static final String PARAM_SP_COD_USU_REGISTRA		= "COD_USU_REGISTRA";
+	public static final String PARAM_SP_COD_USU_MODIFICA		= "COD_USU_MODIFICA";	
+	public static final String PARAM_SP_USERNAME 				= "USERNAME";
+	public static final String PARAM_SP_NRO_DOCUMENTO			= "NRO_DOCUMENTO";
+	public static final String PARAM_SP_NRO_GUIA_REMISION   	= "NRO_GUIA_REMISION";
+	public static final String PARAM_SP_NRO_COMPROBANTE_PAGO   	= "NRO_COMPROBANTE_PAGO";
+    public static final String PARAM_SP_COD_CLIENTE	 			= "COD_CLIENTE";
+	public static final String PARAM_SP_SERIE	 				= "SERIE";
+	public static final String PARAM_SP_CORRELATIVO	 			= "CORRELATIVO";
+	public static final String PARAM_SP_NRO_ORDEN_COMPRA		= "NRO_ORDEN_COMPRA";
+	public static final String PARAM_SP_FEC_DOCUMENTO	 		= "FEC_DOCUMENTO";
+    public static final String PARAM_SP_USUARIO					= "USUARIO";
+    public static final String PARAM_SP_DATO_BUSCAR				= "DATO_BUSCAR";
+    public static final String PARAM_SP_FEC_CONTABILIZACION		= "FEC_CONTABILIZACION";
+    public static final String PARAM_SP_FEC_VALIDO_HASTA		= "FEC_VALIDO_HASTA";
+	public static final String PARAM_SP_FEC_ENTREGA				= "FEC_ENTREGA";
+	public static final String PARAM_SP_FEC_VENCIMIENTO			= "FEC_VENCIMIENTO";
+    public static final String PARAM_SP_FEC_DESDE				= "FEC_DESDE";
+    public static final String PARAM_SP_FEC_HASTA				= "FEC_HASTA";
+    public static final String PARAM_SP_COD_TIPO_MONEDA			= "COD_TIPO_MONEDA";
+    public static final String PARAM_SP_COD_COND_PAGO			= "COD_COND_PAGO";
+    public static final String PARAM_SP_COD_DIAS				= "COD_DIAS";
+    public static final String PARAM_SP_COD_ESTADO				= "COD_ESTADO";
+	public static final String PARAM_SP_COD_ESTADO_PAGO			= "COD_ESTADO_PAGO";
+	public static final String PARAM_SP_COD_MOTIVO_TRASLADO		= "COD_MOTIVO_TRASLADO";
+	public static final String PARAM_SP_NRO_REQUERIMIENTO		= "NRO_REQUERIMIENTO";
+	public static final String PARAM_SP_COD_REPUESTO			= "COD_REPUESTO";
+    public static final String PARAM_SP_ASUNTO					= "ASUNTO";
+    public static final String PARAM_SP_TIPO_CAMBIO				= "TIPO_CAMBIO";
+    public static final String PARAM_SP_OBSERVACIONES			= "OBSERVACIONES";
+    public static final String PARAM_SP_NRO_DOCUMENTO_REF		= "NRO_DOCUMENTO_REF";
+    public static final String PARAM_SP_PORC_DCTO_TOTAL			= "PORC_DCTO_TOTAL";
+    public static final String PARAM_SP_SUB_TOTAL				= "SUB_TOTAL";
+    public static final String PARAM_SP_DCTO          			= "DCTO";
+    public static final String PARAM_SP_IGV						= "IGV";
+    public static final String PARAM_SP_TOTAL					= "TOTAL";
+    public static final String PARAM_SP_USUARIO_REGISTRA		= "USUARIO_REGISTRA";
+    public static final String PARAM_SP_USUARIO_MODIFICA		= "USUARIO_MODIFICA";
+    public static final String PARAM_SP_CANTIDAD				= "CANTIDAD";
+    public static final String PARAM_SP_PRECIO_UNITARIO			= "PRECIO_UNITARIO";
+    public static final String PARAM_SP_PORC_DCTO				= "PORC_DCTO";
+    public static final String PARAM_SP_PRECIO_CON_DCTO			= "PRECIO_CON_DCTO";
+    public static final String PARAM_SP_DATA_JSON				= "DATA_JSON";
     
     public static final String PARAM_SP_COD_ESTANDAR		= "COD_ESTANDAR";
     public static final String PARAM_SP_COD_ANTIGUO			= "COD_ANTIGUO";
@@ -201,7 +203,7 @@ public class Constante {
 	public static final String PARAM_LISTADO 			= "LISTADO";
 	
 	
-	/* PARAMETROS DE ENTRADA PARA LOS MÃƒâ€°TODOS DE LOS CONTROLLER */
+	/* PARAMETROS DE ENTRADA PARA LOS MÉTODOS DE LOS CONTROLLER */
 	public static final String PARAM_ID_ARTICULO = "idArticulo";
 	public static final String PARAM_COD_CLIENTE = "codCliente";
 	public static final String PARAM_COD_MAESTRO_CONTROLLER = "codMaestro";
@@ -250,6 +252,8 @@ public class Constante {
 	public static final String PARAM_DATO_BUSCAR = "datoBuscar";
 	public static final String PARAM_NRO_COTIZACION = "nroCotizacion";
 	public static final String PARAM_NRO_ORDEN_COMPRA = "nroOrdenCompra";
+	public static final String PARAM_NRO_GUIA_REMISION = "nroGuiaRemision";
+	public static final String PARAM_NRO_COMPROBANTE_PAGO = "nroComprobantePago";
 	public static final String PARAM_NRO_REQUERIMIENTO = "nroRequerimiento";
 	public static final String PARAM_COD_REPUESTO = "codRepuesto";
 	public static final String PARAM_DATO_ORDEN_COMPRA = "codigoOrdenCompra";
@@ -267,7 +271,7 @@ public class Constante {
 	public static final String PARAM_COD_DATA_CATALOGO = "codDataCatalogo";
 	public static final String PARAM_TIPO_CATALOGO = "tipoCatalogo";
 	
-	/* NÃƒÅ¡MEROS PARA USO GENERAL */
+	/* NÚMEROS PARA USO GENERAL */
 	public static final Integer CERO = 0;
 	public static final Integer UNO = 1;
 	public static final Integer DOS = 2;
@@ -280,7 +284,7 @@ public class Constante {
 	public static final String COD_ESTADO_GENERADO_GUIA_REMISION = "01";
 	public static final String COD_ESTADO_CANCELADO_GUIA_REMISION = "02";
 
-	public static final String ERROR_CONTROADO_NO_EXISTEN_FACTURAS = "AÃƒÂºn no existen facturas asociadas";
+	public static final String ERROR_CONTROLADO_NO_EXISTEN_COMPROBANTES_PAGO = "Aún no existen comprobantes de pago asociados.";
 	
 
 }
