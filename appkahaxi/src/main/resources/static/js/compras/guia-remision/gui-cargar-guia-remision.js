@@ -1042,7 +1042,7 @@ function mostrarDialogoAnularGuiaRemision() {
 function mostrarDialogoGenerarFactura(event) {
 
 	bootbox.confirm({
-		message: "¿Está seguro de generar el Comprobante de Pago?",
+		message: "¿Está seguro de generar la Factura?",
 		buttons: {
 			confirm: {
 				label: 'Sí',

@@ -284,7 +284,7 @@ public class Constante {
 	public static final String COD_ESTADO_GENERADO_GUIA_REMISION = "01";
 	public static final String COD_ESTADO_CANCELADO_GUIA_REMISION = "02";
 
-	public static final String ERROR_CONTROLADO_NO_EXISTEN_COMPROBANTES_PAGO = "Aún no existen comprobantes de pago asociados.";
+	public static final String ERROR_CONTROLADO_NO_EXISTEN_FACTURAS = "Aún no existen facturas asociadas.";
 	
 
 }

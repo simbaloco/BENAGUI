@@ -40,10 +40,10 @@ var asunto;
 var tipoCambio;
 var observaciones;
 var subTotalCoti;
-var dctoCotiDiv;
-var dctoCoti;
-var igvCoti;
-var totalCoti;
+var dctoFactDiv;
+var dctoFact;
+var igvFact;
+var totalFact;
 
 var tableDetalle;
 var tableNuevoDetalle;
@@ -115,10 +115,10 @@ function inicializarVariables() {
 	tipoCambio =  $("#tipoCambio");
 	observaciones =  $("#observaciones");
 	subTotalCoti =  $("#subTotalCoti");
-	dctoCotiDiv =  $("#dctoCotiDiv");
-	dctoCoti =  $("#dctoCoti");
-	igvCoti =  $("#igvCoti");
-	totalCoti =  $("#totalCoti");
+	dctoFactDiv =  $("#dctoFactDiv");
+	dctoFact =  $("#dctoFact");
+	igvFact =  $("#igvFact");
+	totalFact =  $("#totalFact");
 	
 	tableDetalle =  $("#tableDetalle");
 	tableNuevoDetalle =  $("#tableNuevoDetalle");
@@ -467,9 +467,9 @@ function cargarPantallaHTML(data) {
 	antiguoAsunto = data.asunto;
 	
 	subTotalCoti.val(convertirNumeroAMoneda(data.subTotal));
-    dctoCoti.val(convertirNumeroAMoneda(data.descuento));
-    igvCoti.val(convertirNumeroAMoneda(data.igv));
-    totalCoti.val(convertirNumeroAMoneda(data.total));
+    dctoFact.val(convertirNumeroAMoneda(data.descuento));
+    igvFact.val(convertirNumeroAMoneda(data.igv));
+    totalFact.val(convertirNumeroAMoneda(data.total));
 
 	tipoCambio.val(data.tipoCambio);
 	observaciones.val(data.observaciones);
@@ -480,7 +480,7 @@ function cargarPantallaHTML(data) {
     	dctoTotal.val(data.porcDctoTotal);
     	//habilitarControl(dctoTotal);
     	checkControl(chkDctoTotal);
-    	mostrarControl(dctoCotiDiv);
+    	mostrarControl(dctoFactDiv);
     }
 	// evaluando si tiene documento de referencia
 	if(data.numeroDocumentoRef != CADENA_VACIA){
@@ -948,7 +948,7 @@ function precioKeyDown(e, fila){
 	console.log("precioKeyDown, key-->" + key);
 	// si es ENTER
 	if(key == 13){
-		// preguntamos si está activo el check de dcto totalCoti
+		// preguntamos si está activo el check de dcto totalFact
 		// si está activo, al presionar ENTER entonces INSERTAMOS UNA NUEVA FILA
 		if (chkDctoTotal.is(':checked')) {
 			btnAgregarArticulo.click();
@@ -1056,12 +1056,12 @@ function evaluarCambioEstado(){
 function clickCheckBoxDctoTotal(control){
 	if (control.is(':checked')) {
 		habilitarControl(dctoTotal);
-		mostrarControl(dctoCotiDiv);
+		mostrarControl(dctoFactDiv);
 		calcularActivarDctoTotal();
 		dctoTotal.focus();
 	}else{
 		calcularDesactivarDctoTotal();
-		ocultarControl(dctoCotiDiv);
+		ocultarControl(dctoFactDiv);
 		deshabilitarControl(dctoTotal);
 		dctoTotal.val(CADENA_VACIA);
 	}
@@ -1341,9 +1341,9 @@ function registrarCotizacionVenta(){
 		porcDctoTotal 		= dctoTotal.val().trim();
 	}
 	var subTotal 			= convertirMonedaANumero(subTotalCoti.val().trim());
-	var dcto 				= convertirMonedaANumero(dctoCoti.val().trim() == '' ? '0' : dctoCoti.val().trim());
-	var igv 				= convertirMonedaANumero(igvCoti.val());
-	var total 				= convertirMonedaANumero(totalCoti.val().trim());
+	var dcto 				= convertirMonedaANumero(dctoFact.val().trim() == '' ? '0' : dctoFact.val().trim());
+	var igv 				= convertirMonedaANumero(igvFact.val());
+	var total 				= convertirMonedaANumero(totalFact.val().trim());
 	// obteniendo la data de la tabla
 	var detalle 			= tableToJSON(tableDetalle);
 	console.log("******llegue hasta aqui.....");
@@ -1362,8 +1362,8 @@ function registrarCotizacionVenta(){
     console.log("porcDctoTotal-------->" + porcDctoTotal);
     console.log("subTotal------------->" + subTotal);
     console.log("dcto----------------->" + dcto);
-    console.log("igvCoti------------------>" + igv);
-    console.log("totalCoti---------------->" + total);
+    console.log("igvFact------------------>" + igv);
+    console.log("totalFact---------------->" + total);
     console.log("detalle-------------->" + detalle);
 	
     var objetoJson = {
@@ -1866,15 +1866,15 @@ function limpiarCotizacion(){
 	deshabilitarControl(dctoTotal);
 	dctoTotal.val(CADENA_VACIA);
 	subTotalCoti.val(CADENA_VACIA);
-	dctoCoti.val(CADENA_VACIA);
-	igvCoti.val(CADENA_VACIA);
-	totalCoti.val(CADENA_VACIA);
+	dctoFact.val(CADENA_VACIA);
+	igvFact.val(CADENA_VACIA);
+	totalFact.val(CADENA_VACIA);
 	nroRequerimiento.val(CADENA_VACIA);
 	asunto.val(CADENA_VACIA);
 	observaciones.val(CADENA_VACIA);
 	dataTableDetalle.clear().draw();
 	indiceFilaDataTableDetalle = -1;
-	ocultarControl(dctoCotiDiv);
+	ocultarControl(dctoFactDiv);
 	ocultarControl(btnAgregarArticulo);
 	ocultarControl(btnEliminarTodosArticulos);
 	
@@ -1939,13 +1939,13 @@ function calcularResumenCotizacion(){
 	
 	// 4. mostramos los resultados
 	subTotalCoti.val(convertirNumeroAMoneda(subTotal));
-	dctoCoti.val(convertirNumeroAMoneda(dcto));
-	igvCoti.val(convertirNumeroAMoneda(igv));
-	totalCoti.val(convertirNumeroAMoneda(total));
+	dctoFact.val(convertirNumeroAMoneda(dcto));
+	igvFact.val(convertirNumeroAMoneda(igv));
+	totalFact.val(convertirNumeroAMoneda(total));
 }
 
 function calcularActivarDctoTotal(){
-	// 1. calcular la suma totalCoti de cantidad*precio
+	// 1. calcular la suma totalFact de cantidad*precio
 	var cantidad;
 	var precio;
 	var subTotal;
@@ -1987,7 +1987,7 @@ function calcularActivarDctoTotal(){
 }
 
 function calcularDesactivarDctoTotal(){
-	// 1. calcular la suma totalCoti de cantidad*precio
+	// 1. calcular la suma totalFact de cantidad*precio
 	var cantidad;
 	var precio;
 	var subTotal;
@@ -2076,14 +2076,14 @@ function convertirMontosASoles(){
 	});
 	
 	subTotal = Number(convertirMonedaANumero(subTotalCoti.val())) * tc;
-	dcto = Number(convertirMonedaANumero(dctoCoti.val())) * tc;
-	igv = Number(convertirMonedaANumero(igvCoti.val())) * tc;
-	total = Number(convertirMonedaANumero(totalCoti.val())) * tc;
+	dcto = Number(convertirMonedaANumero(dctoFact.val())) * tc;
+	igv = Number(convertirMonedaANumero(igvFact.val())) * tc;
+	total = Number(convertirMonedaANumero(totalFact.val())) * tc;
 	
 	subTotalCoti.val(convertirNumeroAMoneda(subTotal));
-	dctoCoti.val(convertirNumeroAMoneda(dcto));
-	igvCoti.val(convertirNumeroAMoneda(igv));
-	totalCoti.val(convertirNumeroAMoneda(total));
+	dctoFact.val(convertirNumeroAMoneda(dcto));
+	igvFact.val(convertirNumeroAMoneda(igv));
+	totalFact.val(convertirNumeroAMoneda(total));
 }
 
 function convertirMontosADolares(){
@@ -2130,12 +2130,12 @@ function convertirMontosADolares(){
 	});
 	
 	subTotal = Number(convertirMonedaANumero(subTotalCoti.val())) / tc;
-	dcto = Number(convertirMonedaANumero(dctoCoti.val())) / tc;
-	igv = Number(convertirMonedaANumero(igvCoti.val())) / tc;
-	total = Number(convertirMonedaANumero(totalCoti.val())) / tc;
+	dcto = Number(convertirMonedaANumero(dctoFact.val())) / tc;
+	igv = Number(convertirMonedaANumero(igvFact.val())) / tc;
+	total = Number(convertirMonedaANumero(totalFact.val())) / tc;
 	
 	subTotalCoti.val(convertirNumeroAMoneda(subTotal));
-	dctoCoti.val(convertirNumeroAMoneda(dcto));
-	igvCoti.val(convertirNumeroAMoneda(igv));
-	totalCoti.val(convertirNumeroAMoneda(total));
+	dctoFact.val(convertirNumeroAMoneda(dcto));
+	igvFact.val(convertirNumeroAMoneda(igv));
+	totalFact.val(convertirNumeroAMoneda(total));
 }

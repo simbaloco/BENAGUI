@@ -99,6 +99,8 @@ dependencies {
     compile group: 'org.webjars', name: 'bootbox', version: '5.4.0'
     //MYSQL
     compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.19'
+    // JSOUP
+    implementation group: 'org.jsoup', name: 'jsoup', version: '1.13.1'
     
 }
 

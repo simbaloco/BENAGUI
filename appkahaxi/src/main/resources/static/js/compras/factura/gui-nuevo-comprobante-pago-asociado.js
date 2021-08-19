@@ -306,7 +306,7 @@ function cargarPantallaConDatosGuiaRemisionAsociadas() {
 		type:"Get",
 		contentType : "application/json",
 		accept: 'text/plain',
-		url : '/appkahaxi/generarGuiaRemisionPorGuias/' + codigoOrdenCompra  + '/' + guias,
+		url : '/appkahaxi/generarComprobantePagoCompraPorGuias/' + codigoOrdenCompra  + '/' + guias,
 		data : null,
 		dataType: 'text',
 		beforeSend: function(xhr) {
@@ -389,7 +389,7 @@ function cargarPantallaHTMLFacturaConDatosGuiaRemisionAsociadas(data) {
 
 function habilitarPantallaConDatosGuiaRemisionAsociadas() {
 
-	titulo.text("NUEVO");
+	titulo.text("NUEVA");
 	
 	habilitarControl(dateTimePickerInput);
 	deshabilitarControl(tipoMoneda);
@@ -423,7 +423,7 @@ function cargarPantallaConDatosFactura() {
 		type:"Get",
 		contentType : "application/json",
 		accept: 'text/plain',
-		url : '/appkahaxi/buscarGuiaRemisionCompra/' + nroDocReferenciaVal ,
+		url : '/appkahaxi/buscarComprobantePagoCompra/' + nroDocReferenciaVal ,
 		data : null,
 		dataType: 'text',
 		beforeSend: function(xhr) {

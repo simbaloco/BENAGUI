@@ -236,7 +236,7 @@ public class ComprobantePagoServiceImpl implements ComprobantePagoService {
             logger.info("listaComprobantePagoCabModel ===> " + listaComprobantePagoCabModel.toString());
 
             if(listaComprobantePagoCabModel.isEmpty()) {
-                throw new ErrorControladoException(Constante.ERROR_CONTROLADO_NO_EXISTEN_COMPROBANTES_PAGO);
+                throw new ErrorControladoException(Constante.ERROR_CONTROLADO_NO_EXISTEN_FACTURAS);
             }
 
         } else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {

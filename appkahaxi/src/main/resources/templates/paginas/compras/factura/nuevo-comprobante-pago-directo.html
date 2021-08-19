@@ -33,7 +33,7 @@
 		<div class="kahaxi_titulo">
 	        <div class="kahaxi_titulo_container">
 	            <div class="kahaxi_titulo_logo"><i class="fas fa-cash-register"></i></div>
-	            <div class="kahaxi_titulo_text"><span id="titulo"></span> COTIZACIÓN DE VENTAS</div>
+	            <div class="kahaxi_titulo_text"><span id="titulo"></span> FACTURA</div>
 	        </div>
 	        <div class="subrayado"></div>
 	        <br>
@@ -46,7 +46,7 @@
 	                <div class="card-header quitar-contornos" id="headingOne">
 				        <h2 class="mb-0">
 					        <button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseOne"  aria-expanded="true" aria-controls="collapseOne">
-			                    <i class="fas fa-angle-up"></i><span>Datos de la Cotización </span><span style="font-size: 20; font-weight: bold;" id="codigo"></span>
+			                    <i class="fas fa-angle-up"></i><span>Datos de la Factura </span><span style="font-size: 20; font-weight: bold;" id="codigo"></span>
 			                    <div class="subrayado"></div>
 			                </button>
 		                </h2>
@@ -168,16 +168,6 @@
 						 			<input class="form-control" maxlength="250" size="50" type="text" id="tipoCambio" readonly="readonly" tabindex="-1"/>
 						 		</div>			 		
 						 		
-						 		<div class="col-md-2">
-						 			<label class="label" for="tipoComprobante">Tipo de Comprobante de Pago:</label>
-						 			<select id="tipoComprobante" class="form-control">
-										<option th:each="item : ${listaComprobantePago}"
-									            th:value="${item.codigo}" 
-									            th:text="${item.descripcion}">
-									    </option>
-									</select>
-						 		</div>
-						 		
 						 		<div class="col-md-1">
 									<label class="label" for="serie">Serie:</label>
 									<input class="form-control" maxlength="250" size="50" type="text" id="serie" tabindex="-1" required="required"/>
@@ -263,12 +253,13 @@
 								                <th width="1%">Item</th>
 								                <th id="buscarArticulo" width="2%">Buscar</th>
 								                <th id="codArticulo" style="display: none"></th>
-								                <th id="descCodArticulo" width="11%">C&oacute;d. Art.</th>
+								                <th id="descCodArticulo" width="10%">C&oacute;d. Art.</th>
 								                <th id="descripcionArticulo" width="15%">Descripci&oacute;n</th>
 								                <th id="marca" width="10%">Marca</th>
-								                <th id="cantidad" width="5%" >Cantidad</th>
-								                <th id="precioUnitario" width="10%" >PVU</th>
-								                <th id="precioReferencia" width="10%" >Precio Ref</th>
+								                <th id="codAlmacen" width="5%">Almacén</th>
+												<th id="cantidad" width="5%" >Cantidad</th>
+								                <th id="precioUnitario" width="8%" >PVU</th>
+								                <th id="precioReferencia" width="8%" >Precio Ref</th>
 								                <th id="porcentajeDcto" width="3%">% Dcto.</th>
 								                <th id="precioConDcto" width="10%">Pre. c/Dcto.</th>
 								                <th id="subTotal" width="10%">SubTotal</th>
@@ -287,6 +278,7 @@
 									        	<td></td>							        
 									        	<td></td>
 									        	<td style="display: none"></th>
+									        	<td></td>
 									        	<td></td>
 									        	<td></td>
 									        	<td></td>
@@ -362,35 +354,35 @@
 								    </div>
 			            		</div>
 				            	
-				            	<div class="form-group row" id="dctoCotiDiv" style="display: none ">
+				            	<div class="form-group row" id="dctoFactDiv" style="display: none ">
 					            	<div class="col-md-4">
-					            		<label class="label" for="dctoCoti">Descuento</label>
+					            		<label class="label" for="dctoFact">Descuento</label>
 					            	</div>
 					            	<div class="col-md-8">	
 					            		<span class="simbolo-moneda input-symbol-dolar">
-								        	<input class="form-control alineacion-derecha" maxlength="10" type="text" id="dctoCoti" readonly="readonly"/>
+								        	<input class="form-control alineacion-derecha" maxlength="10" type="text" id="dctoFact" readonly="readonly"/>
 								        </span>
 								    </div>
 				        		</div>
 				        		
 			            		<div class="form-group row">
 			            			<div class="col-md-4">
-					            		<label class="label" for="igvCoti">IGV</label>
+					            		<label class="label" for="igvFact">IGV</label>
 					            	</div>
 					            	<div class="col-md-8">	
 					            		<span class="simbolo-moneda input-symbol-dolar">
-					            			<input class="form-control alineacion-derecha" maxlength="10" type="text" id="igvCoti" readonly="readonly"/>
+					            			<input class="form-control alineacion-derecha" maxlength="10" type="text" id="igvFact" readonly="readonly"/>
 					            		</span>
 								    </div>	
 			            		</div>
 			            		
 			            		<div class="form-group row">
 			            			<div class="col-md-4">
-					            		<label class="label" for="totalCoti">Total</label>
+					            		<label class="label" for="totalFact">Total</label>
 					            	</div>
 					            	<div class="col-md-8">	
 					            		<span class="simbolo-moneda input-symbol-dolar">
-					            			<input class="form-control alineacion-derecha" maxlength="10" type="text" id="totalCoti" readonly="readonly"/>
+					            			<input class="form-control alineacion-derecha" maxlength="10" type="text" id="totalFact" readonly="readonly"/>
 							        	</span>
 								    </div>	
 			            		</div>
@@ -403,13 +395,14 @@
 					     	</div>
 					     	<div class="col-md-6 alineacion-derecha">
 					     		<div>
+						     		<button type="button" id="btnAnular" class="btn btn-primary my-1" style="display: none">
+										<span class="mr-2"><i class="fas fa-trash"></i></span>Anular
+									</button>
+								
 						     		<button type="button" id="btnGrabar" class="btn btn-primary">
 			                  			<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
 						            </button>
 						            
-					              	<button type="button" id="btnDuplicar" class="btn btn-primary" style="display: none">
-			                  			<span class="mr-2"><i class="far fa-copy"></i></span>Duplicar
-						            </button>
 						        </div>
 					     	</div>
 						</div>
@@ -418,35 +411,7 @@
           	</div>
         </div>
         
-        <div class="form-content" style="display:none;">
-		   	<div class="box-body">
-		   	<form class="formEmail needs-validation" novalidate>
-		   		<div class="form-group row">
-		       		<div class="col-md-2">
-		        		<label for="emailPDF">Correo electrónico:</label>
-		        	</div>
-		        	<div class="col-md-10">	
-		        		<input type="email" class="form-control" id="emailPDF" placeholder="Ingrese correo electrónico" required="required" multiple="multiple"
-		        			   title="Puede ingresar varios correos separados por punto y coma (;)"></input>
-		        		<div class="mensaje-validado-falso invalid-feedback">
-		        			Ingrese un email o una lista de emails separados por comas
-		              	</div>
-		   			</div>
-		     	</div>
-		     
-		   		
-		   		<div class="form-group row">
-           			<div class="col-md-12">	
-	            		<div class="form-check">
-			 		  		<input class="form-check-input" type="checkbox" id="chkEnviarCodigo"/>
-			 		  		<label class="textoCheckboxTop">Mostrar c&oacute;digo de art&iacute;culo en el PDF</label>
-					    </div>
-				    </div>
-           		</div>
-           		
-		  	</form>
-		  	</div>
-		</div>
+        
 	</div>
 </body>
 </html>

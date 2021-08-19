@@ -315,14 +315,12 @@ public class PrincipalController {
 			List<ComboModel> listaCondPago = genericService.cargarCombo(Constante.CATALOGO_CONDICION_PAGO);
 			List<ComboModel> listaDias = genericService.cargarCombo(Constante.CATALOGO_DIAS_PC);
 			List<ComboModel> listaEstadoPago = genericService.cargarCombo(Constante.CATALOGO_ESTADO_PAGO);
-			List<ComboModel> listaComprobantePago = genericService.cargarCombo(Constante.CATALOGO_COMPROBANTE_PAGO);
-
+			
 			model.addAttribute("listaMoneda", listaMoneda);
 			model.addAttribute("listaCondPago", listaCondPago);
 			model.addAttribute("listaDias", listaDias);
 			model.addAttribute("listaEstadoPago", listaEstadoPago);
-			model.addAttribute("listaComprobantePago", listaComprobantePago);
-
+			
 			retorno = Constante.PAGINA_NUEVO_COMPROBANTE_PAGO_DIRECTO_COMPRA;
 			logger.info("saliendo del método cargarComprobantePagoCompraDirecto");
 		}catch (Exception e) {
