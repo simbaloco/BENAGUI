@@ -1,7 +1,11 @@
+var indiceFilaDataTableDetalle = -1;
+//**************************************************************** */
 var marquee;
 var titulo;
 var codigo;
 var codigoCliente;
+var email;
+var celular;
 var nroDocReferencia;
 var numeroDocumento;
 var opcion;
@@ -14,10 +18,9 @@ var fechaHasta;
 var estadoParam;
 var volverParam;
 
-var guiasReferencia;
-
 var formFactura;
-var OCReferencia;
+var formObservaciones;
+
 var documentoCliente;
 var nombreCliente;
 var direccion;
@@ -51,10 +54,10 @@ var dataTableDetalle;
 var indiceFilaDataTableDetalle;
 var cantidadDetalleDuplicado;
 
+var campoBuscar;
 var estadoPago;
 var btnAgregarArticulo;
-
-var volverParam;
+var btnEliminarTodosArticulos;
 
 var dateTimePickerInput;
 var valorIGV;
@@ -71,10 +74,11 @@ function inicializarVariables() {
 	titulo =  $("#titulo");
 	codigo = $("#codigo");
 	codigoCliente = $("#codigoCliente");
+	email =  $("#email");
+	celular =  $("#celular");
 	nroDocReferencia = $("#nroDocReferencia");
 	numeroDocumento = $('#numeroDocumento');
 	opcion = $("#opcion");
-	
 	datoBuscar =  $("#datoBuscar");
 	nroComprobantePago =  $("#nroComprobantePago");
 	nroOrdenCompra =  $("#nroOrdenCompra");
@@ -84,10 +88,7 @@ function inicializarVariables() {
 	estadoParam =  $("#estadoParam");
 	volverParam =  $("#volverParam");
 	
-	guiasReferencia = $("#guiasParam");
-
 	formFactura = $("#formFactura");
-	OCReferencia = $("#OCReferencia");
 	documentoCliente = $("#documentoCliente");
 	nombreCliente = $("#nombreCliente");
 	direccion = $("#direccion");
@@ -108,6 +109,7 @@ function inicializarVariables() {
 	btnVolver = $("#btnVolver");
 
 	btnAgregarArticulo = $("#btnAgregarArticulo");
+	btnEliminarTodosArticulos = $("#btnEliminarTodosArticulos");
 	tableDetalle = $("#tableDetalle");
 	tableNuevoDetalle = $("#tableNuevoDetalle");
 
@@ -118,9 +120,9 @@ function inicializarVariables() {
 
 	btnGrabar = $("#btnGrabar");
 
+	campoBuscar = $("#campoBuscar");
 	estadoPago = $("#estadoPago");
-
-	volverParam = $("#volverParam");
+	
 	dateTimePickerInput = $(".datetimepicker-input");
 }
 
@@ -130,20 +132,20 @@ function inicializarComponentes() {
 	habilitarMarquee();
 	construirFechasPicker();
 	restringirSeleccionFechas();
+	habilitarAutocompletarBuscarCampos();
+	
 	inicializarEventos();
 }
 
 function inicializarPantalla() {
-	 
 	if(opcion.text() == Opcion.NUEVO) {
 		inicializarTablaDetalle(true);
-		inicializarFechas();
-		cargarPantallaConDatosGuiaRemisionAsociadas();
-		
-	}else if(opcion.text() == Opcion.VER) {
+		cargarPantallaNueva();
+	}else {
 		inicializarTablaDetalle(false);
 		cargarPantallaConDatosFactura();
 	}
+
 }
 
 function habilitarAnimacionAcordion() {
@@ -176,6 +178,7 @@ function construirFechasPicker() {
 	fecConta.datetimepicker({
 		locale: 		'es',
 		format: 		'L',
+		defaultDate:	new Date(),
 		ignoreReadonly:  true
 	});
 
@@ -209,13 +212,79 @@ function restringirSeleccionFechas() {
 	});
 }
 
+function habilitarAutocompletarBuscarCampos() {
+	
+	campoBuscar.autocomplete({
+		source: function( request, response ) {
+			$.ajax({
+				type:"Get",
+				contentType : "application/json",
+				accept: 'text/plain',
+				url : '/appkahaxi/buscarSnLike/' + TipoSocioNegocios.PROVEEDOR + '/' + request.term,
+				data : null,
+				dataType: 'json',
+				beforeSend: function(xhr) {
+					//loadding(true);
+				},
+				success:function(resultado){
+
+					response($.map(resultado,function(item) {
+						var AC = new Object();
+						// requeridos
+						AC.label = item.numeroDocumento + ' - ' + item.nombreRazonSocial;
+						AC.value = request.term;
+						// personalizando campos
+						AC.codigoSocio 			= item.codigoSocio;
+						AC.numeroDocumento 		= item.numeroDocumento;
+						AC.nombreRazonSocial	= item.nombreRazonSocial;
+						AC.direccionFiscal 		= item.direccionFiscal;
+						AC.email			    = item.email;
+						AC.celular				= item.celular;	
+						
+						return AC;
+					}));
+					// loadding(false);
+				},
+				error: function (xhr, error, code){
+
+					mostrarMensajeError(xhr.responseText);
+					//loadding(false);
+				}
+			});
+		},
+
+		minLength: 3,
+		select: function(event, ui) {
+			event.preventDefault();
+	    	
+			codigoCliente.val(ui.item.codigoSocio);
+			documentoCliente.val(ui.item.numeroDocumento);
+			nombreCliente.val(ui.item.nombreRazonSocial);
+			direccion.val(ui.item.direccionFiscal);
+			email.val(ui.item.email);
+			celular.val(ui.item.celular);
+			
+			campoBuscar.val(CADENA_VACIA);
+			console.log("campobuscar indiceFilaDataTableDetalle--->" + indiceFilaDataTableDetalle);
+			if(indiceFilaDataTableDetalle == -1){
+				agregarFilaEnTablaDetalle();
+			}
+		}
+	});
+}
+
 function inicializarEventos() {
+	
 	$('#tableDetalle tbody').on('click','.btn-delete', function () {
 		mostrarDialogoEliminarFila(dataTableDetalle, $(this));
 	});
 
 	$('.readonly').keydown(function(e){
 		e.preventDefault();
+	});
+
+	$('.sinCaracteresEspeciales').keypress(function(e){
+		return sinCaracteresEspeciales(e);
 	});
 
 	btnGrabar.on("click", function() {
@@ -230,22 +299,22 @@ function inicializarEventos() {
 		mostrarDialogoAnularFactura();
 	});
 
-	estadoPago.on('change', function(){
-		mostrarOcultarBotonAnular();
+	condPago.on('change', function(){
+		evaluarCambioCondicionPago();
 	});
 
-	condPago.on('change', function(){
-		mostrarOcultarDiasPorCondicionPago();
+	estadoPago.on('change', function(){
+		evaluarCambioEstadoPago();
 	});
 
 	btnVolver.on("click", function() {
 		volver();
 	});
-	/*
+
 	tipoMoneda.on('change', function(){
-		calcularPorTipoMoneda();
+		evaluarCambioTipoMoneda();
 	});
-	*/
+
 	serie.on('keypress', function(event){
 		return soloAlfaNumericos(event);
 	});
@@ -256,6 +325,10 @@ function inicializarEventos() {
 
 	btnAgregarArticulo.on("click", function() {
 		agregarFilaEnTablaDetalle();
+	});
+
+	btnEliminarTodosArticulos.on("click", function() {
+		mostrarDialogoEliminarTodo();
 	});
 }
 
@@ -271,7 +344,7 @@ function inicializarTablaDetalle(paginacion) {
 		"paging"	    : paginacion,
 		/*"dom"           :   "<'row'<'col-sm-12'rt>>" +
 			"<'row'<'col-sm-4 'l><'col-sm-8 'p>>",*/
-		"dom"			: '<lp<rt>ip>',
+		"dom"			: '<ip<rt>lp>',
         "lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
 		"fnRowCallback":
 			function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
@@ -283,7 +356,6 @@ function inicializarTablaDetalle(paginacion) {
 			"url": "/appkahaxi/language/Spanish.json"
 		}
 	});
-
 }
 
 /**************** FUNCIONES DE SOPORTE ***********************************************************
@@ -291,128 +363,24 @@ function inicializarTablaDetalle(paginacion) {
 
 function inicializarFechas(){
 	fecConta.datetimepicker('date', moment().format('DD/MM/YYYY'));
+	fecConta.datetimepicker('maxDate', moment().format('DD/MM/YYYY'));
 	fecDocumento.datetimepicker('date', moment().format('DD/MM/YYYY'));
 	fecVencimiento.datetimepicker('date', moment().format('DD/MM/YYYY'));
 }
 
-function cargarPantallaConDatosGuiaRemisionAsociadas() {
-	console.log("cargarPantallaConDatosGuiaRemisionAsociadas...");
-	var codigoOrdenCompra = numeroDocumento.text();
-	var guias = guiasReferencia.text();
-	console.log("codigoOrdenCompra-->" + codigoOrdenCompra);
-	console.log("guias-->" + guias);
-	
-	$.ajax({
-		type:"Get",
-		contentType : "application/json",
-		accept: 'text/plain',
-		url : '/appkahaxi/generarComprobantePagoCompraPorGuias/' + codigoOrdenCompra  + '/' + guias,
-		data : null,
-		dataType: 'text',
-		beforeSend: function(xhr) {
-			loadding(true);
-		},
-		success:function(result, textStatus, xhr){
+function cargarPantallaNueva() {
+	inicializarFechas();
+	obtenerTipoCambio(tipoCambio);
 
-			if(xhr.status == HttpStatus.OK) {
-
-				var data = JSON.parse(result);
-
-				cargarPantallaHTMLFacturaConDatosGuiaRemisionAsociadas(data);
-
-				if(data.codigoCondPago == CondicionPago.CREDITO) {
-					mostrarControl(divDias);
-				}
-
-				habilitarPantallaConDatosGuiaRemisionAsociadas();
-			}
-
-			loadding(false);
-		},
-		error: function (xhr, error, code){
-
-			mostrarMensajeError(xhr.responseText);
-			loadding(false);
-		}
-	});
-
-}
-
-function cargarPantallaHTMLFacturaConDatosGuiaRemisionAsociadas(data) {
-
-	OCReferencia.val(data.ordenCompra);
-	codigoCliente.val(data.codigoCliente);
-	documentoCliente.val(data.nroDocCliente);
-	nombreCliente.val(data.nombreCliente);
-	direccion.val(data.direccionFiscal);
-	tipoMoneda.val(data.codigoTipoMoneda);
-	condPago.val(data.codigoCondPago);
-	dias.val(data.codigoDias);
-	serie.val(data.serie);
-	correlativo.val(data.correlativo);
-	tipoCambio.val(data.tipoCambio);
-	subTotalFactura.val(data.subTotal);
-	igvFactura.val(data.igv);
-	totalFactura.val(data.total);
-
-	cantidadDetalleDuplicado = data.detalle.length;
-
-	var indice = 0;
-
-	for(i=0; i < cantidadDetalleDuplicado; i++) {
-
-		var detalle = data.detalle[i];
-
-		if(Number(detalle.cantidadPendienteGuiaRemision) > 0 ) {
-
-			agregarFilaEnTablaDetalle(data);
-
-			$('#codigoGuiaRemision_' + indice).val(detalle.codGuiaRemision);
-			$('#lineaReferencia_' + indice).val(detalle.lineaReferencia);
-			$('#codigo_' + indice).val(detalle.codArticulo);
-			$('#descripcion_' + indice).val(detalle.descripcionArticulo);
-			$('#marca_' + indice).val(detalle.marca);
-			$('#cantidad_' + indice).val(detalle.cantidadPendienteGuiaRemision);
-			//$('#cantidad_' + indice).data('val', detalle.cantidadPendienteGuiaRemision);
-			$('#cantidad_' + indice).data('temporal', detalle.cantidadPendienteGuiaRemision);
-			$('#precio_' + indice).val(detalle.precioUnitario);
-			$('#subTotal_' + indice).val(detalle.subTotal);
-			$('#subTotalIgv_' + indice).val(detalle.subTotalIgv);
-			calcularCantidadNuevaFactura(null, $('#cantidad_' + i), i);
-			indice++;
-		}
-	}
-
-	dataTableDetalle.destroy();
-	inicializarTablaDetalle(true);
-}
-
-function habilitarPantallaConDatosGuiaRemisionAsociadas() {
-
+	controlNoRequerido(observaciones);
 	titulo.text("NUEVA");
+	dias.val(Dias._30);
 	
-	habilitarControl(dateTimePickerInput);
-	deshabilitarControl(tipoMoneda);
-	habilitarControl(condPago);
-	habilitarControl(dias);
-	habilitarControl(estadoPago);
-	habilitarControl(serie);
-	habilitarControl(correlativo);
-
-	mostrarControl(btnGrabar);
-	mostrarControl(btnLimpiar);
-
-	for(i=0; i< cantidadDetalleDuplicado ; i++) {
-
-		deshabilitarControl(null, '#codigo_' + i);
-		deshabilitarControl(null, '#almacen_' + i);
-		habilitarControl(null, '#cantidad_' + i);
-		deshabilitarControl(null, '#precio_' + i);
+	var volver = volverParam.text();
+	if(volver == Volver.SI){
+		mostrarControl(btnVolver);
 	}
-
-	$("#tableDetalle tbody tr").find(".btn-delete").prop("disabled", false);
-	
-	serie.focus();
+	campoBuscar.focus();
 }
 
 function cargarPantallaConDatosFactura() {
@@ -423,7 +391,7 @@ function cargarPantallaConDatosFactura() {
 		type:"Get",
 		contentType : "application/json",
 		accept: 'text/plain',
-		url : '/appkahaxi/buscarComprobantePagoCompra/' + nroDocReferenciaVal ,
+		url : '/appkahaxi/buscarFacturaCompra/' + nroDocReferenciaVal ,
 		data : null,
 		dataType: 'text',
 		beforeSend: function(xhr) {
@@ -434,7 +402,6 @@ function cargarPantallaConDatosFactura() {
 			if(xhr.status == HttpStatus.OK) {
 
 				var data = JSON.parse(result);
-
 				cargarPantallaHTMLFactura(data);
 
 				if(data.codigoCondPago == CondicionPago.CREDITO) {
@@ -442,9 +409,13 @@ function cargarPantallaConDatosFactura() {
 				}
 
 				verPantallaFactura(data);
+				
+				dataTableDetalle.destroy();
+				inicializarTablaDetalle(true);
 			}
 
 			loadding(false);
+			window.scrollTo(0, 0);
 		},
 		error: function (xhr, error, code){
 
@@ -457,11 +428,12 @@ function cargarPantallaConDatosFactura() {
 
 function cargarPantallaHTMLFactura(data) {
 
-	OCReferencia.val(data.ordenCompra);
 	codigoCliente.val(data.codigoCliente);
 	documentoCliente.val(data.nroDocCliente);
 	nombreCliente.val(data.nombreCliente);
 	direccion.val(data.direccionFiscal);
+	email.val(data.email);
+	celular.val(data.celular);
 	tipoMoneda.val(data.codigoTipoMoneda);
 	condPago.val(data.codigoCondPago);
 	dias.val(data.codigoDias);
@@ -469,35 +441,29 @@ function cargarPantallaHTMLFactura(data) {
 	correlativo.val(data.correlativo);
 	estadoPago.val(data.codigoEstadoPago);
 	tipoCambio.val(data.tipoCambio);
-	subTotalFactura.val(data.subTotal);
-	igvFactura.val(data.igv);
-	totalFactura.val(data.total);
+	
+	subTotalFactura.val(convertirNumeroAMoneda(data.subTotal));
+    igvFactura.val(convertirNumeroAMoneda(data.igv));
+    totalFactura.val(convertirNumeroAMoneda(data.total));
 
 	cantidadDetalleDuplicado = data.detalle.length;
-
-	var indice = 0;
 
 	for(i=0; i < cantidadDetalleDuplicado; i++) {
 
 		agregarFilaEnTablaDetalle(data);
 
 		var detalle = data.detalle[i];
-
-		$('#codigoGuiaRemision_' + indice).val(detalle.codGuiaRemision);
-		$('#lineaReferencia_' + indice).val(detalle.lineaReferencia);
-		$('#codigo_' + indice).val(detalle.codArticulo);
-		$('#descripcion_' + indice).val(detalle.descripcionArticulo);
-		$('#marca_' + indice).val(detalle.marca);
-		$('#cantidad_' + indice).val(detalle.cantidad);
-		$('#precio_' + indice).val(detalle.precioUnitario);
-		$('#subTotal_' + i).val(detalle.subTotal);
-		$('#subTotalIgv_' + indice).val(detalle.subTotalIgv);
 		
-		indice++;
+		$('#codigo_' + i).val(detalle.codArticulo);
+    	$('#descCodigo_' + i).val(detalle.codEstandar);
+    	$('#descripcion_' + i).val(detalle.descripcionArticulo);
+    	$('#marca_' + i).val(detalle.marca);
+    	$('#almacen_' + i).val(detalle.codAlmacen);
+		$('#cantidad_' + i).val(detalle.cantidad);
+		$('#precio_' + i).val(convertirNumeroAMoneda(detalle.precioUnitario));
+		$('#subTotal_' + i).val(convertirNumeroAMoneda(detalle.subTotal));
+		$('#subTotalIgv_' + i).val(convertirNumeroAMoneda(detalle.subTotalIgv));
 	}
-
-	dataTableDetalle.destroy();
-	inicializarTablaDetalle(true);
 }
 
 function verPantallaFactura(data) {
@@ -509,8 +475,9 @@ function verPantallaFactura(data) {
 	fecDocumento.datetimepicker('date', moment(data.fechaDocumento));
 	fecVencimiento.datetimepicker('date', moment(data.fechaEntrega));
 
-	//deshabilitarControl('.datetimepicker-input');
+	deshabilitarControl(campoBuscar);
 	deshabilitarControl(dateTimePickerInput);
+	deshabilitarControl(tipoMoneda);
 
 	if(estadoPago.val() == EstadoPago.PAGADO) {
 		deshabilitarControl(estadoPago);
@@ -520,74 +487,73 @@ function verPantallaFactura(data) {
 		mostrarControl(btnAnular);
 	}
 
-	deshabilitarControl(tipoMoneda);
 	deshabilitarControl(condPago);
 	deshabilitarControl(dias);
 	deshabilitarControl(serie);
 	deshabilitarControl(correlativo);
+	deshabilitarControl(observaciones);
 
-	if(volverParam.text() == Volver.NO) {
-
-		ocultarControl(btnVolver);
-
-	} else {
-
-		mostrarControl(btnVolver);
-	}
-
-
+	mostrarControl(btnVolver);
 	ocultarControl(btnGrabar);
 	ocultarControl(btnLimpiar);
+	ocultarControl(btnAgregarArticulo);
+	ocultarControl(btnEliminarTodosArticulos);
 
 	deshabilitarDetalleFactura();
 }
 
 function deshabilitarDetalleFactura(){
 
+	// ******* DETALLE
 	tableDetalle.DataTable().rows().iterator('row', function(context, index){
 
 		var node = $(this.row(index).node());
 		$cells = node.find("td").not(':first');//.not(':last');
 
 		$cells.each(function(cellIndex) {
-			deshabilitarControl($(this).find(".codigo_table"));
-			deshabilitarControl($(this).find(".almacen_table"));
-			deshabilitarControl($(this).find(".cantidad_table"));
-			deshabilitarControl($(this).find(".precio_table"));
+			deshabilitarControl($(this).find(".buscar-det"));
+			deshabilitarControl($(this).find(".codigo-det"));
+			deshabilitarControl($(this).find(".desc-det"));
+			deshabilitarControl($(this).find(".marca-det"));
+			deshabilitarControl($(this).find(".almacen-det"));
+			deshabilitarControl($(this).find(".cantidad-det"));
+			deshabilitarControl($(this).find(".precio-det"));
 			
 			deshabilitarControl($(this).find(".btn-delete"));
 		});
-	});
+	});	
 
 }
 
 function agregarFilaEnTablaDetalle(data) {
 
 	var filaHTML = tableNuevoDetalle.find("tr")[0].outerHTML;
-
 	var fila = dataTableDetalle.row.add($(filaHTML)).draw(false);
 
 	indiceFilaDataTableDetalle = fila.index();
 
 	agregarFilaHTMLEnTablaDetalle(data);
 
+	if(indiceFilaDataTableDetalle > 0) {
+		mostrarControl(btnEliminarTodosArticulos);
+		mostrarControl(btnAgregarArticulo);
+	}
 }
 
 function agregarFilaHTMLEnTablaDetalle(data) {
-
 	agregarHTMLColumnasDataTable(data);
-
+	// poniendo el símbolo de moneda que corresponde (sólo para el caso de SOLES)
 	var tipoMonedaValor = tipoMoneda.val();
-
 	if(tipoMonedaValor == Moneda.SOLES){
 		$('.simbolo-moneda').removeClass("input-symbol-dolar").addClass("input-symbol-sol");
 	}
-
+	
+	$('#buscarArticulo_' + indiceFilaDataTableDetalle).focus();
 }
 
 function agregarHTMLColumnasDataTable(data) {
 
-	var row = $('#tableDetalle').DataTable().row(':last').nodes().to$().closest("tr").off("mousedown");
+	var row = tableDetalle.DataTable().row(':last').nodes().to$().closest("tr").off("mousedown");
 
 	var $tds = row.find("td").not(':first').not(':last');
 
@@ -595,132 +561,291 @@ function agregarHTMLColumnasDataTable(data) {
 
 		switch(i) {
 
-			// GUIA REMISION
-			case 0:	$(this).html(CADENA_VACIA).append("<input class='form-control' type='text' id='codigoGuiaRemision_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
-				break;
+			// buscar artículo
+			case 0:		$(this).html(CADENA_VACIA).append(
+									"<div>" + 
+			    						"<input class='form-control buscar-det' type='text' " + 
+										"onkeyup='buscarArticuloKeyUp(event, this, " + indiceFilaDataTableDetalle + ");' maxlength='50' " + 
+										"id='buscarArticulo_" + indiceFilaDataTableDetalle + "'>" +
+			    					"</div>");
+						break;
+    		
+			// CODIGO ART (OCULTO)
+			case 1:		$(this).html(CADENA_VACIA).append("<input class='form-control' type='text' id='codigo_" + indiceFilaDataTableDetalle + "' readonly='readonly' tabindex='-1' >");
+						break;
+						
+			// DESCRIPCION CODIGO ART
+			case 2:		$(this).html(CADENA_VACIA).append("<input class='marquee form-control codigo-det' type='text' id='descCodigo_" + indiceFilaDataTableDetalle + "' readonly='readonly' tabindex='-1' >");
+						break;	
+						
+			// DESCRIPCION ART
+			case 3:	$(this).html(CADENA_VACIA).append("<input class='marquee form-control desc-det' type='text' id='descripcion_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
+					break;
 
-			// LINEA REFERENCIA
-			case 1:	$(this).html(CADENA_VACIA).append("<input class='form-control' type='text' id='lineaReferencia_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
-				break;
+			// MARCA ART
+			case 4:	$(this).html(CADENA_VACIA).append("<input class='marquee form-control marca-det' type='text' id='marca_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
+					break;
 
-			// COD ARTICULO
-			case 2:	$(this).html(CADENA_VACIA).append("<div>" +
-				"<input class='marquee form-control codigo_table' type='text' maxlength='20'  id='codigo_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
-				"</div>");
-				break;
-
-			// DESCRIPCION ARTICULO
-			case 3:	$(this).html(CADENA_VACIA).append("<input class='marquee form-control' type='text' id='descripcion_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
-				break;
-
-			// MARCA
-			case 4:	$(this).html(CADENA_VACIA).append("<input class='marquee form-control' type='text' id='marca_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
-				break;
-
-			// COD ALMACEN
+			// ALMACEN
 			case 5:	$(this).html(CADENA_VACIA).append("<div>" +
-				"<select class='form-control almacen_table' id='almacen_" + indiceFilaDataTableDetalle + "'> </select>" +
-				"</div>");
-				cargarComboAlmacen("#almacen_" + indiceFilaDataTableDetalle , data)	;
-				break;
+						"<select class='form-control almacen-det' id='almacen_" + indiceFilaDataTableDetalle + "'> </select>" +
+						"</div>");
+						cargarComboAlmacen("#almacen_" + indiceFilaDataTableDetalle , data)	;
+					break;
 
 			// CANTIDAD
-			case 6:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha cantidad_table' type='text' onchange='dispararEventosCambioCantidad(this, " + indiceFilaDataTableDetalle + ");' " +
-				"onkeypress='return soloEnteros(event);'" +
-				"id='cantidad_" + indiceFilaDataTableDetalle + "'>");
-				break;
+			case 6:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha cantidad-det' type='text' " + 
+						"onkeyup='cantidadKeyUp(this, " + indiceFilaDataTableDetalle + ");' " +
+						"onkeydown='cantidadKeyDown(event, " + indiceFilaDataTableDetalle + ")' " +
+						"onkeypress='return soloEnteros(event);' readonly='readonly' " +
+						"id='cantidad_" + indiceFilaDataTableDetalle + "'>");
+					break;
 
 			// PRECIO UNITARIO
 			case 7:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
-				"<input class='form-control alineacion-derecha precio_table' type='text' " +
-				"onkeypress='return soloDecimales(event, this);' " +
-				"id='precio_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
-				"</span></div>");
-				break;
+						"<input class='form-control alineacion-derecha precio-det' type='number' maxlength='13' " +
+							"onkeyup='precioKeyUp(this, " + indiceFilaDataTableDetalle + ")' " +
+							"onkeypress='return soloDecimales(event, this);' " +
+							"onchange='precioKeyUp(this, " + indiceFilaDataTableDetalle + ");'  readonly='readonly' " + 
+							"onkeydown='precioKeyDown(event, " + indiceFilaDataTableDetalle + ")' " +
+							"id='precio_" + indiceFilaDataTableDetalle + "'>" +
+						"</span></div>");
+					break;
 
 			// SUBTOTAL
 			case 8:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
-				"<input class='form-control alineacion-derecha' type='text' id='subTotal_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
-				"</span></div>");
-				break;
+						"<input class='form-control alineacion-derecha' type='text' id='subTotal_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
+						"</span></div>");
+					break;
 				
 			// SUBTOTAL C/IGV	
 			case 9:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
-				"<input class='form-control alineacion-derecha' type='text' id='subTotalIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
-				"</span></div>");
-				break;
+						"<input class='form-control alineacion-derecha' type='text' id='subTotalIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
+						"</span></div>");
+					break;
 
 		}
 	});
 	habilitarMarquee();
+	window.scrollTo(0, document.body.scrollHeight);
 }
+
 
 /**************** EVENTOS DETALLE *******************/
 
-function dispararEventosCambioCantidad(control, fila) {
+function buscarArticuloKeyUp(e, control, fila){
+	var codCliente = codigoCliente.val();
+	var datoBuscar = control.value.trim();
+	var key = window.Event ? e.which : e.keyCode;
+	/*	| 38 | (Arriba) |
+		| 40 | (Abajo) |
+		| 37 | (Izquierda) |
+		| 39 | (Derecha) |
+	 */
+	// no hacer nada si son las teclas direccionales IZQ o DER
+	if(key != 37 && key != 39){
+		$('#buscarArticulo_' + fila).autocomplete({
+			source: function( request, response ) {
+				console.log("buscarArticuloKeyUp, autocomplete....datoBuscar:" + datoBuscar + "/codCliente:" + codCliente);
+				$.ajax({
+					type:"Get",
+			        contentType : "application/json",
+			        accept: 'text/plain',
+			        url : '/appkahaxi/buscarArticuloLike/' + datoBuscar + '/' + codCliente,
+			        data : null,
+			        dataType: 'json',							  
+			        beforeSend: function(xhr) {
+			        	console.log("buscarArticuloKeyUp...beforesend, loading.....");
+			        	//loadding(true);
+			        },
+			        success:function(resultado){
+			        	/*
+						response($.map(resultado, 
+			        				function(item) {
+						        		return {
+						        				label: item.codigoArticulo + ' - ' + item.codigoEstandar + ' - ' + item.descripcion,
+						        				value: item.codigoArticulo + '/' + item.descripcion + '/' + item.descripcionMarcaArticulo + '/' + item.precioVtaUnd
+						        	      		}
+			        	  		}));
+			        	loadding(false);
+			        	*/
+			        	response($.map(resultado,function(item) {
+			        		var AC = new Object();
+			    			// requeridos
+			        		AC.label = item.codigoEstandar + ' / ' + item.descripcion + ' / ' + item.descripcionMarcaArticulo + ' / ' + 
+									   item.descripcionTipo + ' / ' + item.descripcionSeccion + ' / ' + item.descripcionUnidadMedida + ' / ' + 
+									   ((item.descripcionMarcaVehiculo == null) ? '(Sin marca vehículo)':item.descripcionMarcaVehiculo) + ' / ' + 
+									   ((item.descripcionModelo == null) ? '(Sin modelo)':item.descripcionModelo)	;
+	                        AC.value = request.term;;
+	                        // personalizando campos
+	                        AC.codArticulo				= item.codigoArticulo;
+	                        AC.codEstandar				= item.codigoEstandar;
+							AC.descripcion				= item.descripcion;
+	                        AC.descripcionMarcaArticulo = item.descripcionMarcaArticulo;
+	                        //AC.precioVentaUnitario		= item.precioVentaUnitario;
+							
+	                        return AC;
+	        	  		}));
+			        	//loadding(false);
+			        },
+			        error: function (xhr, error, code){
+			        	console.log("buscarArticuloKeyUp, error...." + xhr.status);
+			        	mostrarMensajeError(xhr.responseText);
+			        	//loadding(false);
+			        }
+			    });
+		      },
+		    minLength: 3,
+		    select: function(event, ui) {
+		    	event.preventDefault();
+		    	
+				$('#buscarArticulo_' + fila).val(CADENA_VACIA);
+				$('#codigo_' + fila).val(ui.item.codArticulo);
+				$('#descCodigo_' + fila).val(ui.item.codEstandar);
+		    	$('#descripcion_' + fila).val(ui.item.descripcion);
+		    	$('#marca_' + fila).val(ui.item.descripcionMarcaArticulo);
+		    	// evaluamos si estamos cotizando en SOLES o DOLARES
+				//var precio;
+				var tc = tipoCambio.val();
+				
+				deshabilitarControlSoloLectura(null, '#cantidad_' + fila);
+				deshabilitarControlSoloLectura(null, '#precio_' + fila);
+				/*
+				var tipMoneda = tipoMoneda.val();
+				if(tipMoneda == Moneda.SOLES){
+					precio 		= ui.item.precioVentaUnitario * tc;
+					//$('.simbolo-moneda').removeClass("input-symbol-dolar").addClass("input-symbol-sol");
+				}else{
+					precio 		= ui.item.precioVentaUnitario;
+					//$('.simbolo-moneda').removeClass("input-symbol-sol").addClass("input-symbol-dolar");
+				}
+				*/
+				//$('#precio_' + fila).val(convertirNumeroAMoneda(precio));
+				//$('#precio_' + fila).prop('min', precio);
+				
+				$('#cantidad_' + fila).focus();
+				
+				var key = window.Event ? event.which : event.keyCode;
+				
+				if(key != 13){
+					if ($('#cantidad_' + fila).val() > 0){						
+						cantidadKeyUp($('#cantidad_' + fila)[0], fila);
+					}				
+				}
+		    }
+	    });
+	}
+}
+
+function cantidadKeyUp(control, fila) {
 
 	var cantidad = Number(control.value);
-	var cantidadGR = Number($('#cantidad_' + fila).val());
-
-	if(cantidad > cantidadGR) {
-		mostrarDialogoCantidadMayorAlPendiente(control, fila);
-		return false;
-	}
-
-	$('#cantidad_' + fila).data('temporal', cantidad);
-	calcularCantidadNuevaFactura(control, null, fila);
-
-}
-/*
-function calcularCantidadKeyUp(control, fila) {
-
-	var cantidad = Number(control.value);
-	var precio = Number($('#precio_' + fila).val());
-	var subTotal = cantidad * precio;	
+	var precio = Number($('#precio_' + fila).val());		
+	var subTotal = cantidad * precio;
 	var subTotalIgv = subTotal + (subTotal * (ParametrosGenerales.IGV/100));
 	
-	$('#subTotal_' + fila).val(convertirNumeroAMoneda(subTotal));	
 	$('#subTotalIgv_' + fila).val(convertirNumeroAMoneda(subTotalIgv));
-
+	$('#subTotal_' + fila).val(convertirNumeroAMoneda(subTotal));
+	
 	calcularResumenFactura();
+
 }
-*/
 
-function calcularCantidadNuevaFactura(control1, control2, fila) {
-
-	var cantidad;
-	if(control1 == null){
-		cantidad = Number(control2.val());
-	}else{
-		cantidad = Number(control1.value);
+function cantidadKeyDown(e, fila){
+	var key = window.Event ? e.which : e.keyCode;
+	console.log("cantidadKeyDown, key-->" + key);
+	// si es ENTER
+	if(key == 13){
+		console.log("cantidadKeyDown, foco en PVU");
+		$('#precio_' + fila).select();
 	}
+}
+
+function precioKeyUp(control, fila) {
+	var cantidad = Number($('#cantidad_' + fila).val());
+	var precio = Number(control.value);
 	
-	var precio = Number($('#precio_' + fila).val());
-	var subTotal = cantidad * precio;	
+	var subTotal = cantidad * precio;
 	var subTotalIgv = subTotal + (subTotal * (ParametrosGenerales.IGV/100));
 	
-	$('#subTotal_' + fila).val(convertirNumeroAMoneda(subTotal));	
 	$('#subTotalIgv_' + fila).val(convertirNumeroAMoneda(subTotalIgv));
+	$('#subTotal_' + fila).val(convertirNumeroAMoneda(subTotal));
 	
 	calcularResumenFactura();
 }
+
+function precioKeyDown(e, fila){
+	var key = window.Event ? e.which : e.keyCode;
+	console.log("precioKeyDown, key-->" + key);
+	// si es ENTER
+	if(key == 13){
+		btnAgregarArticulo.click();
+	}
+}
+
 
 /**************** EVENTOS FORMULARIO *******************/
 
-function grabarFactura() {
+function evaluarCambioCondicionPago() {
+	var condPagoVal = condPago.val();
 
-	if (formFactura[0].checkValidity() == true) {
+	if(condPagoVal == CondicionPago.CREDITO){
+		controlRequerido(dias);
+		mostrarControl(divDias);
+	}else{
+		controlNoRequerido(dias);
+		ocultarControl(divDias);
+	}
+}
+
+function evaluarCambioTipoMoneda() {
+	var tipoMonedaVal = tipoMoneda.val();
+
+	if(tipoMonedaVal == Moneda.SOLES) {
+		$('.simbolo-moneda').removeClass("input-symbol-dolar").addClass("input-symbol-sol");
+		convertirMontosASoles();
+	}else{
+		$('.simbolo-moneda').removeClass("input-symbol-sol").addClass("input-symbol-dolar");
+		convertirMontosADolares();
+	}
+}
+
+function evaluarCambioEstadoPago() {
+	var estadoPagoVal = estadoPago.val();
+
+	if(opcion.text() == Opcion.VER) {
+
+		if(estadoPagoVal == EstadoPago.PAGADO){
+			ocultarControl(btnAnular);
+			mostrarControl(btnGrabar);
+		} else{
+			mostrarControl(btnAnular);
+			ocultarControl(btnGrabar);
+		}
+	}
+}
+
+function grabarFactura() {
+	if(documentoCliente.val() == ''){
+		mostrarDialogoInformacion("Debe buscar un proveedor", Boton.WARNING, $('#campoBuscar'));
+		return false;
+	}
+
+	if (formFactura[0].checkValidity() === true) {
+
 		if(validarDetalleFactura()) {
+
 			if(opcion.text() == Opcion.NUEVO) {
+
 				if(estadoPago.val() == EstadoPago.PENDIENTE) {
-					registrarComprobantePagoCompra();
+					registrarFacturaCompra();
 				} else {
 					mostrarDialogoRegistrarFacturaPagado();
 				}
 			}
 
 			if(opcion.text() == Opcion.VER) {
-				actualizarComprobantePagoCompra();
+				actualizarFacturaCompra();
 			}
 		}
 	} else {
@@ -729,13 +854,13 @@ function grabarFactura() {
 }
 
 function validarDetalleFactura(){
-
 	var cantidad;
+	var precio;
 	var flag = false;
 	var exitEach = false;
 	var exitIterator = false;
 		
-	// verificando que se hayan ingresado por lo menos un item al detalle de la Orden de Compra
+	// verificando que se hayan ingresado por lo menos un item al detalle de la factura
 	var contadorVacios = 0;
 	// recorriendo todos los detalles
 	var $headers = tableDetalle.find("th").not(':first').not(':last');
@@ -760,8 +885,7 @@ function validarDetalleFactura(){
 		return false;	
 	}
 	
-	
-	// verificando que no hayan detalles con cantidad y almacen vacíos
+	// verificando que no hayan detalles con cantidad y precio vacíos
 	tableDetalle.DataTable().rows().iterator('row', function(context, index){
 		
 		if(exitEach == true){
@@ -776,6 +900,7 @@ function validarDetalleFactura(){
 		flag = false;
 		
 		$cells.each(function(cellIndex) {
+			console.log("valor de flag al iniciar new recorrido-->" + flag);
 			// verificamos que estamos en una fila con código (es decir, con datos para validar)
 			if($($headers[cellIndex]).attr('id') == 'codArticulo') {
 				
@@ -789,6 +914,7 @@ function validarDetalleFactura(){
 				// siempre y cuando hayan datos (flag TRUE)
 				if(flag == true){
 					cantidad = $(this).find("input").val();
+					console.log("cantidad-->" + cantidad);
 					if(cantidad == CADENA_VACIA){
 						mostrarMensajeValidacion('Debe ingresar la cantidad.', $(this).find("input"));
 						exitEach = true;
@@ -796,6 +922,24 @@ function validarDetalleFactura(){
 						return false;
 					}else if(convertirMonedaANumero(cantidad) == 0){
 						mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $(this).find("input"));
+						exitEach = true;
+						return false;
+					}
+				}
+			}
+			
+			// evaluamos el PRECIO	
+			if($($headers[cellIndex]).attr('id') == 'precioUnitario') {
+				// siempre y cuando hayan datos (flag TRUE)
+				if(flag == true){
+					precio = $(this).find("input").val();
+					console.log("precio-->" + precio);
+					if(precio == CADENA_VACIA){
+						mostrarMensajeValidacion('Debe ingresar el precio.', $(this).find("input"));
+						exitEach = true;
+						return false;
+					}else if(convertirMonedaANumero(precio) == 0){
+						mostrarDialogoInformacion('Debe ingresar un precio mayor a cero.', Boton.WARNING, $(this).find("input"));
 						exitEach = true;
 						return false;
 					}
@@ -809,13 +953,12 @@ function validarDetalleFactura(){
 		return false;
 	}else{
 		return true;	
-	}	
+	}
 }
 
-function registrarComprobantePagoCompra(){
+function registrarFacturaCompra(){
 
 	var nroDocumento  			= codigo.html();
-	var ordenCompra  			= OCReferencia.val();
 	var serieVal 				= serie.val();
 	var correlativoVal 			= correlativo.val();
 	var codigoClienteVal  		= codigoCliente.val().trim();
@@ -841,7 +984,6 @@ function registrarComprobantePagoCompra(){
 	var objetoJson = {
 
 		numeroDocumento:		nroDocumento,
-		ordenCompra:			ordenCompra,
 		serie:					serieVal,
 		correlativo:			correlativoVal,
 		codigoCliente:  		codigoClienteVal,
@@ -860,8 +1002,7 @@ function registrarComprobantePagoCompra(){
 	};
 
 	var entityJsonStr = JSON.stringify(objetoJson);
-	console.log("entityJsonStr-->" + entityJsonStr);
-	
+
 	var formData = new FormData();
 
 	formData.append('registro', new Blob([entityJsonStr], {
@@ -873,7 +1014,7 @@ function registrarComprobantePagoCompra(){
 		type:"POST",
 		contentType: false,
 		processData: false,
-		url : '/appkahaxi/registrarComprobantePagoCompra/',
+		url : '/appkahaxi/registrarFacturaCompra/',
 		data: formData,
 		beforeSend: function(xhr) {
 			loadding(true);
@@ -904,11 +1045,13 @@ function registrarComprobantePagoCompra(){
 					ocultarControl(btnGrabar);
 					ocultarControl(btnLimpiar);
 
-					deshabilitarDetalleFactura();
 
 				} else {
+
 					volver();
 				}
+
+				deshabilitarDetalleFactura();
 
 			} else if(xhr.status == HttpStatus.Accepted){
 
@@ -925,7 +1068,7 @@ function registrarComprobantePagoCompra(){
 	});
 }
 
-function actualizarComprobantePagoCompra() {
+function actualizarFacturaCompra() {
 
 	var nroDocumento  		= codigo.html();
 	var estadoPagoVal 		= estadoPago.val();
@@ -947,7 +1090,7 @@ function actualizarComprobantePagoCompra() {
 		type:"POST",
 		contentType: false,
 		processData: false,
-		url : '/appkahaxi/actualizarComprobantePagoCompra/',
+		url : '/appkahaxi/actualizarFacturaCompra/',
 		data: formData,
 		beforeSend: function(xhr) {
 			loadding(true);
@@ -1006,10 +1149,20 @@ function tableToJSON(dataTable) {
 				}
 			}
 		});
-
 	});
 
-	return data;
+	console.log("data--->" + data);
+	// eliminando las filas en blanco
+	var newData = [];
+	for(i=0, j=0; i<data.length;i++){
+		console.log("data[i][codArticulo]--->" + data[i]['codArticulo']);
+		if(data[i]['codArticulo'] != UNDEFINED){
+			newData[j] = data[i];
+			j++;
+		}
+	}
+	
+	return newData;
 }
 
 function mostrarDialogoEliminarFila(table, row){
@@ -1038,10 +1191,36 @@ function mostrarDialogoEliminarFila(table, row){
 	});
 }
 
+function mostrarDialogoEliminarTodo() {
+
+	bootbox.confirm({
+		message: "¿Está seguro que desea eliminar todos los registros?",
+		buttons: {
+			confirm: {
+				label: 'Sí',
+				className: 'btn-success'
+			},
+			cancel: {
+				label: 'No',
+				className: 'btn-danger'
+			}
+		},
+		callback: function (result) {
+			if(result == true) {
+				dataTableDetalle.clear().draw();
+				indiceFilaDataTableDetalle = -1;
+
+				calcularResumenFactura();
+				ocultarControl(btnEliminarTodosArticulos);
+			}
+		}
+	});
+}
+
 function mostrarDialogoRegistrarFacturaPagado() {
 
 	bootbox.confirm({
-		message: "¿Está seguro que esta factura ya ha sido pagada?",
+		message: "¿Está seguro de que esta factura ya ha sido pagada?",
 		buttons: {
 			confirm: {
 				label: 'Sí',
@@ -1054,7 +1233,7 @@ function mostrarDialogoRegistrarFacturaPagado() {
 		},
 		callback: function (result) {
 			if(result == true){
-				registrarComprobantePagoCompra();
+				registrarFacturaCompra();
 			}
 		}
 	});
@@ -1076,42 +1255,13 @@ function mostrarDialogoAnularFactura() {
 		},
 		callback: function (result) {
 			if(result == true){
-				anularComprobantePagoCompra();
+				anularFacturaCompra();
 			}
 		}
 	});
 }
 
-function mostrarDialogoCantidadMayorAlPendiente(control, fila) {
-
-	bootbox.alert({
-		message: "No se puede registrar una cantidad mayor a la de la Guia de Remisión de Referencia",
-		callback: function () {
-
-			var cantidad = Number($('#cantidad_' + fila).data('temporal'));
-			$('#cantidad_' + fila).val(cantidad);
-			$('#cantidad_' + fila).focus();
-		}
-	});
-}
-
-function mostrarOcultarBotonAnular() {
-
-	var estadoPagoVal = estadoPago.val();
-
-	if(opcion.text() == Opcion.VER) {
-
-		if(estadoPagoVal == EstadoPago.PAGADO){
-			ocultarControl(btnAnular);
-			mostrarControl(btnGrabar);
-		} else{
-			mostrarControl(btnAnular);
-			ocultarControl(btnGrabar);
-		}
-	}
-}
-
-function anularComprobantePagoCompra(){
+function anularFacturaCompra(){
 
 	var nroDocumento  			= codigo.html();
 
@@ -1132,7 +1282,7 @@ function anularComprobantePagoCompra(){
 		type:"POST",
 		contentType: false,
 		processData: false,
-		url : '/appkahaxi/anularComprobantePagoCompra/',
+		url : '/appkahaxi/anularFacturaCompra/',
 		data: formData,
 		beforeSend: function(xhr) {
 			loadding(true);
@@ -1141,14 +1291,7 @@ function anularComprobantePagoCompra(){
 
 			if(xhr.status == HttpStatus.OK){
 
-				if (opcion.text() == Opcion.NUEVO) {
-					var params = "numeroDocumento=" + numeroDocumento.text() + "&opcion=" + Opcion.VER + "&datoBuscar=&fechaDesde=&fechaHasta=&estadoParam=&volver=0";
-					window.location.href = "/appkahaxi/nuevo-comprobante-pago-compra-directo?" + params;
-				}
-
-				if(opcion.text() == Opcion.VER) {
-					volver();
-				}
+				volver();
 
 			} else if(xhr.status == HttpStatus.Accepted){
 
@@ -1165,86 +1308,50 @@ function anularComprobantePagoCompra(){
 	});
 }
 
-function mostrarOcultarDiasPorCondicionPago() {
-
-	var condPagoVal = condPago.val();
-
-	if(condPagoVal == CondicionPago.CREDITO){
-		controlRequerido(dias);
-		mostrarControl(divDias);
-	}else{
-		controlNoRequerido(dias);
-		ocultarControl(divDias);
-	}
-}
-
 function volver(){
 	var params;
 	var dato 		= datoBuscar.text();
 	var nroFact 	= nroComprobantePago.text();
 	var nroOC 		= nroOrdenCompra.text();
 	var codRpto 	= codRepuesto.text();
-	console.log("fechaDesde.text()-->" + fechaDesde.text());
-	var fechaDesde 	= fechaDesde.text();
-	var fechaHasta 	= fechaHasta.text();
-	var estadoParam	= estadoParam.text();
+	var fecDesde 	= fechaDesde.text();
+	var fecHasta 	= fechaHasta.text();
+	var estParam	= estadoParam.text();
 
 	params = "datoBuscar=" + dato + "&nroComprobantePago=" + nroFact + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +  
-			 "&fechaDesde=" + fechaDesde + "&fechaHasta=" + fechaHasta + "&estadoParam=" + estadoParam;
-	window.location.href = "/appkahaxi/mantenimiento-comprobante-pago-compra?" + params;
-}
-
-function cargarComboAlmacen(control, data) {
-
-	$.ajax({
-		type:"GET",
-		cache: false,
-		contentType : "application/json",
-		accept: 'text/plain',
-		url : '/appkahaxi/buscarAlmacen',
-		data : null,
-		dataType: 'text',
-		success:function(result,textStatus,xhr){
-
-			var resultado = JSON.parse(result);
-
-			if(xhr.status == HttpStatus.OK) {
-				var tam = resultado.length;
-				for(var i = 0; i < tam; i++){
-					if(resultado[i].predeterminado == '1') {
-						$(control).append($('<option selected> </option').val(resultado[i].codigoAlmacen).html(resultado[i].descripcion));
-					} else {
-						$(control).append($('<option />').val(resultado[i].codigoAlmacen).html(resultado[i].descripcion));
-					}
-
-				}
-			} else if(xhr.status == HttpStatus.Accepted){
-				console.log("cargarCombo, Accepted....");
-			}
-
-			cantidadDetalleDuplicado = data.detalle.length;
-
-			for(i=0; i < cantidadDetalleDuplicado; i++) {
-				var detalle = data.detalle[i];
-				$('#almacen_' + i).val(detalle.codAlmacen);
-			}
-		},
-		error: function (xhr, error, code){
-			console.log("cargarCombo, error...." + xhr.status);
-		}
-	});
+			 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam;
+	window.location.href = "/appkahaxi/mantenimiento-factura-compra?" + params;
 }
 
 function limpiarFactura() {
-
 	inicializarFechas();
-	fecDocumento.datetimepicker('date', null);
-	fecVencimiento.datetimepicker('date', null);
+
+	campoBuscar.val(CADENA_VACIA);
+	documentoCliente.val(CADENA_VACIA);
+	nombreCliente.val(CADENA_VACIA);
+	direccion.val(CADENA_VACIA);
 	serie.val(CADENA_VACIA);
 	correlativo.val(CADENA_VACIA);
-	estadoPago.prop("selectedIndex", 0);
-	serie.focus();
+	estadoPago.val(EstadoPago.PENDIENTE);
+	condPago.val(CondicionPago.CONTADO);
+	tipoMoneda.val(Moneda.DOLARES);
+
+	subTotalFactura.val(CADENA_VACIA);
+	igvFactura.val(CADENA_VACIA);
+	totalFactura.val(CADENA_VACIA);
+
+	dataTableDetalle.clear().draw();
+	indiceFilaDataTableDetalle = -1;
+
+	ocultarControl(divDias);
+	ocultarControl(btnAgregarArticulo);
+	ocultarControl(btnEliminarTodosArticulos);
+
+	formFactura.removeClass('was-validated');
+
+	campoBuscar.focus();
 }
+
 
 /********************* CALCULOS NUMERICOS ********************/
 
@@ -1281,50 +1388,85 @@ function calcularResumenFactura(){
 	totalFactura.val(convertirNumeroAMoneda(total));
 }
 
+function convertirMontosASoles(){
+	console.log("convertirMontosASoles.....");
+	var tc = Number(tipoCambio.val());
+	var nvoPrecio;
+	var nvoSubTotal;
+	var subTotal;
+	var subTotalIgv;
+	var igv;
+	var total;
+	
+	var $headers = tableDetalle.find("th").not(':first').not(':last');
+	tableDetalle.DataTable().rows().iterator('row', function(context, index){
 
-/*
-function calcularPorTipoMoneda() {
+		var node = $(this.row(index).node());
+		$cells = node.find("td").not(':first').not(':last');
 
-	var tipoMonedaVal = tipoMoneda.val();
-
-	if(tipoMonedaVal == Moneda.SOLES) {
-		$('.simbolo-moneda').removeClass("input-symbol-dolar").addClass("input-symbol-sol");
-		convertirMontosASoles();
-	}else{
-		$('.simbolo-moneda').removeClass("input-symbol-sol").addClass("input-symbol-dolar");
-		convertirMontosADolares();
-	}
+		$cells.each(function(cellIndex) {
+			if($($headers[cellIndex]).attr('id') == 'precioUnitario') {
+				nvoPrecio = Number(convertirMonedaANumero($(this).find("input").val())) * tc;
+				$(this).find("input").val(convertirNumeroAMoneda(nvoPrecio));
+			}
+			if($($headers[cellIndex]).attr('id') == 'subTotal') {
+				nvoSubTotal = Number(convertirMonedaANumero($(this).find("input").val())) * tc;
+				$(this).find("input").val(convertirNumeroAMoneda(nvoSubTotal));
+			}
+			if($($headers[cellIndex]).attr('id') == 'subTotalIgv') {
+				subTotalIgv = Number(convertirMonedaANumero($(this).find("input").val())) * tc;
+				$(this).find("input").val(convertirNumeroAMoneda(subTotalIgv));
+			}
+			
+		});
+	});
+	
+	subTotal = Number(convertirMonedaANumero(subTotalFactura.val())) * tc;
+	igv = Number(convertirMonedaANumero(igvFactura.val())) * tc;
+	total = Number(convertirMonedaANumero(totalFactura.val())) * tc;
+	
+	subTotalFactura.val(convertirNumeroAMoneda(subTotal));
+	igvFactura.val(convertirNumeroAMoneda(igv));
+	totalFactura.val(convertirNumeroAMoneda(total));
 }
 
-function convertirMontosASoles() {
+function convertirMontosADolares(){
+	console.log("convertirMontosADolares.....");
+	var tc = Number(tipoCambio.val());
+	var nvoPrecio;
+	var nvoSubTotal;
+	var subTotal;
+	var subTotalIgv;
+	var igv;
+	var total;
+	
+	var $headers = tableDetalle.find("th").not(':first').not(':last');
+	tableDetalle.DataTable().rows().iterator('row', function(context, index){
 
-	var tc = tipoCambio.val();
+		var node = $(this.row(index).node());
+		$cells = node.find("td").not(':first').not(':last');
 
-	for(i=0; i < (indiceFilaDataTableDetalle+1); i++) {
-
-		$('#precio_' + i).val($('#precio_' + i).val() * tc);
-		$('#subTotalIgv_' + i).val(($('#subTotalIgv_' + i).val() * tc).toFixed(2));
-		$('#subTotal_' + i).val($('#subTotal_' + i).val() * tc);
-	}
-
-	subTotalFactura.val(subTotalFactura.val() * tc);
-	igvFactura.val(igvFactura.val() * tc);
-	totalFactura.val(totalFactura.val() * tc);
+		$cells.each(function(cellIndex) {
+			if($($headers[cellIndex]).attr('id') == 'precioUnitario') {
+				nvoPrecio = Number(convertirMonedaANumero($(this).find("input").val())) / tc;
+				$(this).find("input").val(convertirNumeroAMoneda(nvoPrecio));
+			}
+			if($($headers[cellIndex]).attr('id') == 'subTotal') {
+				nvoSubTotal = Number(convertirMonedaANumero($(this).find("input").val())) / tc;
+				$(this).find("input").val(convertirNumeroAMoneda(nvoSubTotal));
+			}
+			if($($headers[cellIndex]).attr('id') == 'subTotalIgv') {
+				subTotalIgv = Number(convertirMonedaANumero($(this).find("input").val())) / tc;
+				$(this).find("input").val(convertirNumeroAMoneda(subTotalIgv));
+			}
+		});
+	});
+	
+	subTotal = Number(convertirMonedaANumero(subTotalFactura.val())) / tc;
+	igv = Number(convertirMonedaANumero(igvFactura.val())) / tc;
+	total = Number(convertirMonedaANumero(totalFactura.val())) / tc;
+	
+	subTotalFactura.val(convertirNumeroAMoneda(subTotal));
+	igvFactura.val(convertirNumeroAMoneda(igv));
+	totalFactura.val(convertirNumeroAMoneda(total));
 }
-
-function convertirMontosADolares() {
-
-	var tc = tipoCambio.val();
-
-	for(i=0; i < (indiceFilaDataTableDetalle+1); i++) {
-
-		$('#precio_' + i).val($('#precio_' + i).val() / tc);
-		$('#subTotalIgv_' + i).val(($('#subTotalIgv_' + i).val() / tc).toFixed(2));
-		$('#subTotal_' + i).val($('#subTotal_' + i).val() / tc);
-	}
-
-	subTotalFactura.val(subTotalFactura.val() / tc);
-	igvFactura.val(igvFactura.val() / tc);
-	totalFactura.val(totalFactura.val() / tc);
-}
-*/

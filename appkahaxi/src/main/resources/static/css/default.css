@@ -120,9 +120,21 @@ input.disabled-input {
 	vertical-align: middle;
 }
 
-.filaEliminada{
-	background-color: #da8585 !important;
-	color: white !important;
+.facturaDirecta{
+	font-weight: bold;
+	color: #8a290d;
+}
+
+.facturaDirectaCerrada{
+	font-weight: bold;
+	color: #8a290d;
+	background-color: #cbffee !important; /* lightcyan aquamarine */
+}
+
+.facturaDirectaAnulada{
+	font-weight: bold;
+	color: #8a290d;
+	background-color: wheat !important;
 }
 
 .estadoRechazado{

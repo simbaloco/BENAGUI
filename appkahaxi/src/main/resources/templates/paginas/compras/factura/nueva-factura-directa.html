@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <script th:src="@{/js/compras/factura/gui-nuevo-comprobante-pago-directo.js}" ></script>
+    <script th:src="@{/js/compras/factura/gui-nueva-factura-directa.js}" ></script>
 </head>
 
 <body>
@@ -54,7 +54,7 @@
                 
 	                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionOne">
 	                	<div class="box-body">
-	                    <form id="formCotizacion" class="needs-validation" novalidate>
+	                    <form id="formFactura" class="needs-validation" novalidate>
 					 	 	<div class="row">
 					 	 		<div class="col-md-2">
 						 			<div id="referenciaDiv" style="display: none ">
@@ -170,14 +170,14 @@
 						 		
 						 		<div class="col-md-1">
 									<label class="label" for="serie">Serie:</label>
-									<input class="form-control" maxlength="250" size="50" type="text" id="serie" tabindex="-1" required="required"/>
+									<input class="form-control" maxlength="250" size="50" type="text" id="serie" required="required"/>
 									<div class="invalid-feedback">
 										Ingrese Serie
 									</div>
 								</div>
 								<div class="col-md-1">
 									<label class="label" for="correlativo">Correlativo:</label>
-									<input class="form-control" maxlength="250" size="50" type="text" id="correlativo" tabindex="-1" required="required"/>
+									<input class="form-control" maxlength="250" size="50" type="text" id="correlativo" required="required"/>
 									<div class="invalid-feedback">
 										Ingrese Correlativo
 									</div>
@@ -258,10 +258,7 @@
 								                <th id="marca" width="10%">Marca</th>
 								                <th id="codAlmacen" width="5%">Almacén</th>
 												<th id="cantidad" width="5%" >Cantidad</th>
-								                <th id="precioUnitario" width="8%" >PVU</th>
-								                <th id="precioReferencia" width="8%" >Precio Ref</th>
-								                <th id="porcentajeDcto" width="3%">% Dcto.</th>
-								                <th id="precioConDcto" width="10%">Pre. c/Dcto.</th>
+								                <th id="precioUnitario" width="8%" >PU</th>
 								                <th id="subTotal" width="10%">SubTotal</th>
 								                <th id="subTotalIgv" width="10%" >SubTotal c/IGV</th>									                
 								                <th class="eliminar" width="3%">Eliminar</th>
@@ -278,9 +275,6 @@
 									        	<td></td>							        
 									        	<td></td>
 									        	<td style="display: none"></th>
-									        	<td></td>
-									        	<td></td>
-									        	<td></td>
 									        	<td></td>
 									        	<td></td>
 									        	<td></td>
@@ -318,18 +312,6 @@
 					     	<div class="col-md-8">
 					     		<div class="form-group row">
 			            			<div class="col-md-3">
-					            		<label class="label" for="chkDctoTotal">¿Aplicar Dcto. Total? (%)</label>
-					            	</div>
-					            	<div class="col-md-3">	
-					            		<div class="form-check">
-							 		  		<input class="form-check-input" type="checkbox" id="chkDctoTotal"/>
-							 		  		<input class="form-control" maxlength="3" type="text" id="dctoTotal" disabled="disabled" onkeypress="return soloDecimales(event, this);"/>
-									    </div>
-								    </div>
-			            		</div>
-					     		
-					     		<div class="form-group row">
-			            			<div class="col-md-3">
 					            		<label class="label" for="observaciones">Observaciones</label>
 					            	</div>
 					            	<div class="col-md-9">	
@@ -345,44 +327,33 @@
 					     	<div class="col-md-3">
 				            	<div class="form-group row">
 			            			<div class="col-md-4">
-					            		<label class="label" for="subTotalCoti">SubTotal</label>
+					            		<label class="label" for="subTotalFactura">SubTotal</label>
 					            	</div>
 					            	<div class="col-md-8">	
 					            		<span class="simbolo-moneda input-symbol-dolar">
-								        	<input class="form-control alineacion-derecha" maxlength="10" type="text" id="subTotalCoti" readonly="readonly"/>
+								        	<input class="form-control alineacion-derecha" maxlength="10" type="text" id="subTotalFactura" readonly="readonly"/>
 								        </span>
 								    </div>
 			            		</div>
 				            	
-				            	<div class="form-group row" id="dctoFactDiv" style="display: none ">
-					            	<div class="col-md-4">
-					            		<label class="label" for="dctoFact">Descuento</label>
-					            	</div>
-					            	<div class="col-md-8">	
-					            		<span class="simbolo-moneda input-symbol-dolar">
-								        	<input class="form-control alineacion-derecha" maxlength="10" type="text" id="dctoFact" readonly="readonly"/>
-								        </span>
-								    </div>
-				        		</div>
-				        		
-			            		<div class="form-group row">
+				            	<div class="form-group row">
 			            			<div class="col-md-4">
-					            		<label class="label" for="igvFact">IGV</label>
+					            		<label class="label" for="igvFactura">IGV</label>
 					            	</div>
 					            	<div class="col-md-8">	
 					            		<span class="simbolo-moneda input-symbol-dolar">
-					            			<input class="form-control alineacion-derecha" maxlength="10" type="text" id="igvFact" readonly="readonly"/>
+					            			<input class="form-control alineacion-derecha" maxlength="10" type="text" id="igvFactura" readonly="readonly"/>
 					            		</span>
 								    </div>	
 			            		</div>
 			            		
 			            		<div class="form-group row">
 			            			<div class="col-md-4">
-					            		<label class="label" for="totalFact">Total</label>
+					            		<label class="label" for="totalFactura">Total</label>
 					            	</div>
 					            	<div class="col-md-8">	
 					            		<span class="simbolo-moneda input-symbol-dolar">
-					            			<input class="form-control alineacion-derecha" maxlength="10" type="text" id="totalFact" readonly="readonly"/>
+					            			<input class="form-control alineacion-derecha" maxlength="10" type="text" id="totalFactura" readonly="readonly"/>
 							        	</span>
 								    </div>	
 			            		</div>

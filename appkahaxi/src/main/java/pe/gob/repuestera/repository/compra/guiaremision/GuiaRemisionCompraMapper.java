@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Repository
 @Transactional
-public interface GuiaRemisionMapper {
+public interface GuiaRemisionCompraMapper {
 
     List<AlmacenModel> buscarAlmacen(Map params);
 

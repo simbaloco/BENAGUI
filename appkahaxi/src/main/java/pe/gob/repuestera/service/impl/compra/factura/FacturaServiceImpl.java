@@ -10,9 +10,9 @@ import pe.gob.repuestera.model.CompraCabModel;
 import pe.gob.repuestera.model.ComprobantePagoCabModel;
 import pe.gob.repuestera.model.ComprobantePagoDetModel;
 import pe.gob.repuestera.model.GuiaRemisionDetModel;
-import pe.gob.repuestera.repository.compra.factura.ComprobantePagoMapper;
-import pe.gob.repuestera.service.compra.factura.ComprobantePagoService;
-import pe.gob.repuestera.service.compra.guiaremision.GuiaRemisionService;
+import pe.gob.repuestera.repository.compra.factura.FacturaMapper;
+import pe.gob.repuestera.service.compra.factura.FacturaService;
+import pe.gob.repuestera.service.compra.guiaremision.GuiaRemisionCompraService;
 import pe.gob.repuestera.service.compra.ordencompra.OrdenCompraService;
 import pe.gob.repuestera.util.Constante;
 import pe.gob.repuestera.util.JsonUtils;
@@ -20,12 +20,12 @@ import pe.gob.repuestera.util.JsonUtils;
 import java.util.*;
 
 @Service
-public class ComprobantePagoServiceImpl implements ComprobantePagoService {
+public class FacturaServiceImpl implements FacturaService {
 
-    private static final Logger logger = LogManager.getLogger(ComprobantePagoServiceImpl.class);
+    private static final Logger logger = LogManager.getLogger(FacturaServiceImpl.class);
 
     @Autowired
-    private ComprobantePagoMapper comprobantePagoMapper;
+    private FacturaMapper facturaMapper;
 
     @Autowired
     private JsonUtils jsonUtils;
@@ -34,9 +34,9 @@ public class ComprobantePagoServiceImpl implements ComprobantePagoService {
     private OrdenCompraService ordenCompraService;
 
     @Autowired
-    private GuiaRemisionService guiaRemisionService;
+    private GuiaRemisionCompraService guiaRemisionCompraService;
 
-    public String registrarComprobantePagoCompra(ComprobantePagoCabModel comprobantePagoCabModel, String usuario) throws Exception {
+    public String registrarFacturaCompra(ComprobantePagoCabModel comprobantePagoCabModel, String usuario) throws Exception {
 
         logger.info("comprobantePagoCabModel ===> " + comprobantePagoCabModel.toString());
         logger.info("usuario ===> " + usuario);
@@ -67,7 +67,7 @@ public class ComprobantePagoServiceImpl implements ComprobantePagoService {
 
         logger.info("params ===> " + params);
 
-        comprobantePagoMapper.registrarComprobantePagoCompra(params);
+        facturaMapper.registrarFacturaCompra(params);
 
         String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
         String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
@@ -90,7 +90,7 @@ public class ComprobantePagoServiceImpl implements ComprobantePagoService {
 
     }
 
-    public void actualizarComprobantePagoCompra(ComprobantePagoCabModel comprobantePagoCabModel, String usuario) throws Exception {
+    public void actualizarFacturaCompra(ComprobantePagoCabModel comprobantePagoCabModel, String usuario) throws Exception {
 
         logger.info("comprobantePagoCabModel ===> " + comprobantePagoCabModel.toString());
         logger.info("usuario ===> " + usuario);
@@ -102,7 +102,7 @@ public class ComprobantePagoServiceImpl implements ComprobantePagoService {
 
         logger.info("params ===> " + params);
 
-        comprobantePagoMapper.actualizarComprobantePagoCompra(params);
+        facturaMapper.actualizarFacturaCompra(params);
 
         String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
         String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
@@ -122,7 +122,7 @@ public class ComprobantePagoServiceImpl implements ComprobantePagoService {
         }
     }
 
-    public void anularComprobantePagoCompra(ComprobantePagoCabModel comprobantePagoCabModel, String usuario) throws Exception {
+    public void anularFacturaCompra(ComprobantePagoCabModel comprobantePagoCabModel, String usuario) throws Exception {
 
         logger.info("comprobantePagoCabModel ===> " + comprobantePagoCabModel.toString());
 
@@ -132,7 +132,7 @@ public class ComprobantePagoServiceImpl implements ComprobantePagoService {
 
         logger.info("params ===> " + params);
 
-        comprobantePagoMapper.anularComprobantePagoCompra(params);
+        facturaMapper.anularFacturaCompra(params);
 
         String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
         String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
@@ -153,7 +153,7 @@ public class ComprobantePagoServiceImpl implements ComprobantePagoService {
 
     }
 
-    public List<ComprobantePagoCabModel> listarComprobantePagoCompra(String datoBuscar, String nroComprobantePago, String nroOrdenCompra, String codRepuesto, String codEstado, String fechaDesde, String fechaHasta) throws Exception {
+    public List<ComprobantePagoCabModel> listarFacturaCompra(String datoBuscar, String nroComprobantePago, String nroOrdenCompra, String codRepuesto, String codEstado, String fechaDesde, String fechaHasta) throws Exception {
 
         Map<String, Object> params = new HashMap();
         params.put(Constante.PARAM_SP_DATO_BUSCAR, datoBuscar);
@@ -166,7 +166,7 @@ public class ComprobantePagoServiceImpl implements ComprobantePagoService {
 
         logger.info("params ===> " + params);
 
-        List<ComprobantePagoCabModel> listaComprobantePagoCabModel = comprobantePagoMapper.listarComprobantePagoCompra(params);
+        List<ComprobantePagoCabModel> listaComprobantePagoCabModel = facturaMapper.listarFacturaCompra(params);
 
         String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
         String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
@@ -188,14 +188,14 @@ public class ComprobantePagoServiceImpl implements ComprobantePagoService {
         return listaComprobantePagoCabModel;
     }
 
-    public ComprobantePagoCabModel buscarComprobantePagoCompraCab(String numeroDocumento) throws Exception {
+    public ComprobantePagoCabModel buscarFacturaCompraCab(String numeroDocumento) throws Exception {
 
         Map<String, Object> params = new HashMap();
         params.put(Constante.PARAM_SP_NRO_DOCUMENTO, numeroDocumento);
 
         logger.info("params ===> " + params);
 
-        ComprobantePagoCabModel comprobantePagoCabModel = comprobantePagoMapper.buscarComprobantePagoCompraCab(params);
+        ComprobantePagoCabModel comprobantePagoCabModel = facturaMapper.buscarFacturaCompraCab(params);
 
         String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
         String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
@@ -217,14 +217,14 @@ public class ComprobantePagoServiceImpl implements ComprobantePagoService {
         return comprobantePagoCabModel;
     }
 
-    public List<ComprobantePagoCabModel> listarComprobantePagoCompraPorGuiaRemision(String numeroDocumento) throws Exception {
+    public List<ComprobantePagoCabModel> listarFacturaCompraPorGuiaRemision(String numeroDocumento) throws Exception {
 
         Map<String, Object> params = new HashMap();
         params.put(Constante.PARAM_SP_NRO_GUIA_REMISION, numeroDocumento);
 
         logger.info("params ===> " + params);
 
-        List<ComprobantePagoCabModel> listaComprobantePagoCabModel = comprobantePagoMapper.listarComprobantePagoCompraPorGuiaRemision(params);
+        List<ComprobantePagoCabModel> listaComprobantePagoCabModel = facturaMapper.listarFacturaCompraPorGuiaRemision(params);
 
         String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
         String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
@@ -250,14 +250,14 @@ public class ComprobantePagoServiceImpl implements ComprobantePagoService {
         return listaComprobantePagoCabModel;
     }
 
-    public List<ComprobantePagoDetModel> buscarComprobantePagoCompraDet(String numeroDocumento) throws Exception {
+    public List<ComprobantePagoDetModel> buscarFacturaCompraDet(String numeroDocumento) throws Exception {
 
         Map<String, Object> params = new HashMap();
         params.put(Constante.PARAM_SP_NRO_DOCUMENTO, numeroDocumento);
 
         logger.info("params ===> " + params);
 
-        List<ComprobantePagoDetModel> listComprobantePagoDetModel = comprobantePagoMapper.buscarComprobantePagoCompraDet(params);
+        List<ComprobantePagoDetModel> listComprobantePagoDetModel = facturaMapper.buscarFacturaCompraDet(params);
 
         String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
         String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
@@ -279,7 +279,7 @@ public class ComprobantePagoServiceImpl implements ComprobantePagoService {
         return listComprobantePagoDetModel;
     }
 
-    public ComprobantePagoCabModel buscarComprobantePagoCompraCabPorOrdenCompra(String codigoOrdenCompra) throws Exception {
+    public ComprobantePagoCabModel buscarFacturaCompraCabPorOrdenCompra(String codigoOrdenCompra) throws Exception {
 
         CompraCabModel compraCabModel = ordenCompraService.buscarOrdenCompraCab(codigoOrdenCompra);
 
@@ -291,7 +291,7 @@ public class ComprobantePagoServiceImpl implements ComprobantePagoService {
         return comprobantePagoCabModel;
     }
 
-    public List<ComprobantePagoDetModel> buscarComprobantePagoCompraDetPorGuias(String guias) throws Exception {
+    public List<ComprobantePagoDetModel> buscarFacturaCompraDetPorGuias(String guias) throws Exception {
 
         List<ComprobantePagoDetModel> listComprobantePagoDetModel = new ArrayList<>();
         ComprobantePagoDetModel comprobantePagoDetModel = new ComprobantePagoDetModel();
@@ -300,7 +300,7 @@ public class ComprobantePagoServiceImpl implements ComprobantePagoService {
 
         for(String codidoGuiaRemision: listCodigoGuiasRemision) {
 
-            List<GuiaRemisionDetModel> listGuiaRemisionDetModel = guiaRemisionService.buscarGuiaRemisionCompraDet(codidoGuiaRemision);
+            List<GuiaRemisionDetModel> listGuiaRemisionDetModel = guiaRemisionCompraService.buscarGuiaRemisionCompraDet(codidoGuiaRemision);
 
             for(GuiaRemisionDetModel guiaRemisionDetModel : listGuiaRemisionDetModel) {
                 comprobantePagoDetModel = new ComprobantePagoDetModel();

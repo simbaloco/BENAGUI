@@ -344,7 +344,7 @@ function inicializarTabla(paginacion) {
 		"paging"	    : paginacion,
 		/*"dom"           :   "<'row'<'col-sm-12'rt>>" +
 			"<'row'<'col-sm-4 'l><'col-sm-8 'p>>",*/
-		"dom"			: '<lp<rt>ip>',
+		"dom"			: '<ip<rt>lp>',
         "lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
 		"fnRowCallback":
 			function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {

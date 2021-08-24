@@ -215,19 +215,22 @@ function inicializarTabla(){
             	
             }
         },
-		"stateSave": true,
-		"responsive"	: false,
-        "scrollCollapse": false,
-        //"paging"        : false,
-        "ordering"      : true,
-        "dom"           :   "<'row'<'col-sm-8'i><'col-sm-4'>>" +
+		
+		/*
+		"dom"           :   "<'row'<'col-sm-8'i><'col-sm-4'>>" +
 			                "<'row'<'col-sm-12'rt>>" +
 			                "<'row'<'col-sm-4'l><'col-sm-8'p>>",
-        //"processing"    : true,
-		"lengthMenu"	: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
-        "deferRender"   : true,
-        "autoWidth"		: false,
-        /*"fixedColumns"	: false,*/
+        */
+		"responsive"	: false,
+		"scrollCollapse": false,
+		"ordering"      : true,
+		"deferRender"   : true,
+		"autoWidth"		: false,
+		"paging"	    : true,
+		"stateSave"		: true,
+		"dom"			: '<ip<rt>lp>',
+        "lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
+
         "columnDefs"    : [
             {
                 "width": "1px",
@@ -266,7 +269,7 @@ function inicializarTabla(){
                 "data": "fechaContabilizacion"
             },
             {
-                "width": "80px",
+                "width": "100px",
                 "targets": [7],
                 "data": "descripcionTipoMoneda"
                 
@@ -283,7 +286,7 @@ function inicializarTabla(){
                 "data": "descripcionEstado"
             },
             {
-                "width": "80px",
+                "width": "60px",
                 "targets": [10],
                 "data": "total",
 				"render":

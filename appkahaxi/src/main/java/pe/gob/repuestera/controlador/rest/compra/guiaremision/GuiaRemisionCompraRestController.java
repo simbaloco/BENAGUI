@@ -20,16 +20,16 @@ import pe.gob.repuestera.model.AlmacenModel;
 import pe.gob.repuestera.model.GuiaRemisionCabModel;
 import pe.gob.repuestera.model.GuiaRemisionDetModel;
 import pe.gob.repuestera.model.UsuarioModel;
-import pe.gob.repuestera.service.compra.guiaremision.GuiaRemisionService;
+import pe.gob.repuestera.service.compra.guiaremision.GuiaRemisionCompraService;
 import pe.gob.repuestera.util.Constante;
 
 @RestController
-public class GuiaRemisionRestController {
+public class GuiaRemisionCompraRestController {
 
-    private static final Logger logger = LogManager.getLogger(GuiaRemisionRestController.class);
+    private static final Logger logger = LogManager.getLogger(GuiaRemisionCompraRestController.class);
 
     @Autowired
-    GuiaRemisionService guiaRemisionService;
+    GuiaRemisionCompraService guiaRemisionCompraService;
     @Autowired
     HttpSession session;
 
@@ -38,7 +38,7 @@ public class GuiaRemisionRestController {
 
         logger.info("Inicio buscarAlmacen.......");
 
-        List<AlmacenModel> listaAlmacenModel = guiaRemisionService.buscarAlmacen();
+        List<AlmacenModel> listaAlmacenModel = guiaRemisionCompraService.buscarAlmacen();
 
         logger.info("Fin buscarAlmacen.......");
 
@@ -53,7 +53,7 @@ public class GuiaRemisionRestController {
 
         String usuario = ((UsuarioModel)session.getAttribute("usuarioLogueado")).getUsername();
 
-        String nroDocumento = guiaRemisionService.registrarGuiaRemisionCompra(guiaRemisionCabModel, usuario);
+        String nroDocumento = guiaRemisionCompraService.registrarGuiaRemisionCompra(guiaRemisionCabModel, usuario);
 
         logger.info("Fin registrarGuiaRemisionCompra.......");
 
@@ -69,7 +69,7 @@ public class GuiaRemisionRestController {
 
         String usuario = ((UsuarioModel)session.getAttribute("usuarioLogueado")).getUsername();
 
-        guiaRemisionService.anularGuiaRemisionCompra(guiaRemisionCabModel, usuario);
+        guiaRemisionCompraService.anularGuiaRemisionCompra(guiaRemisionCabModel, usuario);
 
         logger.info("Fin anularGuiaRemisionCompra.......");
 
@@ -88,7 +88,7 @@ public class GuiaRemisionRestController {
 
         logger.info("Inicio listarGuiaRemisionCompra.......");
 
-        List<GuiaRemisionCabModel> listGuiaRemisionCabModel = guiaRemisionService.listarGuiaRemisionCompra(datoBuscar, nroGuiaRemision, nroOrdenCompra, codRepuesto, codEstado, fechaDesde, fechaHasta);
+        List<GuiaRemisionCabModel> listGuiaRemisionCabModel = guiaRemisionCompraService.listarGuiaRemisionCompra(datoBuscar, nroGuiaRemision, nroOrdenCompra, codRepuesto, codEstado, fechaDesde, fechaHasta);
 
         logger.info("Fin listarGuiaRemisionCompra.......");
 
@@ -101,7 +101,7 @@ public class GuiaRemisionRestController {
 
         logger.info("Inicio listarGuiaRemisionCompraPorOrdenCompra.......");
 
-        List<GuiaRemisionCabModel> listGuiaRemisionCabModel = guiaRemisionService.listarGuiaRemisionCompraPorOrdenCompra(codigoOrdenCompra);
+        List<GuiaRemisionCabModel> listGuiaRemisionCabModel = guiaRemisionCompraService.listarGuiaRemisionCompraPorOrdenCompra(codigoOrdenCompra);
 
         logger.info("Fin listarGuiaRemisionCompraPorOrdenCompra.......");
 
@@ -114,9 +114,9 @@ public class GuiaRemisionRestController {
 
         logger.info("Inicio buscarGuiaRemisionCompra.......");
 
-        GuiaRemisionCabModel guiaRemisionCabModel = guiaRemisionService.buscarGuiaRemisionCompraCab(numeroDocumento);
+        GuiaRemisionCabModel guiaRemisionCabModel = guiaRemisionCompraService.buscarGuiaRemisionCompraCab(numeroDocumento);
 
-        List<GuiaRemisionDetModel> listGuiaRemisionDetModel = guiaRemisionService.buscarGuiaRemisionCompraDet(numeroDocumento);
+        List<GuiaRemisionDetModel> listGuiaRemisionDetModel = guiaRemisionCompraService.buscarGuiaRemisionCompraDet(numeroDocumento);
 
         guiaRemisionCabModel.setDetalle(listGuiaRemisionDetModel);
 

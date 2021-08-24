@@ -6,7 +6,7 @@ import pe.gob.repuestera.model.AlmacenModel;
 import pe.gob.repuestera.model.GuiaRemisionCabModel;
 import pe.gob.repuestera.model.GuiaRemisionDetModel;
 
-public interface GuiaRemisionService {
+public interface GuiaRemisionCompraService {
 
     List<AlmacenModel> buscarAlmacen() throws Exception;
 

@@ -206,28 +206,31 @@ function inicializarTabla(){
             	d.fechaDesde 		= fecContaDesde.datetimepicker('date').format('YYYY-MM-DD');
             	d.fechaHasta 		= fecContaHasta.datetimepicker('date').format('YYYY-MM-DD');
 		    },
-            url: '/appkahaxi/listarComprobantePagoCompra/',
+            url: '/appkahaxi/listarFacturaCompra/',
             dataSrc: function (json) {
-            	console.log("listarComprobantePagoCompra...success");
+            	console.log("listarFacturaCompra...success");
             	return json;
             },
             error: function (xhr, error, code){
             	
             }
         },
-		"stateSave": true,
-		"responsive"	: false,
-        "scrollCollapse": false,
-        //"paging"        : false,
-        "ordering"      : true,
-        "dom"           :   "<'row'<'col-sm-8'i><'col-sm-4'>>" +
+
+		/*
+		"dom"           :   "<'row'<'col-sm-8'i><'col-sm-4'>>" +
 			                "<'row'<'col-sm-12'rt>>" +
 			                "<'row'<'col-sm-4'l><'col-sm-8'p>>",
-        //"processing"    : true,
-		"lengthMenu"	: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
-        "deferRender"   : true,
-        "autoWidth"		: false,
-        /*"fixedColumns"	: false,*/
+        */
+		"responsive"	: false,
+		"scrollCollapse": false,
+		"ordering"      : true,
+		"deferRender"   : true,
+		"autoWidth"		: false,
+		"paging"	    : true,
+		"stateSave"		: true,
+		"dom"			: '<ip<rt>lp>',
+        "lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
+
         "columnDefs"    : [
             {
                 "width": "1px",
@@ -240,7 +243,7 @@ function inicializarTabla(){
                 "data": "numeroDocumento"
             },
 			{
-				"width": "30px",
+				"width": "80px",
 				"targets": [2],
 				"data": "ordenCompra"
 			},
@@ -270,7 +273,7 @@ function inicializarTabla(){
                 "data": "fechaContabilizacion"
             },
             {
-                "width": "80px",
+                "width": "100px",
                 "targets": [8],
                 "data": "descripcionTipoMoneda"
                 
@@ -288,19 +291,19 @@ function inicializarTabla(){
 
 			},
 			{
-				"width": "80px",
-				"targets": [11],
+                "width": "50px",
+                "targets": [11],
+                "data": "descripcionEstado"
+            },
+            {
+				"width": "60px",
+				"targets": [12],
 				"data": "total",
 				"render":
 					function (data, type, row ) {
 						return  convertirNumeroAMoneda(data);
 					}
 			},
-            {
-                "width": "50px",
-                "targets": [12],
-                "data": "descripcionEstado"
-            },
             {
                 "width": "5px",
                 "targets": [13],
@@ -322,17 +325,40 @@ function inicializarTabla(){
                 var index = iDisplayIndexFull + 1;
                 // colocando el estilo de la moneda
 				if(data.codigoTipoMoneda == Moneda.SOLES){
-					$('td:eq(11)', row).addClass('dt-body-right listado-symbol-sol');
+					$('td:eq(12)', row).addClass('dt-body-right listado-symbol-sol');
 				}else{
-					$('td:eq(11)', row).addClass('dt-body-right listado-symbol-dolar');
+					$('td:eq(12)', row).addClass('dt-body-right listado-symbol-dolar');
 				}
 				
+				// poniendo en negritas las filas de FACTURA DIRECTA
+				if(data.ordenCompra == 'DIRECTA'){
+					$(row).addClass('facturaDirecta');
+				}
+				
+				console.log("***data.codigoEstado:" + data.codigoEstado);
+				console.log("***data.codigoEstadoProceso:" + data.codigoEstadoProceso);
 				// pintando las filas según estado
                 if(data.codigoEstado == EstadoFactura.ANULADO){
-            		$(row).addClass("estadoRechazado");
+            		// si anulamos una FACTURA DIRECTA
+					if(data.ordenCompra == 'DIRECTA'){
+						$(row).addClass('facturaDirectaAnulada');
+					}else{
+						$(row).addClass("estadoRechazado");	
+					}
             	}else if(data.codigoEstado == EstadoFactura.GENERADO){
+					
 					if(data.codigoEstadoProceso == EstadoProceso.CERRADO){
-						$(row).addClass("estadoAprobadoCerrado");
+						// si es FACTURA DIRECTA
+						if(data.ordenCompra == 'DIRECTA'){
+							$(row).addClass('facturaDirectaCerrada');
+						}else{
+							$(row).addClass("estadoAprobadoCerrado");	
+						}	
+					}else{
+						// si es FACTURA DIRECTA
+						if(data.ordenCompra == 'DIRECTA'){
+							$(row).addClass('facturaDirecta');
+						}	
 					}
             	}
                 // colocando la numeración
@@ -422,7 +448,7 @@ function cargarFactura(numeroDocumento, opcion) {
 			 "&nroComprobantePago=" + nroFacturaVal + "&nroOrdenCompra=" + nroOCVal + "&codRepuesto=" + codRpto +
 			 "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Volver.SI;
 	console.log("cargarFactura---> params:" + params);
-	window.location.href = "/appkahaxi/nuevo-comprobante-pago-compra-directo?" + params;
+	window.location.href = "/appkahaxi/nueva-factura-compra-directa?" + params;
 }
 
 function cargarFacturaAsociada(numeroDocumento, opcion) {
@@ -443,7 +469,7 @@ function cargarFacturaAsociada(numeroDocumento, opcion) {
 
 	console.log("cargarFacturaAsociada---> params:" + params);
 
-	window.location.href = "/appkahaxi/nuevo-comprobante-pago-compra-asociado?" + params;
+	window.location.href = "/appkahaxi/nueva-factura-compra-asociada?" + params;
 }
 
 function buscar(event){

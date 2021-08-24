@@ -64,9 +64,9 @@ public class Constante {
 	public static final String PAGINA_CARGAR_GUIA_REMISION_COMPRA = "paginas/compras/guiaremision/cargar-guia-remision";
 	public static final String PAGINA_MANTENIMIENTO_GUIA_REMISION_COMPRA = "paginas/compras/guiaremision/mantenimiento-guia-remision";
 	/* COMPROBANTE PAGO */
-	public static final String PAGINA_NUEVO_COMPROBANTE_PAGO_DIRECTO_COMPRA = "paginas/compras/factura/nuevo-comprobante-pago-directo";
-	public static final String PAGINA_NUEVO_COMPROBANTE_PAGO_ASOCIADO_COMPRA = "paginas/compras/factura/nuevo-comprobante-pago-asociado";
-	public static final String PAGINA_MANTENIMIENTO_COMPROBANTE_PAGO_COMPRA = "paginas/compras/factura/mantenimiento-comprobante-pago";
+	public static final String PAGINA_NUEVA_FACTURA_COMPRA_DIRECTA = "paginas/compras/factura/nueva-factura-directa";
+	public static final String PAGINA_NUEVA_FACTURA_COMPRA_ASOCIADA = "paginas/compras/factura/nueva-factura-asociada";
+	public static final String PAGINA_MANTENIMIENTO_FACTURA_COMPRA = "paginas/compras/factura/mantenimiento-factura";
 
 	/*** VALORES PARA CONTROL DE FLUJO DENTRO DE LOS CONTROLLERS ***/
 	/* RESULTADOS */

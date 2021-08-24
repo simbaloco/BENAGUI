@@ -192,18 +192,21 @@ function inicializarTabla(){
             }
         },
 		
+		/*
+		"dom"           :   "<'row'<'col-sm-8'i><'col-sm-4'>>" +
+			                "<'row'<'col-sm-12'rt>>" +
+			                "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+        */
 		"responsive"	: false,
-        "scrollCollapse": false,
-        "ordering"      : true,
-        "deferRender"   : true,
-        "autoWidth"		: false,
-        "paging"        : true,
+		"scrollCollapse": false,
+		"ordering"      : true,
+		"deferRender"   : true,
+		"autoWidth"		: false,
+		"paging"	    : true,
 		"stateSave"		: true,
-        /*"dom"           :   "<'row'<'col-sm-12'i>>" +
-			                "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
-							"<'row'<'col-sm-12'rt>>",*/
-		"dom": '<lp<rt>ip>',
-		"lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
+		"dom"			: '<ip<rt>lp>',
+        "lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
+
         "columnDefs"    : [
             {
                 "width": "1px",

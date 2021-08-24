@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="pe.gob.repuestera.repository.compra.guiaremision.GuiaRemisionMapper">
+<mapper namespace="pe.gob.repuestera.repository.compra.guiaremision.GuiaRemisionCompraMapper">
     
     <!-- *************** RESULTMAPS ******************* -->
     <resultMap id="guiaRemisionCab" type="GuiaRemisionCabModel">

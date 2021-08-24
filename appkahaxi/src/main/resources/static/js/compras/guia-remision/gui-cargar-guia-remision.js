@@ -284,7 +284,7 @@ function inicializarTablaDetalle(paginacion) {
 		"paging"	    : paginacion,
 		/*"dom"           :   "<'row'<'col-sm-12'rt>>" +
 			"<'row'<'col-sm-4 'l><'col-sm-8 'p>>",*/
-		"dom"			: '<lp<rt>ip>',
+		"dom"			: '<ip<rt>lp>',
         "lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
 		"fnRowCallback":
 			function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
@@ -328,7 +328,7 @@ function cargarPantallaConDatosOrdenCompra() {
 			if(xhr.status == HttpStatus.OK) {
 
 				var data = JSON.parse(result);
-
+				console.log("**data-->" + data);
 				cargarPantallaHTMLOrdenCompra(data);
 
 				if(data.codigoCondPago == CondicionPago.CREDITO) {
@@ -361,8 +361,8 @@ function cargarPantallaHTMLOrdenCompra(data) {
 	subTotalGR.val(data.subTotal);
 	igvGR.val(data.igv);
 	totalGR.val(data.total);
-
 	cantidadDetalleDuplicado = data.detalle.length;
+	
 	for(i=0; i < cantidadDetalleDuplicado; i++) {
 
 		var detalle = data.detalle[i];
@@ -579,7 +579,7 @@ function agregarFilaHTMLEnTablaDetalle(data) {
 
 function agregarHTMLColumnasDataTable(data) {
 
-	var row = $('#tableDetalle').DataTable().row(':last').nodes().to$().closest("tr").off("mousedown");
+	var row = tableDetalle.DataTable().row(':last').nodes().to$().closest("tr").off("mousedown");
 
 	var $tds = row.find("td").not(':first').not(':last');
 
@@ -1238,9 +1238,9 @@ function obtenerDetalleFacturasPorGuiaRemision(event){
 				data: function ( d ) {
 					d.codigoGuiaRemision 	= codigo.html().trim();
 				},
-				url: '/appkahaxi/listarComprobantePagoCompraPorGuiaRemision/',
+				url: '/appkahaxi/listarFacturaCompraPorGuiaRemision/',
 				dataSrc: function (json) {
-					console.log("listarComprobantePagoCompraPorGuiaRemision...success");
+					console.log("listarFacturaCompraPorGuiaRemision...success");
 					mostrarModal(facturasPorGuiaRemisionModal);
 					return json;
 				},
@@ -1391,7 +1391,7 @@ function generarFacturaAsociada() {
 
 	var opcion = Opcion.NUEVO;
 	var params = "numeroDocumento=" + OCReferencia.val() + "&opcion=" + opcion + "&datoBuscar=&fechaDesde=&fechaHasta=&estadoParam=&volver=0&guias=" + guiasRemision;
-	window.location.href = "/appkahaxi/nuevo-comprobante-pago-compra-asociado?" + params;
+	window.location.href = "/appkahaxi/nueva-factura-compra-asociada?" + params;
 
 }
 
@@ -1414,7 +1414,7 @@ function cargarFacturaAsociada(numeroDocumento, opcion) {
 
 	var params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=&fechaDesde=&fechaHasta=&estadoParam=&guias=&volver=" + Volver.NO;
 
-	window.location.href = "/appkahaxi/nuevo-comprobante-pago-compra-asociado?" + params;
+	window.location.href = "/appkahaxi/nueva-factura-compra-asociada?" + params;
 }
 /*
 function mostrarOcultarDiasPorCondicionPago() {

@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="pe.gob.repuestera.repository.compra.factura.ComprobantePagoMapper">
+<mapper namespace="pe.gob.repuestera.repository.compra.factura.FacturaMapper">
 
     
     <!-- *************** RESULTMAPS ******************* -->
@@ -122,31 +122,31 @@
     </parameterMap>
         
     <!-- ************************* QUERYS ******************************* -->
-    <select id="listarComprobantePagoCompra" parameterMap="listarComprobantePagoCompraParams" resultMap="comprobantePagoCab" statementType="CALLABLE">
+    <select id="listarFacturaCompra" parameterMap="listarComprobantePagoCompraParams" resultMap="comprobantePagoCab" statementType="CALLABLE">
         {CALL SP_LISTAR_COMPROBANTE_PAGO_COMPRA(?,?,?,?,?,?,?,?,?) }
     </select>
 
-    <select id="listarComprobantePagoCompraPorGuiaRemision" parameterMap="listarComprobantePagoCompraPorGuiaRemisionParams" resultMap="comprobantePagoCab" statementType="CALLABLE">
+    <select id="listarFacturaCompraPorGuiaRemision" parameterMap="listarComprobantePagoCompraPorGuiaRemisionParams" resultMap="comprobantePagoCab" statementType="CALLABLE">
         {CALL SP_LISTAR_COMPROBANTE_PAGO_COMPRA_POR_GUIA_REMISION(?,?,?) }
     </select>
 
-    <select id="buscarComprobantePagoCompraCab" parameterMap="buscarComprobantePagoCompraParams" resultMap="comprobantePagoCab" statementType="CALLABLE">
+    <select id="buscarFacturaCompraCab" parameterMap="buscarComprobantePagoCompraParams" resultMap="comprobantePagoCab" statementType="CALLABLE">
         {CALL SP_BUSCAR_COMPROBANTE_PAGO_COMPRA_CAB(?,?,?) }
     </select>
 
-    <select id="buscarComprobantePagoCompraDet" parameterMap="buscarComprobantePagoCompraParams" resultMap="comprobantePagoDet" statementType="CALLABLE">
+    <select id="buscarFacturaCompraDet" parameterMap="buscarComprobantePagoCompraParams" resultMap="comprobantePagoDet" statementType="CALLABLE">
         {CALL SP_BUSCAR_COMPROBANTE_PAGO_COMPRA_DET(?,?,?) }
     </select>
 
-    <insert id="registrarComprobantePagoCompra" parameterMap="registrarComprobantePagoCompraParams" statementType="CALLABLE">
+    <insert id="registrarFacturaCompra" parameterMap="registrarComprobantePagoCompraParams" statementType="CALLABLE">
         {CALL SP_REGISTRAR_COMPROBANTE_PAGO_COMPRA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
     </insert>
 
-    <update id="actualizarComprobantePagoCompra" parameterMap="actualizarComprobantePagoCompraParams" statementType="CALLABLE">
+    <update id="actualizarFacturaCompra" parameterMap="actualizarComprobantePagoCompraParams" statementType="CALLABLE">
         {CALL SP_ACTUALIZAR_COMPROBANTE_PAGO_COMPRA(?,?,?,?,?) }
     </update>
 
-    <insert id="anularComprobantePagoCompra" parameterMap="anularComprobantePagoCompraParams" statementType="CALLABLE">
+    <insert id="anularFacturaCompra" parameterMap="anularComprobantePagoCompraParams" statementType="CALLABLE">
         {CALL SP_ANULAR_COMPROBANTE_PAGO_COMPRA(?,?,?,?) }
     </insert>
 

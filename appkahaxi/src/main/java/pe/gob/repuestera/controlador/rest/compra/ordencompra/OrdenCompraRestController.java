@@ -63,15 +63,15 @@ public class OrdenCompraRestController {
 
         logger.info("Inicio buscarOrdenCompra.......");
 
-        CompraCabModel ventaCabModel = ordenCompraService.buscarOrdenCompraCab(numeroDocumento);
+        CompraCabModel compraCabModel = ordenCompraService.buscarOrdenCompraCab(numeroDocumento);
 
         List<CompraDetModel> listCompraDetModel = ordenCompraService.buscarOrdenCompraDet(numeroDocumento);
 
-        ventaCabModel.setDetalle(listCompraDetModel);
+        compraCabModel.setDetalle(listCompraDetModel);
 
         logger.info("Fin buscarOrdenCompra.......");
 
-        return new ResponseEntity<>(ventaCabModel, HttpStatus.OK);
+        return new ResponseEntity<>(compraCabModel, HttpStatus.OK);
     }
 
     @GetMapping ("/buscarOrdenCompraParaGuiaRemision/{numeroDocumento}")
@@ -79,15 +79,15 @@ public class OrdenCompraRestController {
 
         logger.info("Inicio buscarOrdenCompra.......");
 
-        CompraCabModel ventaCabModel = ordenCompraService.buscarOrdenCompraCab(numeroDocumento);
+        CompraCabModel compraCabModel = ordenCompraService.buscarOrdenCompraCab(numeroDocumento);
 
         List<CompraDetModel> listCompraDetModel = ordenCompraService.buscarOrdenCompraDetalleParaGuiaRemision(numeroDocumento);
 
-        ventaCabModel.setDetalle(listCompraDetModel);
+        compraCabModel.setDetalle(listCompraDetModel);
 
         logger.info("Fin buscarOrdenCompra.......");
 
-        return new ResponseEntity<>(ventaCabModel, HttpStatus.OK);
+        return new ResponseEntity<>(compraCabModel, HttpStatus.OK);
     }
 
     @PostMapping ("/actualizarOrdenCompra")

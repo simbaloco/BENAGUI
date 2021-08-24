@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pe.gob.repuestera.exception.ErrorControladoException;
 import pe.gob.repuestera.model.*;
-import pe.gob.repuestera.repository.compra.guiaremision.GuiaRemisionMapper;
-import pe.gob.repuestera.service.compra.factura.ComprobantePagoService;
-import pe.gob.repuestera.service.compra.guiaremision.GuiaRemisionService;
+import pe.gob.repuestera.repository.compra.guiaremision.GuiaRemisionCompraMapper;
+import pe.gob.repuestera.service.compra.factura.FacturaService;
+import pe.gob.repuestera.service.compra.guiaremision.GuiaRemisionCompraService;
 import pe.gob.repuestera.util.Constante;
 import pe.gob.repuestera.util.JsonUtils;
 
@@ -19,15 +19,15 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class GuiaRemisionServiceImpl implements GuiaRemisionService {
+public class GuiaRemisionCompraServiceImpl implements GuiaRemisionCompraService {
 
-    private static final Logger logger = LogManager.getLogger(GuiaRemisionServiceImpl.class);
-
-    @Autowired
-    private GuiaRemisionMapper guiaRemisionMapper;
+    private static final Logger logger = LogManager.getLogger(GuiaRemisionCompraServiceImpl.class);
 
     @Autowired
-    ComprobantePagoService comprobantePagoService;
+    private GuiaRemisionCompraMapper guiaRemisionCompraMapper;
+
+    @Autowired
+    FacturaService facturaService;
 
     @Autowired
     private JsonUtils jsonUtils;
@@ -39,7 +39,7 @@ public class GuiaRemisionServiceImpl implements GuiaRemisionService {
 
         logger.info("params ===> " + params);
 
-        List<AlmacenModel> listAlmacenModel = guiaRemisionMapper.buscarAlmacen(params);
+        List<AlmacenModel> listAlmacenModel = guiaRemisionCompraMapper.buscarAlmacen(params);
 
         String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
         String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
@@ -93,7 +93,7 @@ public class GuiaRemisionServiceImpl implements GuiaRemisionService {
 
         logger.info("params ===> " + params);
 
-        guiaRemisionMapper.registrarGuiaRemisionCompra(params);
+        guiaRemisionCompraMapper.registrarGuiaRemisionCompra(params);
 
         String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
         String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
@@ -126,7 +126,7 @@ public class GuiaRemisionServiceImpl implements GuiaRemisionService {
 
         logger.info("params ===> " + params);
 
-        guiaRemisionMapper.anularGuiaRemisionCompra(params);
+        guiaRemisionCompraMapper.anularGuiaRemisionCompra(params);
 
         String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
         String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
@@ -160,7 +160,7 @@ public class GuiaRemisionServiceImpl implements GuiaRemisionService {
 
         logger.info("params ===> " + params);
 
-        List<GuiaRemisionCabModel> listaGuiaRemisionCabModel = guiaRemisionMapper.listarGuiaRemisionCompra(params);
+        List<GuiaRemisionCabModel> listaGuiaRemisionCabModel = guiaRemisionCompraMapper.listarGuiaRemisionCompra(params);
 
         String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
         String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
@@ -189,7 +189,7 @@ public class GuiaRemisionServiceImpl implements GuiaRemisionService {
 
         logger.info("params ===> " + params);
 
-        List<GuiaRemisionCabModel> listaGuiaRemisionCabModel = guiaRemisionMapper.listarGuiaRemisionCompraPorOrdenCompra(params);
+        List<GuiaRemisionCabModel> listaGuiaRemisionCabModel = guiaRemisionCompraMapper.listarGuiaRemisionCompraPorOrdenCompra(params);
 
         String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
         String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
@@ -218,7 +218,7 @@ public class GuiaRemisionServiceImpl implements GuiaRemisionService {
 
         logger.info("params ===> " + params);
 
-        GuiaRemisionCabModel guiaRemisionCabModel = guiaRemisionMapper.buscarGuiaRemisionCompraCab(params);
+        GuiaRemisionCabModel guiaRemisionCabModel = guiaRemisionCompraMapper.buscarGuiaRemisionCompraCab(params);
 
         String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
         String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
@@ -231,7 +231,7 @@ public class GuiaRemisionServiceImpl implements GuiaRemisionService {
 
             try {
 
-                List<ComprobantePagoCabModel> listFacturaCabModel = comprobantePagoService.listarComprobantePagoCompraPorGuiaRemision(numeroDocumento);
+                List<ComprobantePagoCabModel> listFacturaCabModel = facturaService.listarFacturaCompraPorGuiaRemision(numeroDocumento);
                 guiaRemisionCabModel.setCantidadFacturasAsociadas(listFacturaCabModel.size());
 
             } catch (Exception e) {
@@ -259,7 +259,7 @@ public class GuiaRemisionServiceImpl implements GuiaRemisionService {
 
         logger.info("params ===> " + params);
 
-        List<GuiaRemisionDetModel> listGuiaRemisionDetModel = guiaRemisionMapper.buscarGuiaRemisionCompraDet(params);
+        List<GuiaRemisionDetModel> listGuiaRemisionDetModel = guiaRemisionCompraMapper.buscarGuiaRemisionCompraDet(params);
 
         String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
         String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);

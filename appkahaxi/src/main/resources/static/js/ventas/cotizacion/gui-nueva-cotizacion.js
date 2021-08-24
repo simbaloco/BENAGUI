@@ -360,7 +360,7 @@ function inicializarTabla(paginacion) {
         "paging"        : paginacion,
         /*"dom"           :   "<'row'<'col-sm-12'rt>>" +
 			                "<'row'<'col-sm-4 'l><'col-sm-8 'p>>",*/
-	    "dom": '<lp<rt>ip>',
+	    "dom"			: '<ip<rt>lp>',
         "lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
         "fnRowCallback":
              function(nRow, aData, iDisplayIndex, iDisplayIndexFull){
@@ -1018,6 +1018,7 @@ function evaluarCambioCondicionPago(){
 
 function evaluarCambioTipoMoneda(){
 	var tipMoneda = tipoMoneda.val();
+	
 	if(tipMoneda == Moneda.SOLES){
 		$('.simbolo-moneda').removeClass("input-symbol-dolar").addClass("input-symbol-sol");
 		convertirMontosASoles();
@@ -1782,6 +1783,7 @@ function mostrarDialogoEliminarTodo(table){
 	        if(result == true){
 	        	table.clear().draw();
 				indiceFilaDataTableDetalle = -1;
+				
 				calcularResumenCotizacion();
 				ocultarControl(btnEliminarTodosArticulos);
 	        }
@@ -1864,17 +1866,20 @@ function limpiarCotizacion(){
 	uncheckControl(chkDctoTotal);
 	dctoTotal.val(CADENA_VACIA);
 	deshabilitarControl(dctoTotal);
+	
 	dctoTotal.val(CADENA_VACIA);
 	subTotalCoti.val(CADENA_VACIA);
 	dctoCoti.val(CADENA_VACIA);
 	igvCoti.val(CADENA_VACIA);
 	totalCoti.val(CADENA_VACIA);
+	
 	nroRequerimiento.val(CADENA_VACIA);
 	asunto.val(CADENA_VACIA);
 	observaciones.val(CADENA_VACIA);
 	dataTableDetalle.clear().draw();
 	indiceFilaDataTableDetalle = -1;
-	ocultarControl(dctoCotiDiv);
+	
+	ocultarControl(dctoCotiDiv);	
 	ocultarControl(btnAgregarArticulo);
 	ocultarControl(btnEliminarTodosArticulos);
 	
