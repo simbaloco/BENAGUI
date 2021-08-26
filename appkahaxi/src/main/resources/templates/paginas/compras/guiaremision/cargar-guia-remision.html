@@ -16,7 +16,7 @@
 <div layout:fragment="content" th:remove="tag">
 
 	<input type="text" id="codigoCliente" hidden="hidden"/>
-
+	
 	<label id="numeroDocumento" th:text=${numeroDocumento} hidden="hidden"></label>
 	<label id="opcion" th:text=${opcion} hidden="hidden"></label>
 	<label id="datoBuscar" th:text=${datoBuscar} hidden="hidden"></label>
@@ -301,7 +301,15 @@
 									    </option>
 									</select>
 								</div>
-
+								
+								<div class="almacen-hidden" style="display: none">
+									<select class="form-control almacen_table" id="reemplazar" >
+										<option th:each="item : ${listaAlmacenModel}"
+									            th:value="${item.codigoAlmacen}" 
+									            th:text="${item.descripcion}">
+									    </option>
+									</select>
+								</div>
 							</div>
 
 							<div class="row">

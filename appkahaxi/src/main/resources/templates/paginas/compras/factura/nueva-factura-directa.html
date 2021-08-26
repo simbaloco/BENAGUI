@@ -160,6 +160,15 @@
 										Debe seleccionar los días de crédito
 									</div>
 						 		</div>
+						 		
+						 		<div class="almacen-hidden" style="display: none">
+									<select class="form-control almacen_table" id="reemplazar" >
+										<option th:each="item : ${listaAlmacenModel}"
+									            th:value="${item.codigoAlmacen}" 
+									            th:text="${item.descripcion}">
+									    </option>
+									</select>
+								</div>
 						    </div>
 						    
 						    <div class="form-group row">

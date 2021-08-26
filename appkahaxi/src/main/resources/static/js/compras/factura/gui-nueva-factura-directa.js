@@ -515,7 +515,7 @@ function deshabilitarDetalleFactura(){
 			deshabilitarControl($(this).find(".codigo-det"));
 			deshabilitarControl($(this).find(".desc-det"));
 			deshabilitarControl($(this).find(".marca-det"));
-			deshabilitarControl($(this).find(".almacen-det"));
+			deshabilitarControl($(this).find(".almacen_table"));
 			deshabilitarControl($(this).find(".cantidad-det"));
 			deshabilitarControl($(this).find(".precio-det"));
 			
@@ -587,10 +587,14 @@ function agregarHTMLColumnasDataTable(data) {
 					break;
 
 			// ALMACEN
-			case 5:	$(this).html(CADENA_VACIA).append("<div>" +
-						"<select class='form-control almacen-det' id='almacen_" + indiceFilaDataTableDetalle + "'> </select>" +
-						"</div>");
-						cargarComboAlmacen("#almacen_" + indiceFilaDataTableDetalle , data)	;
+			case 5:	$(this).html(CADENA_VACIA).append(
+					"<div>" + 
+						$(".almacen-hidden").html().replace('reemplazar', 'almacen_' + indiceFilaDataTableDetalle) + 
+					"</div>");
+					// cargando el valor por defecto (si existe)
+					if(data != UNDEFINED){
+						$('#almacen_' + indiceFilaDataTableDetalle).val(data.detalle[indiceFilaDataTableDetalle].codAlmacen);	
+					}
 					break;
 
 			// CANTIDAD

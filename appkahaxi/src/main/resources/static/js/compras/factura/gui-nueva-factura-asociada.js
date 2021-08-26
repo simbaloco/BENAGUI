@@ -612,12 +612,13 @@ function agregarHTMLColumnasDataTable(data) {
 			case 4:	$(this).html(CADENA_VACIA).append("<input class='marquee form-control' type='text' id='marca_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
 				break;
 
-			// COD ALMACEN
-			case 5:	$(this).html(CADENA_VACIA).append("<div>" +
-				"<select class='form-control almacen_table' id='almacen_" + indiceFilaDataTableDetalle + "'> </select>" +
-				"</div>");
-				cargarComboAlmacen("#almacen_" + indiceFilaDataTableDetalle , data)	;
-				break;
+			// ALMACEN
+			case 5:	$(this).html(CADENA_VACIA).append(
+					"<div>" + 
+						$(".almacen-hidden").html().replace('reemplazar', 'almacen_' + indiceFilaDataTableDetalle) + 
+					"</div>");
+					$('#almacen_' + indiceFilaDataTableDetalle).val(data.detalle[indiceFilaDataTableDetalle].codAlmacen);
+					break;
 
 			// CANTIDAD
 			case 6:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha cantidad_table' type='text' onchange='dispararEventosCambioCantidad(this, " + indiceFilaDataTableDetalle + ");' " +

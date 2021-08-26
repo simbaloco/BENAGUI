@@ -68,6 +68,7 @@ var dataTableDetalleFactura;
 
 var dateTimePickerInput;
 var valorIGV;
+var listaAlmacenModel;
 
 $(document).ready(function(){
 	inicializarVariables();
@@ -140,6 +141,7 @@ function inicializarVariables() {
 	tableDetalleFactura = $("#tableDetalleFactura");
 
 	dateTimePickerInput = $(".datetimepicker-input");
+	listaAlmacenModel = $("#listaAlmacenModel");
 }
 
 function inicializarComponentes() {
@@ -582,66 +584,66 @@ function agregarHTMLColumnasDataTable(data) {
 	var row = tableDetalle.DataTable().row(':last').nodes().to$().closest("tr").off("mousedown");
 
 	var $tds = row.find("td").not(':first').not(':last');
-
+	
 	$.each($tds, function(i, el) {
 
 		switch(i) {
 
 			// CODIGO ART (OCULTO)
-			case 0:		$(this).html(CADENA_VACIA).append("<input class='form-control' type='text' id='codigo_" + indiceFilaDataTableDetalle + "' readonly='readonly' tabindex='-1' >");
-						break;
+			case 0:	$(this).html(CADENA_VACIA).append("<input class='form-control' type='text' id='codigo_" + indiceFilaDataTableDetalle + "' readonly='readonly' tabindex='-1' >");
+					break;
 						
 			// DESCRIPCION CODIGO ART
-			case 1:		$(this).html(CADENA_VACIA).append("<input class='marquee form-control codigo-det' type='text' id='descCodigo_" + indiceFilaDataTableDetalle + "' readonly='readonly' tabindex='-1' >");
-						break;						
+			case 1:	$(this).html(CADENA_VACIA).append("<input class='marquee form-control codigo-det' type='text' id='descCodigo_" + indiceFilaDataTableDetalle + "' readonly='readonly' tabindex='-1' >");
+					break;						
     		        		
 			// DESCRIPCION
 			case 2:	$(this).html(CADENA_VACIA).append("<input class='marquee form-control' type='text' id='descripcion_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
-				break;
+					break;
 
 			// MARCA
 			case 3:	$(this).html(CADENA_VACIA).append("<input class='marquee form-control' type='text' id='marca_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
-				break;
+					break;
 
 			// ALMACEN
-			case 4:	$(this).html(CADENA_VACIA).append("<div>" +
-				"<select class='form-control almacen_table' id='almacen_" + indiceFilaDataTableDetalle + "'> </select>" +
-				"</div>");
-				cargarComboAlmacen("#almacen_" + indiceFilaDataTableDetalle , data)	;
-				break;
+			case 4:	$(this).html(CADENA_VACIA).append(
+					"<div>" + 
+						$(".almacen-hidden").html().replace('reemplazar', 'almacen_' + indiceFilaDataTableDetalle) + 
+					"</div>");
+					$('#almacen_' + indiceFilaDataTableDetalle).val(data.detalle[indiceFilaDataTableDetalle].codAlmacen);
+					break;					
 
 			// CANTIDAD
 			case 5:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha cantidad_table' type='text' onchange='dispararEventosCambioCantidad(this, " + indiceFilaDataTableDetalle + ");' " +
-				"onkeypress='return soloEnteros(event);'" +
-				"id='cantidad_" + indiceFilaDataTableDetalle + "'>");
-				break;
+					"onkeypress='return soloEnteros(event);'" +
+					"id='cantidad_" + indiceFilaDataTableDetalle + "'>");
+					break;
 
 			// CANTIDAD PENDIENTE
 			case 6:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha' type='text' id='cantidadPend_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
-				break;
+					break;
 
 			// PU
 			case 7:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
-				"<input class='form-control alineacion-derecha' type='text' id='precio_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
-				"</span></div>");
-				break;
+					"<input class='form-control alineacion-derecha' type='text' id='precio_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
+					"</span></div>");
+					break;
 
 			// SUBTOTAL
 			case 8:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
-				"<input class='form-control alineacion-derecha' type='text' id='subTotal_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
-				"</span></div>");
-				break;
-
+					"<input class='form-control alineacion-derecha' type='text' id='subTotal_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
+					"</span></div>");
+					break;
 			
 			// SUBTOTAL C/IGV
 			case 9:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
-				"<input class='form-control alineacion-derecha' type='text' id='subTotalIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
-				"</span></div>");
-				break;
+					"<input class='form-control alineacion-derecha' type='text' id='subTotalIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
+					"</span></div>");
+					break;
 
 			// LINEA REFERENCIA
 			case 10:	$(this).html(CADENA_VACIA).append("<input class='alineacion-derecha' type='text' id='lineaReferencia_" + indiceFilaDataTableDetalle + "'>");
-				break;
+						break;
 		}
 	});
 	habilitarMarquee();
@@ -1442,50 +1444,6 @@ function calcularPorTipoMoneda() {
 	}
 }
 */
-
-function cargarComboAlmacen(control, data) {
-
-	$.ajax({
-		type:"GET",
-		cache: false,
-		contentType : "application/json",
-		accept: 'text/plain',
-		url : '/appkahaxi/buscarAlmacen',
-		data : null,
-		dataType: 'text',
-		success:function(result,textStatus,xhr){
-
-			var resultado = JSON.parse(result);
-
-			if(xhr.status == HttpStatus.OK) {
-				var tam = resultado.length;
-				for(var i = 0; i < tam; i++){
-					if(resultado[i].predeterminado == '1') {
-						$(control).append($('<option selected> </option').val(resultado[i].codigoAlmacen).html(resultado[i].descripcion));
-					} else {
-						$(control).append($('<option />').val(resultado[i].codigoAlmacen).html(resultado[i].descripcion));
-					}
-
-				}
-			} else if(xhr.status == HttpStatus.Accepted){
-				console.log("cargarCombo, Accepted....");
-			}
-
-			if(opcion.text() == Opcion.VER) {
-
-				cantidadDetalleDuplicado = data.detalle.length;
-
-				for(i=0; i < cantidadDetalleDuplicado; i++) {
-					var detalle = data.detalle[i];
-					$('#almacen_' + i).val(detalle.codAlmacen);
-				}
-			}
-		},
-		error: function (xhr, error, code){
-			console.log("cargarCombo, error...." + xhr.status);
-		}
-	});
-}
 
 function limpiarGuiaRemision() {
 

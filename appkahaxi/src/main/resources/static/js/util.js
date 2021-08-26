@@ -711,50 +711,6 @@ function cargarComboUbigeo(control, borrarTodoMenosPrimero, codTipo, codDepartam
 	
 }
 
-function cargarComboAlmacen(control, data) {
-	$.ajax({
-		type:"GET",
-		cache: false,
-		contentType : "application/json",
-		accept: 'text/plain',
-		url : '/appkahaxi/buscarAlmacen',
-		data : null,
-		dataType: 'text',
-		success:function(result,textStatus,xhr){
-
-			var resultado = JSON.parse(result);
-
-			if(xhr.status == HttpStatus.OK) {
-				var tam = resultado.length;
-				for(var i = 0; i < tam; i++){
-					if(resultado[i].predeterminado == '1') {
-						$(control).append($('<option selected> </option').val(resultado[i].codigoAlmacen).html(resultado[i].descripcion));
-					} else {
-						$(control).append($('<option />').val(resultado[i].codigoAlmacen).html(resultado[i].descripcion));
-					}
-
-				}
-			} else if(xhr.status == HttpStatus.Accepted){
-				console.log("cargarCombo, Accepted....");
-			}
-
-			console.log("data-->" + data);
-			if(data != UNDEFINED){
-				cantidadDetalleDuplicado = data.detalle.length;
-
-				for(i=0; i < cantidadDetalleDuplicado; i++) {
-					var detalle = data.detalle[i];
-					$(control).val(detalle.codAlmacen);
-				}	
-			}
-			
-		},
-		error: function (xhr, error, code){
-			console.log("cargarCombo, error...." + xhr.status);
-		}
-	});
-}
-
 function mostrarMensajeError(mensaje){
 	mostrarDialogoInformacion("<strong>Ocurrió un error al procesar. Detalle del error:</strong> <br>" + mensaje, Boton.DANGER);
 }

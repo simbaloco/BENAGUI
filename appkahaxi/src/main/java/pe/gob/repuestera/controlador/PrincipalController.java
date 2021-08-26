@@ -12,9 +12,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import pe.gob.repuestera.model.AlmacenModel;
 import pe.gob.repuestera.model.ComboModel;
 import pe.gob.repuestera.model.ParametrosGeneralesModel;
 import pe.gob.repuestera.service.GenericService;
+import pe.gob.repuestera.service.compra.guiaremision.GuiaRemisionCompraService;
 import pe.gob.repuestera.util.Constante;
 
 @Controller
@@ -24,6 +26,8 @@ public class PrincipalController {
 		
 	@Autowired
 	private GenericService genericService;
+	@Autowired
+    GuiaRemisionCompraService guiaRemisionCompraService;
 	@Autowired
     HttpSession session;
 	
@@ -205,11 +209,13 @@ public class PrincipalController {
 			List<ComboModel> listaCondPago = genericService.cargarCombo(Constante.CATALOGO_CONDICION_PAGO);
 			List<ComboModel> listaDias = genericService.cargarCombo(Constante.CATALOGO_DIAS_PC);
 			List<ComboModel> listaMotivosTraslado = genericService.cargarCombo(Constante.CATALOGO_MOTIVO_TRASLADO);
+			List<AlmacenModel> listaAlmacenModel = guiaRemisionCompraService.buscarAlmacen();
 			
 			model.addAttribute("listaMoneda", listaMoneda);
 			model.addAttribute("listaCondPago", listaCondPago);
 			model.addAttribute("listaDias", listaDias);
 			model.addAttribute("listaMotivosTraslado", listaMotivosTraslado);
+			model.addAttribute("listaAlmacenModel", listaAlmacenModel);
 			
 			retorno = Constante.PAGINA_CARGAR_GUIA_REMISION_COMPRA;
 			logger.info("saliendo del método cargarGuiaRemisionCompra");
@@ -315,11 +321,13 @@ public class PrincipalController {
 			List<ComboModel> listaCondPago = genericService.cargarCombo(Constante.CATALOGO_CONDICION_PAGO);
 			List<ComboModel> listaDias = genericService.cargarCombo(Constante.CATALOGO_DIAS_PC);
 			List<ComboModel> listaEstadoPago = genericService.cargarCombo(Constante.CATALOGO_ESTADO_PAGO);
+			List<AlmacenModel> listaAlmacenModel = guiaRemisionCompraService.buscarAlmacen();
 			
 			model.addAttribute("listaMoneda", listaMoneda);
 			model.addAttribute("listaCondPago", listaCondPago);
 			model.addAttribute("listaDias", listaDias);
 			model.addAttribute("listaEstadoPago", listaEstadoPago);
+			model.addAttribute("listaAlmacenModel", listaAlmacenModel);
 			
 			retorno = Constante.PAGINA_NUEVA_FACTURA_COMPRA_DIRECTA;
 			logger.info("saliendo del método cargarFacturaCompraDirecta");
@@ -362,12 +370,14 @@ public class PrincipalController {
 			List<ComboModel> listaCondPago = genericService.cargarCombo(Constante.CATALOGO_CONDICION_PAGO);
 			List<ComboModel> listaDias = genericService.cargarCombo(Constante.CATALOGO_DIAS_PC);
 			List<ComboModel> listaEstadoPago = genericService.cargarCombo(Constante.CATALOGO_ESTADO_PAGO);
-
+			List<AlmacenModel> listaAlmacenModel = guiaRemisionCompraService.buscarAlmacen();
+			
 			model.addAttribute("listaMoneda", listaMoneda);
 			model.addAttribute("listaCondPago", listaCondPago);
 			model.addAttribute("listaDias", listaDias);
 			model.addAttribute("listaEstadoPago", listaEstadoPago);
-
+			model.addAttribute("listaAlmacenModel", listaAlmacenModel);
+			
 			retorno = Constante.PAGINA_NUEVA_FACTURA_COMPRA_ASOCIADA;
 			logger.info("saliendo del método cargarFacturaCompraAsociada");
 		}catch (Exception e) {
