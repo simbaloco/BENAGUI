@@ -306,7 +306,8 @@
 									<select class="form-control almacen_table" id="reemplazar" >
 										<option th:each="item : ${listaAlmacenModel}"
 									            th:value="${item.codigoAlmacen}" 
-									            th:text="${item.descripcion}">
+									            th:text="${item.descripcion}"
+									            th:selected="${item.predeterminado} == 1 ? true : false">
 									    </option>
 									</select>
 								</div>

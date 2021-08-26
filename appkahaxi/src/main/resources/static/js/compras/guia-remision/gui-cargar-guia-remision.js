@@ -330,7 +330,6 @@ function cargarPantallaConDatosOrdenCompra() {
 			if(xhr.status == HttpStatus.OK) {
 
 				var data = JSON.parse(result);
-				console.log("**data-->" + data);
 				cargarPantallaHTMLOrdenCompra(data);
 
 				if(data.codigoCondPago == CondicionPago.CREDITO) {
@@ -610,7 +609,9 @@ function agregarHTMLColumnasDataTable(data) {
 					"<div>" + 
 						$(".almacen-hidden").html().replace('reemplazar', 'almacen_' + indiceFilaDataTableDetalle) + 
 					"</div>");
-					$('#almacen_' + indiceFilaDataTableDetalle).val(data.detalle[indiceFilaDataTableDetalle].codAlmacen);
+					if(data.detalle[indiceFilaDataTableDetalle].codAlmacen != UNDEFINED){
+						$('#almacen_' + indiceFilaDataTableDetalle).val(data.detalle[indiceFilaDataTableDetalle].codAlmacen);	
+					}
 					break;					
 
 			// CANTIDAD
