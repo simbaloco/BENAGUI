@@ -73,7 +73,7 @@
         <parameter property="USUARIO"				jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FEC_CONTABILIZACION"   jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FEC_VALIDO_HASTA"      jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="FEC_ENTREGA"      jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_ENTREGA"      		jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="COD_TIPO_MONEDA"       jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="COD_COND_PAGO"       	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="COD_DIAS"       		jdbcType="VARCHAR"  mode="IN"/>

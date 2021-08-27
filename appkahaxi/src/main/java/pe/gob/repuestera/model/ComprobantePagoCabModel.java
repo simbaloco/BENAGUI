@@ -32,6 +32,7 @@ public class ComprobantePagoCabModel {
     private BigDecimal subTotal;
     private BigDecimal igv;
     private BigDecimal total;
+    private String observaciones;
     private Integer activo;
     private String codigoUsuarioRegistra;
     private Date fechaRegistro;

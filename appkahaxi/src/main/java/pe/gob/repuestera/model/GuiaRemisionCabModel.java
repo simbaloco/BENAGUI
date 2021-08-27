@@ -32,6 +32,7 @@ public class GuiaRemisionCabModel {
     private BigDecimal subTotal;
     private BigDecimal igv;
     private BigDecimal total;
+    private String observaciones;
     private Integer activo;
     private String codigoUsuarioRegistra;
     private Date fechaRegistro;
@@ -47,8 +48,7 @@ public class GuiaRemisionCabModel {
 	private String descripcionCondPago;
 	private String descripcionEstado;
     private String fechaRegistroFormato;
-    private String serieCorrelativo;
-    private int cantidadFacturasAsociadas;
+    private Integer cantidadFacturasAsociadas;
 
     // DETALLE
     private List<GuiaRemisionDetModel> detalle;

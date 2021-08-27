@@ -1,6 +1,5 @@
 var indiceFilaDataTableDetalle = -1;
 //**************************************************************** */
-var marquee;
 var codigoCliente;
 var email;
 var celular;
@@ -75,7 +74,6 @@ $(document).ready(function(){
 });
 
 function inicializarVariables() {
-	marquee = $(".marquee");
 	codigoCliente =  $("#codigoCliente");
 	email =  $("#email");
 	celular =  $("#celular");
@@ -168,25 +166,7 @@ function habilitarAnimacionAcordion() {
     });
 }
 
-function habilitarMarquee(){
-	var timeout_ = null;
-	marquee.on("mouseover", function() {
-		var interval_val = 2;    
-		var this_ = this;
-    	timeout_ = setInterval(function() {
-      		$(this_).scrollLeft(interval_val);
-      		interval_val++;
-    		}, 25);
-  	});
-
-  	marquee.on("mouseout", function() {
-    	clearInterval(timeout_);
-    	$(this).scrollLeft(0);
-  	});	
-}
-
 function construirFechasPicker() {
-	
 	fecConta.datetimepicker({
 		locale: 		'es',
 		format: 		'L',
@@ -632,10 +612,10 @@ function deshabilitarDetalleCotizacion(){
 		$cells = node.find("td").not(':first');//.not(':last');
 
 		$cells.each(function(cellIndex) {
-			deshabilitarControl($(this).find(".buscar-det"));
-			deshabilitarControl($(this).find(".cantidad-det"));
-			deshabilitarControl($(this).find(".pvu-det"));
-			deshabilitarControl($(this).find(".porc-dcto-det"));
+			habilitarControlSoloLectura($(this).find(".buscar-det"));
+			habilitarControlSoloLectura($(this).find(".cantidad-det"));
+			habilitarControlSoloLectura($(this).find(".pvu-det"));
+			habilitarControlSoloLectura($(this).find(".porc-dcto-det"));
 			
 			deshabilitarControl($(this).find(".btn-delete"));
 		});
@@ -650,10 +630,10 @@ function habilitarDetalleCotizacion(){
 		$cells = node.find("td").not(':first');//.not(':last');
 
 		$cells.each(function(cellIndex) {
-			habilitarControl($(this).find(".buscar-det"));
-			habilitarControl($(this).find(".cantidad-det"));
-			habilitarControl($(this).find(".pvu-det"));
-			habilitarControl($(this).find(".porc-dcto-det"));
+			deshabilitarControlSoloLectura($(this).find(".buscar-det"));
+			deshabilitarControlSoloLectura($(this).find(".cantidad-det"));
+			deshabilitarControlSoloLectura($(this).find(".pvu-det"));
+			deshabilitarControlSoloLectura($(this).find(".porc-dcto-det"));
 			
 			habilitarControl($(this).find(".btn-delete"));
 		});
@@ -1419,6 +1399,7 @@ function registrarCotizacionVenta(){
 				// despues de grabar, sólo mostramos el botón para enviar/descargar pdf
 				mostrarControl(btnPdf);
 				mostrarControl(btnNuevo);
+				mostrarControl(btnDuplicar);
 				ocultarControl(btnGrabar);
 				ocultarControl(btnLimpiar);					
 				ocultarControl(btnAgregarArticulo);
@@ -1433,6 +1414,8 @@ function registrarCotizacionVenta(){
 				deshabilitarControl(dias);
 				deshabilitarControl(chkDctoTotal);
 				deshabilitarControl(dctoTotal);
+				
+				habilitarControl(estado);
 				
 				deshabilitarControl(nroRequerimiento);
 				deshabilitarControl(asunto);
@@ -1503,6 +1486,7 @@ function actualizarCotizacionVenta(){
 				if(estado.val() == EstadoDocumentoInicial.APROBADO) {
 					mostrarControl(btnGenerarOV);
 					mostrarControl(btnPdf);
+					mostrarControl(btnDuplicar);
         			ocultarControl(btnGrabar);
 					ocultarControl(btnLimpiar);
 					deshabilitarControl(estado);

@@ -45,6 +45,8 @@ public class CompraCabModel {
 	private String descripcionEstado;
     // para los objetos que necesiten referenciare el documento base
     private String numeroDocumentoBase;
+    private Integer cantidadGrAsociadas;
+    
     // DETALLE
     private List<CompraDetModel> detalle;
 }

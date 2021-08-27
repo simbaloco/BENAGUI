@@ -1,4 +1,3 @@
-var marquee;
 var titulo;
 var codigo;
 var codigoCliente;
@@ -56,6 +55,7 @@ var volverParam;
 
 var dateTimePickerInput;
 var valorIGV;
+var lblAnulado;
 
 $(document).ready(function(){
 	inicializarVariables();
@@ -64,8 +64,6 @@ $(document).ready(function(){
 });
 
 function inicializarVariables() {
-
-	marquee = $(".marquee");
 	titulo =  $("#titulo");
 	codigo = $("#codigo");
 	codigoCliente = $("#codigoCliente");
@@ -119,6 +117,7 @@ function inicializarVariables() {
 
 	volverParam = $("#volverParam");
 	dateTimePickerInput = $(".datetimepicker-input");
+	lblAnulado = $("#lblAnulado");
 }
 
 function inicializarComponentes() {
@@ -149,23 +148,6 @@ function habilitarAnimacionAcordion() {
     }).on('hide.bs.collapse', function(){
     	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-down');
     });
-}
-
-function habilitarMarquee(){
-	var timeout_ = null;
-	marquee.on("mouseover", function() {
-		var interval_val = 2;    
-		var this_ = this;
-    	timeout_ = setInterval(function() {
-      		$(this_).scrollLeft(interval_val);
-      		interval_val++;
-    		}, 25);
-  	});
-
-  	marquee.on("mouseout", function() {
-    	clearInterval(timeout_);
-    	$(this).scrollLeft(0);
-  	});	
 }
 
 function construirFechasPicker() {
@@ -467,7 +449,8 @@ function cargarPantallaHTMLFactura(data) {
 	subTotalFactura.val(data.subTotal);
 	igvFactura.val(data.igv);
 	totalFactura.val(data.total);
-
+	observaciones.val(data.observaciones);
+	
 	cantidadDetalleDuplicado = data.detalle.length;
 
 	var indice = 0;
@@ -506,15 +489,24 @@ function verPantallaFactura(data) {
 
 	//deshabilitarControl('.datetimepicker-input');
 	deshabilitarControl(dateTimePickerInput);
-
-	if(estadoPago.val() == EstadoPago.PAGADO) {
+	deshabilitarControl(observaciones);
+	
+	if(data.codigoEstado == EstadoFactura.GENERADO){
+		if(estadoPago.val() == EstadoPago.PAGADO) {
+			deshabilitarControl(estadoPago);
+			ocultarControl(btnAnular);
+		} else {
+			habilitarControl(observaciones);
+			habilitarControl(estadoPago);
+			mostrarControl(btnAnular);
+		}
+	}else{
+		// si es ANULADO
 		deshabilitarControl(estadoPago);
 		ocultarControl(btnAnular);
-	} else {
-		habilitarControl(estadoPago);
-		mostrarControl(btnAnular);
-	}
-
+		mostrarControl(lblAnulado);
+	}	
+	
 	deshabilitarControl(tipoMoneda);
 	deshabilitarControl(condPago);
 	deshabilitarControl(dias);
@@ -545,10 +537,10 @@ function deshabilitarDetalleFactura(){
 		$cells = node.find("td").not(':first');//.not(':last');
 
 		$cells.each(function(cellIndex) {
-			deshabilitarControl($(this).find(".codigo_table"));
+			habilitarControlSoloLectura($(this).find(".codigo_table"));
 			deshabilitarControl($(this).find(".almacen_table"));
-			deshabilitarControl($(this).find(".cantidad_table"));
-			deshabilitarControl($(this).find(".precio_table"));
+			habilitarControlSoloLectura($(this).find(".cantidad_table"));
+			habilitarControlSoloLectura($(this).find(".precio_table"));
 			
 			deshabilitarControl($(this).find(".btn-delete"));
 		});
@@ -834,6 +826,7 @@ function registrarFacturaCompra(){
 	var condPagoVal 			= condPago.val();
 	var tipoCambioVal			= tipoCambio.val();
 	var codigoEstadoPagoVal 	= estadoPago.val().trim();
+	var observacionesVal 		= observaciones.val().trim();
 	
 	var subTotalVal 			= convertirMonedaANumero(subTotalFactura.val().trim());
 	var igvVal 					= convertirMonedaANumero(igvFactura.val());
@@ -864,6 +857,7 @@ function registrarFacturaCompra(){
 		subTotal:  				subTotalVal,
 		igv:  					igvVal,
 		total:  				totalVal,
+		observaciones:  		observacionesVal,
 		detalle:  				detalle
 	};
 
@@ -937,10 +931,12 @@ function actualizarFacturaCompra() {
 
 	var nroDocumento  		= codigo.html();
 	var estadoPagoVal 		= estadoPago.val();
+	var observacionesVal 	= observaciones.val().trim();
 
 	var objetoJson = {
 		numeroDocumento:	nroDocumento,
-		codigoEstadoPago:   estadoPagoVal
+		codigoEstadoPago:   estadoPagoVal,
+		observaciones:  	observacionesVal
 	};
 
 	var entityJsonStr = JSON.stringify(objetoJson);
@@ -1120,10 +1116,12 @@ function mostrarOcultarBotonAnular() {
 
 function anularFacturaCompra(){
 
-	var nroDocumento  			= codigo.html();
+	var nroDocumento  		= codigo.html();
+	var observacionesVal 	= observaciones.val().trim();
 
 	var objetoJson = {
-		numeroDocumento:		nroDocumento
+		numeroDocumento:	nroDocumento,
+		observaciones:  	observacionesVal
 	};
 
 	var entityJsonStr = JSON.stringify(objetoJson);
@@ -1194,6 +1192,7 @@ function limpiarFactura() {
 	fecVencimiento.datetimepicker('date', null);
 	serie.val(CADENA_VACIA);
 	correlativo.val(CADENA_VACIA);
+	observaciones.val(CADENA_VACIA);
 	estadoPago.prop("selectedIndex", 0);
 	serie.focus();
 }

@@ -723,6 +723,23 @@ function mostrarMensajeValidacion(mensaje, componente1, componente2){
 	mostrarDialogoInformacion("<strong>Mensaje de validación</strong> <br><br>" + mensaje, Boton.WARNING, componente1, componente2);
 }
 
+function habilitarMarquee(){
+	var timeout_ = null;
+	$(".marquee").on("mouseover", function() {
+		var interval_val = 2;    
+		var this_ = this;
+    	timeout_ = setInterval(function() {
+      		$(this_).scrollLeft(interval_val);
+      		interval_val++;
+    		}, 25);
+  	});
+
+  	$(".marquee").on("mouseout", function() {
+    	clearInterval(timeout_);
+    	$(this).scrollLeft(0);
+  	});	
+}
+
 if(is_chrome()){
 	document.onmouseout		=	mousefuera;
 	document.onmousemove	=	movimientomouse;

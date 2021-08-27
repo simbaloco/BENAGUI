@@ -36,7 +36,7 @@ public class UsuarioRestController {
 	
 	@GetMapping ("/listarUsuarios")
     public ResponseEntity<List<UsuarioModel>> listarUsuarios(@RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar, 
-    														@RequestParam(Constante.PARAM_ID_PERFIL) int idPerfil) throws Exception {
+    														@RequestParam(Constante.PARAM_ID_PERFIL) Integer idPerfil) throws Exception {
         
         	logger.info("Inicio listarUsuarios.......");
             

@@ -7,7 +7,7 @@ import java.util.Date;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-public class ProbandoParser {
+public class DmmyProbandoParser {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

@@ -97,7 +97,7 @@ public class PrincipalRestController {
     }
     
     @GetMapping ("/cargarComboUbigeo/{codTipo}/{codDepartamento}/{codProvincia}")
-    public ResponseEntity<List<ComboModel>> cargarComboUbigeo(@PathVariable(Constante.PARAM_COD_TIPO) int codTipo,
+    public ResponseEntity<List<ComboModel>> cargarComboUbigeo(@PathVariable(Constante.PARAM_COD_TIPO) Integer codTipo,
     														 @PathVariable(Constante.PARAM_COD_DEPARTAMENTO_CONTROLLER) String codDepartamento, 
     														 @PathVariable(Constante.PARAM_COD_PROVINCIA_CONTROLLER) String codProvincia) throws Exception {
 		
@@ -123,7 +123,7 @@ public class PrincipalRestController {
     }
     
     @GetMapping ("/buscarOpciones/{idPerfil}")
-    public ResponseEntity<List<MenuModel>> cargarOpcionesMenu(@PathVariable(Constante.PARAM_ID_PERFIL) int idPerfil) throws Exception {
+    public ResponseEntity<List<MenuModel>> cargarOpcionesMenu(@PathVariable(Constante.PARAM_ID_PERFIL) Integer idPerfil) throws Exception {
         logger.info("entrando cargarOpcionesMenu.......");
     	List<MenuModel> listadoMenu = genericService.cargarOpcionesMenu(idPerfil);
     	

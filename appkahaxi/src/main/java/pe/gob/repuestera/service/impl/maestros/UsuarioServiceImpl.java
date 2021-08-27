@@ -16,8 +16,6 @@ import pe.gob.repuestera.model.UsuarioModel;
 import pe.gob.repuestera.repository.maestros.UsuarioMapper;
 import pe.gob.repuestera.service.maestros.UsuarioService;
 import pe.gob.repuestera.util.Constante;
-import pe.gob.repuestera.util.Dummy;
-import pe.gob.repuestera.util.JsonUtils;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {

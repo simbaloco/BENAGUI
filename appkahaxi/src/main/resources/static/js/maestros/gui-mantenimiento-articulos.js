@@ -259,10 +259,8 @@ function inicializarTabla(){
             "responsive"	: false,
 	        "scrollCollapse": false,
 			"ordering"      : true,
-	        "dom"           :   "<'row'<'col-sm-8'i><'col-sm-4'>>" +
-				                "<'row'<'col-sm-12'rt>>" +
-				                "<'row'<'col-sm-4'l><'col-sm-8'p>>",
-			"lengthMenu"	: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+	        "dom"			: '<ip<rt>lp>',
+        	"lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
 	        "deferRender"   : true,
 	        "autoWidth"		: false,
             "columnDefs"    : [

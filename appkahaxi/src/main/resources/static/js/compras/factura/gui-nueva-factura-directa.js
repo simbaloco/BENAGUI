@@ -1,6 +1,5 @@
 var indiceFilaDataTableDetalle = -1;
 //**************************************************************** */
-var marquee;
 var titulo;
 var codigo;
 var codigoCliente;
@@ -38,7 +37,6 @@ var correlativo;
 var divMensajeEliminado;
 var btnAnular;
 var btnLimpiar;
-var btnVolver;
 
 var tableDetalle;
 var tableNuevoDetalle;
@@ -49,6 +47,7 @@ var igvFactura;
 var totalFactura;
 
 var btnGrabar;
+var btnNuevo;
 
 var dataTableDetalle;
 var indiceFilaDataTableDetalle;
@@ -61,6 +60,7 @@ var btnEliminarTodosArticulos;
 
 var dateTimePickerInput;
 var valorIGV;
+var lblAnulado;
 
 $(document).ready(function(){
 	inicializarVariables();
@@ -69,8 +69,6 @@ $(document).ready(function(){
 });
 
 function inicializarVariables() {
-
-	marquee = $(".marquee");
 	titulo =  $("#titulo");
 	codigo = $("#codigo");
 	codigoCliente = $("#codigoCliente");
@@ -106,7 +104,6 @@ function inicializarVariables() {
 	divMensajeEliminado = $("#divMensajeEliminado");
 	btnAnular = $("#btnAnular");
 	btnLimpiar = $("#btnLimpiar");
-	btnVolver = $("#btnVolver");
 
 	btnAgregarArticulo = $("#btnAgregarArticulo");
 	btnEliminarTodosArticulos = $("#btnEliminarTodosArticulos");
@@ -119,11 +116,13 @@ function inicializarVariables() {
 	totalFactura = $("#totalFactura");
 
 	btnGrabar = $("#btnGrabar");
-
+	btnNuevo = $("#btnNuevo");
+	
 	campoBuscar = $("#campoBuscar");
 	estadoPago = $("#estadoPago");
 	
 	dateTimePickerInput = $(".datetimepicker-input");
+	lblAnulado = $("#lblAnulado");
 }
 
 function inicializarComponentes() {
@@ -154,23 +153,6 @@ function habilitarAnimacionAcordion() {
     }).on('hide.bs.collapse', function(){
     	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-down');
     });
-}
-
-function habilitarMarquee(){
-	var timeout_ = null;
-	marquee.on("mouseover", function() {
-		var interval_val = 2;    
-		var this_ = this;
-    	timeout_ = setInterval(function() {
-      		$(this_).scrollLeft(interval_val);
-      		interval_val++;
-    		}, 25);
-  	});
-
-  	marquee.on("mouseout", function() {
-    	clearInterval(timeout_);
-    	$(this).scrollLeft(0);
-  	});	
 }
 
 function construirFechasPicker() {
@@ -307,10 +289,6 @@ function inicializarEventos() {
 		evaluarCambioEstadoPago();
 	});
 
-	btnVolver.on("click", function() {
-		volver();
-	});
-
 	tipoMoneda.on('change', function(){
 		evaluarCambioTipoMoneda();
 	});
@@ -376,10 +354,6 @@ function cargarPantallaNueva() {
 	titulo.text("NUEVA");
 	dias.val(Dias._30);
 	
-	var volver = volverParam.text();
-	if(volver == Volver.SI){
-		mostrarControl(btnVolver);
-	}
 	campoBuscar.focus();
 }
 
@@ -479,12 +453,17 @@ function verPantallaFactura(data) {
 	deshabilitarControl(dateTimePickerInput);
 	deshabilitarControl(tipoMoneda);
 
-	if(estadoPago.val() == EstadoPago.PAGADO) {
-		deshabilitarControl(estadoPago);
-		ocultarControl(btnAnular);
-	} else {
-		habilitarControl(estadoPago);
-		mostrarControl(btnAnular);
+	if(data.codigoEstado == EstadoFactura.GENERADO){
+		if(estadoPago.val() == EstadoPago.PAGADO) {
+			deshabilitarControl(estadoPago);
+			ocultarControl(btnAnular);
+		} else {
+			habilitarControl(estadoPago);
+			mostrarControl(btnAnular);
+		}
+	}else{
+		// estado ANULADO
+		mostrarControl(lblAnulado);
 	}
 
 	deshabilitarControl(condPago);
@@ -493,7 +472,6 @@ function verPantallaFactura(data) {
 	deshabilitarControl(correlativo);
 	deshabilitarControl(observaciones);
 
-	mostrarControl(btnVolver);
 	ocultarControl(btnGrabar);
 	ocultarControl(btnLimpiar);
 	ocultarControl(btnAgregarArticulo);
@@ -511,13 +489,13 @@ function deshabilitarDetalleFactura(){
 		$cells = node.find("td").not(':first');//.not(':last');
 
 		$cells.each(function(cellIndex) {
-			deshabilitarControl($(this).find(".buscar-det"));
-			deshabilitarControl($(this).find(".codigo-det"));
-			deshabilitarControl($(this).find(".desc-det"));
-			deshabilitarControl($(this).find(".marca-det"));
+			habilitarControlSoloLectura($(this).find(".buscar-det"));
+			habilitarControlSoloLectura($(this).find(".codigo-det"));
+			habilitarControlSoloLectura($(this).find(".desc-det"));
+			habilitarControlSoloLectura($(this).find(".marca-det"));
 			deshabilitarControl($(this).find(".almacen_table"));
-			deshabilitarControl($(this).find(".cantidad-det"));
-			deshabilitarControl($(this).find(".precio-det"));
+			habilitarControlSoloLectura($(this).find(".cantidad-det"));
+			habilitarControlSoloLectura($(this).find(".precio-det"));
 			
 			deshabilitarControl($(this).find(".btn-delete"));
 		});
@@ -973,6 +951,7 @@ function registrarFacturaCompra(){
 	var condPagoVal 			= condPago.val();
 	var tipoCambioVal			= tipoCambio.val();
 	var codigoEstadoPagoVal 	= estadoPago.val().trim();
+	var observacionesVal 		= observaciones.val().trim();
 	
 	var subTotalVal 			= convertirMonedaANumero(subTotalFactura.val().trim());
 	var igvVal 					= convertirMonedaANumero(igvFactura.val());
@@ -1002,6 +981,7 @@ function registrarFacturaCompra(){
 		subTotal:  				subTotalVal,
 		igv:  					igvVal,
 		total:  				totalVal,
+		observaciones:  		observacionesVal,
 		detalle:  				detalle
 	};
 
@@ -1028,31 +1008,31 @@ function registrarFacturaCompra(){
 			if(xhr.status == HttpStatus.OK){
 
 				mostrarNotificacion("El registro fué grabado correctamente.", "success");
+				
+				codigo.html(resultado);
 
+				deshabilitarControl(serie);
+				deshabilitarControl(correlativo);
+				deshabilitarControl(estadoPago);
+
+				deshabilitarControl(tipoMoneda);
+				deshabilitarControl(condPago);
+				deshabilitarControl(dias);
+
+				deshabilitarControl(dateTimePickerInput);
+
+				mostrarControl(btnNuevo);
+				
+				ocultarControl(btnGrabar);
+				ocultarControl(btnLimpiar);
+					
 				if(codigoEstadoPagoVal == EstadoPago.PENDIENTE) {
-
-					codigo.html(resultado);
-
-					deshabilitarControl(serie);
-					deshabilitarControl(correlativo);
-					deshabilitarControl(estadoPago);
-
-					deshabilitarControl(tipoMoneda);
-					deshabilitarControl(condPago);
-					deshabilitarControl(dias);
-
-					//deshabilitarControl('.datetimepicker-input');
-					deshabilitarControl(dateTimePickerInput);
-
+					habilitarControl(observaciones);
 					mostrarControl(btnAnular);
-					mostrarControl(btnVolver);
-					ocultarControl(btnGrabar);
-					ocultarControl(btnLimpiar);
-
-
 				} else {
-
-					volver();
+					// CANCELADO
+					deshabilitarControl(observaciones);
+					ocultarControl(btnAnular);
 				}
 
 				deshabilitarDetalleFactura();
@@ -1076,10 +1056,12 @@ function actualizarFacturaCompra() {
 
 	var nroDocumento  		= codigo.html();
 	var estadoPagoVal 		= estadoPago.val();
+	var observacionesVal 	= observaciones.val().trim();
 
 	var objetoJson = {
 		numeroDocumento:	nroDocumento,
-		codigoEstadoPago:   estadoPagoVal
+		codigoEstadoPago:   estadoPagoVal,
+		observaciones:  	observacionesVal
 	};
 
 	var entityJsonStr = JSON.stringify(objetoJson);
@@ -1267,10 +1249,12 @@ function mostrarDialogoAnularFactura() {
 
 function anularFacturaCompra(){
 
-	var nroDocumento  			= codigo.html();
+	var nroDocumento  		= codigo.html();
+	var observacionesVal 	= observaciones.val().trim();
 
 	var objetoJson = {
-		numeroDocumento:		nroDocumento
+		numeroDocumento:	nroDocumento,
+		observaciones:  	observacionesVal
 	};
 
 	var entityJsonStr = JSON.stringify(objetoJson);
@@ -1339,7 +1323,8 @@ function limpiarFactura() {
 	estadoPago.val(EstadoPago.PENDIENTE);
 	condPago.val(CondicionPago.CONTADO);
 	tipoMoneda.val(Moneda.DOLARES);
-
+	observaciones.val(CADENA_VACIA);
+	
 	subTotalFactura.val(CADENA_VACIA);
 	igvFactura.val(CADENA_VACIA);
 	totalFactura.val(CADENA_VACIA);

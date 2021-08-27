@@ -1,5 +1,7 @@
 package pe.gob.repuestera.service.impl.compra.ordencompra;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +15,9 @@ import org.springframework.stereotype.Service;
 import pe.gob.repuestera.exception.ErrorControladoException;
 import pe.gob.repuestera.model.CompraCabModel;
 import pe.gob.repuestera.model.CompraDetModel;
+import pe.gob.repuestera.model.GuiaRemisionCabModel;
 import pe.gob.repuestera.repository.compra.ordencompra.OrdenCompraMapper;
+import pe.gob.repuestera.service.compra.guiaremision.GuiaRemisionCompraService;
 import pe.gob.repuestera.service.compra.ordencompra.OrdenCompraService;
 import pe.gob.repuestera.util.Constante;
 import pe.gob.repuestera.util.JsonUtils;
@@ -25,7 +29,8 @@ public class OrdenCompraServiceImpl implements OrdenCompraService {
 
 	@Autowired
 	private OrdenCompraMapper ordenCompraMapper;
-	
+	@Autowired
+	private GuiaRemisionCompraService guiaRemisionCompraService;
 	@Autowired
 	private JsonUtils jsonUtils;
 
@@ -132,6 +137,18 @@ public class OrdenCompraServiceImpl implements OrdenCompraService {
 
 		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
 			logger.info("compraCabModel ===> " + compraCabModel.toString());
+			
+			try {
+
+                List<GuiaRemisionCabModel> listGuiaRemisionCabModel = guiaRemisionCompraService.listarGuiaRemisionCompraPorOrdenCompra(numeroDocumento);
+                compraCabModel.setCantidadGrAsociadas(listGuiaRemisionCabModel.size());
+
+            } catch (Exception e) {
+                StringWriter printStackTrace = new StringWriter();
+                e.printStackTrace(new PrintWriter(printStackTrace));
+                logger.info("No se tienen GR asociadas ===> " + printStackTrace.toString());
+                compraCabModel.setCantidadGrAsociadas(0);
+            }
 
 		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
 			throw new ErrorControladoException(mensajeResultado);

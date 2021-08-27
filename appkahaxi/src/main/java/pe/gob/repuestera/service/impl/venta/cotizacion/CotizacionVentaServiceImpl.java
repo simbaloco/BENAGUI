@@ -3,20 +3,17 @@ package pe.gob.repuestera.service.impl.venta.cotizacion;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.google.gson.Gson;
-
 import pe.gob.repuestera.exception.ErrorControladoException;
 import pe.gob.repuestera.model.VentaCabModel;
 import pe.gob.repuestera.model.VentaDetModel;
 import pe.gob.repuestera.repository.venta.cotizacion.CotizacionVentaMapper;
 import pe.gob.repuestera.service.venta.cotizacion.CotizacionVentaService;
 import pe.gob.repuestera.util.Constante;
+import pe.gob.repuestera.util.JsonUtils;
 
 @Service
 public class CotizacionVentaServiceImpl implements CotizacionVentaService{
@@ -25,7 +22,9 @@ public class CotizacionVentaServiceImpl implements CotizacionVentaService{
 	
 	@Autowired
 	private CotizacionVentaMapper cotizacionVentaMapper;
-
+	@Autowired
+	private JsonUtils jsonUtils;
+	
 	@Override
 	public List<VentaCabModel> listarCotizacionesVenta(String datoBuscar, String nroCotizacion, String nroRequerimiento, String codRepuesto, String codEstado, String fechaDesde, String fechaHasta) throws Exception{
 		
@@ -144,7 +143,7 @@ public class CotizacionVentaServiceImpl implements CotizacionVentaService{
         logger.info("dcto--->" + registro.getDescuento());
         logger.info("igv--->" + registro.getIgv());
         logger.info("total--->" + registro.getTotal());
-        String dataJSON = (new Gson()).toJson(registro.getDetalle());
+        String dataJSON = jsonUtils.obtenerJson(registro.getDetalle());
         logger.info("DETALLE---->" + dataJSON);        
         // seteando parámetros
         Map<String, Object> params = new HashMap();

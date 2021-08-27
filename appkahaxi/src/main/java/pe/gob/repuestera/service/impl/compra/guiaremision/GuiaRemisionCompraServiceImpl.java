@@ -25,10 +25,8 @@ public class GuiaRemisionCompraServiceImpl implements GuiaRemisionCompraService 
 
     @Autowired
     private GuiaRemisionCompraMapper guiaRemisionCompraMapper;
-
     @Autowired
     FacturaService facturaService;
-
     @Autowired
     private JsonUtils jsonUtils;
 
@@ -89,6 +87,7 @@ public class GuiaRemisionCompraServiceImpl implements GuiaRemisionCompraService 
         params.put(Constante.PARAM_SP_SUB_TOTAL, guiaRemisionCabModel.getSubTotal());
         params.put(Constante.PARAM_SP_IGV, guiaRemisionCabModel.getIgv());
         params.put(Constante.PARAM_SP_TOTAL, guiaRemisionCabModel.getTotal());
+        params.put(Constante.PARAM_SP_OBSERVACIONES, guiaRemisionCabModel.getObservaciones());
         params.put(Constante.PARAM_SP_DATA_JSON, dataJSON);
 
         logger.info("params ===> " + params);
@@ -123,6 +122,7 @@ public class GuiaRemisionCompraServiceImpl implements GuiaRemisionCompraService 
         Map<String, Object> params = new HashMap();
         params.put(Constante.PARAM_SP_USUARIO, usuario);
         params.put(Constante.PARAM_SP_NRO_DOCUMENTO, guiaRemisionCabModel.getNumeroDocumento());
+        params.put(Constante.PARAM_SP_OBSERVACIONES, guiaRemisionCabModel.getObservaciones());
 
         logger.info("params ===> " + params);
 
@@ -237,7 +237,7 @@ public class GuiaRemisionCompraServiceImpl implements GuiaRemisionCompraService 
             } catch (Exception e) {
                 StringWriter printStackTrace = new StringWriter();
                 e.printStackTrace(new PrintWriter(printStackTrace));
-                logger.info("No se tiene facturas asociadas ===> " + printStackTrace.toString());
+                logger.info("No se tienen facturas asociadas ===> " + printStackTrace.toString());
                 guiaRemisionCabModel.setCantidadFacturasAsociadas(0);
             }
 

@@ -74,7 +74,7 @@ public class CatalogoRestController {
 	
 	@GetMapping ("/buscarDataCatalogo")
     public ResponseEntity<CatalogoModel> buscarDataCatalogo(@RequestParam(Constante.PARAM_COD_MAESTRO_CONTROLLER) String codMaestro, 
-    														@RequestParam(Constante.PARAM_COD_DATA_CATALOGO) int codDataCatalogo) throws Exception {
+    														@RequestParam(Constante.PARAM_COD_DATA_CATALOGO) Integer codDataCatalogo) throws Exception {
 		
 		logger.info("Inicio buscarDataCatalogo ......");
 		

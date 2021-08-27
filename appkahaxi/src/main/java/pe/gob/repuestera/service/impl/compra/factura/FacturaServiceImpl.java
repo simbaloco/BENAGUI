@@ -63,6 +63,7 @@ public class FacturaServiceImpl implements FacturaService {
         params.put(Constante.PARAM_SP_SUB_TOTAL, comprobantePagoCabModel.getSubTotal());
         params.put(Constante.PARAM_SP_IGV, comprobantePagoCabModel.getIgv());
         params.put(Constante.PARAM_SP_TOTAL, comprobantePagoCabModel.getTotal());
+        params.put(Constante.PARAM_SP_OBSERVACIONES, comprobantePagoCabModel.getObservaciones());
         params.put(Constante.PARAM_SP_DATA_JSON, dataJSON);
 
         logger.info("params ===> " + params);
@@ -99,6 +100,7 @@ public class FacturaServiceImpl implements FacturaService {
         params.put(Constante.PARAM_SP_NRO_DOCUMENTO, comprobantePagoCabModel.getNumeroDocumento());
         params.put(Constante.PARAM_SP_USUARIO, usuario);
         params.put(Constante.PARAM_SP_COD_ESTADO_PAGO, comprobantePagoCabModel.getCodigoEstadoPago());
+        params.put(Constante.PARAM_SP_OBSERVACIONES, comprobantePagoCabModel.getObservaciones());
 
         logger.info("params ===> " + params);
 
@@ -129,6 +131,7 @@ public class FacturaServiceImpl implements FacturaService {
         Map<String, Object> params = new HashMap();
         params.put(Constante.PARAM_SP_USUARIO, usuario);
         params.put(Constante.PARAM_SP_NRO_DOCUMENTO, comprobantePagoCabModel.getNumeroDocumento());
+        params.put(Constante.PARAM_SP_OBSERVACIONES, comprobantePagoCabModel.getObservaciones());
 
         logger.info("params ===> " + params);
 

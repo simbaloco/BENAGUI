@@ -1,6 +1,6 @@
 var indiceFilaDataTableDetalle = -1;
 //**************************************************************** */
-var marquee;
+var cantidadDetalleDuplicado;
 var codigoCliente;
 var numeroDocumento;
 
@@ -43,6 +43,7 @@ var btnIrGuiaRemision;
 var btnGenerarGuiaRemision;
 var btnLimpiar;
 var btnVolver;
+var btnNuevo;
 
 var btnAgregarArticulo;
 var btnEliminarTodosArticulos;
@@ -66,6 +67,7 @@ var tableDetalleGuias;
 var dataTableDetalleGuias;
 
 var dateTimePickerInput;
+var lblAnulado;
 
 $(document).ready(function(){
 	inicializarVariables();
@@ -74,7 +76,6 @@ $(document).ready(function(){
 });
 
 function inicializarVariables() {
-	marquee = $(".marquee");
 	codigoCliente =  $("#codigoCliente");
 	numeroDocumento =  $("#numeroDocumento");
 	
@@ -117,7 +118,8 @@ function inicializarVariables() {
 	btnGenerarGuiaRemision = $("#btnGenerarGuiaRemision");
 	btnLimpiar = $("#btnLimpiar");
 	btnVolver = $("#btnVolver");
-
+	btnNuevo = $('#btnNuevo');
+	
 	btnAgregarArticulo = $("#btnAgregarArticulo");
 	btnEliminarTodosArticulos = $("#btnEliminarTodosArticulos");
 	tableDetalle = $("#tableDetalle");
@@ -137,6 +139,7 @@ function inicializarVariables() {
 	btnAceptarModal = $("#btnAceptarModal");
 	
 	dateTimePickerInput = $(".datetimepicker-input");
+	lblAnulado = $("#lblAnulado");
 }
 
 function inicializarComponentes() {
@@ -165,23 +168,6 @@ function habilitarAnimacionAcordion() {
     }).on('hide.bs.collapse', function(){
     	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-down');
     });
-}
-
-function habilitarMarquee(){
-	var timeout_ = null;
-	marquee.on("mouseover", function() {
-		var interval_val = 2;    
-		var this_ = this;
-    	timeout_ = setInterval(function() {
-      		$(this_).scrollLeft(interval_val);
-      		interval_val++;
-    		}, 25);
-  	});
-
-  	marquee.on("mouseout", function() {
-    	clearInterval(timeout_);
-    	$(this).scrollLeft(0);
-  	});	
 }
 
 function construirFechasPicker() {
@@ -312,6 +298,10 @@ function inicializarEventos() {
 		mostrarDialogoGenerarGuiaRemision();
 	});
 
+	btnNuevo.click(function(){
+    	nuevaOrdenCompra();
+	});
+	
 	btnVolver.on("click", function() {
 		volver();
 	});
@@ -462,7 +452,7 @@ function cargarPantallaHTML(data) {
     }
 
 	// ******* DETALLE
-    var cantidadDetalleDuplicado = data.detalle.length;
+    cantidadDetalleDuplicado = data.detalle.length;
 
 	for(i=0; i < cantidadDetalleDuplicado; i++) {
 
@@ -505,7 +495,7 @@ function verPantallaOrdenCompra(data) {
 
 		deshabilitarControl(estado);
 		mostrarControl(btnDuplicar);
-		btnVolver.focus();
+		mostrarControl(lblAnulado);
 	}else{
 
 		// estado APROBADO
@@ -517,21 +507,22 @@ function verPantallaOrdenCompra(data) {
 		if(data.codigoEstadoProceso == EstadoProceso.ABIERTO){
 			// estado proceso ABIERTO
 			habilitarControl(btnGenerarGuiaRemision);
-			deshabilitarControl(btnIrGuiaRemision);
-			btnGenerarGuiaRemision.removeClass('btn btn-secondary').addClass('btn btn-primary');
+			if(data.cantidadGrAsociadas > 0) {
+				mostrarControl(btnIrGuiaRemision);
+			} else {
+				ocultarControl(btnIrGuiaRemision);
+			}
 		}else{
 			// estado proceso CERRADO
-			deshabilitarControl(btnGenerarGuiaRemision);
+			ocultarControl(btnGenerarGuiaRemision);
 			mostrarControl(btnIrGuiaRemision);
-			btnGenerarGuiaRemision.removeClass('btn btn-primary').addClass('btn btn-secondary');
 		}
-		
-		btnGenerarGuiaRemision.focus();
 	}
 
 	deshabilitarControl(observaciones);
 	
 	ocultarControl(btnGrabar);
+	ocultarControl(btnNuevo);
 	ocultarControl(btnAgregarArticulo);
 	ocultarControl(btnEliminarTodosArticulos);
 	ocultarControl(btnLimpiar);
@@ -571,9 +562,29 @@ function duplicarPantallaOrdenCompra(nroDocRef) {
 	mostrarControl(btnLimpiar);
 	
 	ocultarControl(btnDuplicar);
+	ocultarControl(btnNuevo);
 	ocultarControl(btnGenerarGuiaRemision);
+	ocultarControl(btnIrGuiaRemision);
+	ocultarControl(lblAnulado);
 	
-	// ******* DETALLE
+	// ******* DETALLE - Recuperando la cantidad pendiente (para el caso de las OC cerradas y con cant pendiente = 0)
+	var cantidadSalvada;
+	var $headers = tableDetalle.find("th").not(':first').not(':last');
+	tableDetalle.DataTable().rows().iterator('row', function(context, index){
+
+		var node = $(this.row(index).node());
+		$cells = node.find("td").not(':first').not(':last');
+
+		$cells.each(function(cellIndex) {
+			if($($headers[cellIndex]).attr('id') == 'cantidad') {
+				cantidadSalvada = $(this).find("input").val();
+			}
+			if($($headers[cellIndex]).attr('id') == 'cantidadPendiente') {
+				$(this).find("input").val(cantidadSalvada);
+			}
+		});
+	});
+	
 	habilitarDetalleOrdenCompra();
 	campoBuscar.focus();
 }
@@ -587,9 +598,9 @@ function deshabilitarDetalleOrdenCompra(){
 		$cells = node.find("td").not(':first');//.not(':last');
 
 		$cells.each(function(cellIndex) {
-			deshabilitarControl($(this).find(".buscar-det"));
-			deshabilitarControl($(this).find(".cantidad-det"));
-			deshabilitarControl($(this).find(".precio-det"));
+			habilitarControlSoloLectura($(this).find(".buscar-det"));
+			habilitarControlSoloLectura($(this).find(".cantidad-det"));
+			habilitarControlSoloLectura($(this).find(".precio-det"));
 			
 			deshabilitarControl($(this).find(".btn-delete"));
 		});
@@ -604,9 +615,9 @@ function habilitarDetalleOrdenCompra(){
 		$cells = node.find("td").not(':first');//.not(':last');
 
 		$cells.each(function(cellIndex) {
-			habilitarControl($(this).find(".buscar-det"));
-			habilitarControl($(this).find(".cantidad-det"));
-			habilitarControl($(this).find(".precio-det"));
+			deshabilitarControlSoloLectura($(this).find(".buscar-det"));
+			deshabilitarControlSoloLectura($(this).find(".cantidad-det"));
+			deshabilitarControlSoloLectura($(this).find(".precio-det"));
 			
 			habilitarControl($(this).find(".btn-delete"));
 		});
@@ -1083,8 +1094,6 @@ function registrarOrdenCompra(){
 		diasVal					= dias.val();
 	}
 
-	console.log("igvVal------------------>" + igvVal);
-
 	var objetoJson = {
 
 		numeroDocumento:		nroDocumento,
@@ -1129,7 +1138,28 @@ function registrarOrdenCompra(){
 
 				mostrarNotificacion("El registro fue grabado correctamente.", "success");
 				
-				limpiarOrdenCompra();
+				// despues de grabar, mostramos los botones de "Generar GR", "Nuevo", "Duplicar" y "Volver" (si fuera el caso)
+				mostrarControl(btnNuevo);
+				mostrarControl(btnDuplicar);
+				
+				ocultarControl(btnGenerarGuiaRemision);
+				ocultarControl(btnLimpiar);
+				ocultarControl(btnGrabar);
+				ocultarControl(btnAgregarArticulo);
+				ocultarControl(btnEliminarTodosArticulos);
+				
+				deshabilitarControl(campoBuscar);
+				deshabilitarControl(dateTimePickerInput);
+				
+				deshabilitarControl(tipoMoneda);
+				deshabilitarControl(condPago);
+				deshabilitarControl(dias);
+				habilitarControl(estado);
+				deshabilitarControl(observaciones);
+				
+				deshabilitarDetalleOrdenCompra();
+				
+				codigo.html(resultado);
 
 			}else if(xhr.status == HttpStatus.Accepted){
 
@@ -1182,6 +1212,7 @@ function actualizarOrdenCompra() {
 
 				if(estado.val() == EstadoDocumentoInicial.APROBADO) {
 					mostrarControl(btnGenerarGuiaRemision);
+					mostrarControl(btnDuplicar);
 					ocultarControl(btnGrabar);
 					ocultarControl(btnLimpiar);
 					deshabilitarControl(estado);
@@ -1339,6 +1370,13 @@ function cargarGuiaRemisionAsociada(numeroDocumento, opcion) {
 	window.location.href = "/appkahaxi/cargar-guia-remision-compra?" + params;
 }
 
+function nuevaOrdenCompra(){
+	var params;
+	// armando los parámetros
+	params = "numeroDocumento=&opcion=&datoBuscar=&nroOrdenCompra=&codRepuesto=&fechaDesde=&fechaHasta=&estadoParam=&volver=0";
+	window.location.href = "/appkahaxi/nueva-orden-compra?" + params;
+}
+
 function volver(){
 	var params;
 	var dato 		= datoBuscar.text();
@@ -1423,13 +1461,11 @@ function obtenerDetalleGuiaPorOrdenCompra(event){
 
 				}
 			},
-			"stateSave": true,
+			"stateSave"		: true,
 			"responsive"	: false,
 			"scrollCollapse": false,
-			"dom"           :   "<'row'<'col-sm-8'i><'col-sm-4'>>" +
-				"<'row'<'col-sm-12'rt>>" +
-				"<'row'<'col-sm-4'l><'col-sm-8'p>>",
-			"lengthMenu"	: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+			"dom"			: '<ip<rt>lp>',
+        	"lengthMenu"	: [[10, 20, 30, 40, -1], [10, 20, 30, 40, "Todos"]],
 			"deferRender"   : true,
 			"autoWidth"		: false,
 			"columnDefs"    : [

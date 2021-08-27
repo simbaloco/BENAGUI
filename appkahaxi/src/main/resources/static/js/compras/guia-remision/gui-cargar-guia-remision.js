@@ -1,4 +1,3 @@
-var marquee;
 var titulo;
 var codigo;
 var codigoCliente;
@@ -69,6 +68,7 @@ var dataTableDetalleFactura;
 var dateTimePickerInput;
 var valorIGV;
 var listaAlmacenModel;
+var lblAnulado;
 
 $(document).ready(function(){
 	inicializarVariables();
@@ -77,7 +77,6 @@ $(document).ready(function(){
 });
 
 function inicializarVariables() {
-	marquee = $(".marquee");
 	titulo =  $("#titulo");
 	codigo = $("#codigo");
 	codigoCliente = $("#codigoCliente");
@@ -142,6 +141,7 @@ function inicializarVariables() {
 
 	dateTimePickerInput = $(".datetimepicker-input");
 	listaAlmacenModel = $("#listaAlmacenModel");
+	lblAnulado = $("#lblAnulado");
 }
 
 function inicializarComponentes() {
@@ -173,23 +173,6 @@ function habilitarAnimacionAcordion() {
     }).on('hide.bs.collapse', function(){
     	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-down');
     });
-}
-
-function habilitarMarquee(){
-	var timeout_ = null;
-	marquee.on("mouseover", function() {
-		var interval_val = 2;    
-		var this_ = this;
-    	timeout_ = setInterval(function() {
-      		$(this_).scrollLeft(interval_val);
-      		interval_val++;
-    		}, 25);
-  	});
-
-  	marquee.on("mouseout", function() {
-    	clearInterval(timeout_);
-    	$(this).scrollLeft(0);
-  	});	
 }
 
 function construirFechasPicker() {
@@ -350,7 +333,6 @@ function cargarPantallaConDatosOrdenCompra() {
 }
 
 function cargarPantallaHTMLOrdenCompra(data) {
-	console.log("aqui cargarPantallaHTMLOrdenCompra...");
 	codigoCliente.val(data.codigoCliente);
 	documentoCliente.val(data.nroDocCliente);
 	nombreCliente.val(data.nombreCliente);
@@ -363,7 +345,6 @@ function cargarPantallaHTMLOrdenCompra(data) {
 	igvGR.val(data.igv);
 	totalGR.val(data.total);
 	cantidadDetalleDuplicado = data.detalle.length;
-	
 	for(i=0; i < cantidadDetalleDuplicado; i++) {
 
 		var detalle = data.detalle[i];
@@ -383,13 +364,11 @@ function cargarPantallaHTMLOrdenCompra(data) {
 		calcularCantidadNuevaGuia(null, $('#cantidad_' + i), i);
 
 	}
-
 	dataTableDetalle.destroy();
 	inicializarTablaDetalle(true);
 }
 
 function nuevaPantallaGuiaRemision() {
-
 	titulo.text("NUEVA");
 
 	deshabilitarControl(OCReferencia);
@@ -462,7 +441,8 @@ function cargarPantallaHTMLGuiaRemision(data) {
 	igvGR.val(data.igv);
 	totalGR.val(data.total);
 	OCReferencia.val(data.ordenCompra);
-
+	observaciones.val(data.observaciones);
+	
 	cantidadDetalleDuplicado = data.detalle.length;
 
 	for(i=0; i < cantidadDetalleDuplicado; i++) {
@@ -501,36 +481,32 @@ function verPantallaGuiaRemision(data) {
 	deshabilitarControl(dias);
 	deshabilitarControl(serie);
 	deshabilitarControl(correlativo);
-
+	deshabilitarControl(observaciones);
+	
 	if(data.codigoEstado == EstadoGuiaRemision.GENERADO){
-
-		// estado APROBADO
-		mostrarControl(btnGenerarFactura);
-
 		if(data.codigoEstadoProceso == EstadoProceso.ABIERTO){
 			// estado proceso ABIERTO
-			habilitarControl(btnGenerarFactura);
-			btnGenerarFactura.removeClass('btn btn-secondary').addClass('btn btn-primary');
+			mostrarControl(btnGenerarFactura);
 			if(data.cantidadFacturasAsociadas > 0) {
 				ocultarControl(btnAnular);
+				mostrarControl(btnIrFactura);
 			} else {
 				mostrarControl(btnAnular);
+				habilitarControl(observaciones);
+				ocultarControl(btnIrFactura);
 			}
 
 		}else{
 			// estado proceso CERRADO
-			deshabilitarControl(btnGenerarFactura);
-			btnGenerarFactura.removeClass('btn btn-primary').addClass('btn btn-secondary');
+			ocultarControl(btnGenerarFactura);
+			mostrarControl(btnIrFactura);
 		}
 
-		btnGenerarFactura.focus();
-		mostrarControl(btnIrFactura);
-
-	}else if(data.codigoEstado == EstadoGuiaRemision.ANULADO){
-
-		btnVolver.focus();
+	}else{
+		// es ANULADO
+		mostrarControl(lblAnulado);
 	}
-
+	
 	mostrarControl(btnVolver);
 	ocultarControl(btnGrabar);
 	ocultarControl(btnLimpiar);
@@ -547,7 +523,7 @@ function deshabilitarDetalleGuiaRemision(){
 
 		$cells.each(function(cellIndex) {
 			deshabilitarControl($(this).find(".almacen_table"));
-			deshabilitarControl($(this).find(".cantidad_table"));
+			habilitarControlSoloLectura($(this).find(".cantidad_table"));
 			
 			deshabilitarControl($(this).find(".btn-delete"));
 		});
@@ -579,7 +555,7 @@ function agregarFilaHTMLEnTablaDetalle(data) {
 }
 
 function agregarHTMLColumnasDataTable(data) {
-
+	console.log("5...");
 	var row = tableDetalle.DataTable().row(':last').nodes().to$().closest("tr").off("mousedown");
 
 	var $tds = row.find("td").not(':first').not(':last');
@@ -615,8 +591,10 @@ function agregarHTMLColumnasDataTable(data) {
 					break;					
 
 			// CANTIDAD
-			case 5:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha cantidad_table' type='text' onchange='dispararEventosCambioCantidad(this, " + indiceFilaDataTableDetalle + ");' " +
+			case 5:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha cantidad_table' type='text' " + 
+					"onchange='dispararEventosCambioCantidad(this, " + indiceFilaDataTableDetalle + ");' " +
 					"onkeypress='return soloEnteros(event);'" +
+					"onkeydown='cantidadKeyDown(event, " + indiceFilaDataTableDetalle + ")' " +
 					"id='cantidad_" + indiceFilaDataTableDetalle + "'>");
 					break;
 
@@ -695,6 +673,23 @@ function calcularCantidadNuevaGuia(control1, control2, fila) {
 	$('#cantidadPend_' + fila).val(cantidad);
 
 	calcularResumenGuiaRemision();
+}
+
+function cantidadKeyDown(e, fila){
+	var key = window.Event ? e.which : e.keyCode;
+	console.log("cantidadKeyDown, key-->" + key);
+	// si es ENTER
+	if(key == 13){
+		console.log("es ENTER");
+		var nuevaFila = Number(fila) + 1;
+		console.log("nuevaFila-->" + nuevaFila);
+		console.log("indiceFilaDataTableDetalle-->" + indiceFilaDataTableDetalle);
+		
+		if(indiceFilaDataTableDetalle >= nuevaFila){
+			console.log("pasando a la sgte fila...");
+			$('#cantidad_' + nuevaFila).select();	
+		}
+	}
 }
 
 /**************** EVENTOS FORMULARIO *******************/
@@ -813,6 +808,7 @@ function registrarGuiaRemisionCompra(){
 	var condPagoVal 			= condPago.val();
 	var tipoCambioVal			= tipoCambio.val();
 	var codigoMotivoTraslado	= motivoTraslado.val().trim();
+	var observacionesVal 		= observaciones.val().trim();
 	
 	var subTotalVal 			= convertirMonedaANumero(subTotalGR.val().trim());
 	var igvVal 					= convertirMonedaANumero(igvGR.val());
@@ -845,6 +841,7 @@ function registrarGuiaRemisionCompra(){
 		subTotal:  				subTotalVal,
 		igv:  					igvVal,
 		total:  				totalVal,
+		observaciones:  		observacionesVal,
 		detalle:  				detalle
 	};
 
@@ -906,9 +903,12 @@ function registrarGuiaRemisionCompra(){
 
 function anularGuiaRemisionCompra(){
 
-	var nroDocumento  			= codigo.html();
+	var nroDocumento  		= codigo.html();
+	var observacionesVal 	= observaciones.val().trim();
+	
 	var objetoJson = {
-		numeroDocumento:		nroDocumento
+		numeroDocumento:	nroDocumento,
+		observaciones:  	observacionesVal
 	};
 
 	var entityJsonStr = JSON.stringify(objetoJson);
@@ -933,15 +933,16 @@ function anularGuiaRemisionCompra(){
 
 			if(xhr.status == HttpStatus.OK){
 
-				if (opcion.text() == Opcion.NUEVO) {
-					var params = "numeroDocumento=" + numeroDocumento.text() + "&opcion=" + Opcion.VER + "&datoBuscar=&fechaDesde=&fechaHasta=&estadoParam=&volver=0";
-					window.location.href = "/appkahaxi/nueva-orden-compra?" + params;
-				}
+				mostrarNotificacion("El registro fué actualizado correctamente.", "success");
 
-				if(opcion.text() == Opcion.VER) {
-					volver();
-				}
-
+				window.scrollTo(0, 0);
+				mostrarControl(lblAnulado);
+				ocultarControl(btnGenerarFactura);
+				ocultarControl(btnIrFactura);
+				ocultarControl(btnAnular);
+				
+				deshabilitarControl(observaciones);
+				
 			} else if(xhr.status == HttpStatus.Accepted){
 
 				mostrarMensajeValidacion(resultado);
@@ -1134,13 +1135,11 @@ function obtenerDetalleGuiaPorOrdenCompra(event){
 
 				}
 			},
-			"stateSave": true,
+			"stateSave"		: true,
 			"responsive"	: false,
 			"scrollCollapse": false,
-			"dom"           :   "<'row'<'col-sm-8'i><'col-sm-4'>>" +
-				"<'row'<'col-sm-12'rt>>" +
-				"<'row'<'col-sm-4'l><'col-sm-8'p>>",
-			"lengthMenu"	: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+			"dom"			: '<ip<rt>lp>',
+        	"lengthMenu"	: [[10, 20, 30, 40, -1], [10, 20, 30, 40, "Todos"]],
 			"deferRender"   : true,
 			"autoWidth"		: false,
 			"columnDefs"    : [
@@ -1251,13 +1250,11 @@ function obtenerDetalleFacturasPorGuiaRemision(event){
 					mostrarMensajeValidacion(xhr.responseText);
 				}
 			},
-			"stateSave": true,
+			"stateSave"		: true,
 			"responsive"	: false,
 			"scrollCollapse": false,
-			"dom"           :   "<'row'<'col-sm-8'i><'col-sm-4'>>" +
-				"<'row'<'col-sm-12'rt>>" +
-				"<'row'<'col-sm-4'l><'col-sm-8'p>>",
-			"lengthMenu"	: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+			"dom"			: '<ip<rt>lp>',
+        	"lengthMenu"	: [[10, 20, 30, 40, -1], [10, 20, 30, 40, "Todos"]],
 			"deferRender"   : true,
 			"autoWidth"		: false,
 			"columnDefs"    : [
@@ -1451,6 +1448,7 @@ function limpiarGuiaRemision() {
 	inicializarFechas();
 	serie.val(CADENA_VACIA);
 	correlativo.val(CADENA_VACIA);
+	observaciones.val(CADENA_VACIA);
 	motivoTraslado.prop("selectedIndex", 0);
 	serie.focus();
 }

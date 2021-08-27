@@ -91,12 +91,12 @@
 
 								<div class="col-md-4">
 									<label class="label" for="nombreCliente">Nombre/Raz&oacute;n Social:</label>
-									<input class="form-control" maxlength="250" size="50" type="text" id="nombreCliente" readonly="readonly" tabindex="-1"/>
+									<input class="marquee form-control" maxlength="250" size="50" type="text" id="nombreCliente" readonly="readonly" tabindex="-1"/>
 								</div>
 
 								<div class="col-md-4">
 									<label class="label" for="direccion">Direcci&oacute;n:</label>
-									<input class="form-control" maxlength="250" size="50" type="text" id="direccion" readonly="readonly" tabindex="-1"/>
+									<input class="marquee form-control" maxlength="250" size="50" type="text" id="direccion" readonly="readonly" tabindex="-1"/>
 								</div>
 
 							</div>
@@ -221,30 +221,32 @@
 										Seleccione Estado Pago
 									</div>
 								</div>
+								
+								<div class="col-md-2">
+									<label class="label" for="lblAnulado">&nbsp;</label>
+									<input class="form-control etiquetaAnulado" type="text" id="lblAnulado" style="display: none" value="ANULADO"/>
+								</div>
+								
+								<div class="col-md-4 alineacion-derecha">
+						 			<label class="label"></label>
+						 			<div>
+
+						 				<button type="button" id="btnLimpiar" class="btn btn-primary">
+				                  			<span class="mr-2"><i class="fas fa-eraser"></i></span>Limpiar
+							            </button>
+							            
+							            <button type="button" id="btnVolver" class="btn btn-primary" style="display: none">
+				                  			<span class="mr-2"><i class="fas fa-backspace"></i></span>Volver
+							            </button>
+							        </div>
+						 		</div>	
 							</div>
 
 							<div class="row">
-
-								<div class="col-md-10">
-								</div>
-
-								<div class="col-md-1">
-									<div class="text-center">
-										<button type="button" id="btnLimpiar" class="btn btn-primary my-1">
-											<span class="mr-2"><i class="fas fa-eraser"></i></span>Limpiar
-										</button>
-									</div>
-								</div>
-
-								<div class="col-md-1">
-									<div class="text-center">
-										<button type="button" id="btnVolver" class="btn btn-primary" style="display: none">
-											<span class="mr-2"><i class="fas fa-backspace"></i></span>Volver
-										</button>
-									</div>
-								</div>
-
-							</div>
+						 		<div class="col-md-12">
+						 			<label class="label"></label>
+						 		</div>
+						    </div>
 
 						</form>
 
@@ -334,71 +336,72 @@
 
 				<div class="card-body">
 
+					<div class="form-group row">
+				     	<div class="col-md-8">
+				     		
+				     		<div class="form-group row">
+		            			<div class="col-md-3">
+				            		<label class="label" for="observaciones">Observaciones</label>
+				            	</div>
+				            	<div class="col-md-9">	
+				            		<textarea class="form-control" rows="3" maxlength="250" id="observaciones"></textarea>
+							    </div>
+		            		</div>
+				     	</div>
+				     	
+				     	<div class="col-md-1"></div>
+				     	<div class="col-md-3">
+			            	<div class="form-group row">
+		            			<div class="col-md-4">
+				            		<label class="label" for="subTotalFactura">SubTotal</label>
+				            	</div>
+				            	<div class="col-md-8">	
+				            		<span class="simbolo-moneda input-symbol-dolar">
+							        	<input class="form-control alineacion-derecha" maxlength="10" type="text" id="subTotalFactura" readonly="readonly"/>
+							        </span>
+							    </div>
+		            		</div>
+			            	
+		            		<div class="form-group row">
+		            			<div class="col-md-4">
+				            		<label class="label" for="igvFactura">IGV</label>
+				            	</div>
+				            	<div class="col-md-8">	
+				            		<span class="simbolo-moneda input-symbol-dolar">
+				            			<input class="form-control alineacion-derecha" maxlength="10" type="text" id="igvFactura" readonly="readonly"/>
+				            		</span>
+							    </div>	
+		            		</div>
+		            		
+		            		<div class="form-group row">
+		            			<div class="col-md-4">
+				            		<label class="label" for="totalFactura">Total</label>
+				            	</div>
+				            	<div class="col-md-8">	
+				            		<span class="simbolo-moneda input-symbol-dolar">
+				            			<input class="form-control alineacion-derecha" maxlength="10" type="text" id="totalFactura" readonly="readonly"/>
+						        	</span>
+							    </div>	
+		            		</div>
+				       	</div>
+				    </div>
+
 					<div class="row">
-
-						<div class="col-md-10">
-
-						</div>
-
-						<div class="col-md-2">
-
-							<div>
-								<label class="label" for="subTotalFactura">SubTotal</label>
-							</div>
-							<div>
-								<span class="simbolo-moneda input-symbol-dolar">
-									<input class="form-control alineacion-derecha" maxlength="10" type="text" id="subTotalFactura" readonly="readonly"/>
-								</span>
-							</div>
-
-							<div>
-								<label class="label" for="igvFactura">IGV</label>
-							</div>
-							<div>
-								<span class="simbolo-moneda input-symbol-dolar">
-				            			<input class="alineacion-derecha form-control" maxlength="10" type="text" id="igvFactura" readonly="readonly"/>
-								</span>
-							</div>
-
-							<div>
-								<label class="label" for="totalFactura">Total</label>
-							</div>
-							<div>
-								<span class="simbolo-moneda input-symbol-dolar">
-									<input class="form-control alineacion-derecha" maxlength="10" type="text" id="totalFactura" readonly="readonly"/>
-								</span>
-							</div>
-
-						</div>
-
-					</div>
-
-					<div class="row">
-						<div class="col-md-12">
-							<label class="label"></label>
-						</div>
-					</div>
-
-					<div class="row">
-
-						<div class="col-md-10">
-						</div>
-
-						<div class="col-md-1">
-							<div class="text-right">
-								<button type="button" id="btnAnular" class="btn btn-primary my-1" style="display: none">
+						<div class="col-md-6">						     		
+				     	</div>
+				     	<div class="col-md-6 alineacion-derecha">
+				     		<div>
+					     		<button type="button" id="btnGrabar" class="btn btn-primary">
+		                  			<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
+					            </button>
+					            
+				              	<button type="button" id="btnAnular" class="btn btn-primary my-1" style="display: none">
 									<span class="mr-2"><i class="fas fa-trash"></i></span>Anular
 								</button>
-							</div>
-						</div>
-
-						<div class="col-md-1">
-							<button type="button" id="btnGrabar" class="btn btn-primary my-1">
-								<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
-							</button>
-						</div>
-
+					        </div>
+				     	</div>
 					</div>
+					
 				</div>
 			</div>
 

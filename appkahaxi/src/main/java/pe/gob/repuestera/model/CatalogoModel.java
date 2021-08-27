@@ -6,13 +6,13 @@ import lombok.Data;
 public class CatalogoModel {
 	private Integer id;
 	
-	private int idDataCatalogo;
+	private Integer idDataCatalogo;
 	private String codMaestro;
 	private String codData;
 	private String descData;	
 	private String codCatalogoPadre;
 	private String codDataPadre;	
-	private int activo;
+	private Integer activo;
 	private String userRegistra;
 	private String userModifica;
 	private String fechaRegistro;	

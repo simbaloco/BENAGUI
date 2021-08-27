@@ -4,8 +4,8 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 */
 /* 
-    Created on : 08/11/2018, 02:57:37 PM
-    Author     : hpaez
+    Created on : 08/11/2020, 02:57:37 PM
+    Author     : vbendezu
 */
 .border-class
 {
@@ -263,4 +263,15 @@ input.form-control.input-validation-error {
     width: 100%;
     position: fixed;
     top: 0;
+}
+
+.etiquetaAnulado {
+	/*pointer-events: none;*/
+	font-weight: bold !important;
+	font-size: medium !important;
+	color: red !important;
+	background-color: wheat !important;
+	text-align: center !important;
+	vertical-align: middle !important;
+	/*opacity: 1;*/
 }

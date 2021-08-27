@@ -204,28 +204,32 @@
 										Seleccione Estado Pago
 									</div>
 								</div>
-						    </div>
-						    
-						    <div class="row">
-								<div class="col-md-10">
+						    	
+						    	<div class="col-md-2">
+									<label class="label" for="lblAnulado">&nbsp;</label>
+									<input class="form-control etiquetaAnulado" type="text" id="lblAnulado" style="display: none" value="ANULADO"/>
 								</div>
+								
+						    	<div class="col-md-4 alineacion-derecha">
+						 			<label class="label"></label>
+						 			<div>
 
-								<div class="col-md-1">
-									<div class="text-center">
-										<button type="button" id="btnLimpiar" class="btn btn-primary my-1">
-											<span class="mr-2"><i class="fas fa-eraser"></i></span>Limpiar
-										</button>
-									</div>
-								</div>
-
-								<div class="col-md-1">
-									<div class="text-center">
-										<button type="button" id="btnVolver" class="btn btn-primary" style="display: none">
-											<span class="mr-2"><i class="fas fa-backspace"></i></span>Volver
-										</button>
-									</div>
-								</div>
+						 				<button type="button" id="btnLimpiar" class="btn btn-primary">
+				                  			<span class="mr-2"><i class="fas fa-eraser"></i></span>Limpiar
+							            </button>
+							            
+							            <button  type="button" id="btnNuevo" class="btn btn-primary" style="display: none">
+				                        	<span class="mr-2"><i class="fas fa-plus-square"></i></span>Nuevo
+				                    	</button >
+							        </div>
+						 		</div>	
 							</div>
+
+							<div class="row">
+						 		<div class="col-md-12">
+						 			<label class="label"></label>
+						 		</div>
+						    </div>
 						</form>
 						</div>
                 	</div>
@@ -371,18 +375,17 @@
 					    </form>
 					    
 					    <div class="row">
-					     	<div class="col-md-6">						     		
+							<div class="col-md-6">						     		
 					     	</div>
 					     	<div class="col-md-6 alineacion-derecha">
 					     		<div>
-						     		<button type="button" id="btnAnular" class="btn btn-primary my-1" style="display: none">
-										<span class="mr-2"><i class="fas fa-trash"></i></span>Anular
-									</button>
-								
 						     		<button type="button" id="btnGrabar" class="btn btn-primary">
 			                  			<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
 						            </button>
 						            
+					              	<button type="button" id="btnAnular" class="btn btn-primary my-1" style="display: none">
+										<span class="mr-2"><i class="fas fa-trash"></i></span>Anular
+									</button>
 						        </div>
 					     	</div>
 						</div>
