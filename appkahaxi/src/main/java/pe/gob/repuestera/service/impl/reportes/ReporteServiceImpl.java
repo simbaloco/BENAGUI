@@ -22,6 +22,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
@@ -36,6 +37,9 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import pe.gob.repuestera.exception.ErrorControladoException;
 import pe.gob.repuestera.model.VentaCabModel;
 import pe.gob.repuestera.repository.reportes.ReporteMapper;
@@ -112,16 +116,31 @@ public class ReporteServiceImpl implements ReporteService{
 	}
 
 	@Override
-	public void generarReporte(String nombreJrxml, String nombreArchivo, Map<String, Object> parametros, List<HashMap> lista, HttpServletResponse response) throws Exception {
+	public void generarReporte(String nombreJrxml, String nombreArchivo, Map<String, Object> parametros, List<HashMap> lista, String tipoReporte, HttpServletResponse response) throws Exception {
 		logger.info("entrando generarReporte.......");
         try {
         	// ARMANDO EL REPORTE
     		JasperPrint jasperPrint = generarReporte(nombreJrxml, lista, parametros);
-    		// GENERANDO REPORTE PDF
-    		response.setContentType("application/x-pdf");
-    		response.setHeader("Content-disposition", "inline; filename=" + nombreArchivo);
-    		final OutputStream outStream = response.getOutputStream();
-    		JasperExportManager.exportReportToPdfStream(jasperPrint, outStream);
+    		
+    		if(tipoReporte.equals("PDF")){
+    			response.setContentType("application/x-pdf");
+    			response.setHeader("Content-disposition", "inline; filename=" + nombreArchivo);
+    			
+    			final OutputStream outStream = response.getOutputStream();
+        		JasperExportManager.exportReportToPdfStream(jasperPrint, outStream);        		
+    		}else {
+    			response.setContentType("application/vnd.ms-excel");
+    			response.setHeader("Content-disposition", "inline; filename=" + nombreArchivo);
+    			
+    			JRXlsExporter  exporter = new JRXlsExporter ();
+    			ServletOutputStream out = response.getOutputStream();
+    			
+    	        exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+    	        exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(out));
+    	        
+    	        exporter.exportReport();
+    	        out.flush();
+    		}    		
         }catch (Exception e) {
         	throw new Exception(e.toString());
 		}
@@ -224,4 +243,222 @@ public class ReporteServiceImpl implements ReporteService{
         
         return recipientAddress;
 	}
+	
+	@Override
+	public List<HashMap> obtenerDetalleReporteCompras(String fechaInicio, String fechaFin, String datoBuscar) throws Exception {
+		logger.info("entrando obtenerDetalleReporteCompras.......");
+		List<HashMap> listaDetalle = null;
+                
+        // seteando parámetros
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_FEC_INICIO, fechaInicio);
+        params.put(Constante.PARAM_SP_FEC_FIN, fechaFin);
+        params.put(Constante.PARAM_SP_DATO_BUSCAR, datoBuscar);
+        
+        // ejecutando la query
+        listaDetalle = reporteMapper.obtenerDetalleReporteCompras(params);
+        
+        logger.info("obtenerDetalleReporteCompras........obteniendo el retorno");	
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        logger.info("obtenerDetalleReporteCompras.......FLAG_RESULTADO------>" + flagResultado);
+		logger.info("obtenerDetalleReporteCompras.......MENSAJE_RESULTADO--->" + mensajeResultado);
+        
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+ 			logger.info("obtenerDetalleReporteCompras ----> success!!!");
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+		
+		return listaDetalle;
+	}
+
+	@Override
+	public List<HashMap> obtenerDetalleReporteKardex(String fechaInicio, String fechaFin, String codAlmacen, String datoBuscar) throws Exception {
+
+		logger.info("entrando obtenerDetalleReporteKardex.......");
+		List<HashMap> listaDetalle = null;
+                
+        // seteando parámetros
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_FEC_INICIO, fechaInicio);
+        params.put(Constante.PARAM_SP_FEC_FIN, fechaFin);
+        params.put(Constante.PARAM_SP_COD_ALMACEN, codAlmacen);
+        params.put(Constante.PARAM_SP_DATO_BUSCAR, datoBuscar);
+        
+        // ejecutando la query
+        listaDetalle = reporteMapper.obtenerDetalleReporteKardex(params);
+        logger.info("obtenerDetalleReporteKardex........obteniendo el retorno");	
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        logger.info("obtenerDetalleReporteKardex.......FLAG_RESULTADO------>" + flagResultado);
+		logger.info("obtenerDetalleReporteKardex.......MENSAJE_RESULTADO--->" + mensajeResultado);
+        
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+ 			logger.info("obtenerDetalleReporteKardex ----> success!!!");
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+		
+		return listaDetalle;
+		
+	}
+
+	@Override
+	public List<HashMap> obtenerDetalleReporteInventario(String codAlmacen, String datoBuscar) throws Exception {
+		
+		logger.info("entrando obtenerDetalleReporteInventario.......");
+		List<HashMap> listaDetalle = null;
+        
+        // seteando parámetros
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_COD_ALMACEN, codAlmacen);
+        params.put(Constante.PARAM_SP_DATO_BUSCAR, datoBuscar);
+        
+        // ejecutando la query
+        listaDetalle = reporteMapper.obtenerDetalleReporteInventario(params);
+        logger.info("obtenerDetalleReporteInventario........obteniendo el retorno");	
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        logger.info("obtenerDetalleReporteInventario.......FLAG_RESULTADO------>" + flagResultado);
+		logger.info("obtenerDetalleReporteInventario.......MENSAJE_RESULTADO--->" + mensajeResultado);
+        
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+ 			logger.info("obtenerDetalleReporteInventario ----> success!!!");
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+		
+		return listaDetalle;
+		
+	}
+
+	@Override
+	public List<HashMap> obtenerDetalleReporteVentas(String fechaInicio, String fechaFin, String datoBuscar)
+			throws Exception {
+		
+		logger.info("entrando obtenerDetalleReporteVentas.......");
+		List<HashMap> listaDetalle = null;
+                
+        // seteando parámetros
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_FEC_INICIO, fechaInicio);
+        params.put(Constante.PARAM_SP_FEC_FIN, fechaFin);
+        params.put(Constante.PARAM_SP_DATO_BUSCAR, datoBuscar);
+        
+        // ejecutando la query
+        listaDetalle = reporteMapper.obtenerDetalleReporteVentas(params);
+                
+        logger.info("obtenerDetalleReporteVentas........obteniendo el retorno");	
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        logger.info("obtenerDetalleReporteVentas.......FLAG_RESULTADO------>" + flagResultado);
+		logger.info("obtenerDetalleReporteVentas.......MENSAJE_RESULTADO--->" + mensajeResultado);
+        
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+ 			logger.info("obtenerDetalleReporteVentas ----> success!!!");
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+		
+		return listaDetalle;		
+	}
+
+	@Override
+	public List<HashMap> obtenerDetalleReporteAnalisisVentas(String fechaInicio, String fechaFin, String opcion)
+			throws Exception {
+		
+		logger.info("entrando obtenerDetallereporteAnalisisVentas.......");
+		List<HashMap> listaDetalle = null;
+                
+        // seteando parámetros
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_FEC_INICIO, fechaInicio);
+        params.put(Constante.PARAM_SP_FEC_FIN, fechaFin);
+        params.put(Constante.PARAM_SP_OPCION, opcion);
+        
+        // ejecutando la query
+        if (opcion.equals("1")) {
+        	listaDetalle = reporteMapper.obtenerDetalleReporteAnalisisVentasCliente(params);
+        }
+        if (opcion.equals("2")) {
+        	listaDetalle = reporteMapper.obtenerDetalleReporteAnalisisVentasArticulo(params);
+        }
+                
+        logger.info("obtenerDetallereporteAnalisisVentas........obteniendo el retorno");	
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        logger.info("obtenerDetallereporteAnalisisVentas.......FLAG_RESULTADO------>" + flagResultado);
+		logger.info("obtenerDetallereporteAnalisisVentas.......MENSAJE_RESULTADO--->" + mensajeResultado);
+        
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+ 			logger.info("obtenerDetallereporteAnalisisVentas ----> success!!!");
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+		
+		return listaDetalle;		
+	}
+
+	@Override
+	public List<HashMap> obtenerDetalleReporteDocumentosAnulados(String fechaInicio, String fechaFin, String codTipo)
+			throws Exception {
+		
+		logger.info("entrando obtenerDetalleReporteDocumentosAnulados.......");
+		List<HashMap> listaDetalle = null;
+                
+        // seteando parámetros
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_FEC_INICIO, fechaInicio);
+        params.put(Constante.PARAM_SP_FEC_FIN, fechaFin);
+        params.put(Constante.PARAM_SP_COD_TIPO, codTipo);
+        
+        // ejecutando la query
+        listaDetalle = reporteMapper.obtenerDetalleReporteDocumentosAnulados(params);
+        logger.info("obtenerDetalleReporteDocumentosAnulados........obteniendo el retorno");	
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        logger.info("obtenerDetalleReporteDocumentosAnulados.......FLAG_RESULTADO------>" + flagResultado);
+		logger.info("obtenerDetalleReporteDocumentosAnulados.......MENSAJE_RESULTADO--->" + mensajeResultado);
+        
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+ 			logger.info("obtenerDetalleReporteDocumentosAnulados ----> success!!!");
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+		
+		return listaDetalle;
+		
+	}
+	
 }

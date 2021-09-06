@@ -210,13 +210,19 @@ var ParametrosGenerales = {
 		RANGO_DIAS_BUSCADOR_FECHAS			: "",
 		RANGO_DIAS_BUSCADOR_FECHAS_INICIO	: "",
 		IGV									: "",
-		RANGO_DIAS_FECHA_VALIDEZ			: ""
+		RANGO_DIAS_FECHA_VALIDEZ			: "",
+		RANGO_DIAS_BUSCADOR_FECHAS_REPORTES : ""
 }
 
 var TipoCampo = {
 		ENTERO		: "E",
 		ALFANUMERICO: "A"
 };
+
+var TipoReporte = {
+		PDF  	: "PDF",
+		EXCEL	: "EXCEL"
+}
 
 function is_chrome(){
 	return navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
@@ -878,6 +884,9 @@ $(document).ready(function () {
 							break;
 				case "07" : // RANGO DE DIAS ENTRE LA FECHA DE CONT Y LA FECHA DE VALIDEZ
 							ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ = newArray[2];
+							break;
+				case "08" : // RANGO DE DIAS REPORTES
+							ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS_REPORTES = newArray[2];
 							break;
 			} 
 		}

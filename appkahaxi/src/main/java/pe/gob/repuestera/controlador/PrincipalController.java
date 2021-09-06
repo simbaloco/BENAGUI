@@ -1115,6 +1115,102 @@ public class PrincipalController {
 		return retorno;
 	}
 	
-	//REPORTES
+	// REPORTES
+		@GetMapping("/reporte-compras")
+	    public String cargarReporteCompras(Model model) {
+			String retorno;
+			try {
+				logger.info("entrando al método cargarReporteCompras");
+				retorno = Constante.PAGINA_REPORTE_COMPRAS;
+				logger.info("saliendo del método cargarReporteCompras");
+			}catch (Exception e) {
+				// TODO: handle exception
+				retorno = Constante.PAGINA_ERROR;
+				model.addAttribute("mensajeError", e.toString());
+			}
+			return retorno;
+	    }
+		
+		@GetMapping("/reporte-ventas")
+	    public String cargarReporteVentas(Model model) {
+			String retorno;
+			try {
+				logger.info("entrando al método cargarReporteVentas");
+				retorno = Constante.PAGINA_REPORTE_VENTAS;
+				logger.info("saliendo del método cargarReporteVentas");
+			}catch (Exception e) {
+				// TODO: handle exception
+				retorno = Constante.PAGINA_ERROR;
+				model.addAttribute("mensajeError", e.toString());
+			}
+			return retorno;
+	    }
+		
+		@GetMapping("/reporte-analisis-ventas")
+	    public String cargarReporteAnalisisVentas(Model model) {
+			String retorno;
+			try {
+				logger.info("entrando al método cargarReporteAnalisisVentas");
+				retorno = Constante.PAGINA_REPORTE_ANALISIS_VENTAS;
+				logger.info("saliendo del método cargarReporteAnalisisVentas");
+			}catch (Exception e) {
+				// TODO: handle exception
+				retorno = Constante.PAGINA_ERROR;
+				model.addAttribute("mensajeError", e.toString());
+			}
+			return retorno;
+	    }
+		
+		@GetMapping("/reporte-kardex")
+	    public String cargarReporteKardex(Model model) {
+			String retorno;
+			try {
+				logger.info("entrando al método cargarReporteKardex");
+				List<AlmacenModel> listaAlmacen = guiaRemisionCompraService.buscarAlmacen();
+				model.addAttribute("listaAlmacen", listaAlmacen);
+				retorno = Constante.PAGINA_REPORTE_KARDEX;
+				logger.info("saliendo del método cargarReporteKardex");
+			}catch (Exception e) {
+				// TODO: handle exception
+				retorno = Constante.PAGINA_ERROR;
+				model.addAttribute("mensajeError", e.toString());
+			}
+			return retorno;
+	    }
+		
+		@GetMapping("/reporte-inventario")
+	    public String cargarReporteInventario(Model model) {
+			String retorno;
+			try {
+				logger.info("entrando al método cargarReporteInventario");
+				List<AlmacenModel> listaAlmacen = guiaRemisionCompraService.buscarAlmacen();
+				model.addAttribute("listaAlmacen", listaAlmacen);
+				retorno = Constante.PAGINA_REPORTE_INVENTARIO;
+				logger.info("saliendo del método cargarReporteInventario");
+			}catch (Exception e) {
+				// TODO: handle exception
+				retorno = Constante.PAGINA_ERROR;
+				model.addAttribute("mensajeError", e.toString());
+			}
+			return retorno;
+	    }
+		
+		@GetMapping("/reporte-anulados")
+	    public String cargarReporteDocumentosAnulados(Model model) {
+			String retorno;
+			try {
+				logger.info("entrando al método cargarReporteDocumentosAnulados");
+				List<ComboModel> listaTipo = genericService.cargarCombo(Constante.CATALOGO_TIPO_DOC_SYSTEM);			
+				model.addAttribute("listaTipo", listaTipo);
+				retorno = Constante.PAGINA_REPORTE_ANULADOS;
+				logger.info("saliendo del método cargarReporteDocumentosAnulados");
+			}catch (Exception e) {
+				// TODO: handle exception
+				retorno = Constante.PAGINA_ERROR;
+				model.addAttribute("mensajeError", e.toString());
+			}
+			return retorno;
+	    }
+	
 
 }

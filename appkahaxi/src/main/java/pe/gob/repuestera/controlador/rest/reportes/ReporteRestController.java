@@ -1,8 +1,11 @@
 package pe.gob.repuestera.controlador.rest.reportes;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.time.LocalDateTime;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -12,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,7 +40,7 @@ public class ReporteRestController {
         
     	logger.info("entrando reporteCotizacionesVenta.......");
     	logger.info("numeroDocumento--->" + numeroDocumento);            
-    	logger.info("enviarCodigo--->" + enviarCodigo);            
+    	logger.info("enviarCodigo--->" + enviarCodigo);      
     	
     	VentaCabModel cotizacionVentaCab = reporteService.obtenerCabeceraCotizacionVenta(numeroDocumento);
         List<HashMap> listaDetalleCotizacionVenta = reporteService.obtenerDetalleCotizacionVenta(numeroDocumento);
@@ -60,7 +64,7 @@ public class ReporteRestController {
  		params.put("FECHA", cotizacionVentaCab.getFechaContabilizacion());
  		params.put("ASUNTO", cotizacionVentaCab.getAsunto());
  		
- 		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalleCotizacionVenta, response);
+ 		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalleCotizacionVenta, "PDF", response);
      		
         logger.info("fin reporteCotizacionesVenta");
     }
@@ -89,6 +93,7 @@ public class ReporteRestController {
  		
  		StringBuilder nombreArchivo = new StringBuilder();
  		nombreArchivo.append("cotizacionVenta-").append(numeroDocumento).append(".pdf");
+ 		
  		// seteando parámetros
         Map<String, Object> params = new HashMap();
  		params.put("NRO_DOCUMENTO", numeroDocumento);
@@ -103,5 +108,227 @@ public class ReporteRestController {
      		
         logger.info("fin enviarEmailReporteCotizacionesVenta");
     }	
+	
+	@PostMapping ("/reporteCompras/")
+    public void reporteCompras(@RequestParam(Constante.PARAM_FECHA_INICIO) String fechaInicio, 
+					    		@RequestParam(Constante.PARAM_FECHA_FIN) String fechaFin,
+					    		@RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar, 
+					    		@RequestParam(Constante.PARAM_TIPO_REPORTE) String tipoReporte, 
+							    HttpServletResponse response) throws Exception{
+        
+    	logger.info("entrando reporteCompras.......");
+    	
+        List<HashMap> listaDetalle = reporteService.obtenerDetalleReporteCompras(fechaInicio, fechaFin, datoBuscar);
+        
+        // GENERANDO EL REPORTE
+        String nombreJrxml;
+        String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
+        
+ 		nombreJrxml = "/reportes/compras/reporte_compras.jrxml"; 		
+ 		StringBuilder nombreArchivo = new StringBuilder();
+ 		 		
+ 		if(tipoReporte.equals("PDF")){
+			nombreArchivo.append("reporteCompras-").append(date).append(".pdf");
+		}else {
+			nombreArchivo.append("reporteCompras-").append(date).append(".xls");
+		}
+ 		
+ 		// seteando parámetros
+        Map<String, Object> params = new HashMap();
+ 		params.put("FEC_INICIO", fechaInicio);
+ 		params.put("FEC_FIN", fechaFin);
+ 		params.put("DATO_BUSCAR", datoBuscar);
+ 		
+ 		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalle, tipoReporte, response);
+ 		
+        logger.info("fin reporteCompras");
+    }
+	
+	@PostMapping ("/reporteKardex/")
+    public void reporteKardex(@RequestParam(Constante.PARAM_FECHA_INICIO) String fechaInicio, 
+					    		@RequestParam(Constante.PARAM_FECHA_FIN) String fechaFin,
+					    		@RequestParam(Constante.PARAM_COD_ALMACEN) String codAlmacen,
+					    		@RequestParam(Constante.PARAM_DES_ALMACEN) String desAlmacen,
+					    		@RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar,
+					    		@RequestParam(Constante.PARAM_TIPO_REPORTE) String tipoReporte, 
+							    HttpServletResponse response) throws Exception{
+        
+    	logger.info("entrando reporteKardex.......");
+    	
+        List<HashMap> listaDetalle = reporteService.obtenerDetalleReporteKardex(fechaInicio, fechaFin, codAlmacen, datoBuscar);
+        
+        // GENERANDO EL REPORTE
+        String nombreJrxml;
+        String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
+        
+ 		nombreJrxml = "/reportes/almacen/reporte_kardex.jrxml";
+ 		StringBuilder nombreArchivo = new StringBuilder();
+ 		
+ 		if(tipoReporte.equals("PDF")){
+			nombreArchivo.append("reporteKardex-").append(date).append(".pdf");
+		}else {
+			nombreArchivo.append("reporteKardex-").append(date).append(".xls");
+		}
+ 		
+ 		// seteando parámetros
+        Map<String, Object> params = new HashMap();
+        params.put("FEC_INICIO", fechaInicio);
+ 		params.put("FEC_FIN", fechaFin);
+ 		params.put("COD_ALMACEN", codAlmacen);
+ 		params.put("DES_ALMACEN", desAlmacen);
+ 		params.put("DATO_BUSCAR", datoBuscar);
+ 		
+ 		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalle, tipoReporte, response);
+     		
+        logger.info("fin reporteKardex");
+    }
+	
+	@PostMapping ("/reporteInventario/")
+    public void reporteInventario(@RequestParam(Constante.PARAM_COD_ALMACEN) String codAlmacen,
+    								@RequestParam(Constante.PARAM_DES_ALMACEN) String desAlmacen,
+						    		@RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar, 
+						    		@RequestParam(Constante.PARAM_TIPO_REPORTE) String tipoReporte, 
+						    		HttpServletResponse response) throws Exception{
+        
+    	logger.info("entrando reporteInventario.......");
+    	    	    	
+        List<HashMap> listaDetalle = reporteService.obtenerDetalleReporteInventario(codAlmacen, datoBuscar);
+        
+        // GENERANDO EL REPORTE
+        String nombreJrxml;
+        String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
+        
+ 		nombreJrxml = "/reportes/almacen/reporte_inventario.jrxml";	
+ 		StringBuilder nombreArchivo = new StringBuilder();
+ 		
+ 		if(tipoReporte.equals("PDF")){
+			nombreArchivo.append("reporteInventario-").append(date).append(".pdf");
+		}else {
+			nombreArchivo.append("reporteInventario-").append(date).append(".xls");
+		}
+ 		
+ 		// seteando parámetros
+        Map<String, Object> params = new HashMap();
+ 		params.put("COD_ALMACEN", codAlmacen);
+ 		params.put("DES_ALMACEN", desAlmacen);
+ 		params.put("DATO_BUSCAR", datoBuscar);
+ 		
+ 		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalle, tipoReporte, response);
+     		
+        logger.info("fin reporteInventario");
+    }
+	
+	@PostMapping ("/reporteVentas/")
+    public void reporteVentas(@RequestParam(Constante.PARAM_FECHA_INICIO) String fechaInicio, 
+					    		@RequestParam(Constante.PARAM_FECHA_FIN) String fechaFin,
+					    		@RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar, 
+					    		@RequestParam(Constante.PARAM_TIPO_REPORTE) String tipoReporte, 
+							    HttpServletResponse response) throws Exception{
+        
+    	logger.info("entrando reporteVentas.......");
+    	
+        List<HashMap> listaDetalle = reporteService.obtenerDetalleReporteVentas(fechaInicio, fechaFin, datoBuscar);
+        
+        // GENERANDO EL REPORTE
+        String nombreJrxml;
+        String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
+        
+ 		nombreJrxml = "/reportes/ventas/reporte_ventas.jrxml"; 		
+ 		StringBuilder nombreArchivo = new StringBuilder();
+ 		 		
+ 		if(tipoReporte.equals("PDF")){
+			nombreArchivo.append("reporteVentas-").append(date).append(".pdf");
+		}else {
+			nombreArchivo.append("reporteVentas-").append(date).append(".xls");
+		}
+ 		
+ 		// seteando parámetros
+        Map<String, Object> params = new HashMap();
+        params.put("FEC_INICIO", fechaInicio);
+ 		params.put("FEC_FIN", fechaFin);
+ 		params.put("DATO_BUSCAR", datoBuscar);
+ 		
+ 		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalle, tipoReporte, response);
+ 		
+        logger.info("fin reporteVentas");
+    }
+	
+	@PostMapping ("/reporteAnalisisVentas/")
+    public void reporteAnalisisVentas(@RequestParam(Constante.PARAM_FECHA_INICIO) String fechaInicio, 
+					    		@RequestParam(Constante.PARAM_FECHA_FIN) String fechaFin,
+					    		@RequestParam(Constante.PARAM_OPCION) String opcion, 
+					    		@RequestParam(Constante.PARAM_TIPO_REPORTE) String tipoReporte, 
+							    HttpServletResponse response) throws Exception{
+        
+    	logger.info("entrando reporteAnalisisVentas.......");
+    	    	
+        List<HashMap> listaDetalle = reporteService.obtenerDetalleReporteAnalisisVentas(fechaInicio, fechaFin, opcion);
+        
+        // GENERANDO EL REPORTE
+        String nombreJrxml = "";
+        String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Calendar.getInstance().getTime()); 
+        
+ 		StringBuilder nombreArchivo = new StringBuilder();
+ 		
+ 		if(opcion.equals("1")){
+ 			nombreJrxml = "/reportes/ventas/reporte_analisis_ventas_cliente.jrxml"; 
+ 		} 		
+ 		if(opcion.equals("2")){
+ 			nombreJrxml = "/reportes/ventas/reporte_analisis_ventas_articulo.jrxml";
+ 		}
+ 		
+ 		if(tipoReporte.equals("PDF")){
+			nombreArchivo.append("analisisVentas-").append(date).append(".pdf");
+		}else {
+			nombreArchivo.append("analisisVentas-").append(date).append(".xls");
+		}
+ 		
+ 		// seteando parámetros
+        Map<String, Object> params = new HashMap();
+        params.put("FEC_INICIO", fechaInicio);
+ 		params.put("FEC_FIN", fechaFin);
+ 		
+ 		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalle, tipoReporte, response);
+ 		
+        logger.info("fin reporteAnalisisVentas");
+    }
+	
+	@PostMapping ("/reporteAnulados/")
+    public void reporteDocumentosAnulados(@RequestParam(Constante.PARAM_FECHA_INICIO) String fechaInicio, 
+					    		@RequestParam(Constante.PARAM_FECHA_FIN) String fechaFin,
+					    		@RequestParam(Constante.PARAM_COD_TIPO) String codTipo,
+					    		@RequestParam(Constante.PARAM_DES_TIPO) String desTipo,
+					    		@RequestParam(Constante.PARAM_TIPO_REPORTE) String tipoReporte, 
+							    HttpServletResponse response) throws Exception{
+        
+    	logger.info("entrando reporteDocumentosAnulados.......");
+    	
+        List<HashMap> listaDetalle = reporteService.obtenerDetalleReporteDocumentosAnulados(fechaInicio, fechaFin, codTipo);
+        
+        // GENERANDO EL REPORTE
+        String nombreJrxml;
+        String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
+ 		
+ 		nombreJrxml = "/reportes/reporte_documentos_anulados.jrxml";
+ 		StringBuilder nombreArchivo = new StringBuilder();
+ 		
+ 		if(tipoReporte.equals("PDF")){
+			nombreArchivo.append("reporteAnulados-").append(date).append(".pdf");
+		}else {
+			nombreArchivo.append("reporteAnulados-").append(date).append(".xls");
+		}
+ 		
+ 		// seteando parámetros
+        Map<String, Object> params = new HashMap();
+        params.put("FEC_INICIO", fechaInicio);
+ 		params.put("FEC_FIN", fechaFin);
+ 		params.put("COD_TIPO", codTipo);
+ 		params.put("DES_TIPO", desTipo);
+ 		
+ 		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalle, tipoReporte, response);
+     		
+        logger.info("fin reporteDocumentosAnulados");
+    }
+	
 	
 }
