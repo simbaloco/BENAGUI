@@ -43,6 +43,7 @@
 	<parameter name="COD_ALMACEN" class="java.lang.String"/>
 	<parameter name="DATO_BUSCAR" class="java.lang.String"/>
 	<parameter name="DES_ALMACEN" class="java.lang.String"/>
+	<parameter name="USUARIO" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT  				'' AS FEC_REGISTRO,
 '' AS TIPO_OPERACION,
@@ -557,7 +558,7 @@
 				<text><![CDATA[Fecha de impresión: ]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy hh:mm:ss">
-				<reportElement x="85" y="8" width="85" height="17" forecolor="#878787" uuid="f0338898-964d-47ab-a47a-7cfa65245ed3">
+				<reportElement x="85" y="8" width="85" height="17" forecolor="#878787" uuid="203d4c29-f051-4fc2-a479-2eae2221d312">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -568,6 +569,20 @@
 					<paragraph leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy hh:mm:ss">
+				<reportElement x="171" y="8" width="185" height="17" forecolor="#878787" uuid="fac65c41-180a-4811-bec0-a570a95a8009">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" /  " + $P{USUARIO}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>
@@ -605,7 +620,7 @@
 				<text><![CDATA[Fecha de impresión: ]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy hh:mm:ss">
-				<reportElement x="85" y="8" width="85" height="17" forecolor="#878787" uuid="fbebeffb-9cbb-4e0b-9a09-e9d307d41df5">
+				<reportElement x="85" y="8" width="85" height="17" forecolor="#878787" uuid="f8a4b22f-150c-491d-bba6-66661d1c7f5f">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -616,6 +631,20 @@
 					<paragraph leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy hh:mm:ss">
+				<reportElement x="171" y="8" width="185" height="17" forecolor="#878787" uuid="6c1665e2-c5c0-4abb-8e5f-3ae62646b0f6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" /  " + $P{USUARIO}]]></textFieldExpression>
 			</textField>
 		</band>
 	</lastPageFooter>

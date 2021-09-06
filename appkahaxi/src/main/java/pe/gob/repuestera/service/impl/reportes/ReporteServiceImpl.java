@@ -248,7 +248,7 @@ public class ReporteServiceImpl implements ReporteService{
 	public List<HashMap> obtenerDetalleReporteCompras(String fechaInicio, String fechaFin, String datoBuscar) throws Exception {
 		logger.info("entrando obtenerDetalleReporteCompras.......");
 		List<HashMap> listaDetalle = null;
-                
+         
         // seteando parámetros
         Map<String, Object> params = new HashMap();
         params.put(Constante.PARAM_SP_FEC_INICIO, fechaInicio);

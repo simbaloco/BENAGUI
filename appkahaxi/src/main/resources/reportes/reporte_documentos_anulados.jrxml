@@ -41,6 +41,7 @@
 	<parameter name="FEC_FIN" class="java.lang.String"/>
 	<parameter name="COD_TIPO" class="java.lang.String"/>
 	<parameter name="DES_TIPO" class="java.lang.String"/>
+	<parameter name="USUARIO" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT  
 kahaxi.tbl_comprobante_pago_compra.`V_NRO_DOCUMENTO` AS "NRO_DOCUMENTO",							
@@ -621,7 +622,7 @@ CLI / PROV]]></text>
 				<text><![CDATA[Fecha de impresión: ]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy hh:mm:ss">
-				<reportElement x="85" y="8" width="85" height="17" forecolor="#878787" uuid="3810e38f-0c09-4b6a-887a-f1c9fddefe07">
+				<reportElement x="85" y="8" width="85" height="17" forecolor="#878787" uuid="c835a7d8-1739-42fb-be16-0fce179f0e5e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -632,6 +633,20 @@ CLI / PROV]]></text>
 					<paragraph leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy hh:mm:ss">
+				<reportElement x="171" y="8" width="185" height="17" forecolor="#878787" uuid="b387984a-3297-47a8-a6c0-7e07b6beef6f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" /  " + $P{USUARIO}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>
@@ -669,7 +684,7 @@ CLI / PROV]]></text>
 				<text><![CDATA[Fecha de impresión: ]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy hh:mm:ss">
-				<reportElement x="85" y="8" width="85" height="17" forecolor="#878787" uuid="d8610b93-97fc-4573-85b2-7de81a9ad150">
+				<reportElement x="85" y="8" width="85" height="17" forecolor="#878787" uuid="fc0b3405-a634-4351-9b18-2ce89e2d9efc">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -680,6 +695,20 @@ CLI / PROV]]></text>
 					<paragraph leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy hh:mm:ss">
+				<reportElement x="171" y="8" width="185" height="17" forecolor="#878787" uuid="a0e1d34b-f363-48ad-bdf7-c36c61d3294b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" /  " + $P{USUARIO}]]></textFieldExpression>
 			</textField>
 		</band>
 	</lastPageFooter>

@@ -40,6 +40,7 @@
 	<parameter name="FEC_INICIO" class="java.lang.String"/>
 	<parameter name="FEC_FIN" class="java.lang.String"/>
 	<parameter name="DATO_BUSCAR" class="java.lang.String"/>
+	<parameter name="USUARIO" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT  
 kahaxi.tbl_comprobante_pago_compra.`V_NRO_DOCUMENTO` AS "NRO_DOCUMENTO",							
@@ -610,7 +611,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<text><![CDATA[Fecha de impresión: ]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy hh:mm:ss">
-				<reportElement x="85" y="8" width="85" height="17" forecolor="#878787" uuid="577ded4d-f85f-4fa6-a7fd-2ddd754b2395">
+				<reportElement x="85" y="8" width="85" height="17" forecolor="#878787" uuid="e4712b76-5b46-4a15-b276-6a80ac6cd57b">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -621,6 +622,20 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 					<paragraph leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy hh:mm:ss">
+				<reportElement x="171" y="8" width="185" height="17" forecolor="#878787" uuid="214e9915-0f60-4701-9bd8-9ebd7c1c2244">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" /  " + $P{USUARIO}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>
@@ -658,7 +673,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<text><![CDATA[Fecha de impresión: ]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy hh:mm:ss">
-				<reportElement x="85" y="8" width="85" height="17" forecolor="#878787" uuid="d4c9bddb-4835-4718-92ad-9d50fe1fe073">
+				<reportElement x="85" y="8" width="85" height="17" forecolor="#878787" uuid="9c7b4d5d-ec40-41d6-8bb1-a2c2a518868a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -669,6 +684,20 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 					<paragraph leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy hh:mm:ss">
+				<reportElement x="171" y="8" width="185" height="17" forecolor="#878787" uuid="ca7610fd-7e8c-42a2-91f1-cc57a0975eae">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" /  " + $P{USUARIO}]]></textFieldExpression>
 			</textField>
 		</band>
 	</lastPageFooter>

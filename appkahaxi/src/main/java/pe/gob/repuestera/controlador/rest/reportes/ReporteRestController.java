@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import pe.gob.repuestera.model.GenericModel;
+import pe.gob.repuestera.model.UsuarioModel;
 import pe.gob.repuestera.model.VentaCabModel;
 import pe.gob.repuestera.service.reportes.ReporteService;
 import pe.gob.repuestera.util.Constante;
@@ -118,6 +119,8 @@ public class ReporteRestController {
         
     	logger.info("entrando reporteCompras.......");
     	
+    	String usuario = ((UsuarioModel)session.getAttribute("usuarioLogueado")).getUsername();
+    	
         List<HashMap> listaDetalle = reporteService.obtenerDetalleReporteCompras(fechaInicio, fechaFin, datoBuscar);
         
         // GENERANDO EL REPORTE
@@ -138,6 +141,7 @@ public class ReporteRestController {
  		params.put("FEC_INICIO", fechaInicio);
  		params.put("FEC_FIN", fechaFin);
  		params.put("DATO_BUSCAR", datoBuscar);
+ 		params.put("USUARIO", usuario);
  		
  		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalle, tipoReporte, response);
  		
@@ -154,6 +158,8 @@ public class ReporteRestController {
 							    HttpServletResponse response) throws Exception{
         
     	logger.info("entrando reporteKardex.......");
+    	
+    	String usuario = ((UsuarioModel)session.getAttribute("usuarioLogueado")).getUsername();
     	
         List<HashMap> listaDetalle = reporteService.obtenerDetalleReporteKardex(fechaInicio, fechaFin, codAlmacen, datoBuscar);
         
@@ -177,6 +183,7 @@ public class ReporteRestController {
  		params.put("COD_ALMACEN", codAlmacen);
  		params.put("DES_ALMACEN", desAlmacen);
  		params.put("DATO_BUSCAR", datoBuscar);
+ 		params.put("USUARIO", usuario);
  		
  		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalle, tipoReporte, response);
      		
@@ -191,7 +198,9 @@ public class ReporteRestController {
 						    		HttpServletResponse response) throws Exception{
         
     	logger.info("entrando reporteInventario.......");
-    	    	    	
+    	    	    
+    	String usuario = ((UsuarioModel)session.getAttribute("usuarioLogueado")).getUsername();
+    	
         List<HashMap> listaDetalle = reporteService.obtenerDetalleReporteInventario(codAlmacen, datoBuscar);
         
         // GENERANDO EL REPORTE
@@ -212,6 +221,7 @@ public class ReporteRestController {
  		params.put("COD_ALMACEN", codAlmacen);
  		params.put("DES_ALMACEN", desAlmacen);
  		params.put("DATO_BUSCAR", datoBuscar);
+ 		params.put("USUARIO", usuario);
  		
  		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalle, tipoReporte, response);
      		
@@ -226,6 +236,8 @@ public class ReporteRestController {
 							    HttpServletResponse response) throws Exception{
         
     	logger.info("entrando reporteVentas.......");
+    	
+    	String usuario = ((UsuarioModel)session.getAttribute("usuarioLogueado")).getUsername();
     	
         List<HashMap> listaDetalle = reporteService.obtenerDetalleReporteVentas(fechaInicio, fechaFin, datoBuscar);
         
@@ -247,6 +259,7 @@ public class ReporteRestController {
         params.put("FEC_INICIO", fechaInicio);
  		params.put("FEC_FIN", fechaFin);
  		params.put("DATO_BUSCAR", datoBuscar);
+ 		params.put("USUARIO", usuario);
  		
  		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalle, tipoReporte, response);
  		
@@ -262,6 +275,8 @@ public class ReporteRestController {
         
     	logger.info("entrando reporteAnalisisVentas.......");
     	    	
+    	String usuario = ((UsuarioModel)session.getAttribute("usuarioLogueado")).getUsername();
+    	
         List<HashMap> listaDetalle = reporteService.obtenerDetalleReporteAnalisisVentas(fechaInicio, fechaFin, opcion);
         
         // GENERANDO EL REPORTE
@@ -287,6 +302,7 @@ public class ReporteRestController {
         Map<String, Object> params = new HashMap();
         params.put("FEC_INICIO", fechaInicio);
  		params.put("FEC_FIN", fechaFin);
+ 		params.put("USUARIO", usuario);
  		
  		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalle, tipoReporte, response);
  		
@@ -302,6 +318,8 @@ public class ReporteRestController {
 							    HttpServletResponse response) throws Exception{
         
     	logger.info("entrando reporteDocumentosAnulados.......");
+    	
+    	String usuario = ((UsuarioModel)session.getAttribute("usuarioLogueado")).getUsername();
     	
         List<HashMap> listaDetalle = reporteService.obtenerDetalleReporteDocumentosAnulados(fechaInicio, fechaFin, codTipo);
         
@@ -324,6 +342,7 @@ public class ReporteRestController {
  		params.put("FEC_FIN", fechaFin);
  		params.put("COD_TIPO", codTipo);
  		params.put("DES_TIPO", desTipo);
+ 		params.put("USUARIO", usuario);
  		
  		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalle, tipoReporte, response);
      		
