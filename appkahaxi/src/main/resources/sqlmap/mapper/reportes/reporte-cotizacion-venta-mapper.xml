@@ -47,10 +47,154 @@
         <result property="SUB_TOTAL" 			column="SUB_TOTAL" />
     </resultMap>
     
+    <resultMap id="repCompraDet" type="hashmap">
+        <result property="NRO_DOCUMENTO" 		column="NRO_DOCUMENTO" />
+        <result property="FEC_CONTABILIZACION" 	column="FEC_CONTABILIZACION" />
+        <result property="ORDEN_COMPRA" 		column="ORDEN_COMPRA" />
+        <result property="COD_PROVEEDOR" 		column="COD_PROVEEDOR" />
+        <result property="NRO_DOC_PROVEEDOR" 	column="NRO_DOC_PROVEEDOR" />
+        <result property="NOMBRE_PROVEEDOR"		column="NOMBRE_PROVEEDOR" />
+        <result property="SERIE"				column="SERIE" />
+        <result property="CORRELATIVO"			column="CORRELATIVO" />
+        <result property="MONEDA"				column="MONEDA" />
+        <result property="SUBTOTAL" 			column="SUBTOTAL" />
+        <result property="IGV"					column="IGV" />
+        <result property="TOTAL"				column="TOTAL" />
+        <result property="ESTADO_PAGO"			column="ESTADO_PAGO" />
+        <result property="ESTADO"				column="ESTADO" />
+        <result property="FEC_REGISTRO" 		column="FEC_REGISTRO" />
+    </resultMap>
+    
+    <resultMap id="repKardexDet" type="hashmap">
+        <result property="FEC_REGISTRO" 	column="FEC_REGISTRO" />
+        <result property="TIPO_OPERACION" 	column="TIPO_OPERACION" />
+        <result property="TIPO_DOCUMENTO" 	column="TIPO_DOCUMENTO" />
+        <result property="NRO_DOCUMENTO" 	column="NRO_DOCUMENTO" />
+        <result property="ALMACEN" 			column="ALMACEN" />
+        <result property="COD_ARTICULO"		column="COD_ARTICULO" />
+        <result property="COD_ESTANDAR"		column="COD_ESTANDAR" />
+        <result property="COD_ANTIGUO"		column="COD_ANTIGUO" />
+        <result property="ARTICULO"			column="ARTICULO" />
+        <result property="N_CANTIDAD"		column="N_CANTIDAD" />       
+    </resultMap>
+    
+    <resultMap id="repInventarioDet" type="hashmap">
+        <result property="ALMACEN" 			column="ALMACEN" />
+        <result property="COD_ARTICULO" 	column="COD_ARTICULO" />
+        <result property="COD_ESTANDAR" 	column="COD_ESTANDAR" />
+        <result property="COD_ANTIGUO" 		column="COD_ANTIGUO" />
+        <result property="ARTICULO" 		column="ARTICULO" />
+        <result property="N_CANTIDAD" 		column="N_CANTIDAD" />
+    </resultMap>
+    
+    <resultMap id="repVentaDet" type="hashmap">
+        <result property="NRO_DOCUMENTO" 		column="NRO_DOCUMENTO" />
+        <result property="FEC_CONTABILIZACION" 	column="FEC_CONTABILIZACION" />
+        <result property="ORDEN_VENTA" 			column="ORDEN_VENTA" />
+        <result property="COD_CLIENTE" 			column="COD_CLIENTE" />
+        <result property="NRO_DOC_CLIENTE"	 	column="NRO_DOC_CLIENTE" />
+        <result property="NOMBRE_CLIENTE"		column="NOMBRE_CLIENTE" />
+        <result property="VENDEDOR"				column="VENDEDOR" />
+        <result property="SERIE"				column="SERIE" />
+        <result property="CORRELATIVO"			column="CORRELATIVO" />
+        <result property="MONEDA"				column="MONEDA" />
+        <result property="SUBTOTAL" 			column="SUBTOTAL" />
+        <result property="IGV"					column="IGV" />
+        <result property="TOTAL"				column="TOTAL" />
+        <result property="ESTADO_PAGO"			column="ESTADO_PAGO" />
+        <result property="ESTADO"				column="ESTADO" />
+        <result property="FEC_REGISTRO" 		column="FEC_REGISTRO" />
+    </resultMap>
+    
+    <resultMap id="repAnalisisVentaDet" type="hashmap">       
+        <result property="COD_CLIENTE" 			column="COD_CLIENTE" />
+        <result property="NRO_DOC_CLIENTE"	 	column="NRO_DOC_CLIENTE" />
+        <result property="NOMBRE_CLIENTE"		column="NOMBRE_CLIENTE" />
+        <result property="TIPO_DOC"				column="TIPO_DOC" />
+        <result property="CANT_DOC"				column="CANT_DOC" />
+        <result property="TOTAL_ML"				column="TOTAL_ML" />
+        <result property="TOTAL_ME"				column="TOTAL_ME" />        
+        <result property="COD_ARTICULO" 		column="COD_ARTICULO" />
+        <result property="COD_ESTANDAR" 		column="COD_ESTANDAR" />
+        <result property="COD_ANTIGUO" 			column="COD_ANTIGUO" />
+        <result property="DESCRIPCION" 			column="DESCRIPCION" />
+		<result property="CANT_ARTI"			column="CANT_ARTI" />
+    </resultMap>
+       
+    
+    <resultMap id="repAnuladosDet" type="hashmap">
+    	<result property="FEC_ANULA" 			column="FEC_ANULA" />
+    	<result property="USER_ANULA" 			column="USER_ANULA" />
+        <result property="NRO_DOC_SISTEMA" 		column="NRO_DOC_SISTEMA" />
+        <result property="FEC_CONTABILIZACION" 	column="FEC_CONTABILIZACION" />
+        <result property="COD_SN" 				column="COD_SN" />
+        <result property="NRO_DOC_SN" 			column="NRO_DOC_SN" />
+        <result property="NOMBRE_SN"			column="NOMBRE_SN" />
+        <result property="TIPO_DOC"				column="TIPO_DOC" />
+        <result property="NRO_DOCUMENTO"		column="NRO_DOCUMENTO" />
+        <result property="MONEDA"				column="MONEDA" />
+        <result property="SUBTOTAL" 			column="SUBTOTAL" />
+        <result property="IGV"					column="IGV" />
+        <result property="TOTAL"				column="TOTAL" />
+    </resultMap>
     
     <!-- ********************* PARAMETERMAPS ********************* -->
     <parameterMap id="cotizacionVentaParams" type="hashmap">
         <parameter property="NRO_DOCUMENTO"			jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="reporteComprasParams" type="hashmap">
+        <parameter property="FEC_INICIO"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_FIN"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="DATO_BUSCAR"        	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="reporteKardexParams" type="hashmap">
+        <parameter property="FEC_INICIO"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_FIN"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_ALMACEN"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="DATO_BUSCAR"        	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="reporteInventarioParams" type="hashmap">
+        <parameter property="COD_ALMACEN"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="DATO_BUSCAR"        	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="reporteVentasParams" type="hashmap">
+        <parameter property="FEC_INICIO"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_FIN"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="DATO_BUSCAR"        	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="reporteAnalisisVentasClienteParams" type="hashmap">
+        <parameter property="FEC_INICIO"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_FIN"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="reporteAnalisisVentasArticuloParams" type="hashmap">
+        <parameter property="FEC_INICIO"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_FIN"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="reporteDocumentosAnuladosParams" type="hashmap">
+        <parameter property="FEC_INICIO"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_FIN"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_TIPO"		       	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
         <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
     </parameterMap>
@@ -65,4 +209,32 @@
       {CALL SP_REP_DET_COTIZACION_VENTA(?,?,?) }
     </select>
     
+    <select id="obtenerDetalleReporteCompras" parameterMap="reporteComprasParams" resultMap="repCompraDet" statementType="CALLABLE">
+      {CALL SP_REPORTE_COMPRAS(?,?,?,?,?) }
+    </select>
+    
+    <select id="obtenerDetalleReporteKardex" parameterMap="reporteKardexParams" resultMap="repKardexDet" statementType="CALLABLE">
+      {CALL SP_REPORTE_KARDEX(?,?,?,?,?,?) }
+    </select>
+    
+    <select id="obtenerDetalleReporteInventario" parameterMap="reporteInventarioParams" resultMap="repInventarioDet" statementType="CALLABLE">
+      {CALL SP_REPORTE_INVENTARIO(?,?,?,?) }
+    </select>
+    
+    <select id="obtenerDetalleReporteVentas" parameterMap="reporteVentasParams" resultMap="repVentaDet" statementType="CALLABLE">
+      {CALL SP_REPORTE_VENTAS(?,?,?,?,?) }
+    </select>
+    
+    <select id="obtenerDetalleReporteAnalisisVentasCliente" parameterMap="reporteAnalisisVentasClienteParams" resultMap="repAnalisisVentaDet" statementType="CALLABLE">
+      {CALL SP_REPORTE_ANALISIS_VENTAS_CLIENTE(?,?,?,?) }
+    </select>
+    
+    <select id="obtenerDetalleReporteAnalisisVentasArticulo" parameterMap="reporteAnalisisVentasArticuloParams" resultMap="repAnalisisVentaDet" statementType="CALLABLE">
+      {CALL SP_REPORTE_ANALISIS_VENTAS_ARTICULO(?,?,?,?) }
+    </select>
+    
+    <select id="obtenerDetalleReporteDocumentosAnulados" parameterMap="reporteDocumentosAnuladosParams" resultMap="repAnuladosDet" statementType="CALLABLE">
+      {CALL SP_REPORTE_DOCUMENTOS_ANULADOS(?,?,?,?,?) }
+    </select>
+        
 </mapper>

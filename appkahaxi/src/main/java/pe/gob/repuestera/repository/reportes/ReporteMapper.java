@@ -15,5 +15,12 @@ public interface ReporteMapper {
 
 	public VentaCabModel obtenerCabeceraCotizacionVenta(Map params);
 	public List<HashMap> obtenerDetalleCotizacionVenta(Map params);
+	public List<HashMap> obtenerDetalleReporteCompras(Map params);
+	public List<HashMap> obtenerDetalleReporteKardex(Map params);
+	public List<HashMap> obtenerDetalleReporteInventario(Map params);
+	public List<HashMap> obtenerDetalleReporteVentas(Map params);
+	public List<HashMap> obtenerDetalleReporteAnalisisVentasCliente(Map params);
+	public List<HashMap> obtenerDetalleReporteAnalisisVentasArticulo(Map params);
+	public List<HashMap> obtenerDetalleReporteDocumentosAnulados(Map params);
 	
 }

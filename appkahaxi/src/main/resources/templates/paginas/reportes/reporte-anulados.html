@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragments/layout}" lang="en">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script th:src="@{/js/reportes/gui-reporte-anulados.js}" ></script>
+    
+</head>
+
+
+<body>
+    <div layout:fragment="content" th:remove="tag">
+        
+        <div class="kahaxi_titulo">
+			<div class="kahaxi_titulo_container">
+		    	<div class="kahaxi_titulo_logo"><i class="fas fa-search"></i></div>
+		        <div class="kahaxi_titulo_text">RESUMEN DE DOCUMENTOS ANULADOS</div>
+		    </div>
+		   	<div class="subrayado"></div>
+			<br>
+		</div>
+		
+		<div class="box bg-box" id="accordionPrincipal">
+		    	<div class="box-body">
+		    		<div class="card">
+		                <div class="card-header quitar-contornos" id="headingOne">
+					        <h2 class="mb-0">
+						        <button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseOne"  aria-expanded="true" aria-controls="collapseOne">
+				                    <i class="fas fa-angle-up"></i><span>Criterios de búsqueda</span>
+				                    <div class="subrayado"></div>
+				                </button>
+			                </h2>
+			            </div>
+	                
+		                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionPrincipal">
+		                	<div class="card-body">
+		                    <form id="formSocioNegocio" class="needs-validation" novalidate>
+						 	 	
+						 	 	<div class="row">
+							 		 	 		
+							 		<div class="col-sm-2">
+							 			<label class="label" for="fecInicio">Fecha desde:</label>
+							 			<div class="input-group date" id="fecInicio" data-target-input="nearest">
+							          		<input type="text" class="form-control datetimepicker-input" data-target="#fecInicio" id="fInicio" readonly="readonly"/>
+							          		<div class="input-group-append" data-target="#fecInicio" data-toggle="datetimepicker">
+						                  		<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+						                  	</div>
+						              	</div>
+							 		</div>
+								    
+							 		<div class="col-sm-2">
+							 			<label class="label" for="fecFin">Fecha hasta:</label>
+							 			<div class="input-group date" id="fecFin" data-target-input="nearest">
+							          		<input type="text" class="form-control datetimepicker-input" data-target="#fecFin" id="fFin" readonly="readonly"/>
+						                  	<div class="input-group-append" data-target="#fecFin" data-toggle="datetimepicker">
+						                  		<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+						                  	</div>
+						              	</div>
+							 		</div>
+							 		
+							 		<div class="col-md-2">
+							 		  	<label class="label" for="tipo">Tipo Doc. sistema:</label>
+							 		  	<select id="tipo" class="form-control">
+											<option value="" >-- TODOS --</option>
+											<option th:each="item : ${listaTipo}"
+										            th:value="${item.codigo}" 
+										            th:text="${item.descripcion}"
+										            th:selected="${item.codigo} == ${tipoParam} ? true : false">
+										    </option>
+										</select>
+							 		</div>
+							 		
+							        <div class="col-md-6 alineacion-derecha">
+							 			<label></label>
+							 			<div>
+								 			<button  type="button" id="btnExportalExcel" class="btn btn-outline-success btn-xs">
+							                   <span class="mr-2"><i class="far fa-file-excel"></i></span>Excel
+							                </button>
+							                
+							                <button  type="button" id="btnExportalPdf" class="btn btn-outline-danger btn-xs">
+					                        	<span class="mr-2"><i class="far fa-file-pdf"></i></span>PDF
+					                    	</button >
+						              	</div>
+							 		</div>
+							 		
+							    </div>
+							    
+							</form>
+							</div>
+	                	</div>
+	            	</div>
+	          	</div>
+		</div>
+			    	    	      
+    </div>
+</body>
+
+</html>
