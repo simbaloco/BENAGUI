@@ -13,6 +13,7 @@ var fechaDesde;
 var fechaHasta;
 var estadoParam;
 var volverParam;
+var desdeOCParam;
 
 var formGuiaRemision;
 var OCReferencia;
@@ -92,6 +93,7 @@ function inicializarVariables() {
 	fechaHasta =  $("#fechaHasta");
 	estadoParam =  $("#estadoParam");
 	volverParam =  $("#volverParam");
+	desdeOCParam =  $("#desdeOCParam");
 
 	formGuiaRemision = $("#formGuiaRemision");
 	OCReferencia = $("#OCReferencia");
@@ -165,14 +167,6 @@ function inicializarPantalla() {
 		inicializarTablaDetalle(false);
 		cargarPantallaConDatosGuiaRemision();
 	}
-}
-
-function habilitarAnimacionAcordion() {
-	$(".collapse").on('show.bs.collapse', function(){
-    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-up');
-    }).on('hide.bs.collapse', function(){
-    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-down');
-    });
 }
 
 function construirFechasPicker() {
@@ -375,6 +369,7 @@ function nuevaPantallaGuiaRemision() {
 	deshabilitarControl(tipoMoneda);
 	deshabilitarControl(condPago);
 	deshabilitarControl(dias);
+	mostrarControl(btnVolver);
 
 	$("#tableDetalle tbody tr").find(".btn-delete").prop("disabled", false);
 	
@@ -383,8 +378,15 @@ function nuevaPantallaGuiaRemision() {
 
 function cargarPantallaConDatosGuiaRemision() {
 
-	var nroDocReferenciaVal = numeroDocumento.text();
-
+	var nroDocReferenciaVal; 
+	var desdeOC = desdeOCParam.text();
+	
+	if(desdeOC == Respuesta.SI){
+		nroDocReferenciaVal = nroGuiaRemision.text();
+	}else{
+		nroDocReferenciaVal = numeroDocumento.text();
+	}
+	
 	$.ajax({
 		type:"Get",
 		contentType : "application/json",
@@ -466,8 +468,15 @@ function cargarPantallaHTMLGuiaRemision(data) {
 function verPantallaGuiaRemision(data) {
 
 	titulo.text("VER");
-	codigo.html(numeroDocumento.text());
-
+	
+	var desdeOC 	= desdeOCParam.text();
+	
+	if(desdeOC == Respuesta.SI){
+		codigo.html(nroGuiaRemision.text());
+	}else{
+		codigo.html(numeroDocumento.text());
+	}
+	
 	fecConta.datetimepicker('date', moment(data.fechaContabilizacion));
 	fecDocumento.datetimepicker('date', moment(data.fechaDocumento));
 	fecEntrega.datetimepicker('date', moment(data.fechaEntrega));
@@ -507,7 +516,11 @@ function verPantallaGuiaRemision(data) {
 		mostrarControl(lblAnulado);
 	}
 	
-	mostrarControl(btnVolver);
+	var volver = volverParam.text();
+	if(volver == Respuesta.SI){
+		mostrarControl(btnVolver);
+	}
+	
 	ocultarControl(btnGrabar);
 	ocultarControl(btnLimpiar);
 
@@ -686,8 +699,13 @@ function cantidadKeyDown(e, fila){
 		console.log("indiceFilaDataTableDetalle-->" + indiceFilaDataTableDetalle);
 		
 		if(indiceFilaDataTableDetalle >= nuevaFila){
-			console.log("pasando a la sgte fila...");
-			$('#cantidad_' + nuevaFila).select();	
+			var nuevaFilaReal = nuevaFila;
+			// iteramos mientras encontremos filas que se hayan eliminado
+			while($('#cantidad_' + nuevaFilaReal).val() == UNDEFINED){
+				nuevaFilaReal++;
+			}
+			// encontramos la sgte fila hábil
+			$('#cantidad_' + nuevaFilaReal).select();
 		}
 	}
 }
@@ -1271,12 +1289,14 @@ function obtenerDetalleFacturasPorGuiaRemision(event){
 					"width": "30px",
 					"targets": [1],
 					"data": "fechaDocumento",
+					"className": "dt-center",
 					"orderable": false
 				},
 				{
 					"width": "30px",
 					"targets": [2],
 					"data": "fechaContabilizacion",
+					"className": "dt-center",
 					"orderable": false
 				},
 				{
@@ -1319,6 +1339,7 @@ function obtenerDetalleFacturasPorGuiaRemision(event){
 					"width": "10px",
 					"targets": [7],
 					"data": "descripcionEstadoPago",
+					"className": "dt-center",
 					"orderable": false
 				}
 			],
@@ -1399,20 +1420,30 @@ function volver(){
 	var params;
 	var dato 		= datoBuscar.text();
 	var nroGR 		= nroGuiaRemision.text();
-	var nroOC 		= nroOrdenCompra.text();
+	var nroOC 		= nroOrdenCompra.text();// este debe ser el valor del campo a buscar en el filtro de oc en el mantenimiento de oc 
 	var codRpto 	= codRepuesto.text();
 	var fecDesde 	= fechaDesde.text();
 	var fecHasta 	= fechaHasta.text();
 	var estParam	= estadoParam.text();
-
-	params = "datoBuscar=" + dato + "&nroGuiaRemision=" + nroGR + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
-			 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam;
-	window.location.href = "/appkahaxi/mantenimiento-guia-remision-compra?" + params;
+	var nroDoc		= numeroDocumento.text(); // este debe ser la OC
+	var desdeOC 	= desdeOCParam.text();
+	
+	if(desdeOC == Respuesta.SI){
+		
+		params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
+			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI;
+		window.location.href = "/appkahaxi/nueva-orden-compra?" + params;
+	}else{
+		
+		params = "datoBuscar=" + dato + "&nroGuiaRemision=" + nroGR + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
+			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam;
+		window.location.href = "/appkahaxi/mantenimiento-guia-remision-compra?" + params;	
+	}
 }
 
 function cargarFacturaAsociada(numeroDocumento, opcion) {
 
-	var params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=&fechaDesde=&fechaHasta=&estadoParam=&guias=&volver=" + Volver.NO;
+	var params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=&fechaDesde=&fechaHasta=&estadoParam=&guias=&volver=" + Respuesta.NO;
 
 	window.location.href = "/appkahaxi/nueva-factura-compra-asociada?" + params;
 }

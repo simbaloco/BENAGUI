@@ -54,14 +54,6 @@ function inicializarPantalla() {
 	campoBuscar.focus();
 }
 
-function habilitarAnimacionAcordion() {
-	$(".collapse").on('show.bs.collapse', function(){
-    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-up');
-    }).on('hide.bs.collapse', function(){
-    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-down');
-    });
-}
-
 function inicializarEventos(){
 	campoBuscar.on('keyup', function (e) {
 		campoBuscarKeyUp();
@@ -273,7 +265,7 @@ function cargarSocioNegocio(codigoSn, opcion){
 	var tipoSoc			= tipoSocio.text()
 
 	// armando los parámetros
-	params = "codigoSocio=" + codigoSn + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar + "&tipoDoc=" + tipoDoc + "&tipoSn=" + tipoSoc + "&volver=" + Volver.SI;
+	params = "codigoSocio=" + codigoSn + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar + "&tipoDoc=" + tipoDoc + "&tipoSn=" + tipoSoc + "&volver=" + Respuesta.SI;
 
 	window.location.href = "/appkahaxi/nuevo-proveedor?" + params;
 }

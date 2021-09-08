@@ -164,16 +164,6 @@ function inicializarPantalla() {
 
 }
 
-function habilitarAnimacionAcordion() {
-	$(".collapse").on('show.bs.collapse', function() {
-		$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-up');
-	}).on('hide.bs.collapse', function() {
-		$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-down');
-	});
-}
-
-
-
 /**************** FUNCIONES DE SOPORTE ***********************************************************
  *************************************************************************************************/
 
@@ -201,7 +191,7 @@ function cargarPantallaNueva() {
 	codigoSocio.text('');
 
 	var volver = $('#volverParam').text();
-	if (volver == Volver.SI) {
+	if (volver == Respuesta.SI) {
 		mostrarControl(btnVolver);
 	}
 

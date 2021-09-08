@@ -186,14 +186,15 @@ public class PrincipalController {
 									 @RequestParam(Constante.PARAM_FECHA_DESDE) String fechaDesde,
 									 @RequestParam(Constante.PARAM_FECHA_HASTA) String fechaHasta,
 									 @RequestParam(Constante.PARAM_ESTADO) String estadoParam,
-									 @RequestParam(Constante.PARAM_VOLVER) String volver) {
+									 @RequestParam(Constante.PARAM_VOLVER) String volver,
+									 @RequestParam(Constante.PARAM_DESDE_OC) String desdeOC) {
 		
 		String retorno;
 		try {
 			logger.info("entrando al método cargarGuiaRemisionCompra, OPCION--->" + opcion + "/numeroDocumento-->" + numeroDocumento + "/datoBuscar-->" + datoBuscar
 					+ "/nroGuiaRemision-->" + nroGuiaRemision + "/nroOrdenCompra-->" + nroOrdenCompra + "/codRepuesto-->" + codRepuesto 
 					+ "/fechaDesde-->" + fechaDesde + "/fechaHasta-->" + fechaHasta
-					+ "/estadoParam-->" + estadoParam + "/volver-->" + volver);
+					+ "/estadoParam-->" + estadoParam + "/volver-->" + volver + "/desdeOC-->" + desdeOC);
 			model.addAttribute("numeroDocumento", numeroDocumento);
 			model.addAttribute("opcion", opcion);
 			model.addAttribute("datoBuscar", datoBuscar);
@@ -204,6 +205,7 @@ public class PrincipalController {
 			model.addAttribute("fechaHasta", fechaHasta);
 			model.addAttribute("estadoParam", estadoParam);
 			model.addAttribute("volver", volver);
+			model.addAttribute("desdeOC", desdeOC);
 			// llenando los combos
 			List<ComboModel> listaMoneda = genericService.cargarCombo(Constante.CATALOGO_MONEDA);
 			List<ComboModel> listaCondPago = genericService.cargarCombo(Constante.CATALOGO_CONDICION_PAGO);
@@ -300,18 +302,26 @@ public class PrincipalController {
 	public String cargarFacturaCompraDirecta(Model model, @RequestParam(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento,
 									 @RequestParam(Constante.PARAM_OPCION) String opcion,
 									 @RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar,
+									 @RequestParam(Constante.PARAM_NRO_COMPROBANTE_PAGO) String nroComprobantePago,
+									 @RequestParam(Constante.PARAM_NRO_ORDEN_COMPRA) String nroOrdenCompra,
+									 @RequestParam(Constante.PARAM_COD_REPUESTO) String codRepuesto,
 									 @RequestParam(Constante.PARAM_FECHA_DESDE) String fechaDesde,
 									 @RequestParam(Constante.PARAM_FECHA_HASTA) String fechaHasta,
 									 @RequestParam(Constante.PARAM_ESTADO) String estadoParam,
 									 @RequestParam(Constante.PARAM_VOLVER) String volver) {
 		String retorno;
 		try {
-			logger.info("entrando al método cargarFacturaCompraDirecta, OPCION--->" + opcion + "/numeroDocumento-->" + numeroDocumento + "/datoBuscar-->" + datoBuscar
-					+ "/fechaDesde-->" + fechaDesde + "/fechaHasta-->" + fechaHasta
+			logger.info("entrando al método cargarFacturaCompraDirecta, OPCION--->" + opcion + "/numeroDocumento-->" + numeroDocumento 
+					+ "/datoBuscar-->" + datoBuscar + "/nroComprobantePago-->" + nroComprobantePago + "/nroOrdenCompra-->" + nroOrdenCompra
+					+ "/codRepuesto-->" + codRepuesto + "/fechaDesde-->" + fechaDesde + "/fechaHasta-->" + fechaHasta
 					+ "/estadoParam-->" + estadoParam + "/volver-->" + volver);
+			
 			model.addAttribute("numeroDocumento", numeroDocumento);
 			model.addAttribute("opcion", opcion);
 			model.addAttribute("datoBuscar", datoBuscar);
+			model.addAttribute("nroComprobantePago", nroComprobantePago);
+			model.addAttribute("nroOrdenCompra", nroOrdenCompra);
+			model.addAttribute("codRepuesto", codRepuesto);
 			model.addAttribute("fechaDesde", fechaDesde);
 			model.addAttribute("fechaHasta", fechaHasta);
 			model.addAttribute("estadoParam", estadoParam);
@@ -1115,6 +1125,102 @@ public class PrincipalController {
 		return retorno;
 	}
 	
+	// REPORTES
+		@GetMapping("/reporte-compras")
+	    public String cargarReporteCompras(Model model) {
+			String retorno;
+			try {
+				logger.info("entrando al método cargarReporteCompras");
+				retorno = Constante.PAGINA_REPORTE_COMPRAS;
+				logger.info("saliendo del método cargarReporteCompras");
+			}catch (Exception e) {
+				// TODO: handle exception
+				retorno = Constante.PAGINA_ERROR;
+				model.addAttribute("mensajeError", e.toString());
+			}
+			return retorno;
+	    }
+		
+		@GetMapping("/reporte-ventas")
+	    public String cargarReporteVentas(Model model) {
+			String retorno;
+			try {
+				logger.info("entrando al método cargarReporteVentas");
+				retorno = Constante.PAGINA_REPORTE_VENTAS;
+				logger.info("saliendo del método cargarReporteVentas");
+			}catch (Exception e) {
+				// TODO: handle exception
+				retorno = Constante.PAGINA_ERROR;
+				model.addAttribute("mensajeError", e.toString());
+			}
+			return retorno;
+	    }
+		
+		@GetMapping("/reporte-analisis-ventas")
+	    public String cargarReporteAnalisisVentas(Model model) {
+			String retorno;
+			try {
+				logger.info("entrando al método cargarReporteAnalisisVentas");
+				retorno = Constante.PAGINA_REPORTE_ANALISIS_VENTAS;
+				logger.info("saliendo del método cargarReporteAnalisisVentas");
+			}catch (Exception e) {
+				// TODO: handle exception
+				retorno = Constante.PAGINA_ERROR;
+				model.addAttribute("mensajeError", e.toString());
+			}
+			return retorno;
+	    }
+		
+		@GetMapping("/reporte-kardex")
+	    public String cargarReporteKardex(Model model) {
+			String retorno;
+			try {
+				logger.info("entrando al método cargarReporteKardex");
+				List<AlmacenModel> listaAlmacen = guiaRemisionCompraService.buscarAlmacen();
+				model.addAttribute("listaAlmacen", listaAlmacen);
+				retorno = Constante.PAGINA_REPORTE_KARDEX;
+				logger.info("saliendo del método cargarReporteKardex");
+			}catch (Exception e) {
+				// TODO: handle exception
+				retorno = Constante.PAGINA_ERROR;
+				model.addAttribute("mensajeError", e.toString());
+			}
+			return retorno;
+	    }
+		
+		@GetMapping("/reporte-inventario")
+	    public String cargarReporteInventario(Model model) {
+			String retorno;
+			try {
+				logger.info("entrando al método cargarReporteInventario");
+				List<AlmacenModel> listaAlmacen = guiaRemisionCompraService.buscarAlmacen();
+				model.addAttribute("listaAlmacen", listaAlmacen);
+				retorno = Constante.PAGINA_REPORTE_INVENTARIO;
+				logger.info("saliendo del método cargarReporteInventario");
+			}catch (Exception e) {
+				// TODO: handle exception
+				retorno = Constante.PAGINA_ERROR;
+				model.addAttribute("mensajeError", e.toString());
+			}
+			return retorno;
+	    }
+		
+		@GetMapping("/reporte-anulados")
+	    public String cargarReporteDocumentosAnulados(Model model) {
+			String retorno;
+			try {
+				logger.info("entrando al método cargarReporteDocumentosAnulados");
+				List<ComboModel> listaTipo = genericService.cargarCombo(Constante.CATALOGO_TIPO_DOC_SYSTEM);			
+				model.addAttribute("listaTipo", listaTipo);
+				retorno = Constante.PAGINA_REPORTE_ANULADOS;
+				logger.info("saliendo del método cargarReporteDocumentosAnulados");
+			}catch (Exception e) {
+				// TODO: handle exception
+				retorno = Constante.PAGINA_ERROR;
+				model.addAttribute("mensajeError", e.toString());
+			}
+			return retorno;
+	    }
 	
 
 }

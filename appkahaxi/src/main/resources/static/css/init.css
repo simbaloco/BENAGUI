@@ -717,7 +717,7 @@ pre code {
 }
 
 .modal-dialog-personalizado-medium {
-    max-width:50%;
+    max-width:75%;
     margin:1.75rem auto;
 }
 
@@ -12673,5 +12673,3 @@ html{
 .btn-outline-primary:hover{
     color:white !important;
 }
-
-/*# sourceMappingURL=custom.css.map */

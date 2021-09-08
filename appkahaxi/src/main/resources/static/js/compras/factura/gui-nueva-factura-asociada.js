@@ -142,14 +142,6 @@ function inicializarPantalla() {
 	}
 }
 
-function habilitarAnimacionAcordion() {
-	$(".collapse").on('show.bs.collapse', function(){
-    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-up');
-    }).on('hide.bs.collapse', function(){
-    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-down');
-    });
-}
-
 function construirFechasPicker() {
 
 	fecConta.datetimepicker({
@@ -513,7 +505,7 @@ function verPantallaFactura(data) {
 	deshabilitarControl(serie);
 	deshabilitarControl(correlativo);
 
-	if(volverParam.text() == Volver.NO) {
+	if(volverParam.text() == Respuesta.NO) {
 
 		ocultarControl(btnVolver);
 
@@ -906,6 +898,9 @@ function registrarFacturaCompra(){
 					ocultarControl(btnGrabar);
 					ocultarControl(btnLimpiar);
 
+					// si se grabó con estado PENDIENTE, cambiar a opción = VER
+					opcion.text(Opcion.VER);
+					
 					deshabilitarDetalleFactura();
 
 				} else {
@@ -1102,15 +1097,12 @@ function mostrarOcultarBotonAnular() {
 
 	var estadoPagoVal = estadoPago.val();
 
-	if(opcion.text() == Opcion.VER) {
-
-		if(estadoPagoVal == EstadoPago.PAGADO){
-			ocultarControl(btnAnular);
-			mostrarControl(btnGrabar);
-		} else{
-			mostrarControl(btnAnular);
-			ocultarControl(btnGrabar);
-		}
+	if(estadoPagoVal == EstadoPago.PAGADO){
+		ocultarControl(btnAnular);
+		mostrarControl(btnGrabar);
+	} else{
+		mostrarControl(btnAnular);
+		ocultarControl(btnGrabar);
 	}
 }
 

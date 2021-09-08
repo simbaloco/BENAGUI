@@ -17,6 +17,7 @@ var btnLimpiar;
 var tablaGuiaRemision;
 var dataTableGuiaRemision;
 
+var esLimpiar = false;
 /**************** CARGA INICIAL DE FORMULARIO ****************************************************
  *************************************************************************************************/
 
@@ -32,6 +33,7 @@ function inicializarVariables() {
 	nroGuia = $('#nroGuia');
 	nroOC = $('#nroOC');
 	codRepuesto = $('#codRepuesto');
+	
 	fecContaDesde = $('#fecContaDesde');
 	fecContaHasta = $('#fecContaHasta');
 	
@@ -52,7 +54,7 @@ function inicializarComponentes() {
 	habilitarAnimacionAcordion();
 	construirFechasPicker();
 	retringirSeleccionFechas();
-	//inicializarFechaContaDesdeHasta();
+	inicializarFechaContaDesdeHasta();
 	
 	inicializarEventos();
 	inicializarTabla();
@@ -62,85 +64,77 @@ function inicializarPantalla() {
 	campoBuscar.focus();
 }
 
-function habilitarAnimacionAcordion() {
-	$(".collapse").on('show.bs.collapse', function(){
-    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-up');
-    }).on('hide.bs.collapse', function(){
-    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-down');
-    });
-}
-
 function construirFechasPicker() {
-	console.log("construirFechasPicker...");
 	fecContaHasta.datetimepicker({
 		locale: 		'es',
 		format: 		'L',
-		maxDate:		new Date(),
-		ignoreReadonly:  true,
-		//minDate:		moment(new Date()).add(-ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS_INICIO , 'day'),
-		//date: 			new Date()
-		date: 			moment(new Date())
+		ignoreReadonly: true,
+		date:			moment(),
+		maxDate:		moment()
     });
 
     fecContaDesde.datetimepicker({
 		locale: 		'es',
 		format: 		'L',
-		maxDate:		new Date(),
-		ignoreReadonly:  true,
-		date:			moment(new Date()).add(-ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS_INICIO , 'day')
+		ignoreReadonly: true,
+		date:			moment().add(-ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS_INICIO , 'day'),
+		maxDate:		moment()
     });
 }
 
+function retringirSeleccionFechas() {
+	
+	fecContaDesde.on("change.datetimepicker", function (e) {
+		if(!esLimpiar){
+			if(validarFechas()){
+				fecContaHasta.datetimepicker('minDate', e.date);
+				buscar(e);
+				
+			}else{
+				mostrarDialogoInformacion("El rango de fechas es máximo de 3 meses.", Boton.WARNING);
+				fecContaDesde.datetimepicker('date', e.oldDate);
+			}	
+		}
+    });
+	
+    fecContaHasta.on("change.datetimepicker", function (e) {
+		if(!esLimpiar){
+			if(validarFechas()){
+				fecContaDesde.datetimepicker('maxDate', e.date);
+				buscar(e);
+				
+			}else{
+				mostrarDialogoInformacion("El rango de fechas es máximo de 3 meses.", Boton.WARNING);
+				fecContaHasta.datetimepicker('date', e.oldDate);
+			}
+		}
+    });
+}
+
+function inicializarFechaContaDesdeHasta(){
+	
+	if(fechaDesde.text() != '' || fechaHasta.text() != ''){
+		fecContaHasta.datetimepicker('date', fechaHasta.text() == '' ? moment() : fechaHasta.text());
+		fecContaHasta.datetimepicker('maxDate', moment());
+		
+		var fecContaHastaVal = fecContaHasta.datetimepicker('date');
+		var nuevaFecContaDesdeVal 	= moment(fecContaHastaVal).add(-ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS_INICIO , 'day');
+		fecContaDesde.datetimepicker('date', fechaDesde.text() == '' ? nuevaFecContaDesdeVal : fechaDesde.text());
+		fecContaDesde.datetimepicker('maxDate', moment());
+	}
+}
+
 function validarFechas(){
-	console.log("validarFechas...");
 	
 	var fecContaDesdeVal = moment(fecContaDesde.datetimepicker('date'));
 	var fecContaHastaVal = moment(fecContaHasta.datetimepicker('date'));
 	var diferencia = fecContaHastaVal.diff(fecContaDesdeVal, 'days');
 	console.log("diferencia--->" + diferencia);
 	if(diferencia > ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS){
-		console.log("dif > 90, falso-....")
 		return false;
 	}else{
-		console.log("dif <= 90, true....")
 		return true;
-	}
-}
-
-function retringirSeleccionFechas() {
-	console.log("retringirSeleccionFechas...");
-	
-	fecContaDesde.on("change.datetimepicker", function (e) {
-		console.log("entrando change fec desde....")
-		if(validarFechas()){
-			fecContaHasta.datetimepicker('minDate', e.date);
-			console.log("change desde....")
-			buscar(e);
-		}else{
-			mostrarDialogoInformacion("El rango de fechas es máximo de 3 meses.", Boton.WARNING);
-			fecContaDesde.datetimepicker('date', e.oldDate);
-		}
-    });
-	
-    fecContaHasta.on("change.datetimepicker", function (e) {
-		console.log("entrando change fec hasta....")
-		if(validarFechas()){
-			fecContaDesde.datetimepicker('maxDate', e.date);
-			console.log("change hasta....")
-			buscar(e);
-		}else{
-			mostrarDialogoInformacion("El rango de fechas es máximo de 3 meses.", Boton.WARNING);
-			fecContaHasta.datetimepicker('date', e.oldDate);
-		}
-    });
-}
-
-function inicializarFechaContaDesdeHasta(){
-	console.log("inicializarFechaContaDesdeHasta....");
-	fecContaHasta.datetimepicker('date', fechaHasta.text() == '' ? moment().format('DD/MM/YYYY') : fechaHasta.text());
-	var fecContaHastaVal = fecContaHasta.datetimepicker('date');
-	var nuevaFecContaDesdeVal 	= moment(fecContaHastaVal).add(-ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS_INICIO , 'day');
-	fecContaDesde.datetimepicker('date', fechaDesde.text() == '' ? nuevaFecContaDesdeVal : fechaDesde.text());
+	}	
 }
 
 function inicializarEventos(){
@@ -185,7 +179,7 @@ function inicializarEventos(){
 		}
 	});
 }
-	
+
 function inicializarTabla(){
 	
 	dataTableGuiaRemision = tablaGuiaRemision.DataTable({
@@ -297,7 +291,7 @@ function inicializarTabla(){
                 "width": "5px",
                 "targets": [12],
                 "data": "activo",
-                "className": "dt-body-left",
+                "className": "dt-body-center",
                 "orderable": false,
                 "render":
                     function (data, type, row ) {
@@ -351,45 +345,29 @@ function inicializarTabla(){
  *************************************************************************************************/
 
 function campoBuscarKeyUp(e){
-	var datoBuscar = campoBuscar.val().trim();
-	console.log('datoBuscar--->' + datoBuscar);
 	var key = window.Event ? e.which : e.keyCode;
-	console.log("***key--->" + key)
 	if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
-		console.log("es TRUE!!!")
 		buscar(e);
 	}
 }
 
 function nroGuiaKeyUp(e){
-	var nroGuiaVal = nroGuia.val().trim();
-	console.log('nroGuia--->' + nroGuiaVal);
 	var key = window.Event ? e.which : e.keyCode;
-	console.log("***key--->" + key)
 	if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
-		console.log("es TRUE!!!")
 		buscar(e);
 	}
 }
 
 function nroOCKeyUp(e){
-	var nroOCVal = nroOC.val().trim();
-	console.log('nroOC--->' + nroOCVal);
 	var key = window.Event ? e.which : e.keyCode;
-	console.log("***key--->" + key)
 	if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
-		console.log("es TRUE!!!")
 		buscar(e);
 	}
 }
 
 function codRepuestoKeyUp(e){
-	var codRpto = codRepuesto.val().trim();
-	console.log('codRepuesto--->' + codRpto);
 	var key = window.Event ? e.which : e.keyCode;
-	console.log("***key--->" + key)
 	if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
-		console.log("es TRUE!!!")
 		buscar(e);
 	}
 }
@@ -406,8 +384,8 @@ function cargarGuiaRemision(numeroDocumento, opcion) {
 	// armando los parámetros
 	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar +  
 			 "&nroGuiaRemision=" + nroGuiaVal + "&nroOrdenCompra=" + nroOCVal + "&codRepuesto=" + codRpto + 
-		     "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Volver.SI;
-	console.log("cargarGuiaRemision---> params:" + params);
+		     "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + "&desdeOC=" + Respuesta.NO;
+	
 	window.location.href = "/appkahaxi/cargar-guia-remision-compra?" + params;
 }
 
@@ -416,15 +394,11 @@ function buscar(event){
 	event.preventDefault();
 
 	if (form1[0].checkValidity() == false) {
-		console.log("validado FALSE!!!....")
-        event.stopPropagation();
+		event.stopPropagation();
     }else{
 		event.stopPropagation();
-		console.log("entrando validado....")
-		console.log("**** buscar");
 		if ( $.fn.dataTable.isDataTable('#tablaGuiaRemision')) {
-		    console.log("ya existe el dt....");
-			//dataTableGuiaRemision.clear().draw(); <--- al usar esta rutina se produce un parpadeo de la tabla
+		    //dataTableGuiaRemision.clear().draw(); <--- al usar esta rutina se produce un parpadeo de la tabla
 			dataTableGuiaRemision.clear(); // usamos esta instrucción para limpiar la tabla sin que haya parpadeo
 			dataTableGuiaRemision.ajax.reload(null, true);
 		}
@@ -433,9 +407,18 @@ function buscar(event){
 }
 
 function limpiar(e){
+	esLimpiar = true;
+	
 	campoBuscar.val(CADENA_VACIA);
-	inicializarFechaContaDesdeHasta();
+	nroGuia.val(CADENA_VACIA);
+	nroOC.val(CADENA_VACIA);
+	codRepuesto.val(CADENA_VACIA);
 	estado.val(CADENA_VACIA);
+	
+	fecContaHasta.datetimepicker('destroy');
+	fecContaDesde.datetimepicker('destroy');
+	construirFechasPicker();
+	
 	buscar(e);
 	campoBuscar.focus();
 }

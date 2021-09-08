@@ -63,7 +63,7 @@ var DescripcionCatalogo = {
 		DES_MODELO				: "Modelo de Vehículo",
 		DES_MOTOR				: "Motor",
 		DES_APLICACION			: "Apicación",
-    DES_ESTADO_DOC_SISTEMA	: "Estado de Documento Sistema",
+    	DES_ESTADO_DOC_SISTEMA	: "Estado de Documento Sistema",
 		DES_ESTADO_DOC_SUNAT	: "Estado de Documento Sunat",
 		DES_ESTADO_COTI_VTA		: "Estado de Cotización",
 		DES_COND_PAGO			: "Condición de Pago",
@@ -124,7 +124,7 @@ var FlagActivo = {
 		INACTIVO	: 0
 };
 
-var Volver = {
+var Respuesta = {
 		SI	: 1,
 		NO	: 0
 };
@@ -210,13 +210,19 @@ var ParametrosGenerales = {
 		RANGO_DIAS_BUSCADOR_FECHAS			: "",
 		RANGO_DIAS_BUSCADOR_FECHAS_INICIO	: "",
 		IGV									: "",
-		RANGO_DIAS_FECHA_VALIDEZ			: ""
+		RANGO_DIAS_FECHA_VALIDEZ			: "",
+		RANGO_DIAS_BUSCADOR_FECHAS_REPORTES : ""
 }
 
 var TipoCampo = {
 		ENTERO		: "E",
 		ALFANUMERICO: "A"
 };
+
+var TipoReporte = {
+		PDF  	: "PDF",
+		EXCEL	: "EXCEL"
+}
 
 function is_chrome(){
 	return navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
@@ -418,6 +424,14 @@ function checkControl(id){
 
 function uncheckControl(id){
 	id.prop('checked', false);
+}
+
+function habilitarAnimacionAcordion() {
+	$(".collapse").on('show.bs.collapse', function(){
+    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-up');
+    }).on('hide.bs.collapse', function(){
+    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-down');
+    });
 }
 
 /*** http://bootstrap-notify.remabledesigns.com/ ****/
@@ -878,6 +892,9 @@ $(document).ready(function () {
 							break;
 				case "07" : // RANGO DE DIAS ENTRE LA FECHA DE CONT Y LA FECHA DE VALIDEZ
 							ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ = newArray[2];
+							break;
+				case "08" : // RANGO DE DIAS REPORTES
+							ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS_REPORTES = newArray[2];
 							break;
 			} 
 		}

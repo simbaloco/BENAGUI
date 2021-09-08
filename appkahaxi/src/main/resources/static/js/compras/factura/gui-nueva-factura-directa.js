@@ -48,6 +48,7 @@ var totalFactura;
 
 var btnGrabar;
 var btnNuevo;
+var btnVolver;
 
 var dataTableDetalle;
 var indiceFilaDataTableDetalle;
@@ -61,6 +62,8 @@ var btnEliminarTodosArticulos;
 var dateTimePickerInput;
 var valorIGV;
 var lblAnulado;
+
+var limpiarVolver = false;
 
 $(document).ready(function(){
 	inicializarVariables();
@@ -104,7 +107,8 @@ function inicializarVariables() {
 	divMensajeEliminado = $("#divMensajeEliminado");
 	btnAnular = $("#btnAnular");
 	btnLimpiar = $("#btnLimpiar");
-
+	btnVolver =  $("#btnVolver");
+	
 	btnAgregarArticulo = $("#btnAgregarArticulo");
 	btnEliminarTodosArticulos = $("#btnEliminarTodosArticulos");
 	tableDetalle = $("#tableDetalle");
@@ -139,20 +143,13 @@ function inicializarComponentes() {
 function inicializarPantalla() {
 	if(opcion.text() == Opcion.NUEVO) {
 		inicializarTablaDetalle(true);
+		inicializarFechas();
 		cargarPantallaNueva();
 	}else {
 		inicializarTablaDetalle(false);
 		cargarPantallaConDatosFactura();
 	}
 
-}
-
-function habilitarAnimacionAcordion() {
-	$(".collapse").on('show.bs.collapse', function(){
-    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-up');
-    }).on('hide.bs.collapse', function(){
-    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-down');
-    });
 }
 
 function construirFechasPicker() {
@@ -280,7 +277,15 @@ function inicializarEventos() {
 	btnAnular.on("click", function() {
 		mostrarDialogoAnularFactura();
 	});
-
+	
+	btnNuevo.click(function(){
+    	nuevaFacturaDirecta();
+	});
+	
+	btnVolver.click(function() {
+		volver(false);
+	});
+		
 	condPago.on('change', function(){
 		evaluarCambioCondicionPago();
 	});
@@ -347,12 +352,16 @@ function inicializarFechas(){
 }
 
 function cargarPantallaNueva() {
-	inicializarFechas();
 	obtenerTipoCambio(tipoCambio);
 
 	controlNoRequerido(observaciones);
 	titulo.text("NUEVA");
 	dias.val(Dias._30);
+	
+	var volver = volverParam.text();
+	if(volver == Respuesta.SI){
+		mostrarControl(btnVolver);
+	}
 	
 	campoBuscar.focus();
 }
@@ -795,15 +804,12 @@ function evaluarCambioTipoMoneda() {
 function evaluarCambioEstadoPago() {
 	var estadoPagoVal = estadoPago.val();
 
-	if(opcion.text() == Opcion.VER) {
-
-		if(estadoPagoVal == EstadoPago.PAGADO){
-			ocultarControl(btnAnular);
-			mostrarControl(btnGrabar);
-		} else{
-			mostrarControl(btnAnular);
-			ocultarControl(btnGrabar);
-		}
+	if(estadoPagoVal == EstadoPago.PAGADO){
+		ocultarControl(btnAnular);
+		mostrarControl(btnGrabar);
+	} else{
+		mostrarControl(btnAnular);
+		ocultarControl(btnGrabar);
 	}
 }
 
@@ -1028,11 +1034,15 @@ function registrarFacturaCompra(){
 					
 				if(codigoEstadoPagoVal == EstadoPago.PENDIENTE) {
 					habilitarControl(observaciones);
+					habilitarControl(estadoPago);
 					mostrarControl(btnAnular);
+					// si se grabó con estado PENDIENTE, cambiar a opción = VER
+					opcion.text(Opcion.VER); 
 				} else {
 					// CANCELADO
 					deshabilitarControl(observaciones);
 					ocultarControl(btnAnular);
+					limpiarVolver = true;
 				}
 
 				deshabilitarDetalleFactura();
@@ -1086,8 +1096,8 @@ function actualizarFacturaCompra() {
 			if(xhr.status == HttpStatus.OK){
 
 				mostrarNotificacion("El registro fué actualizado correctamente.", "success");
-
-				volver();
+				
+				volver(true);
 
 			}else if(xhr.status == HttpStatus.Accepted){
 
@@ -1279,7 +1289,7 @@ function anularFacturaCompra(){
 
 			if(xhr.status == HttpStatus.OK){
 
-				volver();
+				volver(true);
 
 			} else if(xhr.status == HttpStatus.Accepted){
 
@@ -1296,7 +1306,32 @@ function anularFacturaCompra(){
 	});
 }
 
-function volver(){
+function nuevaFacturaDirecta(){
+	var params;
+	var dato 		= datoBuscar.text();
+	var nroFact 	= nroComprobantePago.text();
+	var nroOC 		= nroOrdenCompra.text();
+	var codRpto 	= codRepuesto.text();
+	var fecDesde 	= fechaDesde.text();
+	var fecHasta 	= fechaHasta.text();
+	var estParam	= estadoParam.text();
+	
+	var volver = volverParam.text();
+	if(volver == Respuesta.SI){
+		// armando los parámetros
+		params = "numeroDocumento=&opcion=&datoBuscar=" + dato +  
+			 	 "&nroComprobantePago=" + nroFact + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +
+			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI;
+	}else{
+		params = "numeroDocumento=&opcion=&datoBuscar=&nroComprobantePago=" + 
+				 "&nroOrdenCompra=&codRepuesto=&fechaDesde=&fechaHasta=&estadoParam=&volver=0";
+	}
+	
+	console.log("cargarFactura---> params:" + params);
+	window.location.href = "/appkahaxi/nueva-factura-compra-directa?" + params;
+}
+
+function volver(listadoTotal){
 	var params;
 	var dato 		= datoBuscar.text();
 	var nroFact 	= nroComprobantePago.text();
@@ -1306,8 +1341,13 @@ function volver(){
 	var fecHasta 	= fechaHasta.text();
 	var estParam	= estadoParam.text();
 
-	params = "datoBuscar=" + dato + "&nroComprobantePago=" + nroFact + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +  
-			 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam;
+	if(listadoTotal == true || limpiarVolver == true){
+		params = "datoBuscar=&nroComprobantePago=&nroOrdenCompra=&codRepuesto=&fechaDesde=&fechaHasta=&estadoParam=";
+	}else{
+		params = "datoBuscar=" + dato + "&nroComprobantePago=" + nroFact + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +  
+			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam;
+	}
+	
 	window.location.href = "/appkahaxi/mantenimiento-factura-compra?" + params;
 }
 

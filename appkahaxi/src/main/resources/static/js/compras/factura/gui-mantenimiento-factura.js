@@ -18,6 +18,7 @@ var btnNuevo;
 var tablaFactura;
 var dataTableFactura;
 
+var esLimpiar = false;
 /**************** CARGA INICIAL DE FORMULARIO ****************************************************
  *************************************************************************************************/
 
@@ -54,7 +55,7 @@ function inicializarComponentes() {
 	habilitarAnimacionAcordion();
 	construirFechasPicker();
 	retringirSeleccionFechas();
-	//inicializarFechaContaDesdeHasta();
+	inicializarFechaContaDesdeHasta();
 	
 	inicializarEventos();
 	inicializarTabla();
@@ -64,85 +65,77 @@ function inicializarPantalla() {
 	campoBuscar.focus();
 }
 
-function habilitarAnimacionAcordion() {
-	$(".collapse").on('show.bs.collapse', function(){
-    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-up');
-    }).on('hide.bs.collapse', function(){
-    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-down');
-    });
-}
-
 function construirFechasPicker() {
-	console.log("construirFechasPicker...");
 	fecContaHasta.datetimepicker({
 		locale: 		'es',
 		format: 		'L',
-		maxDate:		new Date(),
-		ignoreReadonly:  true,
-		//minDate:		moment(new Date()).add(-ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS_INICIO , 'day'),
-		//date: 			new Date()
-		date: 			moment(new Date())
+		ignoreReadonly: true,
+		date:			moment(),
+		maxDate:		moment()
     });
 
     fecContaDesde.datetimepicker({
 		locale: 		'es',
 		format: 		'L',
-		maxDate:		new Date(),
-		ignoreReadonly:  true,
-		date:			moment(new Date()).add(-ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS_INICIO , 'day')
+		ignoreReadonly: true,
+		date:			moment().add(-ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS_INICIO , 'day'),
+		maxDate:		moment()
     });
 }
 
+function retringirSeleccionFechas() {
+	
+	fecContaDesde.on("change.datetimepicker", function (e) {
+		if(!esLimpiar){
+			if(validarFechas()){
+				fecContaHasta.datetimepicker('minDate', e.date);
+				buscar(e);
+				
+			}else{
+				mostrarDialogoInformacion("El rango de fechas es máximo de 3 meses.", Boton.WARNING);
+				fecContaDesde.datetimepicker('date', e.oldDate);
+			}	
+		}
+    });
+	
+    fecContaHasta.on("change.datetimepicker", function (e) {
+		if(!esLimpiar){
+			if(validarFechas()){
+				fecContaDesde.datetimepicker('maxDate', e.date);
+				buscar(e);
+				
+			}else{
+				mostrarDialogoInformacion("El rango de fechas es máximo de 3 meses.", Boton.WARNING);
+				fecContaHasta.datetimepicker('date', e.oldDate);
+			}
+		}
+    });
+}
+
+function inicializarFechaContaDesdeHasta(){
+	
+	if(fechaDesde.text() != '' || fechaHasta.text() != ''){
+		fecContaHasta.datetimepicker('date', fechaHasta.text() == '' ? moment() : fechaHasta.text());
+		fecContaHasta.datetimepicker('maxDate', moment());
+		
+		var fecContaHastaVal = fecContaHasta.datetimepicker('date');
+		var nuevaFecContaDesdeVal 	= moment(fecContaHastaVal).add(-ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS_INICIO , 'day');
+		fecContaDesde.datetimepicker('date', fechaDesde.text() == '' ? nuevaFecContaDesdeVal : fechaDesde.text());
+		fecContaDesde.datetimepicker('maxDate', moment());
+	}
+}
+
 function validarFechas(){
-	console.log("validarFechas...");
 	
 	var fecContaDesdeVal = moment(fecContaDesde.datetimepicker('date'));
 	var fecContaHastaVal = moment(fecContaHasta.datetimepicker('date'));
 	var diferencia = fecContaHastaVal.diff(fecContaDesdeVal, 'days');
 	console.log("diferencia--->" + diferencia);
 	if(diferencia > ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS){
-		console.log("dif > 90, falso-....")
 		return false;
 	}else{
-		console.log("dif <= 90, true....")
 		return true;
-	}
-}
-
-function retringirSeleccionFechas() {
-	console.log("retringirSeleccionFechas...");
-	
-	fecContaDesde.on("change.datetimepicker", function (e) {
-		console.log("entrando change fec desde....")
-		if(validarFechas()){
-			fecContaHasta.datetimepicker('minDate', e.date);
-			console.log("change desde....")
-			buscar(e);
-		}else{
-			mostrarDialogoInformacion("El rango de fechas es máximo de 3 meses.", Boton.WARNING);
-			fecContaDesde.datetimepicker('date', e.oldDate);
-		}
-    });
-	
-    fecContaHasta.on("change.datetimepicker", function (e) {
-		console.log("entrando change fec hasta....")
-		if(validarFechas()){
-			fecContaDesde.datetimepicker('maxDate', e.date);
-			console.log("change hasta....")
-			buscar(e);
-		}else{
-			mostrarDialogoInformacion("El rango de fechas es máximo de 3 meses.", Boton.WARNING);
-			fecContaHasta.datetimepicker('date', e.oldDate);
-		}
-    });
-}
-
-function inicializarFechaContaDesdeHasta(){
-	console.log("inicializarFechaContaDesdeHasta....");
-	fecContaHasta.datetimepicker('date', fechaHasta.text() == '' ? moment().format('DD/MM/YYYY') : fechaHasta.text());
-	var fecContaHastaVal = fecContaHasta.datetimepicker('date');
-	var nuevaFecContaDesdeVal 	= moment(fecContaHastaVal).add(-ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS_INICIO , 'day');
-	fecContaDesde.datetimepicker('date', fechaDesde.text() == '' ? nuevaFecContaDesdeVal : fechaDesde.text());
+	}	
 }
 
 function inicializarEventos(){
@@ -191,20 +184,20 @@ function inicializarEventos(){
 		}
 	});
 }
-	
+
 function inicializarTabla(){
 	
 	dataTableFactura = tablaFactura.DataTable({
         "ajax": {
             // se pasa la data de esta forma para poder reinicializar luego sólo la llamada ajax sin tener que dibujar de nuevo toda la tabla
 			data: function ( d ) {
-				d.datoBuscar 		= campoBuscar.val().trim();
-            	d.nroComprobantePago		= nroComprobantePago.val().trim();
-            	d.nroOrdenCompra	= nroOC.val().trim();
-            	d.codRepuesto		= codRepuesto.val().trim();
-            	d.codEstado 		= estado.val();
-            	d.fechaDesde 		= fecContaDesde.datetimepicker('date').format('YYYY-MM-DD');
-            	d.fechaHasta 		= fecContaHasta.datetimepicker('date').format('YYYY-MM-DD');
+				d.datoBuscar 			= campoBuscar.val().trim();
+            	d.nroComprobantePago	= nroComprobantePago.val().trim();
+            	d.nroOrdenCompra		= nroOC.val().trim();
+            	d.codRepuesto			= codRepuesto.val().trim();
+            	d.codEstado 			= estado.val();
+            	d.fechaDesde 			= fecContaDesde.datetimepicker('date').format('YYYY-MM-DD');
+            	d.fechaHasta 			= fecContaHasta.datetimepicker('date').format('YYYY-MM-DD');
 		    },
             url: '/appkahaxi/listarFacturaCompra/',
             dataSrc: function (json) {
@@ -238,65 +231,65 @@ function inicializarTabla(){
                 "data": "id"
             },
             {
-                "width": "30px",
+                "width": "10px",
                 "targets": [1],
                 "data": "numeroDocumento"
             },
 			{
-				"width": "80px",
+				"width": "50px",
 				"targets": [2],
 				"data": "ordenCompra"
 			},
 			{
-				"width": "30px",
+				"width": "10px",
 				"targets": [3],
 				"data": "fechaRegistroFormato"
 			},
 			{
-				"width": "30px",
+				"width": "5px",
 				"targets": [4],
 				"data": "serieCorrelativo"
 			},
             {
-                "width": "40px",
+                "width": "25px",
                 "targets": [5],
                 "data": "nroDocCliente"
             },
             {
-                "width": "300px",
+                "width": "200px",
                 "targets": [6],
                 "data": "nombreCliente"
             },
             {
-                "width": "30px",
+                "width": "10px",
                 "targets": [7],
                 "data": "fechaContabilizacion"
             },
             {
-                "width": "100px",
+                "width": "20px",
                 "targets": [8],
                 "data": "descripcionTipoMoneda"
                 
             },
             {
-                "width": "30px",
+                "width": "10px",
                 "targets": [9],
                 "data": "descripcionCondPago"
                 
             },
 			{
-				"width": "30px",
+				"width": "10px",
 				"targets": [10],
 				"data": "descripcionEstadoPago"
 
 			},
 			{
-                "width": "50px",
+                "width": "10px",
                 "targets": [11],
                 "data": "descripcionEstado"
             },
             {
-				"width": "60px",
+				"width": "20px",
 				"targets": [12],
 				"data": "total",
 				"render":
@@ -308,15 +301,16 @@ function inicializarTabla(){
                 "width": "5px",
                 "targets": [13],
                 "data": "activo",
-                "className": "dt-body-left",
+                "className": "dt-body-center",
                 "orderable": false,
                 "render":
                     function (data, type, row ) {
-                    	return  "<div>" +
+						
+						return  "<div>" +
                         			"<button title='Ver Factura' class='btn-view btn btn-info btn-xs'>" +
                         				"<span><i class=\"fas fa-eye\"></i></span>" +
 					                "</button>" +
-				                "</div>";
+				                "</div>";			
                     }
             }
          ],
@@ -335,8 +329,6 @@ function inicializarTabla(){
 					$(row).addClass('facturaDirecta');
 				}
 				
-				console.log("***data.codigoEstado:" + data.codigoEstado);
-				console.log("***data.codigoEstadoProceso:" + data.codigoEstadoProceso);
 				// pintando las filas según estado
                 if(data.codigoEstado == EstadoFactura.ANULADO){
             		// si anulamos una FACTURA DIRECTA
@@ -376,60 +368,43 @@ function inicializarTabla(){
 	$('#tablaFactura tbody').on('click','.btn-view', function () {
 	    var data = dataTableFactura.row( $(this).closest('tr')).data();
 
-	    if(data.ordenCompra == '' || data.ordenCompra == null || data.ordenCompra == undefined) {
+	    if(data.ordenCompra == 'DIRECTA') {
 			cargarFactura(data.numeroDocumento, Opcion.VER);
 		} else {
 			cargarFacturaAsociada(data.numeroDocumento, Opcion.VER);
 		}
-
 	});
-	 
 }
+
 
 
 /**************** FUNCIONES DE SOPORTE ***********************************************************
  *************************************************************************************************/
 
 function campoBuscarKeyUp(e){
-	var datoBuscar = campoBuscar.val().trim();
-	console.log('datoBuscar--->' + datoBuscar);
 	var key = window.Event ? e.which : e.keyCode;
-	console.log("***key--->" + key)
 	if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
-		console.log("es TRUE!!!")
 		buscar(e);
 	}
 }
 
 function nroFacturaKeyUp(e){
-	var nroFacturaVal = nroComprobantePago.val().trim();
-	console.log('nroComprobantePago--->' + nroFacturaVal);
 	var key = window.Event ? e.which : e.keyCode;
-	console.log("***key--->" + key)
 	if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
-		console.log("es TRUE!!!")
 		buscar(e);
 	}
 }
 
 function nroOCKeyUp(e){
-	var nroOCVal = nroOC.val().trim();
-	console.log('nroOC--->' + nroOCVal);
 	var key = window.Event ? e.which : e.keyCode;
-	console.log("***key--->" + key)
 	if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
-		console.log("es TRUE!!!")
 		buscar(e);
 	}
 }
 
 function codRepuestoKeyUp(e){
-	var codRpto = codRepuesto.val().trim();
-	console.log('codRepuesto--->' + codRpto);
 	var key = window.Event ? e.which : e.keyCode;
-	console.log("***key--->" + key)
 	if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
-		console.log("es TRUE!!!")
 		buscar(e);
 	}
 }
@@ -446,8 +421,8 @@ function cargarFactura(numeroDocumento, opcion) {
 	// armando los parámetros
 	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar +  
 			 "&nroComprobantePago=" + nroFacturaVal + "&nroOrdenCompra=" + nroOCVal + "&codRepuesto=" + codRpto +
-			 "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Volver.SI;
-	console.log("cargarFactura---> params:" + params);
+			 "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI;
+		
 	window.location.href = "/appkahaxi/nueva-factura-compra-directa?" + params;
 }
 
@@ -461,13 +436,10 @@ function cargarFacturaAsociada(numeroDocumento, opcion) {
 	var fecContDesde 		= fecContaDesde.datetimepicker('date').format('L');
 	var fecContHasta 		= fecContaHasta.datetimepicker('date').format('L');
 	var est 				= estado.val();
-
 	// armando los parámetros
 	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar +
 			 "&nroComprobantePago=" + nroFacturaVal + "&nroOrdenCompra=" + nroOCVal + "&codRepuesto=" + codRpto +
-			 "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Volver.SI + "&guias=";
-
-	console.log("cargarFacturaAsociada---> params:" + params);
+			 "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + "&guias=";
 
 	window.location.href = "/appkahaxi/nueva-factura-compra-asociada?" + params;
 }
@@ -477,15 +449,11 @@ function buscar(event){
 	event.preventDefault();
 
 	if (form1[0].checkValidity() == false) {
-		console.log("validado FALSE!!!....")
-        event.stopPropagation();
+		event.stopPropagation();
     }else{
 		event.stopPropagation();
-		console.log("entrando validado....")
-		console.log("**** buscar");
 		if ( $.fn.dataTable.isDataTable('#tablaFactura')) {
-		    console.log("ya existe el dt....");
-			//dataTableFactura.clear().draw(); <--- al usar esta rutina se produce un parpadeo de la tabla
+		    //dataTableFactura.clear().draw(); <--- al usar esta rutina se produce un parpadeo de la tabla
 			dataTableFactura.clear(); // usamos esta instrucción para limpiar la tabla sin que haya parpadeo
 			dataTableFactura.ajax.reload(null, true);
 		}
@@ -494,9 +462,18 @@ function buscar(event){
 }
 
 function limpiar(e){
+	esLimpiar = true;
+	
 	campoBuscar.val(CADENA_VACIA);
-	inicializarFechaContaDesdeHasta();
+	nroComprobantePago.val(CADENA_VACIA);
+	nroOC.val(CADENA_VACIA);
+	codRepuesto.val(CADENA_VACIA);
 	estado.val(CADENA_VACIA);
+	
+	fecContaHasta.datetimepicker('destroy');
+	fecContaDesde.datetimepicker('destroy');
+	construirFechasPicker();
+	
 	buscar(e);
 	campoBuscar.focus();
 }

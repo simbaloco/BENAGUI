@@ -29,13 +29,15 @@
 	<label id="fechaHasta" th:text=${fechaHasta} hidden="hidden"></label>
 	<label id="estadoParam" th:text=${estadoParam} hidden="hidden"></label>
 	<label id="volverParam" th:text=${volver} hidden="hidden"></label>
+	<label id="desdeOCParam" th:text=${desdeOC} hidden="hidden"></label>
+	
 
 	<div class="modal fade" id="guiasPorOrdenCompraModal" role="dialog" aria-labelledby="guiasPorOrdenCompraModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-personalizado-medium modal-sm" role="document" >
 			<div class="modal-content">
 
 				<div class="modal-header">
-					<h6 class="modal-title" id="guiasPorOrdenCompraModalLabel">Seleccionar Guía de Remisión - <span id="modalCodigoOrdenCompra"></span></h6>
+					<h6 class="modal-title" id="guiasPorOrdenCompraModalLabel">Orden de Compra de Referencia: <span id="modalCodigoOrdenCompra"></span></h6>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true" style="color:#5990e0">&times;</span>
 					</button>
@@ -46,7 +48,7 @@
 					<div class="card">
 
 						<div class="card-header">
-							<span class="font-weight-bold">Seleccione las Guías de Remisión a las que se les va a generar Factura</span>
+							<span class="font-weight-bold">Seleccione las Guías de Remisión a las que se les va a generar Factura:</span>
 						</div>
 
 						<div>
@@ -107,7 +109,7 @@
 			<div class="modal-content">
 
 				<div class="modal-header">
-					<h6 class="modal-title" id="facturasPorGuiaRemisionModalLabel">Seleccionar Factura - <span id="modalCodigoGuiaRemision"></span></h6>
+					<h6 class="modal-title" id="facturasPorGuiaRemisionModalLabel">Guía de Remisión: <span id="modalCodigoGuiaRemision"></span></h6>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true" style="color:#5990e0">&times;</span>
 					</button>
@@ -118,7 +120,7 @@
 					<div class="card">
 
 						<div class="card-header">
-							<span class="font-weight-bold">Seleccione la Factura que desea consultar</span>
+							<span class="font-weight-bold">Seleccione la Factura que desea consultar:</span>
 						</div>
 
 						<div>
@@ -136,13 +138,13 @@
 												<thead class="text-center">
 												<tr>
 													<th id="codigoFactura" width="20%" style="text-align: left;">Nro Factura</th>
-													<th id="fechaDocumento" width="10%" style="text-align: left;">Fec. Documento</th>
-													<th id="fechaContabilizacion" width="10%" style="text-align: right;">Fec. Contabilización</th>
-													<th id="serieCorrelativo" width="20%" style="text-align: right;">Serie-Correlativo</th>
+													<th id="fechaDocumento" width="10%" style="text-align: center;">Fec. Documento</th>
+													<th id="fechaContabilizacion" width="10%" style="text-align: center;">Fec. Contabilización</th>
+													<th id="serieCorrelativo" width="20%" style="text-align: center;">Serie-Correlativo</th>
 													<th id="subtotalFactura" width="10%" style="text-align: right;">Subtotal</th>
 													<th id="igvFactura" width="10%" style="text-align: right;">IGV</th>
 													<th id="totalFactura" width="10%" style="text-align: right;">Total</th>
-													<th id="estadoPago" width="10%" style="text-align: right;">Estado Pago</th>
+													<th id="estadoPago" width="10%" style="text-align: center;">Estado Pago</th>
 												</tr>
 												</thead>
 

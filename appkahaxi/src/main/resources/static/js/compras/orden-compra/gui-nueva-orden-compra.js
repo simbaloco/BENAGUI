@@ -162,14 +162,6 @@ function inicializarPantalla() {
 	}
 }
 
-function habilitarAnimacionAcordion() {
-	$(".collapse").on('show.bs.collapse', function(){
-    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-up');
-    }).on('hide.bs.collapse', function(){
-    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-down');
-    });
-}
-
 function construirFechasPicker() {
 	
 	fecConta.datetimepicker({
@@ -371,7 +363,7 @@ function cargarPantallaNueva() {
 	dias.val(Dias._30);
 	
 	var volver = volverParam.text();
-	if(volver == Volver.SI){
+	if(volver == Respuesta.SI){
 		mostrarControl(btnVolver);
 	}
 	campoBuscar.focus();
@@ -1356,16 +1348,35 @@ function mostrarDialogoGenerarGuiaRemision() {
 }
 
 function generarGuiaRemisionPorOrden() {
-	var opcion = Opcion.NUEVO;
-	var params = "numeroDocumento=" + numeroDocumento.text() + "&opcion=" + opcion + 
-		"&datoBuscar=&nroGuiaRemision=&nroOrdenCompra=&codRepuesto=&fechaDesde=&fechaHasta=&estadoParam=&volver=0";
+	var params;
+	var nroDoc 		= numeroDocumento.text();
+	var dato 		= datoBuscar.text();
+	var nroOC 		= nroOrdenCompra.text();
+	var codRpto 	= codRepuesto.text();
+	var fecDesde 	= fechaDesde.text();
+	var fecHasta 	= fechaHasta.text();
+	var estParam	= estadoParam.text();
 	
+	params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.NUEVO + "&datoBuscar=" + dato + 
+			 "&nroGuiaRemision=&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
+			 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta +"&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeOC=" + Respuesta.SI;
+
 	window.location.href = "/appkahaxi/cargar-guia-remision-compra?" + params;
 }
 
-function cargarGuiaRemisionAsociada(numeroDocumento, opcion) {
-	var params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + 
-		"&datoBuscar=&nroGuiaRemision=&nroOrdenCompra=&codRepuesto=&fechaDesde=&fechaHasta=&estadoParam=&volver=" + Volver.NO;
+function cargarGuiaRemisionAsociada(numDocumento) {
+	var params;
+	var nroDoc 		= numeroDocumento.text();
+	var dato 		= datoBuscar.text();
+	var nroOC 		= nroOrdenCompra.text();
+	var codRpto 	= codRepuesto.text();
+	var fecDesde 	= fechaDesde.text();
+	var fecHasta 	= fechaHasta.text();
+	var estParam	= estadoParam.text();
+	
+	params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato + 
+			 "&nroGuiaRemision=" + numDocumento +"&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
+			 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta +"&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeOC=" + Respuesta.SI;
 
 	window.location.href = "/appkahaxi/cargar-guia-remision-compra?" + params;
 }
@@ -1470,7 +1481,7 @@ function obtenerDetalleGuiaPorOrdenCompra(event){
 			"autoWidth"		: false,
 			"columnDefs"    : [
 				{
-					"width": "30px",
+					"width": "20px",
 					"targets": [0],
 					"data": "numeroDocumento",
 					"orderable": false,
@@ -1479,19 +1490,21 @@ function obtenerDetalleGuiaPorOrdenCompra(event){
 					}
 				},
 				{
-					"width": "30px",
+					"width": "20px",
 					"targets": [1],
 					"data": "fechaDocumento",
+					"className": "dt-center",
 					"orderable": false
 				},
 				{
-					"width": "30px",
+					"width": "20px",
 					"targets": [2],
 					"data": "fechaContabilizacion",
+					"className": "dt-center",
 					"orderable": false
 				},
 				{
-					"width": "30px",
+					"width": "70px",
 					"targets": [3],
 					"data": "serieCorrelativo",
 					"orderable": false
@@ -1552,7 +1565,7 @@ function obtenerDetalleGuiaPorOrdenCompra(event){
 		$('#tableDetalleGuias tbody').on('click','.link-ver-guia', function () {
 
 			var data = dataTableDetalleGuias.row( $(this).closest('tr')).data();
-			cargarGuiaRemisionAsociada(data.numeroDocumento, Opcion.VER);
+			cargarGuiaRemisionAsociada(data.numeroDocumento);
 		});
 
 	}

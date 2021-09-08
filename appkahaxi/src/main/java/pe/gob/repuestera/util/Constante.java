@@ -67,7 +67,15 @@ public class Constante {
 	public static final String PAGINA_NUEVA_FACTURA_COMPRA_DIRECTA = "paginas/compras/factura/nueva-factura-directa";
 	public static final String PAGINA_NUEVA_FACTURA_COMPRA_ASOCIADA = "paginas/compras/factura/nueva-factura-asociada";
 	public static final String PAGINA_MANTENIMIENTO_FACTURA_COMPRA = "paginas/compras/factura/mantenimiento-factura";
-
+	/* REPORTES */
+	public static final String PAGINA_REPORTE_COMPRAS = "paginas/reportes/reporte-compras";
+	public static final String PAGINA_REPORTE_VENTAS = "paginas/reportes/reporte-ventas";
+	public static final String PAGINA_REPORTE_ANALISIS_VENTAS = "paginas/reportes/reporte-analisis-ventas";
+	public static final String PAGINA_REPORTE_KARDEX = "paginas/reportes/reporte-kardex";
+	public static final String PAGINA_REPORTE_INVENTARIO = "paginas/reportes/reporte-inventario";	
+	public static final String PAGINA_REPORTE_ANULADOS = "paginas/reportes/reporte-anulados";	
+	
+	
 	/*** VALORES PARA CONTROL DE FLUJO DENTRO DE LOS CONTROLLERS ***/
 	/* RESULTADOS */
 	public static final String RESULTADO_EXITOSO 		= "1";
@@ -196,7 +204,10 @@ public class Constante {
 	public static final String PARAM_SP_PASSWORD 			= "PASSWORD";
 	public static final String PARAM_SP_PERFILES			= "PERFILES";
 	public static final String PARAM_SP_OPCION 				= "OPCION";
-		
+	public static final String PARAM_SP_FEC_INICIO			= "FEC_INICIO";
+    public static final String PARAM_SP_FEC_FIN				= "FEC_FIN";
+    public static final String PARAM_SP_COD_ALMACEN			= "COD_ALMACEN";	
+    
 	/* PARAMETROS DE RETORNO DE LOS SP */
 	public static final String PARAM_FLAG_RESULTADO 	= "FLAG_RESULTADO";
 	public static final String PARAM_MENSAJE_RESULTADO 	= "MENSAJE_RESULTADO";
@@ -212,6 +223,7 @@ public class Constante {
 	public static final String PARAM_COD_PADRE_CONTROLLER = "codPadre";
 	public static final String PARAM_COD_MARCA_ARTICULO = "codMarcaArticulo";
 	public static final String PARAM_COD_TIPO = "codTipo";
+	public static final String PARAM_DES_TIPO = "desTipo";
 	public static final String PARAM_COD_SECCION = "codSeccion";
 	public static final String PARAM_COD_SOCIONEGOCIO = "codigoSocio";
 	public static final String PARAM_COD_UND_MEDIDA = "codUndMedida";
@@ -226,6 +238,8 @@ public class Constante {
 	public static final String PARAM_COD_APLICACION = "codAplicacion";*/
 	
 	public static final String PARAM_COD_ARTICULO = "codArticulo";
+	public static final String PARAM_COD_ALMACEN = "codAlmacen";
+	public static final String PARAM_DES_ALMACEN = "desAlmacen";
 	/*public static final String PARAM_CODIGO_ESTANDAR = "codigoEstandar";
 	public static final String PARAM_CODIGO_ANTIGUO = "codigoAantiguo";*/
 	public static final String PARAM_COD_BARRAS = "codBarras";
@@ -237,7 +251,10 @@ public class Constante {
 	public static final String PARAM_IGV = "igv";
 	public static final String PARAM_ESTADO = "estadoParam";
 	public static final String PARAM_VOLVER = "volver";
+	public static final String PARAM_DESDE_OC = "desdeOC";
 	public static final String PARAM_GUIAS = "guias";
+	public static final String PARAM_FECHA_INICIO = "fechaInicio";
+	public static final String PARAM_FECHA_FIN = "fechaFin";
 	
 	public static final String PARAM_DESCRIPCION = "descripcion";
 	public static final String PARAM_MOTOR = "motor";
@@ -266,6 +283,7 @@ public class Constante {
 	public static final String PARAM_ANIO = "anio";
 	public static final String PARAM_TIPO_PERSONA = "tipoPersona";
 	public static final String PARAM_TIPO_DOCUMENTO = "tipoDoc";
+	public static final String PARAM_TIPO_REPORTE = "tipoReporte";
 	
 	public static final String PARAM_DATO_CLIENTE = "datoCliente";
 	public static final String PARAM_COD_DATA_CATALOGO = "codDataCatalogo";

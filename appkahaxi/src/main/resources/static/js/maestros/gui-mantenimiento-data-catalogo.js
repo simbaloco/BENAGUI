@@ -68,14 +68,6 @@ function inicializarPantalla() {
 	cargarFlagSunat();	
 }
 
-function habilitarAnimacionAcordion() {
-	$(".collapse").on('show.bs.collapse', function(){
-    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-up');
-    }).on('hide.bs.collapse', function(){
-    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-down');
-    });
-}
-
 function inicializarEventos(){
 	campoBuscar.on('keyup', function (e) {
 		campoBuscarKeyUp(e);
