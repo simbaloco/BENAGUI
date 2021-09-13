@@ -899,6 +899,5 @@ $(document).ready(function () {
 			} 
 		}
 	}
-	console.log("util.js, cant decimales-->" + ParametrosGenerales.CANTIDAD_DECIMALES);
-	if(array.length > 0)	console.log("---> (3456.23)" + convertirNumeroAMoneda(3456.23));
+	
 });

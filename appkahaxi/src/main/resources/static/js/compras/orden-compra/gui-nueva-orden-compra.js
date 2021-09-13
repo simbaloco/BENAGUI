@@ -188,9 +188,9 @@ function restringirSeleccionFechas() {
 	fecConta.on("change.datetimepicker", function (e) {
 		reiniciarFechaHasta();
 		
-		fecHasta.datetimepicker('maxDate', moment(e.date).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ , 'day').format('DD/MM/YYYY'));
+		fecHasta.datetimepicker('maxDate', moment(e.date).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ , 'day'));
 		fecHasta.datetimepicker('minDate', e.date);
-		fecHasta.datetimepicker('date', moment(e.date).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ , 'day').format('DD/MM/YYYY'));
+		fecHasta.datetimepicker('date', moment(e.date).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ , 'day'));
 		
 		fecEntrega.datetimepicker('minDate', e.date);
 	});
@@ -346,11 +346,11 @@ function inicializarTabla(paginacion) {
 function inicializarFechaContaHasta(){
 	console.log("inicializarFechaContaHasta")
     
-	fecConta.datetimepicker('date', moment().format('DD/MM/YYYY'));
-	fecConta.datetimepicker('maxDate', moment().format('DD/MM/YYYY'));
+	fecConta.datetimepicker('date', moment());
+	fecConta.datetimepicker('maxDate', moment());
 	
 	var fecContaVal 	= fecConta.datetimepicker('date');
-	var nuevaFechaVal 	= moment(fecContaVal).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ , 'day').format('DD/MM/YYYY');
+	var nuevaFechaVal 	= moment(fecContaVal).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ , 'day');
 	fecHasta.datetimepicker('date', nuevaFechaVal);
 }
 

@@ -345,10 +345,10 @@ function inicializarTablaDetalle(paginacion) {
  *************************************************************************************************/
 
 function inicializarFechas(){
-	fecConta.datetimepicker('date', moment().format('DD/MM/YYYY'));
-	fecConta.datetimepicker('maxDate', moment().format('DD/MM/YYYY'));
-	fecDocumento.datetimepicker('date', moment().format('DD/MM/YYYY'));
-	fecVencimiento.datetimepicker('date', moment().format('DD/MM/YYYY'));
+	fecConta.datetimepicker('date', moment());
+	fecConta.datetimepicker('maxDate', moment());
+	fecDocumento.datetimepicker('date', moment());
+	fecVencimiento.datetimepicker('date', moment());
 }
 
 function cargarPantallaNueva() {

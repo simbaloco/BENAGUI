@@ -283,9 +283,9 @@ function inicializarTablaDetalle(paginacion) {
 
 function inicializarFechas(){
 
-	fecConta.datetimepicker('date', moment().format('DD/MM/YYYY'));
-	fecDocumento.datetimepicker('date', moment().format('DD/MM/YYYY'));
-	fecEntrega.datetimepicker('date', moment().format('DD/MM/YYYY'));
+	fecConta.datetimepicker('date', moment());
+	fecDocumento.datetimepicker('date', moment());
+	fecEntrega.datetimepicker('date', moment());
 }
 
 function cargarPantallaConDatosOrdenCompra() {
