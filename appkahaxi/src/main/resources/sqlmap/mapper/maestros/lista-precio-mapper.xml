@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pe.gob.repuestera.repository.maestros.ListaPrecioMapper">
+    
+    <!-- *************** RESULTMAPS ******************* -->
+    <resultMap id="listaPrecio" type="ListaPreciosModel">
+        <result property="idListaPrecio"			column="ID_LISTA_PRECIO" />
+        <result property="descripcion" 				column="DESCRIPCION" />
+        <result property="codMoneda" 				column="COD_MONEDA" />
+        <result property="desMoneda" 				column="DES_MONEDA" />
+        <result property="activo" 					column="ACTIVO" />
+        <result property="codigoUsuarioRegistra" 	column="COD_USU_REGISTRA" />
+        <result property="fechaRegistro" 			column="FEC_REGISTRO" />
+        <result property="codigoUsuarioModifica" 	column="COD_USU_MODIFICA" />
+        <result property="fechaModificacion" 		column="FEC_MODIFICACION" />
+    </resultMap>
+    
+    <resultMap id="listaPrecioDet" type="ListaPreciosDetModel">
+        <result property="id"						column="ID" />
+        <result property="idListaPrecio" 			column="ID_LISTA_PRECIO" />
+        <result property="codArticulo" 				column="COD_ARTICULO" />
+        <result property="codEstandar" 				column="COD_ESTANDAR" />
+        <result property="codAntiguo" 				column="COD_ANTIGUO" />
+        <result property="descripcion" 				column="DESCRIPCION" />
+        <result property="descMarcaArticulo" 		column="DESC_MARCA_ARTICULO" />
+        <result property="descTipo" 				column="DESC_TIPO" />
+        <result property="descSeccion" 				column="DESC_SECCION" />
+        <result property="descUndMedida" 			column="DESC_UND_MEDIDA" />     
+        <result property="precio" 					column="PRECIO" />
+        <result property="precioRef" 				column="PRECIO_REF" />
+       	<result property="ultPrecioCompra" 			column="ULT_PRECIO_COMPRA" />
+        <result property="activo" 					column="ACTIVO" />
+        <result property="codigoUsuarioRegistra" 	column="COD_USU_REGISTRA" />
+        <result property="fechaRegistro" 			column="FEC_REGISTRO" />
+        <result property="codigoUsuarioModifica" 	column="COD_USU_MODIFICA" />
+        <result property="fechaModificacion" 		column="FEC_MODIFICACION" /> 
+    </resultMap>
+    
+    <!-- ********************* PARAMETERMAPS ********************* -->
+    <parameterMap id="listarListaPrecioParams" type="hashmap">
+    	<parameter property="DATO_BUSCAR"        	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    <parameterMap id="buscarListaPrecioParams" type="hashmap">
+        <parameter property="ID_LISTA_PRECIO"       jdbcType="INTEGER"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap> 
+    
+    <parameterMap id="buscarListaPrecioDetParams" type="hashmap">
+        <parameter property="ID_LISTA_PRECIO"       jdbcType="INTEGER"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap> 
+    
+    <parameterMap id="registrarListaPrecioParams" type="hashmap">
+    	<parameter property="ID_LISTA_PRECIO"		jdbcType="INTEGER"  mode="IN"/>     
+        <parameter property="DESCRIPCION"			jdbcType="VARCHAR"  mode="IN"/>     
+        <parameter property="COD_MONEDA"			jdbcType="VARCHAR"  mode="IN"/>     
+        <parameter property="ACTIVO"          		jdbcType="INTEGER" 	mode="IN"/>
+        <parameter property="DATA_JSON"          	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="USUARIO"				jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+    
+    <!-- ************************* QUERYS ******************************* -->
+    <select id="listarListaPrecio" parameterMap="listarListaPrecioParams" resultMap="listaPrecio" statementType="CALLABLE">
+    	{CALL SP_LISTAR_LISTA_PRECIO(?,?,?) }
+    </select>
+  
+   <select id="buscarListaPrecio" parameterMap="buscarListaPrecioParams" resultMap="listaPrecio" statementType="CALLABLE">
+    	{CALL SP_BUSCAR_LISTA_PRECIO(?,?,?) }
+    </select>
+    
+    <select id="buscarListaPrecioDet" parameterMap="buscarListaPrecioDetParams" resultMap="listaPrecioDet" statementType="CALLABLE">
+    	{CALL SP_BUSCAR_LISTA_PRECIO_DET(?,?,?) }
+    </select>
+   	
+    <insert id="registrarListaPrecio" parameterMap="registrarListaPrecioParams" statementType="CALLABLE">
+    	{CALL SP_REGISTRAR_LISTA_PRECIO(?,?,?,?,?,?,?,?) }
+    </insert> 
+            
+</mapper>

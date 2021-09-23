@@ -1125,6 +1125,55 @@ public class PrincipalController {
 		return retorno;
 	}
 	
+	@GetMapping("/mantenimiento-lista-precios")
+    public String cargarMantenimientoListaPrecios(Model model, @RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar) {
+		
+		String retorno;
+		try {
+			logger.info("entrando al método cargarMantenimientoListaPrecios");
+			
+			model.addAttribute("datoBuscar", datoBuscar);
+			retorno = Constante.PAGINA_MANTENIMIENTO_LISTA_PRECIOS;
+			
+			logger.info("saliendo del método cargarMantenimientoListaPrecios");
+		}catch (Exception e) {
+			// TODO: handle exception
+			retorno = Constante.PAGINA_ERROR;
+			model.addAttribute("mensajeError", e.toString());
+		}
+		return retorno;
+    }
+	
+	@GetMapping("/nueva-lista-precio")
+	public String cargarListaPrecio(Model model,
+										@RequestParam(Constante.PARAM_ID_LISTA_PRECIO) String idListaPrecio,
+									    @RequestParam(Constante.PARAM_OPCION) String opcion,
+									    @RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar) {
+		String retorno;
+
+		try {
+			logger.info("entrando al método cargarListaPrecio");
+			
+			model.addAttribute("idListaPrecio", idListaPrecio);
+			model.addAttribute("opcion", opcion);
+			model.addAttribute("datoBuscar", datoBuscar);
+						
+			// llenando los combos
+			List<ComboModel> listaMoneda = genericService.cargarCombo(Constante.CATALOGO_MONEDA);
+			
+			model.addAttribute("listaMoneda", listaMoneda);
+			retorno = Constante.PAGINA_NUEVA_LISTA_PRECIO;
+			
+			logger.info("saliendo del método cargarListaPrecio");
+		}catch (Exception e) {
+			// TODO: handle exception
+			retorno = Constante.PAGINA_ERROR;
+			model.addAttribute("mensajeError", e.toString());
+		}
+		return retorno;
+	}
+	
+	
 	// REPORTES
 		@GetMapping("/reporte-compras")
 	    public String cargarReporteCompras(Model model) {
