@@ -132,6 +132,7 @@ function inicializarComponentes() {
 function inicializarPantalla() {
 	 
 	if(opcion.text() == Opcion.NUEVO) {
+		console.log("es NUEVO!!!")
 		inicializarTablaDetalle(true);
 		inicializarFechas();
 		cargarPantallaConDatosGuiaRemisionAsociadas();

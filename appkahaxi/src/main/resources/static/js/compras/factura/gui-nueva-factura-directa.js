@@ -157,7 +157,7 @@ function construirFechasPicker() {
 	fecConta.datetimepicker({
 		locale: 		'es',
 		format: 		'L',
-		defaultDate:	new Date(),
+		//defaultDate:	new Date(),
 		ignoreReadonly:  true
 	});
 
