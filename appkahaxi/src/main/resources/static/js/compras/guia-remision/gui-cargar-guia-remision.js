@@ -13,7 +13,7 @@ var fechaDesde;
 var fechaHasta;
 var estadoParam;
 var volverParam;
-var desdeOCParam;
+var desdeDocRefParam;
 
 var formGuiaRemision;
 var OCReferencia;
@@ -93,8 +93,8 @@ function inicializarVariables() {
 	fechaHasta =  $("#fechaHasta");
 	estadoParam =  $("#estadoParam");
 	volverParam =  $("#volverParam");
-	desdeOCParam =  $("#desdeOCParam");
-
+	desdeDocRefParam =  $("#desdeDocRefParam");
+	
 	formGuiaRemision = $("#formGuiaRemision");
 	OCReferencia = $("#OCReferencia");
 	documentoCliente = $("#documentoCliente");
@@ -308,11 +308,6 @@ function cargarPantallaConDatosOrdenCompra() {
 
 				var data = JSON.parse(result);
 				cargarPantallaHTMLOrdenCompra(data);
-
-				if(data.codigoCondPago == CondicionPago.CREDITO) {
-					mostrarControl(divDias);
-				}
-
 				nuevaPantallaGuiaRemision();
 			}
 
@@ -338,6 +333,11 @@ function cargarPantallaHTMLOrdenCompra(data) {
 	subTotalGR.val(data.subTotal);
 	igvGR.val(data.igv);
 	totalGR.val(data.total);
+	
+	if(data.codigoCondPago == CondicionPago.CREDITO) {
+		mostrarControl(divDias);
+	}
+	
 	cantidadDetalleDuplicado = data.detalle.length;
 	for(i=0; i < cantidadDetalleDuplicado; i++) {
 
@@ -379,9 +379,9 @@ function nuevaPantallaGuiaRemision() {
 function cargarPantallaConDatosGuiaRemision() {
 
 	var nroDocReferenciaVal; 
-	var desdeOC = desdeOCParam.text();
+	var desdeDocRef = desdeDocRefParam.text();
 	
-	if(desdeOC == Respuesta.SI){
+	if(desdeDocRef == Respuesta.SI){
 		nroDocReferenciaVal = nroGuiaRemision.text();
 	}else{
 		nroDocReferenciaVal = numeroDocumento.text();
@@ -469,9 +469,9 @@ function verPantallaGuiaRemision(data) {
 
 	titulo.text("VER");
 	
-	var desdeOC 	= desdeOCParam.text();
+	var desdeDocRef 	= desdeDocRefParam.text();
 	
-	if(desdeOC == Respuesta.SI){
+	if(desdeDocRef == Respuesta.SI){
 		codigo.html(nroGuiaRemision.text());
 	}else{
 		codigo.html(numeroDocumento.text());
@@ -1418,17 +1418,17 @@ function generarFacturaAsociada() {
 
 function volver(){
 	var params;
-	var dato 		= datoBuscar.text();
-	var nroGR 		= nroGuiaRemision.text();
-	var nroOC 		= nroOrdenCompra.text();// este debe ser el valor del campo a buscar en el filtro de oc en el mantenimiento de oc 
-	var codRpto 	= codRepuesto.text();
-	var fecDesde 	= fechaDesde.text();
-	var fecHasta 	= fechaHasta.text();
-	var estParam	= estadoParam.text();
-	var nroDoc		= numeroDocumento.text(); // este debe ser la OC
-	var desdeOC 	= desdeOCParam.text();
+	var dato 			= datoBuscar.text();
+	var nroGR 			= nroGuiaRemision.text();
+	var nroOC 			= nroOrdenCompra.text();// este debe ser el valor del campo a buscar en el filtro de oc en el mantenimiento de oc 
+	var codRpto 		= codRepuesto.text();
+	var fecDesde 		= fechaDesde.text();
+	var fecHasta 		= fechaHasta.text();
+	var estParam		= estadoParam.text();
+	var nroDoc			= numeroDocumento.text(); // este debe ser la OC
+	var desdeDocRef 	= desdeDocRefParam.text();
 	
-	if(desdeOC == Respuesta.SI){
+	if(desdeDocRef == Respuesta.SI){
 		
 		params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
 			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI;
@@ -1443,36 +1443,30 @@ function volver(){
 
 function cargarFacturaAsociada(numeroDocumento, opcion) {
 
+	/*
 	var params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=&fechaDesde=&fechaHasta=&estadoParam=&guias=&volver=" + Respuesta.NO;
 
 	window.location.href = "/appkahaxi/nueva-factura-compra-asociada?" + params;
+	*/
+	console.log("cargar factura asociada--> nroDoc (GR origen)-->" + codigo.html());
+	var params;
+	var dato 		= datoBuscar.val();
+	var nroGR 		= nroGuiaRemision.text();
+	var nroOC 		= nroOrdenCompra.text();
+	var codRpto 	= codRepuesto.val();
+	var fecDesde 	= fechaDesde.text();
+	var fecHasta 	= fechaHasta.text();
+	var est 		= estadoParam.val();
+	// armando los parámetros
+	params = "numeroDocumento=" + codigo.html() + "&opcion=" + opcion + "&datoBuscar=" + dato +
+			 "&nroComprobantePago=" + numeroDocumento + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +
+			 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI + "&guias=";
+
+	window.location.href = "/appkahaxi/nueva-factura-compra-asociada?" + params;
+	
+	
+	
 }
-/*
-function mostrarOcultarDiasPorCondicionPago() {
-
-	var condPagoVal = condPago.val();
-
-	if(condPagoVal == CondicionPago.CONTADO){
-		ocultarControl(divDias);
-	}else{
-		mostrarControl(divDias);
-	}
-}
-*/
-/*
-function calcularPorTipoMoneda() {
-
-	var tipoMonedaVal = tipoMoneda.val();
-
-	if(tipoMonedaVal == Moneda.SOLES) {
-		$('.simbolo-moneda').removeClass("input-symbol-dolar").addClass("input-symbol-sol");
-		convertirMontosASoles();
-	}else{
-		$('.simbolo-moneda').removeClass("input-symbol-sol").addClass("input-symbol-dolar");
-		convertirMontosADolares();
-	}
-}
-*/
 
 function limpiarGuiaRemision() {
 
@@ -1519,89 +1513,3 @@ function calcularResumenGuiaRemision(){
 	igvGR.val(convertirNumeroAMoneda(igv));
 	totalGR.val(convertirNumeroAMoneda(total));
 }
-
-/*
-function convertirMontosASoles(){
-	console.log("convertirMontosASoles.....");
-	var tc = Number(tipoCambio.val());
-	var nvoPrecio;
-	var nvoIgv;
-	var nvoSubTotal;
-	var subTotal;
-	var igv;
-	var total;
-	
-	var $headers = tableDetalle.find("th").not(':first').not(':last');
-	tableDetalle.DataTable().rows().iterator('row', function(context, index){
-
-		var node = $(this.row(index).node());
-		$cells = node.find("td").not(':first').not(':last');
-
-		$cells.each(function(cellIndex) {
-			if($($headers[cellIndex]).attr('id') == 'precioUnitario') {
-				nvoPrecio = Number(convertirMonedaANumero($(this).find("input").val())) * tc;
-				$(this).find("input").val(convertirNumeroAMoneda(nvoPrecio));
-			}
-			if($($headers[cellIndex]).attr('id') == 'subTotal') {
-				nvoSubTotal = Number(convertirMonedaANumero($(this).find("input").val())) * tc;
-				$(this).find("input").val(convertirNumeroAMoneda(nvoSubTotal));
-			}
-			if($($headers[cellIndex]).attr('id') == 'subTotalIgv') {
-				nvoIgv = Number(convertirMonedaANumero($(this).find("input").val())) * tc;
-				$(this).find("input").val(convertirNumeroAMoneda(nvoIgv));
-			}
-			
-		});
-	});
-	
-	subTotal = Number(convertirMonedaANumero(subTotalGR.val())) * tc;
-	igv = Number(convertirMonedaANumero(igvGR.val())) * tc;
-	total = Number(convertirMonedaANumero(totalGR.val())) * tc;
-	
-	subTotalGR.val(convertirNumeroAMoneda(subTotal));
-	igvGR.val(convertirNumeroAMoneda(igv));
-	totalGR.val(convertirNumeroAMoneda(total));
-}
-
-function convertirMontosADolares(){
-	console.log("convertirMontosADolares.....");
-	var tc = Number(tipoCambio.val());
-	var nvoPrecio;
-	var nvoIgv;
-	var nvoSubTotal;
-	var subTotal;
-	var igv;
-	var total;
-	
-	var $headers = tableDetalle.find("th").not(':first').not(':last');
-	tableDetalle.DataTable().rows().iterator('row', function(context, index){
-
-		var node = $(this.row(index).node());
-		$cells = node.find("td").not(':first').not(':last');
-
-		$cells.each(function(cellIndex) {
-			if($($headers[cellIndex]).attr('id') == 'precioUnitario') {
-				nvoPrecio = Number(convertirMonedaANumero($(this).find("input").val())) / tc;
-				$(this).find("input").val(convertirNumeroAMoneda(nvoPrecio));
-			}
-			if($($headers[cellIndex]).attr('id') == 'subTotal') {
-				nvoSubTotal = Number(convertirMonedaANumero($(this).find("input").val())) / tc;
-				$(this).find("input").val(convertirNumeroAMoneda(nvoSubTotal));
-			}
-			if($($headers[cellIndex]).attr('id') == 'subTotalIgv') {
-				nvoIgv = Number(convertirMonedaANumero($(this).find("input").val())) / tc;
-				$(this).find("input").val(convertirNumeroAMoneda(nvoIgv));
-			}			
-			
-		});
-	});
-	
-	subTotal = Number(convertirMonedaANumero(subTotalGR.val())) / tc;
-	igv = Number(convertirMonedaANumero(igvGR.val())) / tc;
-	total = Number(convertirMonedaANumero(totalGR.val())) / tc;
-	
-	subTotalGR.val(convertirNumeroAMoneda(subTotal));
-	igvGR.val(convertirNumeroAMoneda(igv));
-	totalGR.val(convertirNumeroAMoneda(total));
-}
-*/

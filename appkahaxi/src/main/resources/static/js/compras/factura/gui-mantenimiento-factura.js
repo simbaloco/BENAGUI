@@ -165,7 +165,7 @@ function inicializarEventos(){
 	});
 
 	btnNuevo.click(function(){
-		cargarFactura(null, Opcion.NUEVO);
+		cargarFacturaDirecta(null, Opcion.NUEVO);
 	});
 	
 	fContaDesde.on('keydown', function(e){
@@ -369,7 +369,7 @@ function inicializarTabla(){
 	    var data = dataTableFactura.row( $(this).closest('tr')).data();
 
 	    if(data.ordenCompra == 'DIRECTA') {
-			cargarFactura(data.numeroDocumento, Opcion.VER);
+			cargarFacturaDirecta(data.numeroDocumento, Opcion.VER);
 		} else {
 			cargarFacturaAsociada(data.numeroDocumento, Opcion.VER);
 		}
@@ -409,7 +409,7 @@ function codRepuestoKeyUp(e){
 	}
 }
 
-function cargarFactura(numeroDocumento, opcion) {
+function cargarFacturaDirecta(numeroDocumento, opcion) {
 	var params;
 	var datoBuscar 			= campoBuscar.val();
 	var nroFacturaVal 		= nroComprobantePago.val();
@@ -421,7 +421,7 @@ function cargarFactura(numeroDocumento, opcion) {
 	// armando los parámetros
 	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar +  
 			 "&nroComprobantePago=" + nroFacturaVal + "&nroOrdenCompra=" + nroOCVal + "&codRepuesto=" + codRpto +
-			 "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI;
+			 "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.NO;
 		
 	window.location.href = "/appkahaxi/nueva-factura-compra-directa?" + params;
 }
@@ -439,7 +439,7 @@ function cargarFacturaAsociada(numeroDocumento, opcion) {
 	// armando los parámetros
 	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar +
 			 "&nroComprobantePago=" + nroFacturaVal + "&nroOrdenCompra=" + nroOCVal + "&codRepuesto=" + codRpto +
-			 "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + "&guias=";
+			 "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.NO + "&guias=";
 
 	window.location.href = "/appkahaxi/nueva-factura-compra-asociada?" + params;
 }

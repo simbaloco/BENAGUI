@@ -187,14 +187,14 @@ public class PrincipalController {
 									 @RequestParam(Constante.PARAM_FECHA_HASTA) String fechaHasta,
 									 @RequestParam(Constante.PARAM_ESTADO) String estadoParam,
 									 @RequestParam(Constante.PARAM_VOLVER) String volver,
-									 @RequestParam(Constante.PARAM_DESDE_OC) String desdeOC) {
+									 @RequestParam(Constante.PARAM_DESDE_DOC_REF) String desdeDocRef) {
 		
 		String retorno;
 		try {
 			logger.info("entrando al método cargarGuiaRemisionCompra, OPCION--->" + opcion + "/numeroDocumento-->" + numeroDocumento + "/datoBuscar-->" + datoBuscar
 					+ "/nroGuiaRemision-->" + nroGuiaRemision + "/nroOrdenCompra-->" + nroOrdenCompra + "/codRepuesto-->" + codRepuesto 
 					+ "/fechaDesde-->" + fechaDesde + "/fechaHasta-->" + fechaHasta
-					+ "/estadoParam-->" + estadoParam + "/volver-->" + volver + "/desdeOC-->" + desdeOC);
+					+ "/estadoParam-->" + estadoParam + "/volver-->" + volver + "/desdeDocRef-->" + desdeDocRef);
 			model.addAttribute("numeroDocumento", numeroDocumento);
 			model.addAttribute("opcion", opcion);
 			model.addAttribute("datoBuscar", datoBuscar);
@@ -205,7 +205,7 @@ public class PrincipalController {
 			model.addAttribute("fechaHasta", fechaHasta);
 			model.addAttribute("estadoParam", estadoParam);
 			model.addAttribute("volver", volver);
-			model.addAttribute("desdeOC", desdeOC);
+			model.addAttribute("desdeDocRef", desdeDocRef);
 			// llenando los combos
 			List<ComboModel> listaMoneda = genericService.cargarCombo(Constante.CATALOGO_MONEDA);
 			List<ComboModel> listaCondPago = genericService.cargarCombo(Constante.CATALOGO_CONDICION_PAGO);
@@ -308,13 +308,14 @@ public class PrincipalController {
 									 @RequestParam(Constante.PARAM_FECHA_DESDE) String fechaDesde,
 									 @RequestParam(Constante.PARAM_FECHA_HASTA) String fechaHasta,
 									 @RequestParam(Constante.PARAM_ESTADO) String estadoParam,
-									 @RequestParam(Constante.PARAM_VOLVER) String volver) {
+									 @RequestParam(Constante.PARAM_VOLVER) String volver,
+									 @RequestParam(Constante.PARAM_DESDE_DOC_REF) String desdeDocRef) {
 		String retorno;
 		try {
 			logger.info("entrando al método cargarFacturaCompraDirecta, OPCION--->" + opcion + "/numeroDocumento-->" + numeroDocumento 
 					+ "/datoBuscar-->" + datoBuscar + "/nroComprobantePago-->" + nroComprobantePago + "/nroOrdenCompra-->" + nroOrdenCompra
 					+ "/codRepuesto-->" + codRepuesto + "/fechaDesde-->" + fechaDesde + "/fechaHasta-->" + fechaHasta
-					+ "/estadoParam-->" + estadoParam + "/volver-->" + volver);
+					+ "/estadoParam-->" + estadoParam + "/volver-->" + volver + "/desdeDocRef-->" + desdeDocRef);
 			
 			model.addAttribute("numeroDocumento", numeroDocumento);
 			model.addAttribute("opcion", opcion);
@@ -326,6 +327,7 @@ public class PrincipalController {
 			model.addAttribute("fechaHasta", fechaHasta);
 			model.addAttribute("estadoParam", estadoParam);
 			model.addAttribute("volver", volver);
+			model.addAttribute("desdeDocRef", desdeDocRef);
 			// llenando los combos
 			List<ComboModel> listaMoneda = genericService.cargarCombo(Constante.CATALOGO_MONEDA);
 			List<ComboModel> listaCondPago = genericService.cargarCombo(Constante.CATALOGO_CONDICION_PAGO);
@@ -358,14 +360,15 @@ public class PrincipalController {
 									    @RequestParam(Constante.PARAM_FECHA_HASTA) String fechaHasta,
 									    @RequestParam(Constante.PARAM_ESTADO) String estadoParam,
 									    @RequestParam(Constante.PARAM_VOLVER) String volver,
+										@RequestParam(Constante.PARAM_DESDE_DOC_REF) String desdeDocRef,
 										@RequestParam(Constante.PARAM_GUIAS) String guias) {
 		String retorno;
 
 		try {
 
-			logger.info("entrando al método cargarFacturaCompraAsociada, OPCION--->" + opcion + "/numeroDocumento-->" + numeroDocumento + "/datoBuscar-->" + datoBuscar
-					+ "/fechaDesde-->" + fechaDesde + "/fechaHasta-->" + fechaHasta
-					+ "/estadoParam-->" + estadoParam + "/volver-->" + volver + "/guias-->" + guias);
+			logger.info("entrando al método cargarFacturaCompraAsociada, OPCION--->" + opcion + "/numeroDocumento-->" + numeroDocumento 
+					+ "/datoBuscar-->" + datoBuscar + "/fechaDesde-->" + fechaDesde + "/fechaHasta-->" + fechaHasta
+					+ "/estadoParam-->" + estadoParam + "/volver-->" + volver + "/desdeDocRef-->" + desdeDocRef + "/guias-->" + guias);
 
 			model.addAttribute("numeroDocumento", numeroDocumento);
 			model.addAttribute("opcion", opcion);
@@ -374,6 +377,7 @@ public class PrincipalController {
 			model.addAttribute("fechaHasta", fechaHasta);
 			model.addAttribute("estadoParam", estadoParam);
 			model.addAttribute("volver", volver);
+			model.addAttribute("desdeDocRef", desdeDocRef);
 			model.addAttribute("guias", guias);
 			// llenando los combos
 			List<ComboModel> listaMoneda = genericService.cargarCombo(Constante.CATALOGO_MONEDA);

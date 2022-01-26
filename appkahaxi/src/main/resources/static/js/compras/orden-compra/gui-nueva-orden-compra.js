@@ -2,7 +2,6 @@ var indiceFilaDataTableDetalle = -1;
 //**************************************************************** */
 var cantidadDetalleDuplicado;
 var codigoCliente;
-var numeroDocumento;
 
 var opcion;
 var datoBuscar;
@@ -77,7 +76,6 @@ $(document).ready(function(){
 
 function inicializarVariables() {
 	codigoCliente =  $("#codigoCliente");
-	numeroDocumento =  $("#numeroDocumento");
 	
 	opcion =  $("#opcion");
 	datoBuscar =  $("#datoBuscar");
@@ -1359,7 +1357,7 @@ function generarGuiaRemisionPorOrden() {
 	
 	params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.NUEVO + "&datoBuscar=" + dato + 
 			 "&nroGuiaRemision=&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
-			 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta +"&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeOC=" + Respuesta.SI;
+			 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta +"&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI;
 
 	window.location.href = "/appkahaxi/cargar-guia-remision-compra?" + params;
 }
@@ -1376,7 +1374,7 @@ function cargarGuiaRemisionAsociada(numDocumento) {
 	
 	params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato + 
 			 "&nroGuiaRemision=" + numDocumento +"&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
-			 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta +"&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeOC=" + Respuesta.SI;
+			 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta +"&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI;
 
 	window.location.href = "/appkahaxi/cargar-guia-remision-compra?" + params;
 }

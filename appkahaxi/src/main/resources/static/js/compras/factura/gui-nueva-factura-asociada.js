@@ -6,12 +6,14 @@ var numeroDocumento;
 var opcion;
 var datoBuscar;
 var nroComprobantePago;
+var nroGuiaRemision;
 var nroOrdenCompra;
 var codRepuesto;
 var fechaDesde;
 var fechaHasta;
 var estadoParam;
 var volverParam;
+var desdeDocRefParam;
 
 var guiasReferencia;
 
@@ -73,6 +75,7 @@ function inicializarVariables() {
 	
 	datoBuscar =  $("#datoBuscar");
 	nroComprobantePago =  $("#nroComprobantePago");
+	nroGuiaRemision =  $("#nroGuiaRemision");
 	nroOrdenCompra =  $("#nroOrdenCompra");
 	codRepuesto =  $("#codRepuesto");
 	fechaDesde =  $("#fechaDesde");
@@ -116,6 +119,7 @@ function inicializarVariables() {
 	estadoPago = $("#estadoPago");
 
 	volverParam = $("#volverParam");
+	desdeDocRefParam =  $("#desdeDocRefParam");
 	dateTimePickerInput = $(".datetimepicker-input");
 	lblAnulado = $("#lblAnulado");
 }
@@ -289,11 +293,6 @@ function cargarPantallaConDatosGuiaRemisionAsociadas() {
 				var data = JSON.parse(result);
 
 				cargarPantallaHTMLFacturaConDatosGuiaRemisionAsociadas(data);
-
-				if(data.codigoCondPago == CondicionPago.CREDITO) {
-					mostrarControl(divDias);
-				}
-
 				habilitarPantallaConDatosGuiaRemisionAsociadas();
 			}
 
@@ -324,13 +323,15 @@ function cargarPantallaHTMLFacturaConDatosGuiaRemisionAsociadas(data) {
 	subTotalFactura.val(data.subTotal);
 	igvFactura.val(data.igv);
 	totalFactura.val(data.total);
+	
+	if(data.codigoCondPago == CondicionPago.CREDITO) {
+		mostrarControl(divDias);
+	}
 
 	cantidadDetalleDuplicado = data.detalle.length;
 
 	var indice = 0;
-
 	for(i=0; i < cantidadDetalleDuplicado; i++) {
-
 		var detalle = data.detalle[i];
 
 		if(Number(detalle.cantidadPendienteGuiaRemision) > 0 ) {
@@ -368,7 +369,8 @@ function habilitarPantallaConDatosGuiaRemisionAsociadas() {
 	habilitarControl(estadoPago);
 	habilitarControl(serie);
 	habilitarControl(correlativo);
-
+	
+	mostrarControl(btnVolver);
 	mostrarControl(btnGrabar);
 	mostrarControl(btnLimpiar);
 
@@ -386,9 +388,16 @@ function habilitarPantallaConDatosGuiaRemisionAsociadas() {
 }
 
 function cargarPantallaConDatosFactura() {
-
-	var nroDocReferenciaVal = numeroDocumento.text();
-
+	
+	var nroDocReferenciaVal; 
+	/*var desdeDocRef = desdeDocRefParam.text();
+	
+	if(desdeDocRef == Respuesta.SI){
+		nroDocReferenciaVal = nroComprobantePago.text();
+	}else{*/
+		nroDocReferenciaVal = numeroDocumento.text();
+	//}
+	console.log("nroDocReferenciaVal-->" + nroDocReferenciaVal);
 	$.ajax({
 		type:"Get",
 		contentType : "application/json",
@@ -474,7 +483,14 @@ function cargarPantallaHTMLFactura(data) {
 function verPantallaFactura(data) {
 
 	titulo.text("VER");
-	codigo.html(numeroDocumento.text());
+	
+	var desdeDocRef 	= desdeDocRefParam.text();
+	
+	if(desdeDocRef == Respuesta.SI){
+		codigo.html(nroComprobantePago.text());
+	}else{
+		codigo.html(numeroDocumento.text());
+	}
 
 	fecConta.datetimepicker('date', moment(data.fechaContabilizacion));
 	fecDocumento.datetimepicker('date', moment(data.fechaDocumento));
@@ -1165,17 +1181,28 @@ function anularFacturaCompra(){
 
 function volver(){
 	var params;
-	var dato 		= datoBuscar.text();
-	var nroFact 	= nroComprobantePago.text();
-	var nroOC 		= nroOrdenCompra.text();
-	var codRpto 	= codRepuesto.text();
-	var fecDesde 	= fechaDesde.text();
-	var fecHasta 	= fechaHasta.text();
-	var estParam	= estadoParam.text();
-
-	params = "datoBuscar=" + dato + "&nroComprobantePago=" + nroFact + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +  
+	var dato 			= datoBuscar.text();
+	var nroFact 		= nroComprobantePago.text();
+	var nroGR 			= nroGuiaRemision.text();
+	var nroOC 			= nroOrdenCompra.text();
+	var codRpto 		= codRepuesto.text();
+	var fecDesde 		= fechaDesde.text();
+	var fecHasta 		= fechaHasta.text();
+	var estParam		= estadoParam.text();
+	var desdeDocRef 	= desdeDocRefParam.text();
+	
+	if(desdeDocRef == Respuesta.SI){
+		
+		params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato + 
+				 "&nroGuiaRemision=" + nroGR + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
+			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI;
+		window.location.href = "/appkahaxi/cargar-guia-remision-compra?" + params;
+	}else{
+		
+		params = "datoBuscar=" + dato + "&nroComprobantePago=" + nroFact + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +  
 			 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam;
-	window.location.href = "/appkahaxi/mantenimiento-factura-compra?" + params;
+		window.location.href = "/appkahaxi/mantenimiento-factura-compra?" + params;
+	}
 }
 
 function limpiarFactura() {
