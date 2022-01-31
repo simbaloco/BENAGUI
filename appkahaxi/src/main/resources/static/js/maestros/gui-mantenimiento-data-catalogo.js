@@ -33,8 +33,8 @@ $(document).ready(function() {
 	parametrizacionTipoCatalogo();
 	inicializarComponentes();
 	inicializarPantalla();
-
 });
+
 
 function inicializarVariables() {
 	tipoMantenimiento = $('#tipoCatalogo');
@@ -294,7 +294,7 @@ function cargarModalDataCatalogo(data, opcion){
 	if(opcion == Opcion.NUEVO){
 		console.log("cargarModalDataCatalogo---> NUEVO");
 		
-		idDC.text(CADENA_VACIA);    	
+		idDC.text(0);    	
         descripcionModal.val(CADENA_VACIA);
         activoModal.prop('checked', true);
 		titulo.text(DescripcionOpcion.DES_NUEVO + " " + desCatalogo);
@@ -408,6 +408,7 @@ function registrarDataCatalogo(){
 
 function limpiar(){
 	campoBuscar.val(CADENA_VACIA);
+	idDC.text(0);
 	buscar();	
 	campoBuscar.focus();
 }

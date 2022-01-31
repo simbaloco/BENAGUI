@@ -4,6 +4,8 @@ var fecFin;
 var fInicio;
 var fFin;
 var tipo;
+var tablaAnulados;
+var dataTableAnulados;
 // botones
 var btnExportalExcel;
 var btnExportalPdf;
@@ -14,6 +16,7 @@ var btnExportalPdf;
 $(document).ready(function() {
 	inicializarVariables();	
 	inicializarComponentes();
+	inicializarTabla();
 });
 
 function inicializarVariables() {
@@ -22,6 +25,7 @@ function inicializarVariables() {
 	fInicio = $('#fInicio');
 	tipo = $('#tipo');
 	fFin = $('#fFin');	
+	tablaAnulados = $('#tablaAnulados');
 	btnExportalExcel = $('#btnExportalExcel');	
 	btnExportalPdf = $("#btnExportalPdf");
 }
@@ -31,6 +35,7 @@ function inicializarComponentes() {
 	retringirSeleccionFechas();
 	//inicializarFechaInicioFin();
 	inicializarEventos();
+	inicializarTabla();
 }
 
 
@@ -63,6 +68,7 @@ function retringirSeleccionFechas() {
 		console.log("entrando change fec desde....")
 		if(validarFechas()){
 			fecFin.datetimepicker('minDate', e.date);
+			buscar(e);
 		}else{
 			mostrarDialogoInformacion("El rango de fechas es máximo de 6 meses.", Boton.WARNING);
 			fecInicio.datetimepicker('date', e.oldDate);
@@ -73,6 +79,7 @@ function retringirSeleccionFechas() {
 		console.log("entrando change fec hasta....")
 		if(validarFechas()){
 			fecInicio.datetimepicker('maxDate', e.date);
+			buscar(e);
 		}else{
 			mostrarDialogoInformacion("El rango de fechas es máximo de 6 meses.", Boton.WARNING);
 			fecFin.datetimepicker('date', e.oldDate);
@@ -137,15 +144,6 @@ function validarFechas(){
 			console.log("dif <= 180, true....")
 			return true;
 		}			
-}
-
-function campoBuscarKeyUp(e){
-	var datoBuscar = campoBuscar.val().trim();
-	console.log('datoBuscar--->' + datoBuscar);
-	var key = window.Event ? e.which : e.keyCode;
-	console.log("***key--->" + key)
-	/*if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
-	}*/
 }
 
 function generarReporte(tipoRep){
@@ -224,5 +222,115 @@ function generarReporte(tipoRep){
     });
 }
 
+function buscar(){	
+	if ( $.fn.dataTable.isDataTable(tablaAnulados)) {
+		console.log("ya existe el dt....");
+		dataTableAnulados.clear(); // usamos esta instrucción para limpiar la tabla sin que haya parpadeo
+		dataTableAnulados.ajax.reload(null, true);
+	}
+}
 
+function inicializarTabla(){
+	
+	dataTableAnulados = tablaAnulados.DataTable({
+        "ajax": {
+			// se pasa la data de esta forma para poder reinicializar luego sólo la llamada ajax sin tener que dibujar de nuevo toda la tabla
+			data: function ( d ) {				
+				d.fechaInicio	= fecInicio.datetimepicker('date').format('DD/MM/YYYY');
+				d.fechaFin		= fecFin.datetimepicker('date').format('DD/MM/YYYY');
+				d.codTipo		= tipo.val();
+		    },
+            url: '/appkahaxi/listarReporteDocsAnulados/',
+            dataSrc: function (json) {
+				console.log("listarReporteDocsAnulados...success");
+            	return json;
+            },
+            error: function (xhr, error, code){
+
+            }
+        },
+        "responsive"	: false,
+        "scrollCollapse": false,
+		"ordering"      : true,
+        "dom"			: '<ip<rt>lp>',
+       	"lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
+        "deferRender"   : true,
+        "autoWidth"		: false,
+        "columnDefs"    : [
+            {
+                "width": "5px",
+                "targets": [0],
+                "data": "NRO_DOCUMENTO"
+            },
+            {
+                "width": "10px",
+                "targets": [1],
+                "data": "FEC_ANULA"
+            },
+            {
+                "width": "75px",
+                "targets": [2],
+                "data": "USER_ANULA"
+            },
+			{
+                "width": "50px",
+                "targets": [3],
+                "data": "TIPO_DOC"
+            },
+			{
+                "width": "50px",
+                "targets": [4],
+                "data": "NRO_DOCUMENTO"
+            },
+			{
+                "width": "50px",
+                "targets": [5],
+                "data": "FEC_CONTABILIZACION"
+            },
+			{
+                "width": "50px",
+                "targets": [6],
+                "data": "NRO_DOC_SN"
+            },
+			{
+                "width": "50px",
+                "targets": [7],
+                "data": "NOMBRE_SN"
+            },
+            {
+                "width": "10px",
+                "targets": [8],
+                "data": "MONEDA"
+            },            
+            {
+                "width": "10px",
+                "targets": [9],
+                "data": "SUBTOTAL"
+            },  
+			{
+                "width": "10px",
+                "targets": [10],
+                "data": "IGV"
+            },  
+			{
+                "width": "10px",
+                "targets": [11],
+                "data": "TOTAL"
+            }  
+         ],
+         "fnRowCallback":
+                 function(row, data, iDisplayIndex, iDisplayIndexFull){					
+                     var index = iDisplayIndexFull + 1;
+					 // colocando la numeración
+                     $('td:eq(0)', row).html(index);
+					// modificando el tamaño de los caracteres del listado 
+					$(row).addClass("listado-tam-caracteres");
+                     return row;
+                 },
+         "language"  : {
+            "url": "/appkahaxi/language/Spanish.json"
+         }
+    });
+  
+}
 

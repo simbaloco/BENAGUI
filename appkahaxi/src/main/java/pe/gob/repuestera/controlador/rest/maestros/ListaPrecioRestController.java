@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
+import pe.gob.repuestera.model.CatalogoModel;
 import pe.gob.repuestera.model.CompraCabModel;
 import pe.gob.repuestera.model.CompraDetModel;
 import pe.gob.repuestera.model.ListaPreciosDetModel;
@@ -37,7 +38,7 @@ public class ListaPrecioRestController {
     HttpSession session;
 	
 	
-	@GetMapping ("/listarListaPrecios")
+	@GetMapping ("/listarListaPrecios/")
     public ResponseEntity<List<ListaPreciosModel>> listarListaPrecios(@RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar) throws Exception {
         
         	logger.info("Inicio listarListaPrecios.......");
@@ -46,7 +47,7 @@ public class ListaPrecioRestController {
             
             logger.info("Fin listarListaPrecios.......");
 
-            return new ResponseEntity<>(listaPrecioList, HttpStatus.OK);     
+            return new ResponseEntity<List<ListaPreciosModel>>(listaPrecioList, HttpStatus.OK);   
     }
 		
 	@PostMapping ("/registrarListaPrecio")

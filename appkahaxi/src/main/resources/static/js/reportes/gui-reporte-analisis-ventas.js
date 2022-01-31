@@ -5,6 +5,10 @@ var fInicio;
 var fFin;
 var rbCliente;
 var rbArticulo;
+var tablaAnalisisCliente;
+var tablaAnalisisArticulo;
+var dataTableAnalisisCliente;
+var dataTableAnalisisArticulo;
 // botones
 var btnExportalExcel;
 var btnExportalPdf;
@@ -25,6 +29,8 @@ function inicializarVariables() {
 	fFin = $('#fFin');
 	rbCliente = $('#rbCliente');
 	rbArticulo = $('#rbArticulo');	
+	tablaAnalisisCliente = $('#tablaAnalisisCliente');
+	tablaAnalisisArticulo = $('#tablaAnalisisArticulo');
 	btnExportalExcel = $('#btnExportalExcel');
 	btnExportalPdf = $("#btnExportalPdf");
 }
@@ -116,16 +122,12 @@ function inicializarEventos() {
 function inicializarFechaInicioFin() {
 	console.log("inicializarFechaInicioFin....");
 	fecFin.datetimepicker('date', moment().format('DD/MM/YYYY'));
-	console.log("2");
 	fecFin.datetimepicker('maxDate', moment().format('DD/MM/YYYY'));
 
 	var fecFinVal = fecFin.datetimepicker('date');
 	var nuevaFecInicioVal = moment(fecFinVal).add(-ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS_INICIO, 'day');
-	console.log("3");
 	fecInicio.datetimepicker('date', nuevaFecInicioVal);
-	console.log("4");
 	fecInicio.datetimepicker('maxDate', moment().format('DD/MM/YYYY'));
-	console.log("5");
 }
 
 function validarFechas() {
@@ -134,7 +136,7 @@ function validarFechas() {
 	var fecfecInicioVal = moment(fecInicio.datetimepicker('date'));
 	var fecFinVal = moment(fecFin.datetimepicker('date'));
 	var diferencia = fecFinVal.diff(fecfecInicioVal, 'days');
-	console.log("diferencia--->" + diferencia);
+	
 	if (diferencia > ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS_REPORTES) {
 		console.log("dif > 180, falso-....")
 		return false;
@@ -142,15 +144,6 @@ function validarFechas() {
 		console.log("dif <= 180, true....")
 		return true;
 	}
-}
-
-function campoBuscarKeyUp(e) {
-	var datoBuscar = campoBuscar.val().trim();
-	console.log('datoBuscar--->' + datoBuscar);
-	var key = window.Event ? e.which : e.keyCode;
-	console.log("***key--->" + key)
-	/*if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
-	}*/
 }
 
 function generarReporte(tipo) {

@@ -5,6 +5,8 @@ var fInicio;
 var fFin;
 var almacen;
 var campoBuscar;
+var tablaKardex;
+var dataTableKardex;
 // botones
 var btnExportalExcel;
 var btnExportalPdf;
@@ -23,6 +25,7 @@ function inicializarVariables() {
 	fInicio = $('#fInicio');
 	almacen = $('#almacen');
 	fFin = $('#fFin');
+	tablaKardex = $('#tablaKardex');
 	campoBuscar = $('#campoBuscar');
 	btnExportalExcel = $('#btnExportalExcel');	
 	btnExportalPdf = $("#btnExportalPdf");
@@ -31,8 +34,8 @@ function inicializarVariables() {
 function inicializarComponentes() {
 	construirFechasPicker();
 	retringirSeleccionFechas();
-	//inicializarFechaInicioFin();
 	inicializarEventos();
+	inicializarTabla();
 }
 
 
@@ -65,6 +68,7 @@ function retringirSeleccionFechas() {
 		console.log("entrando change fec desde....")
 		if(validarFechas()){
 			fecFin.datetimepicker('minDate', e.date);
+			buscar(e);
 		}else{
 			mostrarDialogoInformacion("El rango de fechas es máximo de 6 meses.", Boton.WARNING);
 			fecInicio.datetimepicker('date', e.oldDate);
@@ -75,6 +79,7 @@ function retringirSeleccionFechas() {
 		console.log("entrando change fec hasta....")
 		if(validarFechas()){
 			fecInicio.datetimepicker('maxDate', e.date);
+			buscar(e);
 		}else{
 			mostrarDialogoInformacion("El rango de fechas es máximo de 6 meses.", Boton.WARNING);
 			fecFin.datetimepicker('date', e.oldDate);
@@ -120,16 +125,12 @@ function inicializarEventos(){
 function inicializarFechaInicioFin(){
 	console.log("inicializarFechaInicioFin....");
 	fecFin.datetimepicker('date', moment().format('DD/MM/YYYY'));
-	console.log("2");
 	fecFin.datetimepicker('maxDate', moment().format('DD/MM/YYYY'));
 	
 	var fecFinVal = fecFin.datetimepicker('date');
 	var nuevaFecInicioVal 	= moment(fecFinVal).add(-ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS_INICIO , 'day');
-	console.log("3");
 	fecInicio.datetimepicker('date', nuevaFecInicioVal);
-	console.log("4");
 	fecInicio.datetimepicker('maxDate', moment().format('DD/MM/YYYY'));
-	console.log("5");
 }
 
 function validarFechas(){
@@ -149,12 +150,10 @@ function validarFechas(){
 }
 
 function campoBuscarKeyUp(e){
-	var datoBuscar = campoBuscar.val().trim();
-	console.log('datoBuscar--->' + datoBuscar);
 	var key = window.Event ? e.which : e.keyCode;
-	console.log("***key--->" + key)
-	/*if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
-	}*/
+	if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
+		buscar(e);
+	}
 }
 
 function generarReporte(tipo){
@@ -234,5 +233,106 @@ function generarReporte(tipo){
     });
 }
 
+function buscar(){	
+	if ( $.fn.dataTable.isDataTable(tablaCompras)) {
+		console.log("ya existe el dt....");
+		dataTableKardex.clear(); // usamos esta instrucción para limpiar la tabla sin que haya parpadeo
+		dataTableKardex.ajax.reload(null, true);
+	}
+}
 
+function inicializarTabla(){
+	
+	dataTableKardex = tablaKardex.DataTable({
+        "ajax": {
+			// se pasa la data de esta forma para poder reinicializar luego sólo la llamada ajax sin tener que dibujar de nuevo toda la tabla
+			data: function ( d ) {
+				d.fechaInicio	= fecInicio.datetimepicker('date').format('DD/MM/YYYY');
+				d.fechaFin		= fecFin.datetimepicker('date').format('DD/MM/YYYY');
+				d.codAlmacen	= almacen.val();
+				d.datoBuscar	= campoBuscar.val().trim();
+		    },
+            url: '/appkahaxi/listarReporteKardex/',
+            dataSrc: function (json) {
+				console.log("listarReporteKardex...success");
+            	return json;
+            },
+            error: function (xhr, error, code){
+
+            }
+        },
+        "responsive"	: false,
+        "scrollCollapse": false,
+		"ordering"      : true,
+        "dom"			: '<ip<rt>lp>',
+       	"lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
+        "deferRender"   : true,
+        "autoWidth"		: false,
+        "columnDefs"    : [
+            {
+                "width": "5px",
+                "targets": [0],
+                "data": "NRO_DOCUMENTO"
+            },
+            {
+                "width": "10px",
+                "targets": [1],
+                "data": "FEC_REGISTRO"
+            },
+            {
+                "width": "75px",
+                "targets": [2],
+                "data": "TIPO_OPERACION"
+            },
+			{
+                "width": "50px",
+                "targets": [3],
+                "data": "TIPO_DOCUMENTO"
+            },
+			{
+                "width": "50px",
+                "targets": [4],
+                "data": "NRO_DOCUMENTO"
+            },
+			{
+                "width": "50px",
+                "targets": [5],
+                "data": "ALMACEN"
+            },
+			{
+                "width": "50px",
+                "targets": [6],
+                "data": "COD_ESTANDAR"
+            },
+			{
+                "width": "50px",
+                "targets": [7],
+                "data": "COD_ANTIGUO"
+            },
+            {
+                "width": "10px",
+                "targets": [8],
+                "data": "ARTICULO"
+            },            
+            {
+                "width": "10px",
+                "targets": [9],
+                "data": "N_CANTIDAD"
+            }       
+         ],
+         "fnRowCallback":
+                 function(row, data, iDisplayIndex, iDisplayIndexFull){					
+                     var index = iDisplayIndexFull + 1;
+					 // colocando la numeración
+                     $('td:eq(0)', row).html(index);
+					// modificando el tamaño de los caracteres del listado 
+					$(row).addClass("listado-tam-caracteres");
+                     return row;
+                 },
+         "language"  : {
+            "url": "/appkahaxi/language/Spanish.json"
+         }
+    });
+  
+}
 

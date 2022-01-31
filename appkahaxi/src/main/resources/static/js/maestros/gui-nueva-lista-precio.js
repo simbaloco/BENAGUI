@@ -86,7 +86,7 @@ function volver() {
 	var datoBusca = datoBuscar.text();
 
 	params = "datoBuscar=" + datoBusca;
-	window.location.href = "/appkahaxi/mantenimiento-lista-precios?" + params;
+	window.location.href = "/appkahaxi/lista-precios?" + params;
 }
 
 function inicializarTabla(paginacion) {

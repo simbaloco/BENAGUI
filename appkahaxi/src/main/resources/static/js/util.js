@@ -76,7 +76,7 @@ var DescripcionCatalogo = {
 		DES_TIPO_DOC_SISTEMA	: "Tipo de Documento Sistema",
 		DES_TIPO_DOC_SUNAT		: "Tipo de Documento Sunat",
 		DES_TIPO_TRASLADO		: "Motivo de Traslado",
-		DES_ESTADO_PAGO			: "EstadAo de Pago"
+		DES_ESTADO_PAGO			: "Estado de Pago"
 };
 
 var CodigoSocio = {

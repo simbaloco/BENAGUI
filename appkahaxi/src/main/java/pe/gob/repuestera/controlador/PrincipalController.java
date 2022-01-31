@@ -1129,7 +1129,7 @@ public class PrincipalController {
 		return retorno;
 	}
 	
-	@GetMapping("/mantenimiento-lista-precios")
+	@GetMapping("/lista-precios")
     public String cargarMantenimientoListaPrecios(Model model, @RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar) {
 		
 		String retorno;
@@ -1267,6 +1267,25 @@ public class PrincipalController {
 				model.addAttribute("listaTipo", listaTipo);
 				retorno = Constante.PAGINA_REPORTE_ANULADOS;
 				logger.info("saliendo del método cargarReporteDocumentosAnulados");
+			}catch (Exception e) {
+				// TODO: handle exception
+				retorno = Constante.PAGINA_ERROR;
+				model.addAttribute("mensajeError", e.toString());
+			}
+			return retorno;
+	    }
+		
+		@GetMapping("/series")
+	    public String cargarSeries(Model model) {
+			String retorno;
+			try {
+				logger.info("entrando al método cargarSeries");
+				
+				List<ComboModel> listaTipoDocumento = genericService.cargarCombo(Constante.CATALOGO_TIPO_DOC_SUNAT);
+				model.addAttribute("listaTipoDocumentoModal", listaTipoDocumento);
+				model.addAttribute("listaTipoDocumento", listaTipoDocumento);
+				retorno = Constante.PAGINA_MANTENIMIENTO_SERIE;
+				logger.info("saliendo del método cargarSeries");
 			}catch (Exception e) {
 				// TODO: handle exception
 				retorno = Constante.PAGINA_ERROR;

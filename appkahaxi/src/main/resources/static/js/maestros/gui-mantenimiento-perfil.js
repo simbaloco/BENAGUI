@@ -280,7 +280,7 @@ function cargarModalPerfil(perfil, opcion){
 			habilitarControl(activoModal);
 			habilitarControl(tree);
 			habilitarControl(btnGrabarModal);
-			
+			mostrarControl(btnGrabarModal);			
 			buscarOpciones(tree, Opcion.NUEVO);
 		}
 		

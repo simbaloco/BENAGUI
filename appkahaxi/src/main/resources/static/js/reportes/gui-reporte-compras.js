@@ -4,7 +4,10 @@ var fecFin;
 var fInicio;
 var fFin;
 var campoBuscar;
+var tablaCompras
+var dataTableCompras;
 // botones
+//var btnBuscar;
 var btnExportalExcel;
 var btnExportalPdf;
 
@@ -22,6 +25,8 @@ function inicializarVariables() {
 	fInicio = $('#fInicio');
 	fFin = $('#fFin');
 	campoBuscar = $('#campoBuscar');
+	tablaCompras = $('#tablaCompras');
+	//btnBuscar = $('#btnBuscar');
 	btnExportalExcel = $('#btnExportalExcel');
 	btnExportalPdf = $("#btnExportalPdf");
 }
@@ -29,8 +34,8 @@ function inicializarVariables() {
 function inicializarComponentes() {
 	construirFechasPicker();
 	retringirSeleccionFechas();
-	//inicializarFechaInicioFin();
 	inicializarEventos();
+	inicializarTabla();
 }
 
 
@@ -63,6 +68,7 @@ function retringirSeleccionFechas() {
 		console.log("entrando change fec desde....")
 		if (validarFechas()) {
 			fecFin.datetimepicker('minDate', e.date);
+			buscar(e);
 		} else {
 			mostrarDialogoInformacion("El rango de fechas es máximo de 6 meses.", Boton.WARNING);
 			fecInicio.datetimepicker('date', e.oldDate);
@@ -73,6 +79,7 @@ function retringirSeleccionFechas() {
 		console.log("entrando change fec hasta....")
 		if (validarFechas()) {
 			fecInicio.datetimepicker('maxDate', e.date);
+			buscar(e);
 		} else {
 			mostrarDialogoInformacion("El rango de fechas es máximo de 6 meses.", Boton.WARNING);
 			fecFin.datetimepicker('date', e.oldDate);
@@ -101,7 +108,7 @@ function inicializarEventos() {
 			return false;
 		}
 	});
-
+		
 	btnExportalExcel.click(function() {
 		generarReporte(TipoReporte.EXCEL);
 	});
@@ -109,50 +116,40 @@ function inicializarEventos() {
 	btnExportalPdf.click(function() {
 		generarReporte(TipoReporte.PDF);
 	});
-
+	
 }
 
 /**************** FUNCIONES DE SOPORTE ***********************************************************
  *************************************************************************************************/
 
+function campoBuscarKeyUp(e){
+	var key = window.Event ? e.which : e.keyCode;
+	if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
+		buscar(e);
+	}
+}
+
 function inicializarFechaInicioFin() {
 	console.log("inicializarFechaInicioFin....");
 	fecFin.datetimepicker('date', moment().format('DD/MM/YYYY'));
-	console.log("2");
 	fecFin.datetimepicker('maxDate', moment().format('DD/MM/YYYY'));
 
 	var fecFinVal = fecFin.datetimepicker('date');
 	var nuevaFecInicioVal = moment(fecFinVal).add(-ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS_INICIO, 'day');
-	console.log("3");
 	fecInicio.datetimepicker('date', nuevaFecInicioVal);
-	console.log("4");
 	fecInicio.datetimepicker('maxDate', moment().format('DD/MM/YYYY'));
-	console.log("5");
 }
 
 function validarFechas() {
-	console.log("validarFechas...");
-
 	var fecfecInicioVal = moment(fecInicio.datetimepicker('date'));
 	var fecFinVal = moment(fecFin.datetimepicker('date'));
 	var diferencia = fecFinVal.diff(fecfecInicioVal, 'days');
 	console.log("diferencia--->" + diferencia);
 	if (diferencia > ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS_REPORTES) {
-		console.log("dif > 180, falso-....")
 		return false;
 	} else {
-		console.log("dif <= 180, true....")
 		return true;
 	}
-}
-
-function campoBuscarKeyUp(e) {
-	var datoBuscar = campoBuscar.val().trim();
-	console.log('datoBuscar--->' + datoBuscar);
-	var key = window.Event ? e.which : e.keyCode;
-	console.log("***key--->" + key)
-	/*if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
-	}*/
 }
 
 function generarReporte(tipo) {
@@ -230,5 +227,129 @@ function generarReporte(tipo) {
 	});
 }
 
+function buscar(){	
+	if ( $.fn.dataTable.isDataTable(tablaCompras)) {
+		console.log("ya existe el dt....");
+		dataTableCompras.clear(); // usamos esta instrucción para limpiar la tabla sin que haya parpadeo
+		dataTableCompras.ajax.reload(null, true);
+	}
+}
 
+function inicializarTabla(){
+	
+	dataTableCompras = tablaCompras.DataTable({
+        "ajax": {
+			// se pasa la data de esta forma para poder reinicializar luego sólo la llamada ajax sin tener que dibujar de nuevo toda la tabla
+			data: function ( d ) {				
+				d.fechaInicio	= fecInicio.datetimepicker('date').format('DD/MM/YYYY');
+				d.fechaFin		= fecFin.datetimepicker('date').format('DD/MM/YYYY');
+				d.datoBuscar	= campoBuscar.val().trim();
+		    },
+            url: '/appkahaxi/listarReporteCompras/',
+            dataSrc: function (json) {
+				console.log("listarReporteCompras...success");
+            	return json;
+            },
+            error: function (xhr, error, code){
 
+            }
+        },
+        "responsive"	: false,
+        "scrollCollapse": false,
+		"ordering"      : true,
+        "dom"			: '<ip<rt>lp>',
+       	"lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
+        "deferRender"   : true,
+        "autoWidth"		: false,
+        "columnDefs"    : [
+            {
+                "width": "5px",
+                "targets": [0],
+                "data": "NRO_DOCUMENTO"
+            },
+            {
+                "width": "10px",
+                "targets": [1],
+                "data": "NRO_DOCUMENTO"
+            },
+            {
+                "width": "75px",
+                "targets": [2],
+                "data": "FEC_CONTABILIZACION"
+            },
+			{
+                "width": "50px",
+                "targets": [3],
+                "data": "ORDEN_COMPRA"
+            },
+			{
+                "width": "50px",
+                "targets": [4],
+                "data": "NRO_DOC_PROVEEDOR"
+            },
+			{
+                "width": "50px",
+                "targets": [5],
+                "data": "NOMBRE_PROVEEDOR"
+            },
+			{
+                "width": "50px",
+                "targets": [6],
+                "data": "SERIE"
+            },
+			{
+                "width": "50px",
+                "targets": [7],
+                "data": "CORRELATIVO"
+            },
+            {
+                "width": "10px",
+                "targets": [8],
+                "data": "MONEDA"
+            },            
+            {
+                "width": "10px",
+                "targets": [9],
+                "data": "SUBTOTAL"
+            },  
+			{
+                "width": "10px",
+                "targets": [10],
+                "data": "IGV"
+            },  
+			{
+                "width": "10px",
+                "targets": [11],
+                "data": "TOTAL"
+            },  
+			{
+                "width": "10px",
+                "targets": [12],
+                "data": "ESTADO_PAGO"
+            },  
+			{
+                "width": "10px",
+                "targets": [13],
+                "data": "ESTADO"
+            },  
+			{
+                "width": "10px",
+                "targets": [14],
+                "data": "FEC_REGISTRO"
+            }          
+         ],
+         "fnRowCallback":
+                 function(row, data, iDisplayIndex, iDisplayIndexFull){					
+                     var index = iDisplayIndexFull + 1;
+					 // colocando la numeración
+                     $('td:eq(0)', row).html(index);
+					// modificando el tamaño de los caracteres del listado 
+					$(row).addClass("listado-tam-caracteres");
+                     return row;
+                 },
+         "language"  : {
+            "url": "/appkahaxi/language/Spanish.json"
+         }
+    });
+  
+}

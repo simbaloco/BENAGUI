@@ -310,7 +310,7 @@ function cargarCatalogoDependiente(codDataCatalogo){
 function cargarModalCatalogoDependiente(catalogoDependiente, opcion){	
 		if(opcion == Opcion.NUEVO){
 			console.log("cargarModalCatalogoDependiente---> NUEVO");
-			idDC.text(CADENA_VACIA);	    	
+			idDC.text(0);	    	
 	        descripcionModal.val(CADENA_VACIA);
 			marcaModal.val(CADENA_VACIA);
 	        activoModal.prop('checked', true);
@@ -426,7 +426,7 @@ function limpiar(){
 	campoBuscar.val(CADENA_VACIA);
 	marca.val(CADENA_VACIA);
 	marcaModal.val(CADENA_VACIA);
-	idDC.val(CADENA_VACIA);
+	idDC.text(0);
 	buscar();
 	campoBuscar.focus();
 }

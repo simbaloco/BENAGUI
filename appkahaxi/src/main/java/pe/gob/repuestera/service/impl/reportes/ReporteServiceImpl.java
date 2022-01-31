@@ -460,5 +460,43 @@ public class ReporteServiceImpl implements ReporteService{
 		return listaDetalle;
 		
 	}
+
+	/*@Override
+	public List<HashMap> listarReporteCompras(String fechaInicio, String fechaFin, String datoBuscar)
+			throws Exception {
+		
+		logger.info("entrando listarReporteCompras.......");
+		
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_FEC_INICIO, fechaInicio);
+        params.put(Constante.PARAM_SP_FEC_FIN, fechaFin);
+        params.put(Constante.PARAM_SP_DATO_BUSCAR, datoBuscar);
+        
+        logger.info("params ===>" + params);
+        
+        List<HashMap> listaCompras = reporteMapper.obtenerDetalleReporteCompras(params);
+        
+        logger.info("listaCompras ===> " + listaCompras);
+        
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        
+        logger.info("flagResultado ===> " + flagResultado);
+		logger.info("mensajeResultado ===> " + mensajeResultado);
+		
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+			logger.info("buscarDataCatalogoLike ===> "+ listaCompras.toString());
+			
+		}else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+		}
+        
+		return listaCompras;		
+	}*/
+
+	
 	
 }

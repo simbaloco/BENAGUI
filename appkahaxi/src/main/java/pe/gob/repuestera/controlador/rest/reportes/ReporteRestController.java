@@ -13,12 +13,17 @@ import javax.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
+import pe.gob.repuestera.model.CatalogoModel;
+import pe.gob.repuestera.model.ComprobantePagoCabModel;
 import pe.gob.repuestera.model.GenericModel;
 import pe.gob.repuestera.model.UsuarioModel;
 import pe.gob.repuestera.model.VentaCabModel;
@@ -347,6 +352,103 @@ public class ReporteRestController {
  		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalle, tipoReporte, response);
      		
         logger.info("fin reporteDocumentosAnulados");
+    }
+	
+	
+	
+	@GetMapping ("/listarReporteCompras/")
+    public ResponseEntity<List<HashMap>> listarReporteCompras(@RequestParam(Constante.PARAM_FECHA_INICIO) String fechaInicio, 
+														    		@RequestParam(Constante.PARAM_FECHA_FIN) String fechaFin,
+														    		@RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar,
+																    HttpServletResponse response) throws Exception {
+        
+		logger.info("Inicio listarReporteCompras ......");
+		
+		List<HashMap> listaCompras = reporteService.obtenerDetalleReporteCompras(fechaInicio, fechaFin,datoBuscar);
+        
+        logger.info("Fin listarReporteCompras.......");
+        
+        return new ResponseEntity<List<HashMap>>(listaCompras, HttpStatus.OK);  
+    
+    }
+	
+	@GetMapping ("/listarReporteKardex/")
+    public ResponseEntity<List<HashMap>> listarReporteKardex(@RequestParam(Constante.PARAM_FECHA_INICIO) String fechaInicio, 
+													    		@RequestParam(Constante.PARAM_FECHA_FIN) String fechaFin,
+													    		@RequestParam(Constante.PARAM_COD_ALMACEN) String codAlmacen,
+													    		@RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar,
+																HttpServletResponse response) throws Exception {
+        
+		logger.info("Inicio listarReporteKardex ......");
+		
+		List<HashMap> listaKardex = reporteService.obtenerDetalleReporteKardex(fechaInicio, fechaFin, codAlmacen, datoBuscar);
+        
+        logger.info("Fin listarReporteKardex.......");
+        
+        return new ResponseEntity<List<HashMap>>(listaKardex, HttpStatus.OK);  
+    
+    }
+	
+	@GetMapping ("/listarReporteInventario/")
+    public ResponseEntity<List<HashMap>> listarReporteInventario(@RequestParam(Constante.PARAM_COD_ALMACEN) String codAlmacen,
+													    		 @RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar, 
+																 HttpServletResponse response) throws Exception {
+        
+		logger.info("Inicio listarReporteInventario ......");
+		
+		List<HashMap> listaCompras = reporteService.obtenerDetalleReporteInventario(codAlmacen, datoBuscar);
+        
+        logger.info("Fin listarReporteInventario.......");
+        
+        return new ResponseEntity<List<HashMap>>(listaCompras, HttpStatus.OK);  
+    
+    }
+	
+	@GetMapping ("/listarReporteVentas/")
+    public ResponseEntity<List<HashMap>> listarReporteVentas(@RequestParam(Constante.PARAM_FECHA_INICIO) String fechaInicio, 
+														    		@RequestParam(Constante.PARAM_FECHA_FIN) String fechaFin,
+														    		@RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar,
+																    HttpServletResponse response) throws Exception {
+        
+		logger.info("Inicio listarReporteVentas ......");
+		
+		List<HashMap> listaVentas = reporteService.obtenerDetalleReporteVentas(fechaInicio, fechaFin,datoBuscar);
+        
+        logger.info("Fin listarReporteVentas.......");
+        
+        return new ResponseEntity<List<HashMap>>(listaVentas, HttpStatus.OK);  
+    
+    }
+	
+	@GetMapping ("/listarReporteAnalisisVentas/")
+    public ResponseEntity<List<HashMap>> listarReporteAnalisisVentas(@RequestParam(Constante.PARAM_FECHA_INICIO) String fechaInicio, 
+														    		 @RequestParam(Constante.PARAM_FECHA_FIN) String fechaFin,
+														    		 @RequestParam(Constante.PARAM_OPCION) String opcion,
+																     HttpServletResponse response) throws Exception {
+        
+		logger.info("Inicio listarReporteAnalisisVentas ......");
+		
+		List<HashMap> listaAnVentas = reporteService.obtenerDetalleReporteAnalisisVentas(fechaInicio, fechaFin, opcion);
+        
+        logger.info("Fin listarReporteAnalisisVentas.......");
+        
+        return new ResponseEntity<List<HashMap>>(listaAnVentas, HttpStatus.OK);    
+    }
+	
+	@GetMapping ("/listarReporteDocsAnulados/")
+    public ResponseEntity<List<HashMap>> listarReporteDocsAnulados(@RequestParam(Constante.PARAM_FECHA_INICIO) String fechaInicio, 
+														    	   @RequestParam(Constante.PARAM_FECHA_FIN) String fechaFin,
+														    	   @RequestParam(Constante.PARAM_COD_TIPO) String codTipo,
+																   HttpServletResponse response) throws Exception {
+        
+		logger.info("Inicio listarReporteDocsAnulados ......");
+		
+		List<HashMap> listaAnulados = reporteService.obtenerDetalleReporteDocumentosAnulados(fechaInicio, fechaFin, codTipo);
+        
+        logger.info("Fin listarReporteDocsAnulados.......");
+        
+        return new ResponseEntity<List<HashMap>>(listaAnulados, HttpStatus.OK);  
+    
     }
 	
 	

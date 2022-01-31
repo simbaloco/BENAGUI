@@ -54,6 +54,7 @@ public class Constante {
 	public static final String PAGINA_MANTENIMIENTO_PERFILES = "paginas/maestros/mantenimiento-perfil";
 	public static final String PAGINA_MANTENIMIENTO_LISTA_PRECIOS = "paginas/maestros/mantenimiento-lista-precios";
 	public static final String PAGINA_NUEVA_LISTA_PRECIO = "paginas/maestros/nueva-lista-precio";
+	public static final String PAGINA_MANTENIMIENTO_SERIE = "paginas/maestros/mantenimiento-serie";
 	/* CATALOGOS */
 	public static final String PAGINA_BUSCAR_IGV = "paginas/maestros/buscar-igv";
 	public static final String PAGINA_MANTENIMIENTO_DATA_CATALOGO = "paginas/maestros/mantenimiento-data-catalogo";
@@ -215,10 +216,13 @@ public class Constante {
 	public static final String PARAM_FLAG_RESULTADO 	= "FLAG_RESULTADO";
 	public static final String PARAM_MENSAJE_RESULTADO 	= "MENSAJE_RESULTADO";
 	public static final String PARAM_LISTADO 			= "LISTADO";
-	
+	public static final String PARAM_SP_COD_SERIE			= "COD_SERIE";
+    public static final String PARAM_SP_NRO_SERIE			= "NRO_SERIE";
+    public static final String PARAM_SP_MAXCORRELATIVO		= "MAXCORRELATIVO";
 	
 	/* PARAMETROS DE ENTRADA PARA LOS MÉTODOS DE LOS CONTROLLER */
 	public static final String PARAM_ID_ARTICULO = "idArticulo";
+	public static final String PARAM_COD_SERIE = "codSerie";
 	public static final String PARAM_COD_CLIENTE = "codCliente";
 	public static final String PARAM_COD_MAESTRO_CONTROLLER = "codMaestro";
 	public static final String PARAM_COD_CATALOGO_PADRE_CONTROLLER = "codCatalogoPadre";
@@ -256,6 +260,7 @@ public class Constante {
 	public static final String PARAM_ESTADO = "estadoParam";
 	public static final String PARAM_VOLVER = "volver";
 	public static final String PARAM_DESDE_DOC_REF = "desdeDocRef";
+	public static final String PARAM_DESDE_OC = "desdeOC";
 	public static final String PARAM_GUIAS = "guias";
 	public static final String PARAM_FECHA_INICIO = "fechaInicio";
 	public static final String PARAM_FECHA_FIN = "fechaFin";
