@@ -9,6 +9,7 @@ var dataTableAnulados;
 // botones
 var btnExportalExcel;
 var btnExportalPdf;
+var btnLimpiar;
 
 /**************** CARGA INICIAL DE FORMULARIO ****************************************************
  *************************************************************************************************/
@@ -16,10 +17,9 @@ var btnExportalPdf;
 $(document).ready(function() {
 	inicializarVariables();	
 	inicializarComponentes();
-	inicializarTabla();
 });
 
-function inicializarVariables() {
+function inicializarVariables(){
 	fecInicio = $('#fecInicio');
 	fecFin = $('#fecFin');
 	fInicio = $('#fInicio');
@@ -28,6 +28,7 @@ function inicializarVariables() {
 	tablaAnulados = $('#tablaAnulados');
 	btnExportalExcel = $('#btnExportalExcel');	
 	btnExportalPdf = $("#btnExportalPdf");
+	btnLimpiar = $("#btnLimpiar");
 }
 
 function inicializarComponentes() {
@@ -105,6 +106,10 @@ function inicializarEventos(){
 		}
 	});
 	
+	tipo.on('change', function (e) {
+		buscar();
+	});
+	
 	btnExportalExcel.click(function() {
 		generarReporte(TipoReporte.EXCEL);
 	});
@@ -112,6 +117,10 @@ function inicializarEventos(){
 	btnExportalPdf.click(function() {
 		console.log("tipo...." + tipo.text());		
 		generarReporte(TipoReporte.PDF);
+	});
+	
+	btnLimpiar.click(function() {
+		limpiar();
 	});
 
 }
@@ -128,6 +137,12 @@ function inicializarFechaInicioFin(){
 	var nuevaFecInicioVal 	= moment(fecFinVal).add(-ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS_INICIO , 'day');
 	fecInicio.datetimepicker('date', nuevaFecInicioVal);
 	fecInicio.datetimepicker('maxDate', moment().format('DD/MM/YYYY'));
+}
+
+function limpiar(){
+	tipo.val(CADENA_VACIA);
+	inicializarFechaInicioFin();
+	buscar();
 }
 
 function validarFechas(){
@@ -260,7 +275,7 @@ function inicializarTabla(){
             {
                 "width": "5px",
                 "targets": [0],
-                "data": "NRO_DOCUMENTO"
+                "data": "NRO_DOC_SN"
             },
             {
                 "width": "10px",

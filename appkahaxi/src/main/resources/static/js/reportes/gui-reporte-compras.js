@@ -10,6 +10,7 @@ var dataTableCompras;
 //var btnBuscar;
 var btnExportalExcel;
 var btnExportalPdf;
+var btnLimpiar;
 
 /**************** CARGA INICIAL DE FORMULARIO ****************************************************
  *************************************************************************************************/
@@ -29,6 +30,7 @@ function inicializarVariables() {
 	//btnBuscar = $('#btnBuscar');
 	btnExportalExcel = $('#btnExportalExcel');
 	btnExportalPdf = $("#btnExportalPdf");
+	btnLimpiar = $("#btnLimpiar");
 }
 
 function inicializarComponentes() {
@@ -117,6 +119,10 @@ function inicializarEventos() {
 		generarReporte(TipoReporte.PDF);
 	});
 	
+	btnLimpiar.click(function() {
+		limpiar();
+	});
+	
 }
 
 /**************** FUNCIONES DE SOPORTE ***********************************************************
@@ -127,6 +133,13 @@ function campoBuscarKeyUp(e){
 	if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
 		buscar(e);
 	}
+}
+
+function limpiar(){
+	campoBuscar.val(CADENA_VACIA);	
+	inicializarFechaInicioFin();
+	buscar();
+	campoBuscar.focus();
 }
 
 function inicializarFechaInicioFin() {
@@ -276,67 +289,42 @@ function inicializarTabla(){
                 "width": "75px",
                 "targets": [2],
                 "data": "FEC_CONTABILIZACION"
-            },
+            },			
 			{
                 "width": "50px",
                 "targets": [3],
-                "data": "ORDEN_COMPRA"
-            },
-			{
-                "width": "50px",
-                "targets": [4],
                 "data": "NRO_DOC_PROVEEDOR"
             },
 			{
                 "width": "50px",
-                "targets": [5],
+                "targets": [4],
                 "data": "NOMBRE_PROVEEDOR"
-            },
-			{
-                "width": "50px",
-                "targets": [6],
-                "data": "SERIE"
-            },
-			{
-                "width": "50px",
-                "targets": [7],
-                "data": "CORRELATIVO"
-            },
+            },			
             {
                 "width": "10px",
-                "targets": [8],
+                "targets": [5],
                 "data": "MONEDA"
             },            
             {
                 "width": "10px",
-                "targets": [9],
+                "targets": [6],
                 "data": "SUBTOTAL"
             },  
 			{
                 "width": "10px",
-                "targets": [10],
+                "targets": [7],
                 "data": "IGV"
             },  
 			{
                 "width": "10px",
-                "targets": [11],
+                "targets": [8],
                 "data": "TOTAL"
             },  
 			{
                 "width": "10px",
-                "targets": [12],
+                "targets": [9],
                 "data": "ESTADO_PAGO"
-            },  
-			{
-                "width": "10px",
-                "targets": [13],
-                "data": "ESTADO"
-            },  
-			{
-                "width": "10px",
-                "targets": [14],
-                "data": "FEC_REGISTRO"
-            }          
+            }			        
          ],
          "fnRowCallback":
                  function(row, data, iDisplayIndex, iDisplayIndexFull){					

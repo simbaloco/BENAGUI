@@ -34,6 +34,7 @@
 	<parameter name="FECHA" class="java.lang.String"/>
 	<parameter name="ASUNTO" class="java.lang.String"/>
 	<parameter name="ATENCION" class="java.lang.String"/>
+	<parameter name="imagen" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT kahaxi.tbl_cotizacion_venta_detalle.`N_CANTIDAD` AS "CANTIDAD",
 	kahaxi.tbl_cotizacion_venta_detalle.`N_PRECIO_UNITARIO` AS "PRECIO_UNITARIO",

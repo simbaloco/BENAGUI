@@ -10,6 +10,7 @@ var dataTableKardex;
 // botones
 var btnExportalExcel;
 var btnExportalPdf;
+var btnLimpiar;
 
 /**************** CARGA INICIAL DE FORMULARIO ****************************************************
  *************************************************************************************************/
@@ -29,6 +30,7 @@ function inicializarVariables() {
 	campoBuscar = $('#campoBuscar');
 	btnExportalExcel = $('#btnExportalExcel');	
 	btnExportalPdf = $("#btnExportalPdf");
+	btnLimpiar = $("#btnLimpiar");
 }
 
 function inicializarComponentes() {
@@ -93,6 +95,10 @@ function inicializarEventos(){
 		campoBuscarKeyUp(e);
 	});
 	
+	almacen.on('change', function (e) {
+		buscar();
+	});
+	
 	fInicio.on('keydown', function(e){
 		var key = window.Event ? e.which : e.keyCode;
 		// si es <>TAB, cancelar
@@ -116,11 +122,23 @@ function inicializarEventos(){
 	btnExportalPdf.click(function() {
 		generarReporte(TipoReporte.PDF);
 	});
+	
+	btnLimpiar.click(function() {
+		limpiar();
+	});
 
 }
 
 /**************** FUNCIONES DE SOPORTE ***********************************************************
  *************************************************************************************************/
+
+function limpiar(){
+	campoBuscar.val(CADENA_VACIA);
+	almacen.val(CADENA_VACIA);
+	inicializarFechaInicioFin();
+	buscar();
+	campoBuscar.focus();
+}
 
 function inicializarFechaInicioFin(){
 	console.log("inicializarFechaInicioFin....");
@@ -234,7 +252,7 @@ function generarReporte(tipo){
 }
 
 function buscar(){	
-	if ( $.fn.dataTable.isDataTable(tablaCompras)) {
+	if ( $.fn.dataTable.isDataTable(tablaKardex)) {
 		console.log("ya existe el dt....");
 		dataTableKardex.clear(); // usamos esta instrucción para limpiar la tabla sin que haya parpadeo
 		dataTableKardex.ajax.reload(null, true);

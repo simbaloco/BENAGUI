@@ -9,7 +9,12 @@ var tablaAnalisisCliente;
 var tablaAnalisisArticulo;
 var dataTableAnalisisCliente;
 var dataTableAnalisisArticulo;
+var divAnalisisCli;
+var divAnalisisArt;
+var cabCliente;
+var cabArticulo;
 // botones
+var btnLimpiar;
 var btnExportalExcel;
 var btnExportalPdf;
 //var esLimpiar = false;
@@ -33,6 +38,9 @@ function inicializarVariables() {
 	tablaAnalisisArticulo = $('#tablaAnalisisArticulo');
 	btnExportalExcel = $('#btnExportalExcel');
 	btnExportalPdf = $("#btnExportalPdf");
+	btnLimpiar = $("#btnLimpiar");
+	divAnalisisCli = $("#divAnalisisCli");
+	divAnalisisArt = $("#divAnalisisArt");
 }
 
 function inicializarComponentes() {
@@ -40,6 +48,8 @@ function inicializarComponentes() {
 	retringirSeleccionFechas();
 	//inicializarFechaInicioFin();
 	inicializarEventos();
+	inicializarTablaPorCliente();
+	inicializarTablaPorArticulo();
 }
 
 function construirFechasPicker() {
@@ -90,6 +100,18 @@ function retringirSeleccionFechas() {
 
 function inicializarEventos() {
 	
+	rbCliente.on('click', function (e) {
+		buscarPorCliente();
+		mostrarControl(divAnalisisCli);
+		ocultarControl(divAnalisisArt);
+	});
+	
+	rbArticulo.on('click', function (e) {
+		buscarPorArticulo();
+		ocultarControl(divAnalisisCli);
+		mostrarControl(divAnalisisArt);
+	});
+	
 	fInicio.on('keydown', function(e) {
 		var key = window.Event ? e.which : e.keyCode;
 		// si es <>TAB, cancelar
@@ -104,6 +126,10 @@ function inicializarEventos() {
 		if (key != 9) {
 			return false;
 		}
+	});
+	
+	btnLimpiar.click(function() {
+		limpiar();
 	});
 
 	btnExportalExcel.click(function() {
@@ -144,6 +170,14 @@ function validarFechas() {
 		console.log("dif <= 180, true....")
 		return true;
 	}
+}
+
+function limpiar(){
+	checkControl(rbCliente);
+	inicializarFechaInicioFin();
+	buscarPorCliente();
+	mostrarControl(divAnalisisCli);
+	ocultarControl(divAnalisisArt);
 }
 
 function generarReporte(tipo) {
@@ -229,6 +263,198 @@ function generarReporte(tipo) {
 		}
 	});
 }
+
+function buscarPorCliente(){
+	if ( $.fn.dataTable.isDataTable(tablaAnalisisCliente)) {
+		console.log("ya existe el dt....");
+		dataTableAnalisisCliente.clear(); // usamos esta instrucción para limpiar la tabla sin que haya parpadeo
+		dataTableAnalisisCliente.ajax.reload(null, true);
+	}
+}
+
+function inicializarTablaPorCliente(){
+	var iOpcion = 1;
+	
+	if (rbCliente.is(":checked")){
+		iOpcion = 1;
+	}
+	if (rbArticulo.is(":checked")){
+		iOpcion = 2;
+	}
+	
+	dataTableAnalisisCliente = tablaAnalisisCliente.DataTable({
+        "ajax": {
+			// se pasa la data de esta forma para poder reinicializar luego sólo la llamada ajax sin tener que dibujar de nuevo toda la tabla
+			data: function ( d ) {
+				d.fechaInicio	= fecInicio.datetimepicker('date').format('DD/MM/YYYY');
+				d.fechaFin		= fecFin.datetimepicker('date').format('DD/MM/YYYY');
+				d.opcion		= iOpcion;
+		    },
+            url: '/appkahaxi/listarReporteAnalisisVentas/',
+            dataSrc: function (json) {
+				console.log("listarReporteAnalisisVentas...success");
+            	return json;
+            },
+            error: function (xhr, error, code){
+
+            }
+        },
+        "responsive"	: false,
+        "scrollCollapse": false,
+		"ordering"      : true,
+        "dom"			: '<ip<rt>lp>',
+       	"lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
+        "deferRender"   : true,
+        "autoWidth"		: false,
+        "columnDefs"    : [
+            {
+                "width": "5px",
+                "targets": [0],
+                "data": "COD_CLIENTE"
+            },
+            {
+                "width": "10px",
+                "targets": [1],
+                "data": "COD_CLIENTE"
+            },
+            {
+                "width": "75px",
+                "targets": [2],
+                "data": "NRO_DOC_CLIENTE"
+            },
+			{
+                "width": "50px",
+                "targets": [3],
+                "data": "NOMBRE_CLIENTE"
+            },
+			{
+                "width": "50px",
+                "targets": [4],
+                "data": "TIPO_DOC"
+            },
+			{
+                "width": "50px",
+                "targets": [5],
+                "data": "CANT_DOC"
+            },
+			{
+                "width": "50px",
+                "targets": [6],
+                "data": "TOTAL_ML"
+            },
+			{
+                "width": "50px",
+                "targets": [7],
+                "data": "TOTAL_ME"
+            }
+         ],
+         "fnRowCallback":
+                 function(row, data, iDisplayIndex, iDisplayIndexFull){					
+                     var index = iDisplayIndexFull + 1;
+					 // colocando la numeración
+                     $('td:eq(0)', row).html(index);
+					// modificando el tamaño de los caracteres del listado 
+					$(row).addClass("listado-tam-caracteres");
+                     return row;
+                 },
+         "language"  : {
+            "url": "/appkahaxi/language/Spanish.json"
+         }
+    });
+  
+}
+
+
+function buscarPorArticulo(){
+	if ( $.fn.dataTable.isDataTable(tablaAnalisisArticulo)) {
+		console.log("ya existe el dt....");
+		dataTableAnalisisArticulo.clear(); // usamos esta instrucción para limpiar la tabla sin que haya parpadeo
+		dataTableAnalisisArticulo.ajax.reload(null, true);
+	}
+}
+
+function inicializarTablaPorArticulo(){
+	var iOpcion = 1;
+	
+	if (rbCliente.is(":checked")){
+		iOpcion = 1;
+	}
+	if (rbArticulo.is(":checked")){
+		iOpcion = 2;
+	}
+	
+	dataTableAnalisisArticulo = tablaAnalisisArticulo.DataTable({
+        "ajax": {
+			// se pasa la data de esta forma para poder reinicializar luego sólo la llamada ajax sin tener que dibujar de nuevo toda la tabla
+			data: function ( d ) {
+				d.fechaInicio	= fecInicio.datetimepicker('date').format('DD/MM/YYYY');
+				d.fechaFin		= fecFin.datetimepicker('date').format('DD/MM/YYYY');
+				d.opcion		= iOpcion;
+		    },
+            url: '/appkahaxi/listarReporteAnalisisVentas/',
+            dataSrc: function (json) {
+				console.log("listarReporteAnalisisVentas...success");
+            	return json;
+            },
+            error: function (xhr, error, code){
+
+            }
+        },
+        "responsive"	: false,
+        "scrollCollapse": false,
+		"ordering"      : true,
+        "dom"			: '<ip<rt>lp>',
+       	"lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
+        "deferRender"   : true,
+        "autoWidth"		: false,
+        "columnDefs"    : [
+            {
+                "width": "5px",
+                "targets": [0],
+                "data": "COD_ARTICULO"
+            },
+            {
+                "width": "10px",
+                "targets": [1],
+                "data": "COD_ARTICULO"
+            },
+            {
+                "width": "75px",
+                "targets": [2],
+                "data": "COD_ESTANDAR"
+            },
+			{
+                "width": "50px",
+                "targets": [3],
+                "data": "COD_ANTIGUO"
+            },
+			{
+                "width": "50px",
+                "targets": [4],
+                "data": "DESCRIPCION"
+            },
+			{
+                "width": "50px",
+                "targets": [5],
+                "data": "CANT_ARTI"
+            }
+         ],
+         "fnRowCallback":
+                 function(row, data, iDisplayIndex, iDisplayIndexFull){					
+                     var index = iDisplayIndexFull + 1;
+					 // colocando la numeración
+                     $('td:eq(0)', row).html(index);
+					// modificando el tamaño de los caracteres del listado 
+					$(row).addClass("listado-tam-caracteres");
+                     return row;
+                 },
+         "language"  : {
+            "url": "/appkahaxi/language/Spanish.json"
+         }
+    });
+  
+}
+
 
 
 

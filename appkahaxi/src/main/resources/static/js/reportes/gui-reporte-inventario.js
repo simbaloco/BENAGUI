@@ -6,14 +6,14 @@ var dataTableInventario;
 // botones
 var btnExportalExcel;
 var btnExportalPdf;
+var btnLimpiar;
 
 /**************** CARGA INICIAL DE FORMULARIO ****************************************************
  *************************************************************************************************/
 
 $(document).ready(function() {
 	inicializarVariables();	
-	inicializarComponentes();
-	inicializarTabla();
+	inicializarComponentes();	
 });
 
 function inicializarVariables() {	
@@ -22,10 +22,12 @@ function inicializarVariables() {
 	tablaInventario = $('#tablaInventario');
 	btnExportalExcel = $('#btnExportalExcel');	
 	btnExportalPdf = $("#btnExportalPdf");
+	btnLimpiar = $("#btnLimpiar");
 }
 
 function inicializarComponentes() {
 	inicializarEventos();
+	inicializarTabla();
 }
 
 function inicializarEventos(){
@@ -34,7 +36,9 @@ function inicializarEventos(){
 		campoBuscarKeyUp(e);
 	});
 	
-	
+	almacen.on('change', function (e) {
+		buscar();
+	});
 	
 	btnExportalExcel.click(function() {
 		generarReporte(TipoReporte.EXCEL);
@@ -42,6 +46,10 @@ function inicializarEventos(){
 
 	btnExportalPdf.click(function() {
 		generarReporte(TipoReporte.PDF);
+	});
+	
+	btnLimpiar.click(function() {
+		limpiar();
 	});
 
 }
@@ -54,6 +62,13 @@ function campoBuscarKeyUp(e){
 	if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
 		buscar(e);
 	}
+}
+
+function limpiar(){
+	campoBuscar.val(CADENA_VACIA);
+	almacen.val(CADENA_VACIA);	
+	buscar();
+	campoBuscar.focus();
 }
 
 function generarReporte(tipo){

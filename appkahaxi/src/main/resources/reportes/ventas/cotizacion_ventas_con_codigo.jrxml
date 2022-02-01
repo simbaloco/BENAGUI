@@ -57,6 +57,7 @@
 	<parameter name="SUB_TOTAL" class="java.lang.String"/>
 	<parameter name="IGV" class="java.lang.String"/>
 	<parameter name="TOTAL" class="java.lang.String"/>
+	<parameter name="imagen" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[SELECT kahaxi.tbl_cotizacion_venta_detalle.`N_CANTIDAD` AS "CANTIDAD",
 	Case kahaxi.tbl_cotizacion_venta.V_COD_TIPO_MONEDA When 'USD' Then '$' When 'PEN' Then 'S/.' Else '' End AS "MONEDA",
@@ -461,8 +462,8 @@ WHERE
 					<textFieldExpression><![CDATA[$P{NRO_DOCUMENTO}]]></textFieldExpression>
 				</textField>
 				<image>
-					<reportElement stretchType="RelativeToTallestObject" x="116" y="-1" width="150" height="40" uuid="d5b38b91-6d1d-4a5a-8863-885b1c85f089"/>
-					<imageExpression><![CDATA["C:/Users/PILAR/Desktop/logo_kahaxi_v1.PNG"]]></imageExpression>
+					<reportElement stretchType="RelativeToTallestObject" x="100" y="5" width="123" height="40" uuid="d5b38b91-6d1d-4a5a-8863-885b1c85f089"/>
+					<imageExpression><![CDATA[$P{imagen}]]></imageExpression>
 				</image>
 			</frame>
 		</band>

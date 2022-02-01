@@ -50,6 +50,7 @@
 	<parameter name="FEC_FIN" class="java.lang.String"/>
 	<parameter name="DATO_BUSCAR" class="java.lang.String"/>
 	<parameter name="USUARIO" class="java.lang.String"/>
+	<parameter name="imagen" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[SELECT  
 kahaxi.tbl_comprobante_pago_compra.`V_NRO_DOCUMENTO` AS "NRO_DOCUMENTO",							
@@ -124,7 +125,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				</staticText>
 				<image>
 					<reportElement stretchType="RelativeToTallestObject" x="5" y="5" width="140" height="40" uuid="7ee5de2f-8f09-4f57-bb86-b45af98e56e7"/>
-					<imageExpression><![CDATA["C:/Users/PILAR/Desktop/logo_kahaxi_v1.PNG"]]></imageExpression>
+					<imageExpression><![CDATA[$P{imagen}]]></imageExpression>
 				</image>
 			</frame>
 			<staticText>

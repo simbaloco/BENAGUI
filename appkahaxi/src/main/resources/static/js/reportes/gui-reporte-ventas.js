@@ -4,9 +4,12 @@ var fecFin;
 var fInicio;
 var fFin;
 var campoBuscar;
+var tablaVentas;
+var dataTableVentas;
 // botones
 var btnExportalExcel;
 var btnExportalPdf;
+var btnLimpiar;
 
 /**************** CARGA INICIAL DE FORMULARIO ****************************************************
  *************************************************************************************************/
@@ -21,9 +24,11 @@ function inicializarVariables() {
 	fecFin = $('#fecFin');
 	fInicio = $('#fInicio');
 	fFin = $('#fFin');
+	tablaVentas = $('#tablaVentas');
 	campoBuscar = $('#campoBuscar');	
 	btnExportalExcel = $('#btnExportalExcel');
 	btnExportalPdf = $("#btnExportalPdf");
+	btnLimpiar = $("#btnLimpiar");
 }
 
 function inicializarComponentes() {
@@ -31,6 +36,7 @@ function inicializarComponentes() {
 	retringirSeleccionFechas();
 	//inicializarFechaInicioFin();
 	inicializarEventos();
+	inicializarTabla();
 }
 
 function construirFechasPicker() {
@@ -62,9 +68,10 @@ function retringirSeleccionFechas() {
 		console.log("entrando change fec desde....")
 		if (validarFechas()) {
 			fecFin.datetimepicker('minDate', e.date);
+			buscar(e);
 		} else {
 			mostrarDialogoInformacion("El rango de fechas es máximo de 6 meses.", Boton.WARNING);
-			fecInicio.datetimepicker('date', e.oldDate);
+			fecInicio.datetimepicker('date', e.oldDate);			
 		}
 	});
 
@@ -72,6 +79,7 @@ function retringirSeleccionFechas() {
 		console.log("entrando change fec hasta....")
 		if (validarFechas()) {
 			fecInicio.datetimepicker('maxDate', e.date);
+			buscar(e);
 		} else {
 			mostrarDialogoInformacion("El rango de fechas es máximo de 6 meses.", Boton.WARNING);
 			fecFin.datetimepicker('date', e.oldDate);
@@ -108,11 +116,22 @@ function inicializarEventos() {
 	btnExportalPdf.click(function() {
 		generarReporte(TipoReporte.PDF);
 	});
+	
+	btnLimpiar.click(function() {
+		limpiar();
+	});
 
 }
 
 /**************** FUNCIONES DE SOPORTE ***********************************************************
  *************************************************************************************************/
+
+function limpiar(){
+	campoBuscar.val(CADENA_VACIA);
+	inicializarFechaInicioFin();
+	buscar();
+	campoBuscar.focus();
+}
 
 function inicializarFechaInicioFin() {
 	console.log("inicializarFechaInicioFin....");
@@ -146,12 +165,10 @@ function validarFechas() {
 }
 
 function campoBuscarKeyUp(e) {
-	var datoBuscar = campoBuscar.val().trim();
-	console.log('datoBuscar--->' + datoBuscar);
 	var key = window.Event ? e.which : e.keyCode;
-	console.log("***key--->" + key)
-	/*if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
-	}*/
+	if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
+		buscar(e);
+	}
 }
 
 function generarReporte(tipo) {
@@ -227,6 +244,113 @@ function generarReporte(tipo) {
 			}
 		}
 	});
+}
+
+function buscar(){	
+	if ( $.fn.dataTable.isDataTable(tablaVentas)) {
+		console.log("ya existe el dt....");
+		dataTableVentas.clear(); // usamos esta instrucción para limpiar la tabla sin que haya parpadeo
+		dataTableVentas.ajax.reload(null, true);
+	}
+}
+
+function inicializarTabla(){
+	
+	dataTableVentas = tablaVentas.DataTable({
+        "ajax": {
+			// se pasa la data de esta forma para poder reinicializar luego sólo la llamada ajax sin tener que dibujar de nuevo toda la tabla
+			data: function ( d ) {				
+				d.fechaInicio	= fecInicio.datetimepicker('date').format('DD/MM/YYYY');
+				d.fechaFin		= fecFin.datetimepicker('date').format('DD/MM/YYYY');
+				d.datoBuscar	= campoBuscar.val().trim();
+		    },
+            url: '/appkahaxi/listarReporteVentas/',
+            dataSrc: function (json) {
+				console.log("listarReporteVentas...success");
+            	return json;
+            },
+            error: function (xhr, error, code){
+
+            }
+        },
+        "responsive"	: false,
+        "scrollCollapse": false,
+		"ordering"      : true,
+        "dom"			: '<ip<rt>lp>',
+       	"lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
+        "deferRender"   : true,
+        "autoWidth"		: false,
+        "columnDefs"    : [
+            {
+                "width": "5px",
+                "targets": [0],
+                "data": "NRO_DOCUMENTO"
+            },
+            {
+                "width": "10px",
+                "targets": [1],
+                "data": "NRO_DOCUMENTO"
+            },
+            {
+                "width": "75px",
+                "targets": [2],
+                "data": "FEC_CONTABILIZACION"
+            },
+			{
+                "width": "50px",
+                "targets": [3],
+                "data": "NRO_DOC_CLIENTE"
+            },
+			{
+                "width": "50px",
+                "targets": [4],
+                "data": "NOMBRE_CLIENTE"
+            },
+			{
+                "width": "50px",
+                "targets": [5],
+                "data": "VENDEDOR"
+            },			
+            {
+                "width": "10px",
+                "targets": [6],
+                "data": "MONEDA"
+            },            
+            {
+                "width": "10px",
+                "targets": [7],
+                "data": "SUBTOTAL"
+            },  
+			{
+                "width": "10px",
+                "targets": [8],
+                "data": "IGV"
+            },  
+			{
+                "width": "10px",
+                "targets": [9],
+                "data": "TOTAL"
+            },  
+			{
+                "width": "10px",
+                "targets": [10],
+                "data": "ESTADO_PAGO"
+            }     
+         ],
+         "fnRowCallback":
+                 function(row, data, iDisplayIndex, iDisplayIndexFull){					
+                     var index = iDisplayIndexFull + 1;
+					 // colocando la numeración
+                     $('td:eq(0)', row).html(index);
+					// modificando el tamaño de los caracteres del listado 
+					$(row).addClass("listado-tam-caracteres");
+                     return row;
+                 },
+         "language"  : {
+            "url": "/appkahaxi/language/Spanish.json"
+         }
+    });
+  
 }
 
 

@@ -69,6 +69,7 @@ public class ReporteRestController {
  		params.put("DIRECCION", cotizacionVentaCab.getDireccionFiscal());
  		params.put("FECHA", cotizacionVentaCab.getFechaContabilizacion());
  		params.put("ASUNTO", cotizacionVentaCab.getAsunto());
+ 		params.put("imagen", getClass().getResourceAsStream("/static/images/logo_kahaxi.png"));
  		
  		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalleCotizacionVenta, "PDF", response);
      		
@@ -147,6 +148,7 @@ public class ReporteRestController {
  		params.put("FEC_FIN", fechaFin);
  		params.put("DATO_BUSCAR", datoBuscar);
  		params.put("USUARIO", usuario);
+ 		params.put("imagen", getClass().getResourceAsStream("/static/images/logo_kahaxi.png"));
  		
  		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalle, tipoReporte, response);
  		
@@ -189,6 +191,7 @@ public class ReporteRestController {
  		params.put("DES_ALMACEN", desAlmacen);
  		params.put("DATO_BUSCAR", datoBuscar);
  		params.put("USUARIO", usuario);
+ 		params.put("imagen", getClass().getResourceAsStream("/static/images/logo_kahaxi.png"));
  		
  		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalle, tipoReporte, response);
      		
@@ -227,6 +230,7 @@ public class ReporteRestController {
  		params.put("DES_ALMACEN", desAlmacen);
  		params.put("DATO_BUSCAR", datoBuscar);
  		params.put("USUARIO", usuario);
+ 		params.put("imagen", getClass().getResourceAsStream("/static/images/logo_kahaxi.png"));
  		
  		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalle, tipoReporte, response);
      		
@@ -265,6 +269,7 @@ public class ReporteRestController {
  		params.put("FEC_FIN", fechaFin);
  		params.put("DATO_BUSCAR", datoBuscar);
  		params.put("USUARIO", usuario);
+ 		params.put("imagen", getClass().getResourceAsStream("/static/images/logo_kahaxi.png"));
  		
  		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalle, tipoReporte, response);
  		
@@ -308,6 +313,7 @@ public class ReporteRestController {
         params.put("FEC_INICIO", fechaInicio);
  		params.put("FEC_FIN", fechaFin);
  		params.put("USUARIO", usuario);
+ 		params.put("imagen", getClass().getResourceAsStream("/static/images/logo_kahaxi.png"));
  		
  		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalle, tipoReporte, response);
  		
@@ -348,6 +354,7 @@ public class ReporteRestController {
  		params.put("COD_TIPO", codTipo);
  		params.put("DES_TIPO", desTipo);
  		params.put("USUARIO", usuario);
+ 		params.put("imagen", getClass().getResourceAsStream("/static/images/logo_kahaxi.png"));
  		
  		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalle, tipoReporte, response);
      		

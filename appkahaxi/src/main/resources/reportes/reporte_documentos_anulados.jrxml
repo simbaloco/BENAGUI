@@ -42,6 +42,7 @@
 	<parameter name="COD_TIPO" class="java.lang.String"/>
 	<parameter name="DES_TIPO" class="java.lang.String"/>
 	<parameter name="USUARIO" class="java.lang.String"/>
+	<parameter name="imagen" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[SELECT  
 kahaxi.tbl_comprobante_pago_compra.`V_NRO_DOCUMENTO` AS "NRO_DOCUMENTO",							
@@ -153,7 +154,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 					<reportElement stretchType="RelativeToTallestObject" x="5" y="5" width="150" height="40" uuid="d5b38b91-6d1d-4a5a-8863-885b1c85f089">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
-					<imageExpression><![CDATA["C:/Users/PILAR/Desktop/logo_kahaxi_v1.PNG"]]></imageExpression>
+					<imageExpression><![CDATA[$P{imagen}]]></imageExpression>
 				</image>
 			</frame>
 			<staticText>
