@@ -106,6 +106,7 @@ public class Constante {
 	public static final String PARAM_SP_NRO_GUIA_REMISION   	= "NRO_GUIA_REMISION";
 	public static final String PARAM_SP_NRO_COMPROBANTE_PAGO   	= "NRO_COMPROBANTE_PAGO";
     public static final String PARAM_SP_COD_CLIENTE	 			= "COD_CLIENTE";
+    public static final String PARAM_SP_COD_PROV	 			= "COD_PROV";
 	public static final String PARAM_SP_SERIE	 				= "SERIE";
 	public static final String PARAM_SP_CORRELATIVO	 			= "CORRELATIVO";
 	public static final String PARAM_SP_NRO_ORDEN_COMPRA		= "NRO_ORDEN_COMPRA";

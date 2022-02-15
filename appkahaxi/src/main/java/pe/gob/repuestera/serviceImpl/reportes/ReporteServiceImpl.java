@@ -1,4 +1,4 @@
-package pe.gob.repuestera.service.impl.reportes;
+package pe.gob.repuestera.serviceImpl.reportes;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

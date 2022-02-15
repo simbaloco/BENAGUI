@@ -232,7 +232,7 @@ function inicializarTabla(){
             {
                 "width": "5px",
                 "targets": [2],
-                "data": "codigoCliente",
+                "data": "codigoProv",
                 "visible": false
             },
             {
@@ -243,12 +243,12 @@ function inicializarTabla(){
             {
                 "width": "40px",
                 "targets": [4],
-                "data": "nroDocCliente"
+                "data": "nroDocProv"
             },
             {
                 "width": "300px",
                 "targets": [5],
-                "data": "nombreCliente"
+                "data": "nombreProv"
             },
             {
                 "width": "30px",

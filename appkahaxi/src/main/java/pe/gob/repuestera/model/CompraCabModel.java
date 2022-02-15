@@ -12,7 +12,7 @@ public class CompraCabModel {
 	// PK
 	private String numeroDocumento;
 	// FK
-	private String codigoCliente;
+	private String codigoProv;
 	private String username;
 	// columnas
 	private String fechaContabilizacion;
@@ -37,8 +37,8 @@ public class CompraCabModel {
 
     // soporte para los listados
 	private String nombreUsuario;
-	private String nroDocCliente; 
-	private String nombreCliente;
+	private String nroDocProv; 
+	private String nombreProv;
 	private String direccionFiscal;
 	private String descripcionTipoMoneda;
 	private String descripcionCondPago;

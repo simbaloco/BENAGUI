@@ -12,7 +12,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import pe.gob.repuestera.handler.LoggingAccessDeniedHandler;
 import pe.gob.repuestera.handler.MyAuthenticationSuccessHandler;
-import pe.gob.repuestera.service.impl.UserDetailsServiceImpl;
+import pe.gob.repuestera.serviceImpl.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity

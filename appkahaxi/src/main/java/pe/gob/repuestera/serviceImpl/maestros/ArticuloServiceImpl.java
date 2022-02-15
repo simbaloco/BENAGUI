@@ -1,4 +1,4 @@
-package pe.gob.repuestera.service.impl.maestros;
+package pe.gob.repuestera.serviceImpl.maestros;
 
 import java.util.HashMap;
 import java.util.List;

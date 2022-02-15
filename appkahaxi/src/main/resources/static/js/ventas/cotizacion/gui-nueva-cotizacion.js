@@ -210,7 +210,7 @@ function habilitarAutocompletarBuscarCampos() {
                         AC.nombreRazonSocial	= item.nombreRazonSocial;
                         AC.direccionFiscal 		= item.direccionFiscal;
 						AC.email			    = item.email;
-						AC.celular				= item.celular;	
+						AC.celular				= item.celular;
 
                         return AC;
         	  		}));

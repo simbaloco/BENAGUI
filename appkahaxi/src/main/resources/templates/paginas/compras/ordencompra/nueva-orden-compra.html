@@ -15,7 +15,9 @@
 
 <div layout:fragment="content" th:remove="tag">
 
-	<input type="text" id="codigoCliente" hidden="hidden"/>
+	<input type="text" id="codigoProveedor" hidden="hidden"/>
+	<input type="text" id="email" hidden="hidden"/>
+	<input type="text" id="celular" hidden="hidden"/>
 	
 	<label id="numeroDocumento" th:text=${numeroDocumento} hidden="hidden"></label>
 	<label id="opcion" th:text=${opcion} hidden="hidden"></label>
@@ -152,13 +154,13 @@
 								</div>
 
 								<div class="col-md-2">
-									<label class="label" for="documentoCliente">DNI/RUC:</label>
-									<input class="form-control" maxlength="20" size="15" type="text" id="documentoCliente" readonly="readonly" tabindex="-1" />
+									<label class="label" for="documentoProv">DNI/RUC:</label>
+									<input class="form-control" maxlength="20" size="15" type="text" id="documentoProv" readonly="readonly" tabindex="-1" />
 								</div>
 
 								<div class="col-md-4">
-									<label class="label" for="nombreCliente">Nombre/Raz&oacute;n Social:</label>
-									<input class="marquee form-control" maxlength="250" size="50" type="text" id="nombreCliente" readonly="readonly" tabindex="-1"/>
+									<label class="label" for="nombreProv">Nombre/Raz&oacute;n Social:</label>
+									<input class="marquee form-control" maxlength="250" size="50" type="text" id="nombreProv" readonly="readonly" tabindex="-1"/>
 								</div>
 
 								<div class="col-md-4">

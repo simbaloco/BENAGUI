@@ -10,9 +10,9 @@
         <result property="numeroDocumento" 			column="NRO_DOCUMENTO" />
         <result property="username" 				column="USERNAME" />
         <result property="nombreUsuario" 			column="NOMBRE_USUARIO" />
-        <result property="codigoCliente" 			column="COD_CLIENTE" />
-        <result property="nroDocCliente" 			column="NRO_DOC_CLIENTE" />
-        <result property="nombreCliente" 			column="NOMBRE_CLIENTE" />
+        <result property="codigoProv" 				column="COD_PROV" />
+        <result property="nroDocProv" 				column="NRO_DOC_PROV" />
+        <result property="nombreProv" 				column="NOMBRE_PROV" />
         <result property="direccionFiscal" 			column="DIRECCION_FISCAL" />
         <result property="fechaContabilizacion" 	column="FEC_CONTABILIZACION" />
         <result property="fechaValidoHasta" 		column="FEC_VALIDO_HASTA" />
@@ -69,7 +69,7 @@
     </parameterMap> 
     
     <parameterMap id="registrarOrdenCompraParams" type="hashmap">
-        <parameter property="COD_CLIENTE"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_PROV"       		jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="USUARIO"				jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FEC_CONTABILIZACION"   jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FEC_VALIDO_HASTA"      jdbcType="VARCHAR"  mode="IN"/>

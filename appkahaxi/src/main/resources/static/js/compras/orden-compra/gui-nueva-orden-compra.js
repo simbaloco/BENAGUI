@@ -1,7 +1,7 @@
 var indiceFilaDataTableDetalle = -1;
 //**************************************************************** */
 var cantidadDetalleDuplicado;
-var codigoCliente;
+var codigoProveedor;
 
 var opcion;
 var datoBuscar;
@@ -14,7 +14,6 @@ var volverParam;
 
 var titulo;
 var codigo;
-var codigoCliente;
 var nroDocReferencia;
 var numeroDocumento;
 var opcion;
@@ -22,8 +21,8 @@ var opcion;
 var formOrdenCompra;
 var formObservaciones;
 var campoBuscar;
-var documentoCliente;
-var nombreCliente;
+var documentoProv;
+var nombreProv;
 var direccion;
 var fecConta;
 var fecHasta;
@@ -75,8 +74,6 @@ $(document).ready(function(){
 });
 
 function inicializarVariables() {
-	codigoCliente =  $("#codigoCliente");
-	
 	opcion =  $("#opcion");
 	datoBuscar =  $("#datoBuscar");
 	nroOrdenCompra =  $("#nroOrdenCompra");
@@ -88,7 +85,7 @@ function inicializarVariables() {
 	
 	titulo =  $("#titulo");
 	codigo = $("#codigo");
-	codigoCliente = $("#codigoCliente");
+	codigoProveedor = $("#codigoProveedor");
 	nroDocReferencia = $("#nroDocReferencia");
 	numeroDocumento = $('#numeroDocumento');
 	opcion = $("#opcion");
@@ -96,8 +93,8 @@ function inicializarVariables() {
 	formOrdenCompra = $("#formOrdenCompra");
 	formObservaciones  = $("#formObservaciones");
 	campoBuscar = $("#campoBuscar");
-	documentoCliente = $("#documentoCliente");
-	nombreCliente = $("#nombreCliente");
+	documentoProv = $("#documentoProv");
+	nombreProv = $("#nombreProv");
 	direccion = $("#direccion");
 	fecConta = $("#fecConta");
 	fecHasta = $("#fecHasta");
@@ -220,6 +217,8 @@ function habilitarAutocompletarBuscarCampos() {
 						AC.numeroDocumento 		= item.numeroDocumento;
 						AC.nombreRazonSocial	= item.nombreRazonSocial;
 						AC.direccionFiscal 		= item.direccionFiscal;
+						AC.email			    = item.email;
+						AC.celular				= item.celular;
 						
 						return AC;
 					}));
@@ -237,9 +236,9 @@ function habilitarAutocompletarBuscarCampos() {
 		select: function(event, ui) {
 			event.preventDefault();
 	    	
-			codigoCliente.val(ui.item.codigoSocio);
-			documentoCliente.val(ui.item.numeroDocumento);
-			nombreCliente.val(ui.item.nombreRazonSocial);
+			codigoProveedor.val(ui.item.codigoSocio);
+			documentoProv.val(ui.item.numeroDocumento);
+			nombreProv.val(ui.item.nombreRazonSocial);
 			direccion.val(ui.item.direccionFiscal);
 			
 			campoBuscar.val(CADENA_VACIA);
@@ -416,9 +415,9 @@ function cargarPantallaConDatos() {
 
 function cargarPantallaHTML(data) {
 	// ****** CABECERA
-	codigoCliente.val(data.codigoCliente);
-	documentoCliente.val(data.nroDocCliente);
-	nombreCliente.val(data.nombreCliente);
+	codigoProveedor.val(data.codigoProv);
+	documentoProv.val(data.nroDocProv);
+	nombreProv.val(data.nombreProv);
 	direccion.val(data.direccionFiscal);
 	tipoMoneda.val(data.codigoTipoMoneda);
 	condPago.val(data.codigoCondPago);
@@ -718,7 +717,7 @@ function agregarHTMLColumnasDataTable() {
 /**************** EVENTOS DETALLE *******************/
 
 function buscarArticuloKeyUp(e, control, fila){
-	var codCliente = codigoCliente.val();
+	var codProv = codigoProveedor.val();
 	var datoBuscar = control.value.trim();
 	var key = window.Event ? e.which : e.keyCode;
 	/*	| 38 | (Arriba) |
@@ -735,7 +734,7 @@ function buscarArticuloKeyUp(e, control, fila){
 					type:"Get",
 			        contentType : "application/json",
 			        accept: 'text/plain',
-			        url : '/appkahaxi/buscarArticuloLike/' + datoBuscar + '/' + codCliente,
+			        url : '/appkahaxi/buscarArticuloLike/' + datoBuscar + '/' + codProv,
 			        data : null,
 			        dataType: 'json',							  
 			        beforeSend: function(xhr) {
@@ -924,7 +923,7 @@ function evaluarCambioEstado() {
 
 function grabarOrdenCompra(event) {
 
-	if(documentoCliente.val() == CADENA_VACIA){
+	if(documentoProv.val() == CADENA_VACIA){
 		mostrarDialogoInformacion("Debe buscar un proveedor", Boton.WARNING, $('#campoBuscar'));
 		return false;
 	}
@@ -1062,7 +1061,7 @@ function validarDetalleOrden(){
 function registrarOrdenCompra(){
 
 	var nroDocumento  			= codigo.html();
-	var codigoClienteVal  		= codigoCliente.val().trim();
+	var codigoProvVal  		= codigoProveedor.val().trim();
 	var fecContaVal 			= fecConta.datetimepicker('date').format('YYYY-MM-DD');
 	var fecHastaVal 			= fecHasta.datetimepicker('date').format('YYYY-MM-DD');
 	var fecEntregaVal 			= fecEntrega.datetimepicker('date').format('YYYY-MM-DD');
@@ -1087,7 +1086,7 @@ function registrarOrdenCompra(){
 	var objetoJson = {
 
 		numeroDocumento:		nroDocumento,
-		codigoCliente:  		codigoClienteVal,
+		codigoProv:  			codigoProvVal,
 		fechaContabilizacion:   fecContaVal,
 		fechaValidoHasta:       fecHastaVal,
 		fechaEntrega:       	fecEntregaVal,
@@ -1411,8 +1410,8 @@ function limpiarOrdenCompra() {
 	inicializarFechaContaHasta();
 
 	campoBuscar.val(CADENA_VACIA);
-	documentoCliente.val(CADENA_VACIA);
-	nombreCliente.val(CADENA_VACIA);
+	documentoProv.val(CADENA_VACIA);
+	nombreProv.val(CADENA_VACIA);
 	direccion.val(CADENA_VACIA);
 	tipoMoneda.val(Moneda.DOLARES);
 	condPago.val(CondicionPago.CONTADO);

@@ -1,4 +1,4 @@
-package pe.gob.repuestera.service.impl;
+package pe.gob.repuestera.serviceImpl;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
