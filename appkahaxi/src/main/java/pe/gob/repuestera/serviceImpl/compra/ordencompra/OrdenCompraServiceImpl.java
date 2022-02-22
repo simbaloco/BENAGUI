@@ -58,7 +58,7 @@ public class OrdenCompraServiceImpl implements OrdenCompraService {
 		params.put(Constante.PARAM_SP_NRO_DOCUMENTO_REF, compraCabModel.getNumeroDocumentoRef());
 		params.put(Constante.PARAM_SP_SUB_TOTAL, compraCabModel.getSubTotal());
 		params.put(Constante.PARAM_SP_IGV, compraCabModel.getIgv());
-		params.put(Constante.PARAM_SP_TOTAL, compraCabModel.getTotal());
+		params.put(Constante.PARAM_SP_TOTAL, compraCabModel.getTotal());		
 		params.put(Constante.PARAM_SP_DATA_JSON, dataJSON);
 
 		logger.info("params ===> " + params);
@@ -226,15 +226,60 @@ public class OrdenCompraServiceImpl implements OrdenCompraService {
 		logger.info("compraCabModel ===> " + compraCabModel.toString());
 		logger.info("usuario ===> " + usuario);
 
+		String dataJSON = jsonUtils.obtenerJson(compraCabModel.getDetalle());
+		logger.info("List<CompraDetModel> ===> " + dataJSON);
+		
 		Map<String, Object> params = new HashMap();
 		params.put(Constante.PARAM_SP_NRO_DOCUMENTO, compraCabModel.getNumeroDocumento());
 		params.put(Constante.PARAM_SP_USUARIO, usuario);
 		params.put(Constante.PARAM_SP_COD_ESTADO, compraCabModel.getCodigoEstado());
 		params.put(Constante.PARAM_SP_OBSERVACIONES, compraCabModel.getObservaciones());
+		params.put(Constante.PARAM_SP_NRO_SEGUIMIENTO, compraCabModel.getNroSeguimiento());
+		params.put(Constante.PARAM_SP_FEC_CONTABILIZACION, compraCabModel.getFechaContabilizacion());
+		params.put(Constante.PARAM_SP_FEC_VALIDO_HASTA, compraCabModel.getFechaValidoHasta());
+		params.put(Constante.PARAM_SP_FEC_ENTREGA, compraCabModel.getFechaEntrega());
+		params.put(Constante.PARAM_SP_COD_TIPO_MONEDA, compraCabModel.getCodigoTipoMoneda());
+		params.put(Constante.PARAM_SP_COD_COND_PAGO, compraCabModel.getCodigoCondPago());
+		params.put(Constante.PARAM_SP_COD_DIAS, compraCabModel.getCodigoDias());		
+		params.put(Constante.PARAM_SP_TIPO_CAMBIO, compraCabModel.getTipoCambio());		
+		params.put(Constante.PARAM_SP_SUB_TOTAL, compraCabModel.getSubTotal());
+		params.put(Constante.PARAM_SP_IGV, compraCabModel.getIgv());
+		params.put(Constante.PARAM_SP_TOTAL, compraCabModel.getTotal());		
+		params.put(Constante.PARAM_SP_DATA_JSON, dataJSON);
 
 		logger.info("params ===> " + params);
 
 		ordenCompraMapper.actualizarOrdenCompra(params);
+
+		String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+		String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+
+		logger.info("flagResultado ===> " + flagResultado);
+		logger.info("mensajeResultado ===> " + mensajeResultado);
+
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+			logger.info(mensajeResultado);
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+		
+	}
+	
+	public void actualizarEnvioOrdenCompra(String numeroDocumento, String usuario) throws Exception {
+
+		logger.info("usuario ===> " + usuario);
+
+		Map<String, Object> params = new HashMap();
+		params.put(Constante.PARAM_SP_NRO_DOCUMENTO, numeroDocumento);
+
+		logger.info("params ===> " + params);
+
+		ordenCompraMapper.actualizarEnvioOrdenCompra(params);
 
 		String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
 		String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);

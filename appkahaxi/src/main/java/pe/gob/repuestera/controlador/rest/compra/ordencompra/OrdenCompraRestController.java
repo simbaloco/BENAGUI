@@ -103,6 +103,20 @@ public class OrdenCompraRestController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    
+    @PostMapping ("/actualizarEnvioOrdenCompra/{numeroDocumento}")
+    public ResponseEntity<String> actualizarEnvioOrdenCompra(@PathVariable(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento) throws Exception {
+
+        logger.info("Inicio actualizarEnvioOrdenCompra.......");
+
+        String usuario = ((UsuarioModel)session.getAttribute("usuarioLogueado")).getUsername();
+
+        ordenCompraService.actualizarEnvioOrdenCompra(numeroDocumento, usuario);
+
+        logger.info("Fin actualizarEnvioOrdenCompra.......");
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     @GetMapping ("/eliminarOrdenCompra/{numeroDocumento}")
     public ResponseEntity<String> eliminarOrdenCompra(@PathVariable(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento) throws Exception {

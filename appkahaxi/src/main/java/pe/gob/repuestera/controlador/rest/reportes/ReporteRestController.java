@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import pe.gob.repuestera.model.CatalogoModel;
+import pe.gob.repuestera.model.CompraCabModel;
+import pe.gob.repuestera.model.CompraDetModel;
 import pe.gob.repuestera.model.ComprobantePagoCabModel;
 import pe.gob.repuestera.model.GenericModel;
 import pe.gob.repuestera.model.UsuarioModel;
@@ -98,6 +100,23 @@ public class ReporteRestController {
  			nombreJrxml = "/reportes/ventas/cotizacion_ventas_sin_codigo.jrxml";
  		}
  		
+ 		String asunto = "COTIZACION - SOLICITUD DE CONFIRMACION DE CORREO";
+	    String nombreUsuario = "XXX";
+	    String mensaje = "<html><head><meta http-equiv=Content-Type content=text/html; charset=utf-8/></head><body><table align=center width=610 cellspacing=0 cellpadding=0 border=0 style='position:relative; font-size:12px; font-family:Arial, Helvetica, sans-serif; color: #00486A; background: #ffffff; border: solid 1px #bdcbcd; -moz-border-radius: 20px 20px 20px 20px; -ms-border-radius: 20px 20px 20px 20px; -webkit-border-radius: 20px 20px 20px 20px; border-radius: 20px 20px 20px 20px; padding:5px;''>"
+	                    + "<tbody><tr><td align=center bgcolor=#ffffff><img width=220 height=60 src='cid:identifier1234'/>"
+	                    + "</td><td align=center bgcolor=#ffffff style='text-align: left; font-size:18px; padding-left:20px; color:#121D89;''><br>KAHAXI EIRL</td>"
+	                    + "</tr><tr><td valign=middle align=center colspan=2>"
+	                    + "<br><br><p style='text-align: left; font-size:14px; padding-left:20px; color:#121D89;'>Estimado(a) <b> "+ nombreUsuario +" </b>, <br/><br/>"
+	                    + "Si has recibido un mensaje de este tipo, significa que te hemos enviado una cotización.<br/><br/>"
+	                    + "</p>"
+	                    + "<p style='text-align: left; font-size:14px; padding-left:20px; color:#121D89;''>Atentamente,<br>"+"KAHAXI"
+	                    + "<br></p><p style='text-align: left; font-size:10px; padding-left:20px; color:#DF0101;''>"
+	                    + "'Esta notificación ha sido enviada automáticamente. Por favor, no responda este correo.'</b></p><br/>"
+	                    + "</td></tr><tr></tr><tr><td valign=middle height=50 bgcolor=#bdcbcd align=center style='font-size:11px; -moz-border-radius: 0px 0px 20px 20px; -ms-border-radius: 0px 0px 20px 20px; -webkit-border-radius: 0px 0px 20px 20px; border-radius: 0px 0px 20px 20px; padding:5px;' colspan=2 >"
+	                    + "<table width=570 cellspacing=0 cellpadding=0 border=0 align=center><tbody><tr>"
+	                    + "<td width=100% valign=middle align=left style='padding:5px; font-size:10px;'><b>KAHAXI</b><br/>"
+	                    + "</td><td width=100% valign=top align=right ></td></tr></tbody></table></td></tr></tbody></table></body></html>";
+ 		
  		StringBuilder nombreArchivo = new StringBuilder();
  		nombreArchivo.append("cotizacionVenta-").append(numeroDocumento).append(".pdf");
  		
@@ -111,9 +130,110 @@ public class ReporteRestController {
  		params.put("ASUNTO", "ASUNTO DE PRUEBA");
  		params.put("ATENCION", "ATENCION DE PRUEBA");
  		
- 		reporteService.enviarReportePorCorreo(nombreJrxml, nombreArchivo.toString(), email, params, listaDetalleCotizacionVenta, response);
+ 		reporteService.enviarReportePorCorreo(nombreJrxml, nombreArchivo.toString(), email, params, listaDetalleCotizacionVenta, asunto, mensaje, response);
      		
         logger.info("fin enviarEmailReporteCotizacionesVenta");
+    }	
+	
+	@PostMapping ("/reporteOrdenCompra/{numeroDocumento}")
+    public void reporteOrdenCompra(@PathVariable(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento, 
+    									 HttpServletResponse response) throws Exception{
+        
+    	logger.info("entrando reporteOrdenCompra.......");
+    	logger.info("numeroDocumento--->" + numeroDocumento);    
+    	
+    	CompraCabModel ordenCompraCab = reporteService.obtenerCabeceraOrdenCompra(numeroDocumento);
+        List<HashMap> listaDetalleOrdenCompra = reporteService.obtenerDetalleOrdenCompra(numeroDocumento);
+        
+        // GENERANDO EL REPORTE
+        String nombreJrxml = "/reportes/compras/orden_compra.jrxml"; 		
+        
+ 		StringBuilder nombreArchivo = new StringBuilder();
+ 		nombreArchivo.append("ordenCompra-").append(numeroDocumento).append(".pdf");
+ 		// seteando parámetros
+        Map<String, Object> params = new HashMap();
+ 		params.put("NRO_DOCUMENTO", numeroDocumento);
+ 		params.put("RAZON_SOCIAL", ordenCompraCab.getNombreProv());
+ 		params.put("RUC", ordenCompraCab.getNroDocProv() );
+ 		params.put("DIRECCION", ordenCompraCab.getDireccionFiscal());
+ 		params.put("FECHA_CONTABILIZA", ordenCompraCab.getFechaContabilizacion());
+ 		params.put("VALIDO_HASTA", ordenCompraCab.getFechaValidoHasta());
+ 		params.put("FECHA_ENTREGA", ordenCompraCab.getFechaEntrega());
+ 		params.put("MONEDA", ordenCompraCab.getCodigoTipoMoneda());
+ 		params.put("TIPO_CAMBIO", ordenCompraCab.getTipoCambio());
+ 		params.put("FORMA_PAGO", ordenCompraCab.getDescripcionCondPago());
+ 		params.put("NRO_SEGUIMIENTO", ordenCompraCab.getNroSeguimiento());
+ 		params.put("SUB_TOTAL", ordenCompraCab.getSubTotal());
+ 		params.put("IGV", ordenCompraCab.getIgv());
+ 		params.put("TOTAL", ordenCompraCab.getTotal());
+ 		params.put("imagen", getClass().getResourceAsStream("/static/images/logo_kahaxi.png"));
+ 		
+ 		logger.info("Hashmap:" + params);
+ 		logger.info("detalle:" + listaDetalleOrdenCompra);
+ 		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalleOrdenCompra, "PDF", response);
+     		
+        logger.info("fin reporteOrdenCompra");
+    }
+	
+	@PostMapping ("/enviarEmailReporteOrdenCompra")
+    public void enviarEmailReporteOrdenCompra(@RequestPart("registro") GenericModel datos,
+    												HttpServletResponse response) throws Exception{
+		logger.info("entrando enviarEmailReporteOrdenCompra.......");
+		String numeroDocumento = datos.getNumeroDocumento();
+    	String email = datos.getEmail();
+    	String enviarCodigo = datos.getEnviarCodigo();
+    	
+    	logger.info("numeroDocumento--->" + numeroDocumento);            
+		logger.info("email--->" + email);            
+        logger.info("enviarCodigo--->" + enviarCodigo);            
+    	
+        CompraCabModel ordenCompraCab = reporteService.obtenerCabeceraOrdenCompra(numeroDocumento);
+        List<HashMap> listaDetalleOrdenCompra = reporteService.obtenerDetalleOrdenCompra(numeroDocumento);
+        
+        // GENERANDO EL REPORTE
+        String nombreJrxml = "/reportes/compras/orden_compra.jrxml"; 
+        
+        String asunto = "ORDEN DE COMPRA - SOLICITUD DE CONFIRMACION DE CORREO";
+	    String nombreUsuario = "XXX";
+	    String mensaje = "<html><head><meta http-equiv=Content-Type content=text/html; charset=utf-8/></head><body><table align=center width=610 cellspacing=0 cellpadding=0 border=0 style='position:relative; font-size:12px; font-family:Arial, Helvetica, sans-serif; color: #00486A; background: #ffffff; border: solid 1px #bdcbcd; -moz-border-radius: 20px 20px 20px 20px; -ms-border-radius: 20px 20px 20px 20px; -webkit-border-radius: 20px 20px 20px 20px; border-radius: 20px 20px 20px 20px; padding:5px;''>"
+	                    + "<tbody><tr><td align=center bgcolor=#ffffff><img width=220 height=60 src='cid:identifier1234'/>"
+	                    + "</td><td align=center bgcolor=#ffffff style='text-align: left; font-size:18px; padding-left:20px; color:#121D89;''><br>KAHAXI EIRL</td>"
+	                    + "</tr><tr><td valign=middle align=center colspan=2>"
+	                    + "<br><br><p style='text-align: left; font-size:14px; padding-left:20px; color:#121D89;'>Estimado(a) <b> "+ nombreUsuario +" </b>, <br/><br/>"
+	                    + "Si has recibido un mensaje de este tipo, significa que te hemos enviado una Orden de Compra.<br/><br/>"
+	                    + "</p>"
+	                    + "<p style='text-align: left; font-size:14px; padding-left:20px; color:#121D89;''>Atentamente,<br>"+"KAHAXI"
+	                    + "<br></p><p style='text-align: left; font-size:10px; padding-left:20px; color:#DF0101;''>"
+	                    + "'Esta notificación ha sido enviada automáticamente. Por favor, no responda este correo.'</b></p><br/>"
+	                    + "</td></tr><tr></tr><tr><td valign=middle height=50 bgcolor=#bdcbcd align=center style='font-size:11px; -moz-border-radius: 0px 0px 20px 20px; -ms-border-radius: 0px 0px 20px 20px; -webkit-border-radius: 0px 0px 20px 20px; border-radius: 0px 0px 20px 20px; padding:5px;' colspan=2 >"
+	                    + "<table width=570 cellspacing=0 cellpadding=0 border=0 align=center><tbody><tr>"
+	                    + "<td width=100% valign=middle align=left style='padding:5px; font-size:10px;'><b>KAHAXI</b><br/>"
+	                    + "</td><td width=100% valign=top align=right ></td></tr></tbody></table></td></tr></tbody></table></body></html>";
+ 		
+ 		StringBuilder nombreArchivo = new StringBuilder();
+ 		nombreArchivo.append("ordenCompra-").append(numeroDocumento).append(".pdf");
+ 		
+ 		// seteando parámetros
+ 		Map<String, Object> params = new HashMap();
+ 		params.put("NRO_DOCUMENTO", numeroDocumento);
+ 		params.put("RAZON_SOCIAL", ordenCompraCab.getNombreProv());
+ 		params.put("RUC", ordenCompraCab.getNroDocProv() );
+ 		params.put("DIRECCION", ordenCompraCab.getDireccionFiscal());
+ 		params.put("FECHA_CONTABILIZA", ordenCompraCab.getFechaContabilizacion());
+ 		params.put("VALIDO_HASTA", ordenCompraCab.getFechaValidoHasta());
+ 		params.put("FECHA_ENTREGA", ordenCompraCab.getFechaEntrega());
+ 		params.put("MONEDA", ordenCompraCab.getCodigoTipoMoneda());
+ 		params.put("TIPO_CAMBIO", ordenCompraCab.getTipoCambio());
+ 		params.put("FORMA_PAGO", ordenCompraCab.getDescripcionCondPago());
+ 		params.put("NRO_SEGUIMIENTO", ordenCompraCab.getNroSeguimiento());
+ 		params.put("SUB_TOTAL", ordenCompraCab.getSubTotal());
+ 		params.put("IGV", ordenCompraCab.getIgv());
+ 		params.put("TOTAL", ordenCompraCab.getTotal());
+ 		params.put("imagen", getClass().getResourceAsStream("/static/images/logo_kahaxi.png"));
+ 		
+ 		reporteService.enviarReportePorCorreo(nombreJrxml, nombreArchivo.toString(), email, params, listaDetalleOrdenCompra, asunto, mensaje, response);
+     		
+        logger.info("fin enviarEmailReporteOrdenCompra");
     }	
 	
 	@PostMapping ("/reporteCompras/")

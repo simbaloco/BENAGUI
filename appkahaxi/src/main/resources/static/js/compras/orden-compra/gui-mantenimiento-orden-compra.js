@@ -180,7 +180,8 @@ function inicializarEventos(){
 }
 	
 function inicializarTabla(){
-
+	var habilita;
+	
 	console.log("estado-->" + estado.val());
 	dataTableOrdenCompra = tablaOrdenCompra.DataTable({
         "ajax": {
@@ -246,7 +247,7 @@ function inicializarTabla(){
                 "data": "nroDocProv"
             },
             {
-                "width": "300px",
+                "width": "250px",
                 "targets": [5],
                 "data": "nombreProv"
             },
@@ -268,12 +269,12 @@ function inicializarTabla(){
                 
             },
             {
-                "width": "50px",
+                "width": "40px",
                 "targets": [9],
                 "data": "descripcionEstado"
             },
             {
-                "width": "60px",
+                "width": "40px",
                 "targets": [10],
                 "data": "total",
 				"render":
@@ -282,17 +283,23 @@ function inicializarTabla(){
                     }
             },
             {
-                "width": "5px",
+                "width": "100px",
                 "targets": [11],
-                "data": "activo",
+                "data": null,
                 "className": "dt-body-center",
                 "orderable": false,
                 "render":
-                    function (data, type, row ) {
+                    function (data, type, row ) {	
+						console.log("data.codigoEstado-->" + data.codigoEstado);			
+						(data.codigoEstado == EstadoDocumentoInicial.POR_APROBAR) ? habilita = CADENA_VACIA : habilita = 'disabled="true"';
+						
                     	return  "<div>" +
                         			"<button title='Ver Orden' class='btn-view btn btn-info btn-xs'>" +
                         				"<span><i class=\"fas fa-eye\"></i></span>" +
 					                "</button>" +
+									"<button title='Modificar Orden' class='btn-edit btn btn-primary btn-xs' " + habilita + ">" +
+                        				"<span><i class=\"fas fa-edit\"></i></span>" +
+					                   "</button>"+
 					                "<button title='Duplicar' class='btn-copy btn btn-success btn-xs'>" +
 			                            "<span><i class=\"far fa-copy\"></i></span>" +
 			                        "</button>" +
@@ -336,6 +343,11 @@ function inicializarTabla(){
 	    var data = dataTableOrdenCompra.row( $(this).closest('tr')).data();
 	    console.log("data.numeroDocument-->" + data.numeroDocumento)
 		nuevaOrdenCompra(data.numeroDocumento, Opcion.VER);
+	});
+	
+	$('#tablaOrdenCompra tbody').on('click','.btn-edit', function () {
+	    var data = dataTableOrdenCompra.row( $(this).closest('tr')).data();
+	    nuevaOrdenCompra(data.numeroDocumento, Opcion.MODIFICAR);
 	});
 	 
 	$('#tablaOrdenCompra tbody').on('click','.btn-copy', function () {

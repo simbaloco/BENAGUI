@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_compras" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true" uuid="4eedbb89-b4f6-4469-9ab6-f642a1688cf7">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_compras" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true" uuid="4eedbb89-b4f6-4469-9ab6-f642a1688cf7">
 	<property name="template.engine" value="tabular_template"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="160"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="833"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Kahaxi BD"/>
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="633"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="353"/>
 	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false"/>
@@ -153,6 +144,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 		<property name="com.jaspersoft.studio.field.label" value="FEC_REGISTRO"/>
 		<property name="com.jaspersoft.studio.field.name" value="D_FEC_REGISTRO"/>
 	</field>
+	<field name="NRO_SEGUIMIENTO" class="java.lang.String"/>
 	<variable name="Documento" class="java.lang.String">
 		<variableExpression><![CDATA[$F{SERIE}+ "-" +$F{CORRELATIVO}]]></variableExpression>
 	</variable>
@@ -160,11 +152,11 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 		<band height="115">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<frame>
-				<reportElement mode="Opaque" x="0" y="6" width="556" height="50" backcolor="#FFFFFF" uuid="00a9ea0d-b69d-44c6-820a-fd757b65174f">
+				<reportElement mode="Opaque" x="0" y="6" width="796" height="50" backcolor="#FFFFFF" uuid="00a9ea0d-b69d-44c6-820a-fd757b65174f">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<staticText>
-					<reportElement mode="Transparent" x="144" y="13" width="300" height="24" forecolor="#000000" uuid="f07eac41-91a7-4c23-9159-11410013276f">
+					<reportElement mode="Transparent" x="248" y="13" width="300" height="24" forecolor="#000000" uuid="f07eac41-91a7-4c23-9159-11410013276f">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -180,7 +172,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				</image>
 			</frame>
 			<staticText>
-				<reportElement x="94" y="66" width="85" height="17" uuid="4d0fa873-6db1-405b-b7ec-10c4d7624922">
+				<reportElement x="184" y="66" width="85" height="17" uuid="4d0fa873-6db1-405b-b7ec-10c4d7624922">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -190,7 +182,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<text><![CDATA[Fecha desde]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="329" y="66" width="54" height="17" uuid="64ba31d5-e33f-479c-86d7-5baca9606626">
+				<reportElement x="419" y="66" width="54" height="17" uuid="64ba31d5-e33f-479c-86d7-5baca9606626">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -200,7 +192,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<text><![CDATA[Fecha hasta]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="94" y="86" width="85" height="17" uuid="ef35ded4-fe05-4c1e-b412-a61fcadec555">
+				<reportElement x="184" y="86" width="85" height="17" uuid="ef35ded4-fe05-4c1e-b412-a61fcadec555">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -210,7 +202,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<text><![CDATA[Datos del proveedor]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="179" y="86" width="5" height="17" uuid="dcbd0644-d576-49be-8834-25126760ca46">
+				<reportElement x="269" y="86" width="5" height="17" uuid="dcbd0644-d576-49be-8834-25126760ca46">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -220,7 +212,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="179" y="66" width="5" height="17" uuid="d59cb14c-4865-4235-9edd-6e0b5c08bd4b">
+				<reportElement x="269" y="66" width="5" height="17" uuid="d59cb14c-4865-4235-9edd-6e0b5c08bd4b">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -230,7 +222,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="383" y="66" width="5" height="17" uuid="c811a011-2c46-45b4-b9f4-15560c2c8fcc">
+				<reportElement x="473" y="66" width="5" height="17" uuid="c811a011-2c46-45b4-b9f4-15560c2c8fcc">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -241,7 +233,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="184" y="86" width="280" height="17" uuid="55168867-43d5-4960-b513-95ae1097485d">
+				<reportElement x="274" y="86" width="376" height="17" uuid="55168867-43d5-4960-b513-95ae1097485d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle">
@@ -250,7 +242,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<textFieldExpression><![CDATA[$P{DATO_BUSCAR}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="184" y="66" width="76" height="17" uuid="e39f4025-6018-48ed-b1c1-bdb60e3dbf65">
+				<reportElement x="274" y="66" width="76" height="17" uuid="e39f4025-6018-48ed-b1c1-bdb60e3dbf65">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle">
@@ -259,7 +251,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<textFieldExpression><![CDATA[$P{FEC_INICIO}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="388" y="66" width="76" height="17" uuid="1320ffb6-adef-4006-93be-e84a49c46892">
+				<reportElement x="478" y="66" width="76" height="17" uuid="1320ffb6-adef-4006-93be-e84a49c46892">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle">
@@ -270,10 +262,10 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="25">
+		<band height="26">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement mode="Opaque" x="324" y="1" width="39" height="24" backcolor="#F7F7F7" uuid="d8021f73-77cb-497c-8bac-5ba4bdfe29bb">
+				<reportElement mode="Opaque" x="373" y="1" width="49" height="24" backcolor="#F7F7F7" uuid="d8021f73-77cb-497c-8bac-5ba4bdfe29bb">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -286,7 +278,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<text><![CDATA[MONEDA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="363" y="1" width="46" height="24" backcolor="#F7F7F7" uuid="44f3297f-d775-4c6d-921c-58b9714c86f4">
+				<reportElement mode="Opaque" x="422" y="1" width="66" height="24" backcolor="#F7F7F7" uuid="44f3297f-d775-4c6d-921c-58b9714c86f4">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -298,7 +290,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<text><![CDATA[SUBTOTAL]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="455" y="1" width="46" height="24" backcolor="#F7F7F7" uuid="f9fe6e43-bc99-493a-8411-0aee43740b20">
+				<reportElement mode="Opaque" x="551" y="1" width="68" height="24" backcolor="#F7F7F7" uuid="f9fe6e43-bc99-493a-8411-0aee43740b20">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -323,7 +315,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<text><![CDATA[FECHA CONTABILIZACION]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="223" y="1" width="101" height="24" backcolor="#F7F7F7" uuid="94812b3f-e6a7-4346-8780-46875fe4a6df">
+				<reportElement mode="Opaque" x="223" y="1" width="150" height="24" backcolor="#F7F7F7" uuid="94812b3f-e6a7-4346-8780-46875fe4a6df">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0040e9f0-c759-4bcb-b23b-6552eacab5b4"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -362,7 +354,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<text><![CDATA[N°]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="409" y="1" width="46" height="24" backcolor="#F7F7F7" uuid="3a08a30c-333b-4f70-92fa-c21fcb1c271f">
+				<reportElement mode="Opaque" x="488" y="1" width="63" height="24" backcolor="#F7F7F7" uuid="3a08a30c-333b-4f70-92fa-c21fcb1c271f">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -387,7 +379,20 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<text><![CDATA[NRO. DOC. PROV.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="501" y="1" width="55" height="24" backcolor="#F7F7F7" uuid="576e661c-1870-41e7-a2a9-5ecff0e8855a">
+				<reportElement mode="Opaque" x="619" y="1" width="94" height="24" backcolor="#F7F7F7" uuid="576e661c-1870-41e7-a2a9-5ecff0e8855a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[NRO SEGUIMIENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="714" y="1" width="79" height="24" backcolor="#F7F7F7" uuid="6db8a74f-5bb1-4250-adb7-50939c4cd13f">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -445,7 +450,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<textFieldExpression><![CDATA[$F{NRO_DOC_PROVEEDOR}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight">
-				<reportElement stretchType="ContainerHeight" x="223" y="0" width="101" height="16" uuid="eb4931cf-cec8-4e67-92c1-289e38c53c9c">
+				<reportElement stretchType="ContainerHeight" x="223" y="0" width="150" height="16" uuid="eb4931cf-cec8-4e67-92c1-289e38c53c9c">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f3a6dcbf-f585-4735-9150-689b0a004660"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -460,7 +465,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<textFieldExpression><![CDATA[$F{NOMBRE_PROVEEDOR}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight">
-				<reportElement stretchType="ContainerHeight" x="324" y="0" width="39" height="16" uuid="76322c42-5d0d-4f7b-8785-2380b95b0d8f">
+				<reportElement stretchType="ContainerHeight" x="373" y="0" width="49" height="16" uuid="76322c42-5d0d-4f7b-8785-2380b95b0d8f">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0e8f1f4c-654f-404e-b647-463a756be687"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -475,7 +480,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<textFieldExpression><![CDATA[$F{MONEDA}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight">
-				<reportElement stretchType="ContainerHeight" x="363" y="0" width="46" height="16" uuid="8c242c90-b1f0-4c46-87c4-e378eba574b9">
+				<reportElement stretchType="ContainerHeight" x="422" y="0" width="66" height="16" uuid="8c242c90-b1f0-4c46-87c4-e378eba574b9">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="606d4c39-9fdd-411b-928c-21e99e31cced"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -492,7 +497,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<textFieldExpression><![CDATA[$F{SUBTOTAL}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight">
-				<reportElement stretchType="ContainerHeight" x="409" y="0" width="46" height="16" uuid="05dc3144-287b-47f9-8f2e-72bca7044d32">
+				<reportElement stretchType="ContainerHeight" x="488" y="0" width="63" height="16" uuid="05dc3144-287b-47f9-8f2e-72bca7044d32">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="80a3d2aa-fa20-4f07-8ac1-e8f6f9afa879"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -508,11 +513,12 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<textFieldExpression><![CDATA[$F{IGV}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight">
-				<reportElement stretchType="ContainerHeight" x="455" y="0" width="46" height="16" uuid="4bea07ca-2e51-4209-8e0b-a14ba4acf87a">
+				<reportElement stretchType="ContainerHeight" x="551" y="0" width="68" height="16" uuid="4bea07ca-2e51-4209-8e0b-a14ba4acf87a">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8b2882ab-d133-4b55-b7fa-b4c74495247c"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box topPadding="2" bottomPadding="2">
 					<pen lineWidth="0.75"/>
@@ -524,7 +530,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<textFieldExpression><![CDATA[$F{TOTAL}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight">
-				<reportElement stretchType="ContainerHeight" x="501" y="0" width="55" height="16" uuid="5e5108d0-693c-44cc-8ff4-6ece4c5ce0d7">
+				<reportElement stretchType="ContainerHeight" x="619" y="0" width="94" height="16" uuid="5e5108d0-693c-44cc-8ff4-6ece4c5ce0d7">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5d976e0e-659e-4bea-b71f-f927d4fd357d"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -537,7 +543,7 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ESTADO_PAGO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{NRO_SEGUIMIENTO}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight">
 				<reportElement stretchType="ContainerHeight" x="18" y="0" width="62" height="16" uuid="4a0bb09d-0fd1-4f80-8512-65b598128c43">
@@ -555,25 +561,42 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 				</textElement>
 				<textFieldExpression><![CDATA[$V{Documento}]]></textFieldExpression>
 			</textField>
+			<textField textAdjust="StretchHeight">
+				<reportElement stretchType="ContainerHeight" x="714" y="0" width="79" height="16" uuid="c384f986-f3b0-4936-b155-eb7a988f4214">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5d976e0e-659e-4bea-b71f-f927d4fd357d"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="2" bottomPadding="2">
+					<pen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ESTADO_PAGO}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>
 		<band height="35" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<frame>
-				<reportElement mode="Opaque" x="0" y="5" width="555" height="2" forecolor="#D0B48E" backcolor="#878787" uuid="2857bbc0-51d5-4ed7-b542-cefaeb4bdc36">
+				<reportElement mode="Opaque" x="0" y="5" width="797" height="2" forecolor="#D0B48E" backcolor="#878787" uuid="2857bbc0-51d5-4ed7-b542-cefaeb4bdc36">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 			</frame>
 			<textField evaluationTime="Report">
-				<reportElement style="Column header" x="514" y="8" width="40" height="20" forecolor="#878787" uuid="4cb41995-c3cf-49e7-b55a-0551596951a3"/>
+				<reportElement style="Column header" x="742" y="8" width="40" height="20" forecolor="#878787" uuid="4cb41995-c3cf-49e7-b55a-0551596951a3"/>
 				<textElement verticalAlignment="Middle">
 					<font size="9" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Column header" x="434" y="8" width="80" height="20" forecolor="#878787" uuid="ee894d99-105b-48a2-91ec-9ef313a43dcc"/>
+				<reportElement style="Column header" x="662" y="8" width="80" height="20" forecolor="#878787" uuid="ee894d99-105b-48a2-91ec-9ef313a43dcc"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="9" isBold="false"/>
 				</textElement>
@@ -622,19 +645,20 @@ INNER JOIN tbl_socio_negocios ON (kahaxi.tbl_socio_negocios.`V_CODIGO_SOCIO_NEGO
 		<band height="35">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<frame>
-				<reportElement mode="Opaque" x="0" y="6" width="555" height="2" forecolor="#D0B48E" backcolor="#878787" uuid="687df0fd-b2fb-484f-b5cb-a3aabbefb8b1">
+				<reportElement mode="Opaque" x="0" y="6" width="797" height="2" forecolor="#D0B48E" backcolor="#878787" uuid="687df0fd-b2fb-484f-b5cb-a3aabbefb8b1">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 			</frame>
 			<textField evaluationTime="Report">
-				<reportElement style="Column header" x="514" y="8" width="40" height="20" forecolor="#878787" uuid="aed97be8-ff8d-42ec-a846-7a07a757aabe"/>
+				<reportElement style="Column header" x="742" y="8" width="40" height="20" forecolor="#878787" uuid="aed97be8-ff8d-42ec-a846-7a07a757aabe"/>
 				<textElement verticalAlignment="Middle">
 					<font size="9" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Column header" x="434" y="8" width="80" height="20" forecolor="#878787" uuid="e48be205-3359-4a43-b038-ca53437d2618"/>
+				<reportElement style="Column header" x="662" y="8" width="80" height="20" forecolor="#878787" uuid="e48be205-3359-4a43-b038-ca53437d2618"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="9" isBold="false"/>
 				</textElement>

@@ -2,7 +2,7 @@ var indiceFilaDataTableDetalle = -1;
 //**************************************************************** */
 var cantidadDetalleDuplicado;
 var codigoProveedor;
-
+var email;
 var opcion;
 var datoBuscar;
 var nroOrdenCompra;
@@ -17,6 +17,7 @@ var codigo;
 var nroDocReferencia;
 var numeroDocumento;
 var opcion;
+var flagEnvio;
 
 var formOrdenCompra;
 var formObservaciones;
@@ -33,6 +34,8 @@ var divDias;
 var estado;
 var fecEntrega;
 var tipoCambio;
+var nroSeguimiento;
+var divNroseguimiento;
 var referenciaDiv;
 var nroDocReferenciaVer;
 
@@ -55,6 +58,7 @@ var totalOC;
 
 var btnGrabar;
 var btnDuplicar;
+var btnPdf;
 
 var dataTableDetalle;
 var indiceFilaDataTableDetalle;
@@ -66,32 +70,35 @@ var dataTableDetalleGuias;
 
 var dateTimePickerInput;
 var lblAnulado;
+var flgNuevo;
 
-$(document).ready(function(){
+$(document).ready(function() {
 	inicializarVariables();
 	inicializarComponentes();
 	inicializarPantalla();
 });
 
 function inicializarVariables() {
-	opcion =  $("#opcion");
-	datoBuscar =  $("#datoBuscar");
-	nroOrdenCompra =  $("#nroOrdenCompra");
-	codRepuesto =  $("#codRepuesto");
-	fechaDesde =  $("#fechaDesde");
-	fechaHasta =  $("#fechaHasta");
-	estadoParam =  $("#estadoParam");
-	volverParam =  $("#volverParam");
-	
-	titulo =  $("#titulo");
+	opcion = $("#opcion");
+	datoBuscar = $("#datoBuscar");
+	email =  $("#email");
+	nroOrdenCompra = $("#nroOrdenCompra");
+	codRepuesto = $("#codRepuesto");
+	fechaDesde = $("#fechaDesde");
+	fechaHasta = $("#fechaHasta");
+	estadoParam = $("#estadoParam");
+	volverParam = $("#volverParam");
+
+	titulo = $("#titulo");
 	codigo = $("#codigo");
 	codigoProveedor = $("#codigoProveedor");
 	nroDocReferencia = $("#nroDocReferencia");
 	numeroDocumento = $('#numeroDocumento');
 	opcion = $("#opcion");
+	flagEnvio = $("#flagEnvio");
 
 	formOrdenCompra = $("#formOrdenCompra");
-	formObservaciones  = $("#formObservaciones");
+	formObservaciones = $("#formObservaciones");
 	campoBuscar = $("#campoBuscar");
 	documentoProv = $("#documentoProv");
 	nombreProv = $("#nombreProv");
@@ -105,16 +112,18 @@ function inicializarVariables() {
 	estado = $("#estado");
 	fecEntrega = $("#fecEntrega");
 	tipoCambio = $("#tipoCambio");
+	nroSeguimiento = $("#nroSeguimiento");
 	referenciaDiv = $("#referenciaDiv");
 	nroDocReferenciaVer = $("#nroDocReferenciaVer");
 
+	divNroseguimiento = $("#divNroseguimiento");
 	divMensajeEliminado = $("#divMensajeEliminado");
 	btnIrGuiaRemision = $("#btnIrGuiaRemision");
 	btnGenerarGuiaRemision = $("#btnGenerarGuiaRemision");
 	btnLimpiar = $("#btnLimpiar");
 	btnVolver = $("#btnVolver");
 	btnNuevo = $('#btnNuevo');
-	
+
 	btnAgregarArticulo = $("#btnAgregarArticulo");
 	btnEliminarTodosArticulos = $("#btnEliminarTodosArticulos");
 	tableDetalle = $("#tableDetalle");
@@ -127,12 +136,13 @@ function inicializarVariables() {
 
 	btnGrabar = $("#btnGrabar");
 	btnDuplicar = $("#btnDuplicar");
-	
+	btnPdf = $("#btnPdf");
+
 	guiasPorOrdenCompraModal = $("#guiasPorOrdenCompraModal");
 	modalCodigoOrdenCompra = $("#modalCodigoOrdenCompra");
 	tableDetalleGuias = $("#tableDetalleGuias");
 	btnAceptarModal = $("#btnAceptarModal");
-	
+
 	dateTimePickerInput = $(".datetimepicker-input");
 	lblAnulado = $("#lblAnulado");
 }
@@ -143,12 +153,12 @@ function inicializarComponentes() {
 	construirFechasPicker();
 	restringirSeleccionFechas();
 	habilitarAutocompletarBuscarCampos();
-	
+
 	inicializarEventos();
 }
 
 function inicializarPantalla() {
-	if(opcion.text() == Opcion.NUEVO) {
+	if (opcion.text() == Opcion.NUEVO) {
 		inicializarTabla(true);
 		cargarPantallaNueva();
 	} else {
@@ -158,35 +168,35 @@ function inicializarPantalla() {
 }
 
 function construirFechasPicker() {
-	
+
 	fecConta.datetimepicker({
-		locale: 		'es',
-		format: 		'L',
-		ignoreReadonly:  true
+		locale: 'es',
+		format: 'L',
+		ignoreReadonly: true
 	});
 
 	fecHasta.datetimepicker({
-		locale: 		'es',
-		format: 		'L',
-		ignoreReadonly:  true
+		locale: 'es',
+		format: 'L',
+		ignoreReadonly: true
 	});
 
 	fecEntrega.datetimepicker({
-		locale: 		'es',
-		format: 		'L',
-		ignoreReadonly:  true
+		locale: 'es',
+		format: 'L',
+		ignoreReadonly: true
 	});
 }
 
 function restringirSeleccionFechas() {
 
-	fecConta.on("change.datetimepicker", function (e) {
+	fecConta.on("change.datetimepicker", function(e) {
 		reiniciarFechaHasta();
-		
-		fecHasta.datetimepicker('maxDate', moment(e.date).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ , 'day'));
+
+		fecHasta.datetimepicker('maxDate', moment(e.date).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'));
 		fecHasta.datetimepicker('minDate', e.date);
-		fecHasta.datetimepicker('date', moment(e.date).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ , 'day'));
-		
+		fecHasta.datetimepicker('date', moment(e.date).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'));
+
 		fecEntrega.datetimepicker('minDate', e.date);
 	});
 }
@@ -194,37 +204,36 @@ function restringirSeleccionFechas() {
 function habilitarAutocompletarBuscarCampos() {
 
 	campoBuscar.autocomplete({
-		source: function( request, response ) {
+		source: function(request, response) {
 			$.ajax({
-				type:"Get",
-				contentType : "application/json",
+				type: "Get",
+				contentType: "application/json",
 				accept: 'text/plain',
-				url : '/appkahaxi/buscarSnLike/' + TipoSocioNegocios.PROVEEDOR + '/' + request.term,
-				data : null,
+				url: '/appkahaxi/buscarSnLike/' + TipoSocioNegocios.PROVEEDOR + '/' + request.term,
+				data: null,
 				dataType: 'json',
 				beforeSend: function(xhr) {
 					//loadding(true);
 				},
-				success:function(resultado){
+				success: function(resultado) {
 
-					response($.map(resultado,function(item) {
+					response($.map(resultado, function(item) {
 						var AC = new Object();
-						
+
 						AC.label = item.numeroDocumento + ' - ' + item.nombreRazonSocial;
 						AC.value = request.term;
-						
-						AC.codigoSocio 			= item.codigoSocio;
-						AC.numeroDocumento 		= item.numeroDocumento;
-						AC.nombreRazonSocial	= item.nombreRazonSocial;
-						AC.direccionFiscal 		= item.direccionFiscal;
-						AC.email			    = item.email;
-						AC.celular				= item.celular;
-						
+
+						AC.codigoSocio = item.codigoSocio;
+						AC.numeroDocumento = item.numeroDocumento;
+						AC.nombreRazonSocial = item.nombreRazonSocial;
+						AC.direccionFiscal = item.direccionFiscal;
+						AC.email = item.email;
+
 						return AC;
 					}));
 					//loadding(false);
 				},
-				error: function (xhr, error, code){
+				error: function(xhr, error, code) {
 
 					mostrarMensajeError(xhr.responseText);
 					//loadding(false);
@@ -235,14 +244,15 @@ function habilitarAutocompletarBuscarCampos() {
 		minLength: 3,
 		select: function(event, ui) {
 			event.preventDefault();
-	    	
+
 			codigoProveedor.val(ui.item.codigoSocio);
 			documentoProv.val(ui.item.numeroDocumento);
 			nombreProv.val(ui.item.nombreRazonSocial);
 			direccion.val(ui.item.direccionFiscal);
+			email.val(ui.item.email);
 			
 			campoBuscar.val(CADENA_VACIA);
-			if(indiceFilaDataTableDetalle == -1){
+			if (indiceFilaDataTableDetalle == -1) {
 				agregarFilaEnTablaDetalle();
 			}
 		}
@@ -255,15 +265,15 @@ function inicializarEventos() {
 		agregarFilaEnTablaDetalle();
 	});
 
-	$('#tableDetalle tbody').on('click','.btn-delete', function () {
+	$('#tableDetalle tbody').on('click', '.btn-delete', function() {
 		mostrarDialogoEliminarFila(dataTableDetalle, $(this));
 	});
 
-	$('.readonly').keydown(function(e){
+	$('.readonly').keydown(function(e) {
 		e.preventDefault();
 	});
 
-	$('.sinCaracteresEspeciales').keypress(function(e){
+	$('.sinCaracteresEspeciales').keypress(function(e) {
 		return sinCaracteresEspeciales(e);
 	});
 
@@ -274,7 +284,7 @@ function inicializarEventos() {
 	btnDuplicar.on("click", function() {
 		duplicarPantallaOrdenCompra(numeroDocumento.text());
 	});
-	
+
 	btnLimpiar.on("click", function() {
 		limpiarOrdenCompra();
 	});
@@ -287,19 +297,23 @@ function inicializarEventos() {
 		mostrarDialogoGenerarGuiaRemision();
 	});
 
-	btnNuevo.click(function(){
-    	nuevaOrdenCompra();
+	btnNuevo.click(function() {
+		nuevaOrdenCompra();
 	});
-	
+
 	btnVolver.on("click", function() {
 		volver();
 	});
-
-	condPago.on('change', function(){
+	
+	btnPdf.click(function(e){
+		generarPdf(e);	
+    });
+	
+	condPago.on('change', function() {
 		evaluarCambioCondicionPago();
 	});
 
-	tipoMoneda.on('change', function(){
+	tipoMoneda.on('change', function() {
 		calcularPorTipoMoneda();
 	});
 
@@ -309,29 +323,29 @@ function inicializarEventos() {
 
 	btnEliminarTodosArticulos.on("click", function() {
 		mostrarDialogoEliminarTodo(dataTableDetalle);
-	});	
+	});
 }
 
 function inicializarTabla(paginacion) {
 
 	dataTableDetalle = tableDetalle.DataTable({
-		"responsive"	: false,
+		"responsive": false,
 		"scrollCollapse": false,
-		"ordering"      : false,
-		"deferRender"   : true,
-		"autoWidth"		: false,
-		"paging"	    : paginacion,
+		"ordering": false,
+		"deferRender": true,
+		"autoWidth": false,
+		"paging": paginacion,
 		/*"dom"           :   "<'row'<'col-sm-12'rt>>" +
 			"<'row'<'col-sm-4 'l><'col-sm-8 'p>>",*/
-		"dom"			: '<ip<rt>lp>',
-        "lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
+		"dom": '<ip<rt>lp>',
+		"lengthMenu": [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
 		"fnRowCallback":
 			function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 				var index = iDisplayIndexFull + 1;
 				$('td:eq(0)', nRow).html(index);
 				return nRow;
 			},
-		"language"  : {
+		"language": {
 			"url": "/appkahaxi/language/Spanish.json"
 		}
 	});
@@ -340,62 +354,63 @@ function inicializarTabla(paginacion) {
 /**************** FUNCIONES DE SOPORTE ***********************************************************
  *************************************************************************************************/
 
-function inicializarFechaContaHasta(){
+function inicializarFechaContaHasta() {
 	console.log("inicializarFechaContaHasta")
-    
+
 	fecConta.datetimepicker('date', moment());
 	fecConta.datetimepicker('maxDate', moment());
-	
-	var fecContaVal 	= fecConta.datetimepicker('date');
-	var nuevaFechaVal 	= moment(fecContaVal).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ , 'day');
+
+	var fecContaVal = fecConta.datetimepicker('date');
+	var nuevaFechaVal = moment(fecContaVal).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day');
 	fecHasta.datetimepicker('date', nuevaFechaVal);
 }
 
 function cargarPantallaNueva() {
+	flgNuevo=1;
 	inicializarFechaContaHasta();
-	obtenerTipoCambio(tipoCambio);
-
+	//obtenerTipoCambio(tipoCambio);
+	ocultarControl(divNroseguimiento);
 	controlNoRequerido(observaciones);
 	titulo.text("NUEVA");
 	dias.val(Dias._30);
-	
+
 	var volver = volverParam.text();
-	if(volver == Respuesta.SI){
+	if (volver == Respuesta.SI) {
 		mostrarControl(btnVolver);
 	}
 	campoBuscar.focus();
 }
 
 function cargarPantallaConDatos() {
-
+	flgNuevo=0;
 	var nroDocReferenciaVal = numeroDocumento.text();
 
 	$.ajax({
-		type:"Get",
-		contentType : "application/json",
+		type: "Get",
+		contentType: "application/json",
 		accept: 'text/plain',
-		url : '/appkahaxi/buscarOrdenCompra/' + nroDocReferenciaVal ,
-		data : null,
+		url: '/appkahaxi/buscarOrdenCompra/' + nroDocReferenciaVal,
+		data: null,
 		dataType: 'text',
 		beforeSend: function(xhr) {
 			loadding(true);
 		},
-		
-		success:function(result, textStatus, xhr){
 
-			if(xhr.status == HttpStatus.OK) {
+		success: function(result, textStatus, xhr) {
+
+			if (xhr.status == HttpStatus.OK) {
 
 				var data = JSON.parse(result);
 
 				cargarPantallaHTML(data);
-				
-				if(opcion.text() == Opcion.VER) {
+
+				if (opcion.text() == Opcion.VER || opcion.text() == Opcion.MODIFICAR) {
 
 					verPantallaOrdenCompra(data);
-				}else {
+				} else {
 					duplicarPantallaOrdenCompra(nroDocReferenciaVal);
 				}
-				
+
 				dataTableDetalle.destroy();
 				inicializarTabla(true);
 			}
@@ -403,7 +418,7 @@ function cargarPantallaConDatos() {
 			loadding(false);
 			window.scrollTo(0, 0);
 		},
-		error: function (xhr, error, code){
+		error: function(xhr, error, code) {
 
 			mostrarMensajeError(xhr.responseText);
 			loadding(false);
@@ -423,27 +438,30 @@ function cargarPantallaHTML(data) {
 	condPago.val(data.codigoCondPago);
 	dias.val(data.codigoDias);
 	estado.val(data.codigoEstado);
+	flagEnvio.val(data.flagEnvio);
 	
 	subTotalOC.val(convertirNumeroAMoneda(data.subTotal));
-    igvOC.val(convertirNumeroAMoneda(data.igv));
-    totalOC.val(convertirNumeroAMoneda(data.total));
-	
+	igvOC.val(convertirNumeroAMoneda(data.igv));
+	totalOC.val(convertirNumeroAMoneda(data.total));
+
 	tipoCambio.val(data.tipoCambio);
 	observaciones.val(data.observaciones);
+	nroSeguimiento.val(data.nroSeguimiento);
+	
 	// evaluando si tiene documento de referencia
-	if(data.numeroDocumentoRef != CADENA_VACIA){
+	if (data.numeroDocumentoRef != CADENA_VACIA) {
 		nroDocReferencia.val(data.numeroDocumentoRef);
 		mostrarControl(referenciaDiv);
 	}
-	
-	if(data.codigoCondPago == CondicionPago.CREDITO){
-    	mostrarControl(divDias);
-    }
+
+	if (data.codigoCondPago == CondicionPago.CREDITO) {
+		mostrarControl(divDias);
+	}
 
 	// ******* DETALLE
-    cantidadDetalleDuplicado = data.detalle.length;
+	cantidadDetalleDuplicado = data.detalle.length;
 
-	for(i=0; i < cantidadDetalleDuplicado; i++) {
+	for (i = 0; i < cantidadDetalleDuplicado; i++) {
 
 		var detalle = data.detalle[i];
 		btnAgregarArticulo.click();
@@ -453,7 +471,7 @@ function cargarPantallaHTML(data) {
 		$('#marca_' + i).val(detalle.marca);
 		$('#cantidad_' + i).val(detalle.cantidad);
 		$('#cantidadPend_' + i).val(detalle.cantidadPendiente);
-		
+
 		$('#precio_' + i).val(convertirNumeroAMoneda(detalle.precioUnitario));
 		$('#subTotalIgv_' + i).val(convertirNumeroAMoneda(detalle.subTotalIgv));
 		$('#subTotal_' + i).val(convertirNumeroAMoneda(detalle.subTotal));
@@ -462,76 +480,127 @@ function cargarPantallaHTML(data) {
 
 function verPantallaOrdenCompra(data) {
 	// ****** CABECERA
-	titulo.text("VER");
 	codigo.html(numeroDocumento.text());
-
 	fecConta.datetimepicker('date', moment(data.fechaContabilizacion));
 	fecHasta.datetimepicker('date', moment(data.fechaValidoHasta));
 	fecEntrega.datetimepicker('date', moment(data.fechaEntrega));
 
-	deshabilitarControl(dateTimePickerInput);
-	deshabilitarControl(campoBuscar);
-	deshabilitarControl(tipoMoneda);
-	deshabilitarControl(condPago);
-	deshabilitarControl(dias);
+	deshabilitarControl(campoBuscar);	
+	deshabilitarControl(observaciones);		
+	ocultarControl(btnNuevo);	
+	ocultarControl(btnLimpiar);
 
-	if(data.codigoEstado == EstadoDocumentoInicial.POR_APROBAR){
+	if (opcion.text() == Opcion.VER) {
+		titulo.text("VER");
+		deshabilitarControl(dateTimePickerInput);
+		deshabilitarControl(tipoMoneda);
+		deshabilitarControl(condPago);
+		deshabilitarControl(dias);
+		deshabilitarControl(estado);
+		deshabilitarControl(tipoCambio);
+		mostrarControl(divNroseguimiento);
+		mostrarControl(btnPdf);
+		deshabilitarControl(nroSeguimiento);
+		ocultarControl(btnGrabar);
+		ocultarControl(btnAgregarArticulo);
+		ocultarControl(btnEliminarTodosArticulos);
+		deshabilitarDetalleOrdenCompra();
+		mostrarControl(btnDuplicar);
 
+		if (data.codigoEstado == EstadoDocumentoInicial.RECHAZADO) {
+			deshabilitarControl(estado);
+			//mostrarControl(btnDuplicar);
+			mostrarControl(lblAnulado);
+		} else if (data.codigoEstado == EstadoDocumentoInicial.APROBADO) {
+			deshabilitarControl(estado);
+			//mostrarControl(btnDuplicar);
+			mostrarControl(btnGenerarGuiaRemision);
+			mostrarControl(btnIrGuiaRemision);
+
+			if (data.codigoEstadoProceso == EstadoProceso.ABIERTO) {
+				// estado proceso ABIERTO
+				habilitarControl(btnGenerarGuiaRemision);
+				if (data.cantidadGrAsociadas > 0) {
+					mostrarControl(btnIrGuiaRemision);
+				} else {
+					ocultarControl(btnIrGuiaRemision);
+				}
+			} else {
+				// estado proceso CERRADO
+				ocultarControl(btnGenerarGuiaRemision);
+				mostrarControl(btnIrGuiaRemision);
+			}
+		}
+	}
+
+	if (opcion.text() == Opcion.MODIFICAR) {
+		titulo.text("MODIFICAR");
+		habilitarControl(dateTimePickerInput);
+		habilitarControl(tipoMoneda);
+		habilitarControl(condPago);
+		habilitarControl(dias);
+		habilitarControl(tipoCambio);
+		habilitarControl(estado);
+		habilitarControl(nroSeguimiento);		
+ 		(flagEnvio.val() == 1) ? mostrarControl(divNroseguimiento) : ocultarControl(divNroseguimiento);
+		
+		//mostrarControl(btnDuplicar);
+		estado.focus();
+
+		mostrarControl(btnGrabar);
+		mostrarControl(btnAgregarArticulo);
+		mostrarControl(btnEliminarTodosArticulos);
+		habilitarDetalleOrdenCompra();
+	}
+
+
+	/*if (data.codigoEstado == EstadoDocumentoInicial.POR_APROBAR) {
 		habilitarControl(estado);
 		mostrarControl(btnDuplicar);
 		estado.focus();
-	}else if(data.codigoEstado == EstadoDocumentoInicial.RECHAZADO){
-
+	} else if (data.codigoEstado == EstadoDocumentoInicial.RECHAZADO) {
 		deshabilitarControl(estado);
 		mostrarControl(btnDuplicar);
 		mostrarControl(lblAnulado);
-	}else{
-
+	} else {
 		// estado APROBADO
 		deshabilitarControl(estado);
 		mostrarControl(btnDuplicar);
 		mostrarControl(btnGenerarGuiaRemision);
 		mostrarControl(btnIrGuiaRemision);
-		
-		if(data.codigoEstadoProceso == EstadoProceso.ABIERTO){
+
+		if (data.codigoEstadoProceso == EstadoProceso.ABIERTO) {
 			// estado proceso ABIERTO
 			habilitarControl(btnGenerarGuiaRemision);
-			if(data.cantidadGrAsociadas > 0) {
+			if (data.cantidadGrAsociadas > 0) {
 				mostrarControl(btnIrGuiaRemision);
 			} else {
 				ocultarControl(btnIrGuiaRemision);
 			}
-		}else{
+		} else {
 			// estado proceso CERRADO
 			ocultarControl(btnGenerarGuiaRemision);
 			mostrarControl(btnIrGuiaRemision);
 		}
-	}
+	}*/
 
-	deshabilitarControl(observaciones);
 	
-	ocultarControl(btnGrabar);
-	ocultarControl(btnNuevo);
-	ocultarControl(btnAgregarArticulo);
-	ocultarControl(btnEliminarTodosArticulos);
-	ocultarControl(btnLimpiar);
-
-	deshabilitarDetalleOrdenCompra();
 }
 
 function duplicarPantallaOrdenCompra(nroDocRef) {
 	console.log("duplicarPantallaOrdenCompra....");
 	// ****** CABECERA
+	flgNuevo = 1;
 	titulo.text("DUPLICAR");
-
+	
 	inicializarFechaContaHasta();
-	opcion.text(Opcion.DUPLICAR);
-	obtenerTipoCambio(tipoCambio);
-    codigo.html(CADENA_VACIA);
+	opcion.text(Opcion.DUPLICAR);	
+	//obtenerTipoCambio(tipoCambio);
+	codigo.html(CADENA_VACIA);
 
 	nroDocReferencia.val(nroDocRef);
 	mostrarControl(referenciaDiv);
-
+	ocultarControl(divNroseguimiento);
 	estado.val(EstadoDocumentoInicial.POR_APROBAR);
 
 	//observaciones.val(CADENA_VACIA);
@@ -544,44 +613,46 @@ function duplicarPantallaOrdenCompra(nroDocRef) {
 	deshabilitarControl(estado);
 	habilitarControl(observaciones);
 	habilitarControl(campoBuscar);
+	habilitarControl(tipoCambio);
 
 	mostrarControl(btnGrabar);
 	mostrarControl(btnAgregarArticulo);
 	mostrarControl(btnEliminarTodosArticulos);
 	mostrarControl(btnLimpiar);
-	
+
 	ocultarControl(btnDuplicar);
 	ocultarControl(btnNuevo);
 	ocultarControl(btnGenerarGuiaRemision);
 	ocultarControl(btnIrGuiaRemision);
 	ocultarControl(lblAnulado);
-	
+	ocultarControl(btnPdf);
+
 	// ******* DETALLE - Recuperando la cantidad pendiente (para el caso de las OC cerradas y con cant pendiente = 0)
 	var cantidadSalvada;
 	var $headers = tableDetalle.find("th").not(':first').not(':last');
-	tableDetalle.DataTable().rows().iterator('row', function(context, index){
+	tableDetalle.DataTable().rows().iterator('row', function(context, index) {
 
 		var node = $(this.row(index).node());
 		$cells = node.find("td").not(':first').not(':last');
 
 		$cells.each(function(cellIndex) {
-			if($($headers[cellIndex]).attr('id') == 'cantidad') {
+			if ($($headers[cellIndex]).attr('id') == 'cantidad') {
 				cantidadSalvada = $(this).find("input").val();
 			}
-			if($($headers[cellIndex]).attr('id') == 'cantidadPendiente') {
+			if ($($headers[cellIndex]).attr('id') == 'cantidadPendiente') {
 				$(this).find("input").val(cantidadSalvada);
 			}
 		});
 	});
-	
+
 	habilitarDetalleOrdenCompra();
 	campoBuscar.focus();
 }
 
-function deshabilitarDetalleOrdenCompra(){
+function deshabilitarDetalleOrdenCompra() {
 
 	// ******* DETALLE
-	tableDetalle.DataTable().rows().iterator('row', function(context, index){
+	tableDetalle.DataTable().rows().iterator('row', function(context, index) {
 
 		var node = $(this.row(index).node());
 		$cells = node.find("td").not(':first');//.not(':last');
@@ -590,15 +661,15 @@ function deshabilitarDetalleOrdenCompra(){
 			habilitarControlSoloLectura($(this).find(".buscar-det"));
 			habilitarControlSoloLectura($(this).find(".cantidad-det"));
 			habilitarControlSoloLectura($(this).find(".precio-det"));
-			
+
 			deshabilitarControl($(this).find(".btn-delete"));
 		});
 	});
 }
 
-function habilitarDetalleOrdenCompra(){
+function habilitarDetalleOrdenCompra() {
 	// ******* DETALLE
-	tableDetalle.DataTable().rows().iterator('row', function(context, index){
+	tableDetalle.DataTable().rows().iterator('row', function(context, index) {
 
 		var node = $(this.row(index).node());
 		$cells = node.find("td").not(':first');//.not(':last');
@@ -607,7 +678,7 @@ function habilitarDetalleOrdenCompra(){
 			deshabilitarControlSoloLectura($(this).find(".buscar-det"));
 			deshabilitarControlSoloLectura($(this).find(".cantidad-det"));
 			deshabilitarControlSoloLectura($(this).find(".precio-det"));
-			
+
 			habilitarControl($(this).find(".btn-delete"));
 		});
 	});
@@ -620,10 +691,10 @@ function agregarFilaEnTablaDetalle() {
 
 	indiceFilaDataTableDetalle = fila.index();
 	console.log("al agregar fila, indiceFilaDataTableDetalle-->" + indiceFilaDataTableDetalle);
-	
+
 	agregarFilaHTMLEnTablaDetalle();
 
-	if(indiceFilaDataTableDetalle >= 0) {
+	if (indiceFilaDataTableDetalle >= 0) {
 		mostrarControl(btnEliminarTodosArticulos);
 		mostrarControl(btnAgregarArticulo);
 	}
@@ -634,7 +705,7 @@ function agregarFilaHTMLEnTablaDetalle() {
 
 	var tipoMonedaValor = tipoMoneda.val();
 
-	if(tipoMonedaValor == Moneda.SOLES){
+	if (tipoMonedaValor == Moneda.SOLES) {
 		$('.simbolo-moneda').removeClass("input-symbol-dolar").addClass("input-symbol-sol");
 	}
 
@@ -647,48 +718,48 @@ function agregarHTMLColumnasDataTable() {
 
 	$.each($tds, function(i, el) {
 
-		switch(i) {
+		switch (i) {
 
 			// buscar artículo
-			case 0:		$(this).html(CADENA_VACIA).append(
-									"<div>" + 
-			    						"<input class='form-control buscar-det' type='text' onkeyup='buscarArticuloKeyUp(event, this, " + indiceFilaDataTableDetalle + ");' maxlength='50' id='buscarArticulo_" + indiceFilaDataTableDetalle + "'>" +
-			    					"</div>");
-						break;
-    		
+			case 0: $(this).html(CADENA_VACIA).append(
+				"<div>" +
+				"<input class='form-control buscar-det' type='text' onkeyup='buscarArticuloKeyUp(event, this, " + indiceFilaDataTableDetalle + ");' maxlength='50' id='buscarArticulo_" + indiceFilaDataTableDetalle + "'>" +
+				"</div>");
+				break;
+
 			// CODIGO ART (OCULTO)
-			case 1:		$(this).html(CADENA_VACIA).append("<input class='form-control' type='text' id='codigo_" + indiceFilaDataTableDetalle + "' readonly='readonly' tabindex='-1' >");
-						break;
-						
+			case 1: $(this).html(CADENA_VACIA).append("<input class='form-control' type='text' id='codigo_" + indiceFilaDataTableDetalle + "' readonly='readonly' tabindex='-1' >");
+				break;
+
 			// DESCRIPCION CODIGO ART
-			case 2:		$(this).html(CADENA_VACIA).append("<input class='marquee form-control codigo-det' type='text' id='descCodigo_" + indiceFilaDataTableDetalle + "' readonly='readonly' tabindex='-1' >");
-						break;						
-    		        		
+			case 2: $(this).html(CADENA_VACIA).append("<input class='marquee form-control codigo-det' type='text' id='descCodigo_" + indiceFilaDataTableDetalle + "' readonly='readonly' tabindex='-1' >");
+				break;
+
 			// DESCRIPCION ART
-			case 3:		$(this).html(CADENA_VACIA).append("<input class='marquee form-control desc-det' type='text' id='descripcion_" + indiceFilaDataTableDetalle + "' readonly='readonly' tabindex='-1' >");
-						break;
-    					
-    		// MARCA ART
-			case 4:		$(this).html(CADENA_VACIA).append("<input class='marquee form-control marca-det' type='text' id='marca_" + indiceFilaDataTableDetalle + "' readonly='readonly' tabindex='-1' >");
-						break;
-				
+			case 3: $(this).html(CADENA_VACIA).append("<input class='marquee form-control desc-det' type='text' id='descripcion_" + indiceFilaDataTableDetalle + "' readonly='readonly' tabindex='-1' >");
+				break;
+
+			// MARCA ART
+			case 4: $(this).html(CADENA_VACIA).append("<input class='marquee form-control marca-det' type='text' id='marca_" + indiceFilaDataTableDetalle + "' readonly='readonly' tabindex='-1' >");
+				break;
+
 			// CANTIDAD
-			case 5:	$(this).html(CADENA_VACIA).append(
-								"<input class='form-control cantidad-det alineacion-derecha' type='text' maxlength='4' " + 
-									    "onkeyup='cantidadKeyUp(this, " + indiceFilaDataTableDetalle + ");' " + 
-										"onkeydown='cantidadKeyDown(event, " + indiceFilaDataTableDetalle + ")' " +
-										"onkeypress='return soloEnteros(event);' readonly='readonly' " +
-										"id='cantidad_" + indiceFilaDataTableDetalle + "' >");
-									
-					break;
+			case 5: $(this).html(CADENA_VACIA).append(
+				"<input class='form-control cantidad-det alineacion-derecha' type='text' maxlength='4' " +
+				"onkeyup='cantidadKeyUp(this, " + indiceFilaDataTableDetalle + ");' " +
+				"onkeydown='cantidadKeyDown(event, " + indiceFilaDataTableDetalle + ")' " +
+				"onkeypress='return soloEnteros(event);' readonly='readonly' " +
+				"id='cantidad_" + indiceFilaDataTableDetalle + "' >");
+
+				break;
 
 			// CANTIDAD PENDIENTE
-			case 6:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha' type='text' id='cantidadPend_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
+			case 6: $(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha' type='text' id='cantidadPend_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
 				break;
 
 			// PRECIO
-			case 7:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
-				"<input class='form-control alineacion-derecha precio-det' type='number' maxlength='13' " +  
+			case 7: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+				"<input class='form-control alineacion-derecha precio-det' type='number' maxlength='13' " +
 				"onkeyup='precioKeyUp(this, " + indiceFilaDataTableDetalle + ")' " +
 				"onchange='precioKeyUp(this, " + indiceFilaDataTableDetalle + ");' " +
 				"onkeydown='precioKeyDown(event)' " +
@@ -698,16 +769,16 @@ function agregarHTMLColumnasDataTable() {
 				break;
 
 			// SUBTOTAL
-			case 8:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+			case 8: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
 				"<input class='form-control alineacion-derecha' type='text' id='subTotal_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
 				"</span></div>");
 				break;
-				
+
 			// SUBTOTAL C/IGV
-			case 9:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+			case 9: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
 				"<input class='form-control alineacion-derecha' type='text' id='subTotalIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
 				"</span></div>");
-			
+
 		}
 	});
 	habilitarMarquee();
@@ -716,7 +787,7 @@ function agregarHTMLColumnasDataTable() {
 
 /**************** EVENTOS DETALLE *******************/
 
-function buscarArticuloKeyUp(e, control, fila){
+function buscarArticuloKeyUp(e, control, fila) {
 	var codProv = codigoProveedor.val();
 	var datoBuscar = control.value.trim();
 	var key = window.Event ? e.which : e.keyCode;
@@ -726,96 +797,96 @@ function buscarArticuloKeyUp(e, control, fila){
 		| 39 | (Derecha) |
 	 */
 	// no hacer nada si son las teclas direccionales IZQ o DER
-	if(key != 37 && key != 39){
+	if (key != 37 && key != 39) {
 		$('#buscarArticulo_' + fila).autocomplete({
-			source: function( request, response ) {
+			source: function(request, response) {
 				console.log("buscarArticuloKeyUp, autocomplete....");
 				$.ajax({
-					type:"Get",
-			        contentType : "application/json",
-			        accept: 'text/plain',
-			        url : '/appkahaxi/buscarArticuloLike/' + datoBuscar + '/' + codProv,
-			        data : null,
-			        dataType: 'json',							  
-			        beforeSend: function(xhr) {
-			        	console.log("buscarArticuloKeyUp...beforesend, loading.....");
-			        	//loadding(true);
-			        },
-			        success:function(resultado){
-			        	/*
+					type: "Get",
+					contentType: "application/json",
+					accept: 'text/plain',
+					url: '/appkahaxi/buscarArticuloLike/' + datoBuscar + '/' + codProv,
+					data: null,
+					dataType: 'json',
+					beforeSend: function(xhr) {
+						console.log("buscarArticuloKeyUp...beforesend, loading.....");
+						//loadding(true);
+					},
+					success: function(resultado) {
+						/*
 						response($.map(resultado, 
-			        				function(item) {
-						        		return {
-						        				label: item.codigoArticulo + ' - ' + item.codigoEstandar + ' - ' + item.descripcion,
-						        				value: item.codigoArticulo + '/' + item.descripcion + '/' + item.descripcionMarcaArticulo + '/' + item.precioVtaUnd
-						        	      		}
-			        	  		}));
-			        	loadding(false);
-			        	*/
-			        	response($.map(resultado,function(item) {
-			        		var AC = new Object();
-			    			// requeridos
-			        		AC.label = item.codigoEstandar + ' / ' + item.descripcion + ' / ' + item.descripcionMarcaArticulo + ' / ' + 
-									   item.descripcionTipo + ' / ' + item.descripcionSeccion + ' / ' + item.descripcionUnidadMedida + ' / ' + 
-									   ((item.descripcionMarcaVehiculo == null) ? '(Sin marca vehículo)':item.descripcionMarcaVehiculo) + ' / ' + 
-									   ((item.descripcionModelo == null) ? '(Sin modelo)':item.descripcionModelo)	;
-	                        AC.value = request.term;;
-	                        // personalizando campos
-	                        AC.codArticulo				= item.codigoArticulo;
-	                        AC.codEstandar				= item.codigoEstandar;
-							AC.descripcion				= item.descripcion;
-	                        AC.descripcionMarcaArticulo = item.descripcionMarcaArticulo;
-	                        AC.precioVentaUnitario		= item.precioVentaUnitario;
-							AC.precioReferencia			= item.precioReferencia;
-							
-	                        return AC;
-	        	  		}));
-			        	//loadding(false);
-			        },
-			        error: function (xhr, error, code){
-			        	console.log("buscarArticuloKeyUp, error...." + xhr.status);
-			        	mostrarMensajeError(xhr.responseText);
-			        	//loadding(false);
-			        }
-			    });
-		      },
-		    minLength: 3,
-		    select: function(event, ui) {
-		    	event.preventDefault();
-		    	
+									function(item) {
+										return {
+												label: item.codigoArticulo + ' - ' + item.codigoEstandar + ' - ' + item.descripcion,
+												value: item.codigoArticulo + '/' + item.descripcion + '/' + item.descripcionMarcaArticulo + '/' + item.precioVtaUnd
+													}
+									}));
+						loadding(false);
+						*/
+						response($.map(resultado, function(item) {
+							var AC = new Object();
+							// requeridos
+							AC.label = item.codigoEstandar + ' / ' + item.descripcion + ' / ' + item.descripcionMarcaArticulo + ' / ' +
+								item.descripcionTipo + ' / ' + item.descripcionSeccion + ' / ' + item.descripcionUnidadMedida + ' / ' +
+								((item.descripcionMarcaVehiculo == null) ? '(Sin marca vehículo)' : item.descripcionMarcaVehiculo) + ' / ' +
+								((item.descripcionModelo == null) ? '(Sin modelo)' : item.descripcionModelo);
+							AC.value = request.term;;
+							// personalizando campos
+							AC.codArticulo = item.codigoArticulo;
+							AC.codEstandar = item.codigoEstandar;
+							AC.descripcion = item.descripcion;
+							AC.descripcionMarcaArticulo = item.descripcionMarcaArticulo;
+							AC.precioVentaUnitario = item.precioVentaUnitario;
+							AC.precioReferencia = item.precioReferencia;
+
+							return AC;
+						}));
+						//loadding(false);
+					},
+					error: function(xhr, error, code) {
+						console.log("buscarArticuloKeyUp, error...." + xhr.status);
+						mostrarMensajeError(xhr.responseText);
+						//loadding(false);
+					}
+				});
+			},
+			minLength: 3,
+			select: function(event, ui) {
+				event.preventDefault();
+
 				$('#buscarArticulo_' + fila).val(CADENA_VACIA);
 				$('#codigo_' + fila).val(ui.item.codArticulo);
 				$('#descCodigo_' + fila).val(ui.item.codEstandar);
-		    	$('#descripcion_' + fila).val(ui.item.descripcion);
-		    	$('#marca_' + fila).val(ui.item.descripcionMarcaArticulo);
-		    	
-		    	// evaluamos si estamos cotizando en SOLES o DOLARES
+				$('#descripcion_' + fila).val(ui.item.descripcion);
+				$('#marca_' + fila).val(ui.item.descripcionMarcaArticulo);
+
+				// evaluamos si estamos cotizando en SOLES o DOLARES
 				var precio;
 				var tc = tipoCambio.val();
-				
+
 				deshabilitarControlSoloLectura(null, '#cantidad_' + fila);
 				deshabilitarControlSoloLectura(null, '#precio_' + fila);
-				
+
 				var tipMoneda = tipoMoneda.val();
-				if(tipMoneda == Moneda.SOLES){
-					precio 		= ui.item.precioVentaUnitario * tc;
-				}else{
-					precio 		= ui.item.precioVentaUnitario;
+				if (tipMoneda == Moneda.SOLES) {
+					precio = ui.item.precioVentaUnitario * tc;
+				} else {
+					precio = ui.item.precioVentaUnitario;
 				}
-				
+
 				$('#precio_' + fila).val(convertirNumeroAMoneda(precio));
 				$('#precio_' + fila).prop('min', precio);
 				$('#cantidad_' + fila).focus();
-				
+
 				var key = window.Event ? event.which : event.keyCode;
-				
-				if(key != 13){
-					if ($('#cantidad_' + fila).val() > 0){						
+
+				if (key != 13) {
+					if ($('#cantidad_' + fila).val() > 0) {
 						cantidadKeyUp($('#cantidad_' + fila)[0], fila);
-					}				
+					}
 				}
-		    }
-	    });
+			}
+		});
 	}
 }
 
@@ -823,21 +894,21 @@ function cantidadKeyUp(control, fila) {
 
 	var cantidad = Number(control.value);
 	var precio = Number($('#precio_' + fila).val());
-	var subTotal = cantidad * precio;	
-	var subTotalIgv = subTotal + (subTotal * (ParametrosGenerales.IGV/100));
+	var subTotal = cantidad * precio;
+	var subTotalIgv = subTotal + (subTotal * (ParametrosGenerales.IGV / 100));
 
-	$('#subTotal_' + fila).val(convertirNumeroAMoneda(subTotal));	
+	$('#subTotal_' + fila).val(convertirNumeroAMoneda(subTotal));
 	$('#subTotalIgv_' + fila).val(convertirNumeroAMoneda(subTotalIgv));
 	$('#cantidadPend_' + fila).val(cantidad);
-	
+
 	calcularResumenOrdenCompra();
 }
 
-function cantidadKeyDown(e, fila){
+function cantidadKeyDown(e, fila) {
 	var key = window.Event ? e.which : e.keyCode;
 	console.log("cantidadKeyDown, key-->" + key);
 	// si es ENTER
-	if(key == 13){
+	if (key == 13) {
 		console.log("cantidadKeyDown, foco en PVU");
 		$('#precio_' + fila).select();
 	}
@@ -847,21 +918,21 @@ function precioKeyUp(control, fila) {
 
 	var cantidad = Number($('#cantidad_' + fila).val());
 	var precio = Number(control.value);
-	
+
 	var subTotal = cantidad * precio;
-	var subTotalIgv = subTotal + (subTotal * (ParametrosGenerales.IGV/100));
+	var subTotalIgv = subTotal + (subTotal * (ParametrosGenerales.IGV / 100));
 
 	$('#subTotal_' + fila).val(convertirNumeroAMoneda(subTotal));
 	$('#subTotalIgv_' + fila).val(convertirNumeroAMoneda(subTotalIgv));
-	
+
 	calcularResumenOrdenCompra();
 }
 
-function precioKeyDown(e){
+function precioKeyDown(e) {
 	var key = window.Event ? e.which : e.keyCode;
 	console.log("precioKeyDown, key-->" + key);
 	// si es ENTER
-	if(key == 13){
+	if (key == 13) {
 		btnAgregarArticulo.click();
 	}
 }
@@ -872,10 +943,10 @@ function precioKeyDown(e){
 function evaluarCambioCondicionPago() {
 	var condPagoVal = condPago.val();
 
-	if(condPagoVal == CondicionPago.CREDITO){
+	if (condPagoVal == CondicionPago.CREDITO) {
 		controlRequerido(dias)
 		mostrarControl(divDias);
-	}else{
+	} else {
 		controlNoRequerido(dias);
 		ocultarControl(divDias);
 	}
@@ -884,25 +955,25 @@ function evaluarCambioCondicionPago() {
 function calcularPorTipoMoneda() {
 	var tipoMonedaVal = tipoMoneda.val();
 
-	if(tipoMonedaVal == Moneda.SOLES) {
+	if (tipoMonedaVal == Moneda.SOLES) {
 		$('.simbolo-moneda').removeClass("input-symbol-dolar").addClass("input-symbol-sol");
 		convertirMontosASoles();
-	}else{
+	} else {
 		$('.simbolo-moneda').removeClass("input-symbol-sol").addClass("input-symbol-dolar");
 		convertirMontosADolares();
 	}
 }
 
 function evaluarCambioEstado() {
-	
-	if(estado.val() == EstadoDocumentoInicial.APROBADO) {
+
+	if (estado.val() == EstadoDocumentoInicial.APROBADO) {
 
 		mostrarControl(btnGrabar);
 		ocultarControl(btnDuplicar);
 		habilitarControl(observaciones);
 		controlNoRequerido(observaciones);
 
-	} else if(estado.val() == EstadoDocumentoInicial.RECHAZADO) {
+	} else if (estado.val() == EstadoDocumentoInicial.RECHAZADO) {
 
 		ocultarControl(btnGenerarGuiaRemision);
 		ocultarControl(btnDuplicar);
@@ -923,74 +994,87 @@ function evaluarCambioEstado() {
 
 function grabarOrdenCompra(event) {
 
-	if(documentoProv.val() == CADENA_VACIA){
+	if (documentoProv.val() == CADENA_VACIA) {
 		mostrarDialogoInformacion("Debe buscar un proveedor", Boton.WARNING, $('#campoBuscar'));
 		return false;
 	}
-	
+
 	if (formOrdenCompra[0].checkValidity() == true) {
 		event.stopPropagation();
 		console.log("entrando validado....")
 		event.preventDefault();
-		
-		if(validarDetalleOrden()){
-			if(estado.val() == EstadoDocumentoInicial.POR_APROBAR){
-				registrarOrdenCompra();
-			} else {
-				if(formObservaciones[0].checkValidity() == true) {
+
+		if (validarDetalleOrden()) {
+			
+			if (flgNuevo == 1){
+				registrarOrdenCompra();				
+			}else {
+				if (formObservaciones[0].checkValidity() == true) {
+					console.log("actualiza....")
 					actualizarOrdenCompra();
 				} else {
 					console.log("validado FALSE!!!....")
-        			event.stopPropagation();
+					event.stopPropagation();
 				}
-			}
+			}			
+			
+			/*if (estado.val() == EstadoDocumentoInicial.POR_APROBAR) {
+				registrarOrdenCompra();
+			} else {
+				if (formObservaciones[0].checkValidity() == true) {
+					actualizarOrdenCompra();
+				} else {
+					console.log("validado FALSE!!!....")
+					event.stopPropagation();
+				}
+			}*/
 		}
 	} else {
 		console.log("validado FALSE!!!....")
-        event.stopPropagation();
-		
+		event.stopPropagation();
+
 	}
 	formOrdenCompra.addClass('was-validated');
 	formObservaciones.addClass('was-validated');
 }
 
-function validarDetalleOrden(){
-	
+function validarDetalleOrden() {
+
 	var cantidad;
 	var precio;
 	var flag = false;
 	var exitEach = false;
 	var exitIterator = false;
-		
+
 	// verificando que se hayan ingresado por lo menos un item al detalle de la Orden de Compra
 	var contadorVacios = 0;
 	// recorriendo todos los detalles
 	var $headers = tableDetalle.find("th").not(':first').not(':last');
-	tableDetalle.DataTable().rows().iterator('row', function(context, index){
+	tableDetalle.DataTable().rows().iterator('row', function(context, index) {
 
 		var node = $(this.row(index).node());
 		$cells = node.find("td").not(':first').not(':last');
 
 		$cells.each(function(cellIndex) {
-			if($($headers[cellIndex]).attr('id') == 'codArticulo') {
-				
-				if($(this).find("input").val() == CADENA_VACIA || $(this).find("input").val() == UNDEFINED){
+			if ($($headers[cellIndex]).attr('id') == 'codArticulo') {
+
+				if ($(this).find("input").val() == CADENA_VACIA || $(this).find("input").val() == UNDEFINED) {
 					contadorVacios++;
 				}
 			}
 		});
 	});
-	
+
 	// si la cantidad de filas vacías es igual al contador de filas, mostrar mensaje
-	if(contadorVacios == (indiceFilaDataTableDetalle + 1)){
+	if (contadorVacios == (indiceFilaDataTableDetalle + 1)) {
 		mostrarMensajeValidacion("Debe ingresar items a la Orden de Compra", null, '#buscarArticulo_' + indiceFilaDataTableDetalle);
-		return false;	
+		return false;
 	}
-	
+
 	// verificando que no hayan detalles con cantidad y precio vacíos
-	tableDetalle.DataTable().rows().iterator('row', function(context, index){
-		
-		if(exitEach == true){
+	tableDetalle.DataTable().rows().iterator('row', function(context, index) {
+
+		if (exitEach == true) {
 			console.log("exirteach es true!");
 			exitIterator = true;
 			return false;
@@ -1000,47 +1084,47 @@ function validarDetalleOrden(){
 		$cells = node.find("td").not(':first').not(':last');
 
 		flag = false;
-		
+
 		$cells.each(function(cellIndex) {
 			console.log("valor de flag al iniciar new recorrido-->" + flag);
 			// verificamos que estamos en una fila con código (es decir, con datos para validar)
-			if($($headers[cellIndex]).attr('id') == 'codArticulo') {
-				
-				if($(this).find("input").val() != CADENA_VACIA && $(this).find("input").val() != UNDEFINED){
-					flag = true;	
+			if ($($headers[cellIndex]).attr('id') == 'codArticulo') {
+
+				if ($(this).find("input").val() != CADENA_VACIA && $(this).find("input").val() != UNDEFINED) {
+					flag = true;
 				}
 			}
-			
+
 			// evaluamos la CANTIDAD				
-			if($($headers[cellIndex]).attr('id') == 'cantidad') {
+			if ($($headers[cellIndex]).attr('id') == 'cantidad') {
 				// siempre y cuando hayan datos (flag TRUE)
-				if(flag == true){
+				if (flag == true) {
 					cantidad = $(this).find("input").val();
 					console.log("cantidad-->" + cantidad);
-					if(cantidad == CADENA_VACIA){
+					if (cantidad == CADENA_VACIA) {
 						mostrarMensajeValidacion('Debe ingresar la cantidad.', $(this).find("input"));
 						exitEach = true;
 						console.log("cantidad es cadena vacia");
 						return false;
-					}else if(convertirMonedaANumero(cantidad) == 0){
+					} else if (convertirMonedaANumero(cantidad) == 0) {
 						mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $(this).find("input"));
 						exitEach = true;
 						return false;
 					}
 				}
 			}
-			
+
 			// evaluamos el PRECIO	
-			if($($headers[cellIndex]).attr('id') == 'precioUnitario') {
+			if ($($headers[cellIndex]).attr('id') == 'precioUnitario') {
 				// siempre y cuando hayan datos (flag TRUE)
-				if(flag == true){
+				if (flag == true) {
 					precio = $(this).find("input").val();
 					console.log("precio-->" + precio);
-					if(precio == CADENA_VACIA){
+					if (precio == CADENA_VACIA) {
 						mostrarMensajeValidacion('Debe ingresar el precio.', $(this).find("input"));
 						exitEach = true;
 						return false;
-					}else if(convertirMonedaANumero(precio) == 0){
+					} else if (convertirMonedaANumero(precio) == 0) {
 						mostrarDialogoInformacion('Debe ingresar un precio mayor a cero.', Boton.WARNING, $(this).find("input"));
 						exitEach = true;
 						return false;
@@ -1049,58 +1133,56 @@ function validarDetalleOrden(){
 			}
 		});
 	});
-		
-	if(exitEach == true || exitIterator == true){
+
+	if (exitEach == true || exitIterator == true) {
 		console.log("exitEach||exititerator es true!");
 		return false;
-	}else{
-		return true;	
+	} else {
+		return true;
 	}
 }
 
-function registrarOrdenCompra(){
+function registrarOrdenCompra() {
 
-	var nroDocumento  			= codigo.html();
-	var codigoProvVal  		= codigoProveedor.val().trim();
-	var fecContaVal 			= fecConta.datetimepicker('date').format('YYYY-MM-DD');
-	var fecHastaVal 			= fecHasta.datetimepicker('date').format('YYYY-MM-DD');
-	var fecEntregaVal 			= fecEntrega.datetimepicker('date').format('YYYY-MM-DD');
-	var tipoMonedaVal 			= tipoMoneda.val();
-	var condPagoVal 			= condPago.val();
-	var estadoVal 				= estado.val();
-	var tipoCambioVal			= tipoCambio.val();
-	var observacionesVal 		= observaciones.val().trim();
-	var numeroDocumentoRefVal	= nroDocReferencia.val();
-	
-	var subTotalVal 			= convertirMonedaANumero(subTotalOC.val().trim());
-	var igvVal 					= convertirMonedaANumero(igvOC.val());
-	var totalVal 				= convertirMonedaANumero(totalOC.val().trim());
-	
-	var detalle 				= tableToJSON(tableDetalle);
-	var diasVal					= null;
+	var nroDocumento = codigo.html();
+	var codigoProvVal = codigoProveedor.val().trim();
+	var fecContaVal = fecConta.datetimepicker('date').format('YYYY-MM-DD');
+	var fecHastaVal = fecHasta.datetimepicker('date').format('YYYY-MM-DD');
+	var fecEntregaVal = fecEntrega.datetimepicker('date').format('YYYY-MM-DD');
+	var tipoMonedaVal = tipoMoneda.val();
+	var condPagoVal = condPago.val();
+	var estadoVal = estado.val();
+	var tipoCambioVal = tipoCambio.val();
+	var observacionesVal = observaciones.val().trim();
+	var numeroDocumentoRefVal = nroDocReferencia.val();
+	var subTotalVal = convertirMonedaANumero(subTotalOC.val().trim());
+	var igvVal = convertirMonedaANumero(igvOC.val());
+	var totalVal = convertirMonedaANumero(totalOC.val().trim());
+	var detalle = tableToJSON(tableDetalle);
+	var diasVal = null;
 
-	if(condPagoVal == CondicionPago.CREDITO) {
-		diasVal					= dias.val();
+	if (condPagoVal == CondicionPago.CREDITO) {
+		diasVal = dias.val();
 	}
 
 	var objetoJson = {
 
-		numeroDocumento:		nroDocumento,
-		codigoProv:  			codigoProvVal,
-		fechaContabilizacion:   fecContaVal,
-		fechaValidoHasta:       fecHastaVal,
-		fechaEntrega:       	fecEntregaVal,
-		codigoTipoMoneda:     	tipoMonedaVal,
-		codigoCondPago:     	condPagoVal,
-		codigoDias:     		diasVal,
-		codigoEstado:       	estadoVal,
-		tipoCambio:				tipoCambioVal,
-		observaciones:  		observacionesVal,
-		numeroDocumentoRef:		numeroDocumentoRefVal,
-		subTotal:  				subTotalVal,
-		igv:  					igvVal,
-		total:  				totalVal,
-		detalle:  				detalle
+		numeroDocumento: nroDocumento,
+		codigoProv: codigoProvVal,
+		fechaContabilizacion: fecContaVal,
+		fechaValidoHasta: fecHastaVal,
+		fechaEntrega: fecEntregaVal,
+		codigoTipoMoneda: tipoMonedaVal,
+		codigoCondPago: condPagoVal,
+		codigoDias: diasVal,
+		codigoEstado: estadoVal,
+		tipoCambio: tipoCambioVal,
+		observaciones: observacionesVal,
+		numeroDocumentoRef: numeroDocumentoRefVal,
+		subTotal: subTotalVal,
+		igv: igvVal,
+		total: totalVal,
+		detalle: detalle
 	};
 
 	var entityJsonStr = JSON.stringify(objetoJson);
@@ -1113,50 +1195,51 @@ function registrarOrdenCompra(){
 
 
 	$.ajax({
-		type:"POST",
+		type: "POST",
 		contentType: false,
 		processData: false,
-		url : '/appkahaxi/registrarOrdenCompra/',
+		url: '/appkahaxi/registrarOrdenCompra/',
 		data: formData,
 		beforeSend: function(xhr) {
 			loadding(true);
 		},
-		success:function(resultado,textStatus,xhr){
+		success: function(resultado, textStatus, xhr) {
 
-			if(xhr.status == HttpStatus.OK){
+			if (xhr.status == HttpStatus.OK) {
 
 				mostrarNotificacion("El registro fue grabado correctamente.", "success");
-				
+
 				// despues de grabar, mostramos los botones de "Generar GR", "Nuevo", "Duplicar" y "Volver" (si fuera el caso)
 				mostrarControl(btnNuevo);
 				mostrarControl(btnDuplicar);
-				
+
 				ocultarControl(btnGenerarGuiaRemision);
 				ocultarControl(btnLimpiar);
 				ocultarControl(btnGrabar);
 				ocultarControl(btnAgregarArticulo);
 				ocultarControl(btnEliminarTodosArticulos);
-				
+				mostrarControl(btnPdf);
+
 				deshabilitarControl(campoBuscar);
 				deshabilitarControl(dateTimePickerInput);
-				
+
 				deshabilitarControl(tipoMoneda);
 				deshabilitarControl(condPago);
 				deshabilitarControl(dias);
 				habilitarControl(estado);
 				deshabilitarControl(observaciones);
-				
+
 				deshabilitarDetalleOrdenCompra();
-				
+
 				codigo.html(resultado);
 
-			}else if(xhr.status == HttpStatus.Accepted){
+			} else if (xhr.status == HttpStatus.Accepted) {
 
 				mostrarMensajeValidacion(resultado);
 			}
 			loadding(false);
 		},
-		error: function (xhr, error, code){
+		error: function(xhr, error, code) {
 
 			mostrarMensajeError(xhr.responseText);
 			loadding(false);
@@ -1165,15 +1248,49 @@ function registrarOrdenCompra(){
 }
 
 function actualizarOrdenCompra() {
+	
+	if(nroSeguimiento.val().trim() == CADENA_VACIA){
+		mostrarMensajeValidacion("Debe ingresar el número de seguimiento antes de grabar.", nroSeguimiento);
+		return;
+	}
+	
+	
+	var nroDocumento = codigo.html();
+	var estadoVal = estado.val();
+	var observacionesVal = observaciones.val().trim();
+	var numeroSeguimiento = nroSeguimiento.val().trim();	
+	var fecContaVal = fecConta.datetimepicker('date').format('YYYY-MM-DD');
+	var fecHastaVal = fecHasta.datetimepicker('date').format('YYYY-MM-DD');
+	var fecEntregaVal = fecEntrega.datetimepicker('date').format('YYYY-MM-DD');
+	var tipoMonedaVal = tipoMoneda.val();
+	var condPagoVal = condPago.val();	
+	var tipoCambioVal = tipoCambio.val();	
+	var subTotalVal = convertirMonedaANumero(subTotalOC.val().trim());
+	var igvVal = convertirMonedaANumero(igvOC.val());
+	var totalVal = convertirMonedaANumero(totalOC.val().trim());
+	var detalle = tableToJSON(tableDetalle);
+	var diasVal = null;
 
-	var nroDocumento  		= codigo.html();
-	var estadoVal 			= estado.val();
-	var observacionesVal 	= observaciones.val().trim();
+	if (condPagoVal == CondicionPago.CREDITO) {
+		diasVal = dias.val();
+	}
 
 	var objetoJson = {
-		numeroDocumento:	nroDocumento,
-		codigoEstado:       estadoVal,
-		observaciones:  	observacionesVal
+		numeroDocumento: nroDocumento,
+		codigoEstado: estadoVal,
+		observaciones: observacionesVal,
+		nroSeguimiento: numeroSeguimiento,
+		fechaContabilizacion: fecContaVal,
+		fechaValidoHasta: fecHastaVal,
+		fechaEntrega: fecEntregaVal,
+		codigoTipoMoneda: tipoMonedaVal,
+		codigoCondPago: condPagoVal,
+		codigoDias: diasVal,		
+		tipoCambio: tipoCambioVal,		
+		subTotal: subTotalVal,
+		igv: igvVal,
+		total: totalVal,
+		detalle: detalle
 	};
 
 	var entityJsonStr = JSON.stringify(objetoJson);
@@ -1185,21 +1302,20 @@ function actualizarOrdenCompra() {
 
 
 	$.ajax({
-		type:"POST",
+		type: "POST",
 		contentType: false,
 		processData: false,
-		url : '/appkahaxi/actualizarOrdenCompra/',
+		url: '/appkahaxi/actualizarOrdenCompra/',
 		data: formData,
 		beforeSend: function(xhr) {
 			loadding(true);
 		},
-		success:function(resultado,textStatus,xhr){
+		success: function(resultado, textStatus, xhr) {
 
-			if(xhr.status == HttpStatus.OK){
-
+			if (xhr.status == HttpStatus.OK) {
 				mostrarNotificacion("El registro fué actualizado correctamente.", "success");
 
-				if(estado.val() == EstadoDocumentoInicial.APROBADO) {
+				if (estado.val() == EstadoDocumentoInicial.APROBADO) {
 					mostrarControl(btnGenerarGuiaRemision);
 					mostrarControl(btnDuplicar);
 					ocultarControl(btnGrabar);
@@ -1207,21 +1323,37 @@ function actualizarOrdenCompra() {
 					deshabilitarControl(estado);
 					controlNoRequerido(observaciones);
 					deshabilitarControl(observaciones);
-					
+					mostrarControl(btnPdf);
 					window.scrollTo(0, 0);
-
-				} else {
+				} else if (estado.val() == EstadoDocumentoInicial.POR_APROBAR) {
+					deshabilitarControl(estado);
+					deshabilitarControl(tipoCambio);
+					deshabilitarControl(nroSeguimiento);
+					mostrarControl(btnPdf);	
+					mostrarControl(btnDuplicar);
+					ocultarControl(btnGrabar);
+					ocultarControl(btnLimpiar);		
+					ocultarControl(btnAgregarArticulo);
+					ocultarControl(btnEliminarTodosArticulos);
+					deshabilitarDetalleOrdenCompra();
+					deshabilitarControl(dateTimePickerInput);
+					deshabilitarControl(tipoMoneda);
+					deshabilitarControl(condPago);
+					deshabilitarControl(dias);
+					deshabilitarControl(tipoCambio);
+				}
+				else{
 					volver();
 				}
 
-			}else if(xhr.status == HttpStatus.Accepted){
+			} else if (xhr.status == HttpStatus.Accepted) {
 
 				mostrarMensajeValidacion(resultado);
 			}
 
 			loadding(false);
 		},
-		error: function (xhr, error, code){
+		error: function(xhr, error, code) {
 
 			mostrarMensajeError(xhr.responseText);
 			loadding(false);
@@ -1232,21 +1364,21 @@ function actualizarOrdenCompra() {
 function tableToJSON(dataTable) {
 	var data = [];
 	var $headers = dataTable.find("th").not(':first').not(':last');
-	
-	dataTable.DataTable().rows().iterator('row', function(context, index){
+
+	dataTable.DataTable().rows().iterator('row', function(context, index) {
 		var node = $(this.row(index).node());
 		$cells = node.find("td").not(':first').not(':last');
 		data[index] = {};
 
 		$cells.each(function(cellIndex) {
 
-			if($($headers[cellIndex]).attr('id') == 'codArticulo' && $(this).find("input").val() == CADENA_VACIA){
+			if ($($headers[cellIndex]).attr('id') == 'codArticulo' && $(this).find("input").val() == CADENA_VACIA) {
 				return false;
-			}else{
-				if($($headers[cellIndex]).attr('id') == 'precioUnitario' || $($headers[cellIndex]).attr('id') == 'subTotalIgv' || $($headers[cellIndex]).attr('id') == 'subTotal'){
+			} else {
+				if ($($headers[cellIndex]).attr('id') == 'precioUnitario' || $($headers[cellIndex]).attr('id') == 'subTotalIgv' || $($headers[cellIndex]).attr('id') == 'subTotal') {
 					data[index][$($headers[cellIndex]).attr('id')] = convertirMonedaANumero($(this).find("input").val());
-				}else{
-					if($($headers[cellIndex]).attr('id') != 'buscarArticulo'){
+				} else {
+					if ($($headers[cellIndex]).attr('id') != 'buscarArticulo') {
 						data[index][$($headers[cellIndex]).attr('id')] = $(this).find("input").val();
 					}
 				}
@@ -1258,22 +1390,46 @@ function tableToJSON(dataTable) {
 	console.log("data--->" + data);
 	// eliminando las filas en blanco
 	var newData = [];
-	for(i=0, j=0; i<data.length;i++){
+	for (i = 0, j = 0; i < data.length; i++) {
 		console.log("data[i][codArticulo]--->" + data[i]['codArticulo']);
-		if(data[i]['codArticulo'] != UNDEFINED){
+		if (data[i]['codArticulo'] != UNDEFINED) {
 			newData[j] = data[i];
 			j++;
 		}
 	}
-	
+
 	return newData;
 }
 
-function mostrarDialogoEliminarFila(table, row){
+function actualizarEnvioOrdenCompra() {
+
+	var nroDocumento = codigo.html();
+	
+	$.ajax({
+		type: "POST",
+		contentType: false,
+		processData: false,
+		url: '/appkahaxi/actualizarEnvioOrdenCompra/'  + nroDocumento,
+		data: null,
+		beforeSend: function(xhr) {
+			loadding(true);
+		},
+		success: function(resultado, textStatus, xhr) {
+			console.log("OC enviada");
+			loadding(false);
+		},
+		error: function(xhr, error, code) {
+			mostrarMensajeError(xhr.responseText);
+			loadding(false);
+		}
+	});
+}
+
+function mostrarDialogoEliminarFila(table, row) {
 
 	bootbox.confirm({
 		message: "¿Está seguro que desea eliminar el registro?",
-		
+
 		buttons: {
 			confirm: {
 				label: 'Sí',
@@ -1284,11 +1440,11 @@ function mostrarDialogoEliminarFila(table, row){
 				className: 'btn-danger'
 			}
 		},
-		callback: function (result) {
-			if(result == true){
+		callback: function(result) {
+			if (result == true) {
 				table.row(row.closest('tr')).remove().draw();
 				indiceFilaDataTableDetalle--;
-				if(indiceFilaDataTableDetalle == -1){
+				if (indiceFilaDataTableDetalle == -1) {
 					ocultarControl(btnEliminarTodosArticulos);
 				}
 				calcularResumenOrdenCompra();
@@ -1311,8 +1467,8 @@ function mostrarDialogoEliminarTodo(table) {
 				className: 'btn-danger'
 			}
 		},
-		callback: function (result) {
-			if(result == true) {
+		callback: function(result) {
+			if (result == true) {
 				table.clear().draw();
 				indiceFilaDataTableDetalle = -1;
 				calcularResumenOrdenCompra();
@@ -1336,8 +1492,8 @@ function mostrarDialogoGenerarGuiaRemision() {
 				className: 'btn-danger'
 			}
 		},
-		callback: function (result) {
-			if(result == true){
+		callback: function(result) {
+			if (result == true) {
 				generarGuiaRemisionPorOrden();
 			}
 		}
@@ -1346,64 +1502,64 @@ function mostrarDialogoGenerarGuiaRemision() {
 
 function generarGuiaRemisionPorOrden() {
 	var params;
-	var nroDoc 		= numeroDocumento.text();
-	var dato 		= datoBuscar.text();
-	var nroOC 		= nroOrdenCompra.text();
-	var codRpto 	= codRepuesto.text();
-	var fecDesde 	= fechaDesde.text();
-	var fecHasta 	= fechaHasta.text();
-	var estParam	= estadoParam.text();
-	
-	params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.NUEVO + "&datoBuscar=" + dato + 
-			 "&nroGuiaRemision=&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
-			 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta +"&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI;
+	var nroDoc = numeroDocumento.text();
+	var dato = datoBuscar.text();
+	var nroOC = nroOrdenCompra.text();
+	var codRpto = codRepuesto.text();
+	var fecDesde = fechaDesde.text();
+	var fecHasta = fechaHasta.text();
+	var estParam = estadoParam.text();
+
+	params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.NUEVO + "&datoBuscar=" + dato +
+		"&nroGuiaRemision=&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +
+		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI;
 
 	window.location.href = "/appkahaxi/cargar-guia-remision-compra?" + params;
 }
 
 function cargarGuiaRemisionAsociada(numDocumento) {
 	var params;
-	var nroDoc 		= numeroDocumento.text();
-	var dato 		= datoBuscar.text();
-	var nroOC 		= nroOrdenCompra.text();
-	var codRpto 	= codRepuesto.text();
-	var fecDesde 	= fechaDesde.text();
-	var fecHasta 	= fechaHasta.text();
-	var estParam	= estadoParam.text();
-	
-	params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato + 
-			 "&nroGuiaRemision=" + numDocumento +"&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
-			 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta +"&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI;
+	var nroDoc = numeroDocumento.text();
+	var dato = datoBuscar.text();
+	var nroOC = nroOrdenCompra.text();
+	var codRpto = codRepuesto.text();
+	var fecDesde = fechaDesde.text();
+	var fecHasta = fechaHasta.text();
+	var estParam = estadoParam.text();
+
+	params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato +
+		"&nroGuiaRemision=" + numDocumento + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +
+		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI;
 
 	window.location.href = "/appkahaxi/cargar-guia-remision-compra?" + params;
 }
 
-function nuevaOrdenCompra(){
+function nuevaOrdenCompra() {
 	var params;
 	// armando los parámetros
 	params = "numeroDocumento=&opcion=&datoBuscar=&nroOrdenCompra=&codRepuesto=&fechaDesde=&fechaHasta=&estadoParam=&volver=0";
 	window.location.href = "/appkahaxi/nueva-orden-compra?" + params;
 }
 
-function volver(){
+function volver() {
 	var params;
-	var dato 		= datoBuscar.text();
-	var nroOC 		= nroOrdenCompra.text();
-	var codRpto 	= codRepuesto.text();
-	var fecDesde 	= fechaDesde.text();
-	var fecHasta 	= fechaHasta.text();
-	var estParam	= estadoParam.text();
+	var dato = datoBuscar.text();
+	var nroOC = nroOrdenCompra.text();
+	var codRpto = codRepuesto.text();
+	var fecDesde = fechaDesde.text();
+	var fecHasta = fechaHasta.text();
+	var estParam = estadoParam.text();
 
-	params = "datoBuscar=" + dato + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
-			 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam;
+	params = "datoBuscar=" + dato + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +
+		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam;
 	window.location.href = "/appkahaxi/mantenimiento-orden-compra?" + params;
 }
 
-function reiniciarFechaHasta(){
+function reiniciarFechaHasta() {
 	console.log("reiniciarFechaHasta...inicio");
 	fecHasta.datetimepicker('maxDate', false);
 	fecHasta.datetimepicker('minDate', false);
-	
+
 }
 
 function limpiarOrdenCompra() {
@@ -1442,12 +1598,12 @@ function mostrarModalGuiasPorOrdenCompra(event) {
 	mostrarModal(guiasPorOrdenCompraModal);
 }
 
-function obtenerDetalleGuiaPorOrdenCompra(event){
+function obtenerDetalleGuiaPorOrdenCompra(event) {
 
 	event.preventDefault();
 	event.stopPropagation();
 
-	if ( $.fn.dataTable.isDataTable('#tableDetalleGuias')) {
+	if ($.fn.dataTable.isDataTable('#tableDetalleGuias')) {
 
 		dataTableDetalleGuias.clear();
 		dataTableDetalleGuias.ajax.reload(null, true);
@@ -1457,26 +1613,26 @@ function obtenerDetalleGuiaPorOrdenCompra(event){
 		dataTableDetalleGuias = tableDetalleGuias.DataTable({
 
 			"ajax": {
-				data: function ( d ) {
-					d.codigoOrdenCompra 	= numeroDocumento.text().trim();
+				data: function(d) {
+					d.codigoOrdenCompra = numeroDocumento.text().trim();
 				},
 				url: '/appkahaxi/listarGuiaRemisionCompraPorOrdenCompra/',
-				dataSrc: function (json) {
+				dataSrc: function(json) {
 					console.log("listarGuiaRemisionCompraPorOrdenCompra...success");
 					return json;
 				},
-				error: function (xhr, error, code){
+				error: function(xhr, error, code) {
 
 				}
 			},
-			"stateSave"		: true,
-			"responsive"	: false,
+			"stateSave": true,
+			"responsive": false,
 			"scrollCollapse": false,
-			"dom"			: '<ip<rt>lp>',
-        	"lengthMenu"	: [[10, 20, 30, 40, -1], [10, 20, 30, 40, "Todos"]],
-			"deferRender"   : true,
-			"autoWidth"		: false,
-			"columnDefs"    : [
+			"dom": '<ip<rt>lp>',
+			"lengthMenu": [[10, 20, 30, 40, -1], [10, 20, 30, 40, "Todos"]],
+			"deferRender": true,
+			"autoWidth": false,
+			"columnDefs": [
 				{
 					"width": "20px",
 					"targets": [0],
@@ -1512,8 +1668,8 @@ function obtenerDetalleGuiaPorOrdenCompra(event){
 					"data": "subTotal",
 					"orderable": false,
 					"render":
-						function (data, type, row ) {
-							return  convertirNumeroAMoneda(data);
+						function(data, type, row) {
+							return convertirNumeroAMoneda(data);
 						}
 				},
 				{
@@ -1522,8 +1678,8 @@ function obtenerDetalleGuiaPorOrdenCompra(event){
 					"data": "igv",
 					"orderable": false,
 					"render":
-						function (data, type, row ) {
-							return  convertirNumeroAMoneda(data);
+						function(data, type, row) {
+							return convertirNumeroAMoneda(data);
 						}
 				},
 				{
@@ -1532,19 +1688,19 @@ function obtenerDetalleGuiaPorOrdenCompra(event){
 					"data": "total",
 					"orderable": false,
 					"render":
-						function (data, type, row ) {
-							return  convertirNumeroAMoneda(data);
+						function(data, type, row) {
+							return convertirNumeroAMoneda(data);
 						}
 				}
 			],
 			"fnRowCallback":
-				function(row, data, iDisplayIndex, iDisplayIndexFull){
+				function(row, data, iDisplayIndex, iDisplayIndexFull) {
 
-					if(data.codigoTipoMoneda == Moneda.SOLES){
+					if (data.codigoTipoMoneda == Moneda.SOLES) {
 						$('td:eq(4)', row).addClass('dt-body-right listado-symbol-sol');
 						$('td:eq(5)', row).addClass('dt-body-right listado-symbol-sol');
 						$('td:eq(6)', row).addClass('dt-body-right listado-symbol-sol');
-					}else{
+					} else {
 						$('td:eq(4)', row).addClass('dt-body-right listado-symbol-dolar');
 						$('td:eq(5)', row).addClass('dt-body-right listado-symbol-dolar');
 						$('td:eq(6)', row).addClass('dt-body-right listado-symbol-dolar');
@@ -1554,14 +1710,14 @@ function obtenerDetalleGuiaPorOrdenCompra(event){
 					return row;
 
 				},
-			"language"  : {
+			"language": {
 				"url": "/appkahaxi/language/Spanish.json"
 			}
 		});
 
-		$('#tableDetalleGuias tbody').on('click','.link-ver-guia', function () {
+		$('#tableDetalleGuias tbody').on('click', '.link-ver-guia', function() {
 
-			var data = dataTableDetalleGuias.row( $(this).closest('tr')).data();
+			var data = dataTableDetalleGuias.row($(this).closest('tr')).data();
 			cargarGuiaRemisionAsociada(data.numeroDocumento);
 		});
 
@@ -1571,23 +1727,23 @@ function obtenerDetalleGuiaPorOrdenCompra(event){
 
 /********************* CALCULOS NUMERICOS ********************/
 
-function calcularResumenOrdenCompra(){
+function calcularResumenOrdenCompra() {
 
 	var subTotal = 0;
 
 	// 1. sumamos el campo subTotal de cada fila
 	var $headers = tableDetalle.find("th").not(':first').not(':last');
-	tableDetalle.DataTable().rows().iterator('row', function(context, index){
+	tableDetalle.DataTable().rows().iterator('row', function(context, index) {
 
 		var node = $(this.row(index).node());
 		$cells = node.find("td").not(':first').not(':last');
 		$cells.each(function(cellIndex) {
 
-			if($($headers[cellIndex]).attr('id') == 'subTotal') {
-				
+			if ($($headers[cellIndex]).attr('id') == 'subTotal') {
+
 				parcial = ($(this).find("input").val() != CADENA_VACIA && $(this).find("input").val() != UNDEFINED) ? $(this).find("input").val() : 0;
 				//console.log("parcial-->" + parcial + "; i-->" + i + "; typeof-->" + (typeof parcial));
-				if((typeof parcial) == 'string'){
+				if ((typeof parcial) == 'string') {
 					parcial = convertirMonedaANumero(parcial);
 				}
 				subTotal = Number(subTotal) + Number(parcial);
@@ -1596,15 +1752,15 @@ function calcularResumenOrdenCompra(){
 	});
 
 	// 2. hacemos los cáculos del IGV y TOTAL de la OC
-	var igv = subTotal * (ParametrosGenerales.IGV/100);
+	var igv = subTotal * (ParametrosGenerales.IGV / 100);
 	var total = subTotal + igv;
-	
+
 	subTotalOC.val(convertirNumeroAMoneda(subTotal));
 	igvOC.val(convertirNumeroAMoneda(igv));
 	totalOC.val(convertirNumeroAMoneda(total));
 }
 
-function convertirMontosASoles(){
+function convertirMontosASoles() {
 	console.log("convertirMontosASoles.....");
 	var tc = Number(tipoCambio.val());
 	var nvoPrecio;
@@ -1613,40 +1769,40 @@ function convertirMontosASoles(){
 	var subTotal;
 	var igv;
 	var total;
-	
+
 	var $headers = tableDetalle.find("th").not(':first').not(':last');
-	tableDetalle.DataTable().rows().iterator('row', function(context, index){
+	tableDetalle.DataTable().rows().iterator('row', function(context, index) {
 
 		var node = $(this.row(index).node());
 		$cells = node.find("td").not(':first').not(':last');
 
 		$cells.each(function(cellIndex) {
-			if($($headers[cellIndex]).attr('id') == 'precioUnitario') {
+			if ($($headers[cellIndex]).attr('id') == 'precioUnitario') {
 				nvoPrecio = Number(convertirMonedaANumero($(this).find("input").val())) * tc;
 				$(this).find("input").val(convertirNumeroAMoneda(nvoPrecio));
 			}
-			if($($headers[cellIndex]).attr('id') == 'subTotal') {
+			if ($($headers[cellIndex]).attr('id') == 'subTotal') {
 				nvoSubTotal = Number(convertirMonedaANumero($(this).find("input").val())) * tc;
 				$(this).find("input").val(convertirNumeroAMoneda(nvoSubTotal));
 			}
-			if($($headers[cellIndex]).attr('id') == 'subTotalIgv') {
+			if ($($headers[cellIndex]).attr('id') == 'subTotalIgv') {
 				nvoIgv = Number(convertirMonedaANumero($(this).find("input").val())) * tc;
 				$(this).find("input").val(convertirNumeroAMoneda(nvoIgv));
 			}
-			
+
 		});
 	});
-	
+
 	subTotal = Number(convertirMonedaANumero(subTotalOC.val())) * tc;
 	igv = Number(convertirMonedaANumero(igvOC.val())) * tc;
 	total = Number(convertirMonedaANumero(totalOC.val())) * tc;
-	
+
 	subTotalOC.val(convertirNumeroAMoneda(subTotal));
 	igvOC.val(convertirNumeroAMoneda(igv));
 	totalOC.val(convertirNumeroAMoneda(total));
 }
 
-function convertirMontosADolares(){
+function convertirMontosADolares() {
 	console.log("convertirMontosADolares.....");
 	var tc = Number(tipoCambio.val());
 	var nvoPrecio;
@@ -1655,35 +1811,197 @@ function convertirMontosADolares(){
 	var subTotal;
 	var igv;
 	var total;
-	
+
 	var $headers = tableDetalle.find("th").not(':first').not(':last');
-	tableDetalle.DataTable().rows().iterator('row', function(context, index){
+	tableDetalle.DataTable().rows().iterator('row', function(context, index) {
 
 		var node = $(this.row(index).node());
 		$cells = node.find("td").not(':first').not(':last');
 
 		$cells.each(function(cellIndex) {
-			if($($headers[cellIndex]).attr('id') == 'precioUnitario') {
+			if ($($headers[cellIndex]).attr('id') == 'precioUnitario') {
 				nvoPrecio = Number(convertirMonedaANumero($(this).find("input").val())) / tc;
 				$(this).find("input").val(convertirNumeroAMoneda(nvoPrecio));
 			}
-			if($($headers[cellIndex]).attr('id') == 'subTotal') {
+			if ($($headers[cellIndex]).attr('id') == 'subTotal') {
 				nvoSubTotal = Number(convertirMonedaANumero($(this).find("input").val())) / tc;
 				$(this).find("input").val(convertirNumeroAMoneda(nvoSubTotal));
 			}
-			if($($headers[cellIndex]).attr('id') == 'subTotalIgv') {
+			if ($($headers[cellIndex]).attr('id') == 'subTotalIgv') {
 				nvoIgv = Number(convertirMonedaANumero($(this).find("input").val())) / tc;
 				$(this).find("input").val(convertirNumeroAMoneda(nvoIgv));
-			}			
-			
+			}
+
 		});
 	});
-	
+
 	subTotal = Number(convertirMonedaANumero(subTotalOC.val())) / tc;
 	igv = Number(convertirMonedaANumero(igvOC.val())) / tc;
 	total = Number(convertirMonedaANumero(totalOC.val())) / tc;
-	
+
 	subTotalOC.val(convertirNumeroAMoneda(subTotal));
 	igvOC.val(convertirNumeroAMoneda(igv));
 	totalOC.val(convertirNumeroAMoneda(total));
 }
+
+function generarPdf(event){
+	var nroDocumento = codigo.html();
+	var correo = email.val();
+	var box = bootbox.dialog({
+	    title: 'Enviar correo o descargar orden de compra',
+		message: $(".form-content").html().replace('formEmail', 'formEmailReal'),
+		buttons: {
+	        correo: {
+	            label: '<i class="fas fa-at"></i> Enviar por correo',
+	            className: Boton.SUCCESS,
+	            callback: function(){
+									
+	                event.preventDefault();
+					var form = $(".formEmailReal")
+					
+			        if (form[0].checkValidity() == false) {
+						console.log("validado FALSE!!!....")
+			            event.stopPropagation();
+						
+						box.find('.formEmailReal #emailPDF').addClass('input-validation-error');
+						box.find('.formEmailReal #emailPDF').focus();
+						box.find('.mensaje-validado-falso').show();
+						return false;
+			        }else{
+						//event.stopPropagation();
+						console.log("todo bien....send email....")
+						var listaCorreos = $('.formEmailReal #emailPDF').val();
+						console.log('listaCorreos-->' + listaCorreos);
+					
+						enviarMailReporte(nroDocumento, listaCorreos);
+					}
+					form.addClass('was-validated');
+	            }
+	        },
+	        descargar: {
+	            label: '<i class="fas fa-download"></i> Descargar',
+	            className: Boton.WARNING,
+	            callback: function(){
+	                console.log('boton descargar...');
+					descargarReporte(nroDocumento);	
+	            }
+	        }
+	    }
+	});
+	
+	box.on('shown.bs.modal',function(){
+	  console.log("$$$on modal...")
+		$('.formEmailReal #emailPDF').focus();
+		//$('#emailPDF').focus();
+		console.log("correo del cliente-->" + correo + "/ NRO DOC-->" + nroDocumento);
+		$('.formEmailReal #emailPDF').val(correo);
+	});
+}
+
+function enviarMailReporte(numeroDocumento, email){
+    var objetoJson = {
+		numeroDocumento		: numeroDocumento,
+    	email				: email
+    };
+
+	var entityJsonStr = JSON.stringify(objetoJson);
+    console.log("entityJsonStr-->" + entityJsonStr);
+    var formData = new FormData();
+    formData.append('registro', new Blob([entityJsonStr], {
+        type: "application/json"
+    }));
+	
+	$.ajax({
+        type:"Post",
+        contentType: false,
+        processData: false,
+		url : '/appkahaxi/enviarEmailReporteOrdenCompra',
+        xhrFields: {
+            responseType: 'blob'
+        },
+        data : formData,
+        beforeSend: function(xhr) {
+        	loadding(true);
+        },
+        error: function (xhr, error, code){
+        	mostrarMensajeError(xhr.responseText);
+        	loadding(false);
+        },
+        success: function (result, status, xhr) {
+            mostrarNotificacion("El correo se envió correctamente.", "success");
+			loadding(false);
+			actualizarEnvioOrdenCompra();
+        }
+    });
+}
+
+function descargarReporte(numeroDocumento){
+    $.ajax({
+        type:"Post",
+        url : '/appkahaxi/reporteOrdenCompra/' + numeroDocumento,
+        xhrFields: {
+            responseType: 'blob'
+        },
+        data : null,
+        beforeSend: function(xhr) {
+        	loadding(true);
+        },
+        error: function (xhr, error, code){
+        	mostrarMensajeError(xhr.responseText);
+        	loadding(false);
+        },
+        success: function (result, status, xhr) {
+            if(result.size > 0){
+                var filename = "nombre.pdf";
+                var disposition = xhr.getResponseHeader('Content-Disposition');
+
+                if (disposition) {
+                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var matches = filenameRegex.exec(disposition);
+                    if (matches !== null && matches[1]) filename = matches[1].replace(/['"]/g, CADENA_VACIA);
+                }
+                var linkelem = document.createElement('a');
+                try {
+                    var blob = new Blob([result], { type: 'application/octet-stream' });
+                    
+                    if (typeof window.navigator.msSaveBlob !== 'undefined') {
+                        //   IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
+                        window.navigator.msSaveBlob(blob, null);
+                    } else {
+                        var URL = window.URL || window.webkitURL;
+                        var downloadUrl = URL.createObjectURL(blob);
+
+                        if (filename) {
+                            // use HTML5 a[download] attribute to specify filename
+                            var a = document.createElement("a");
+
+                            // safari doesn't support this yet
+                            if (typeof a.download === 'undefined') {
+                                window.location = downloadUrl;
+                            } else {
+                                a.href = downloadUrl;
+                                a.download = filename;
+                                document.body.appendChild(a);
+                                a.target = "_blank";
+                                a.click();
+
+                                window.onfocus = function () {
+                                   // document.body.removeChild(a);
+                                    window.URL.revokeObjectURL(downloadUrl);
+                                }
+                            }
+                        } else {
+                            window.location = downloadUrl;
+                        }
+                    }
+                    loadding(false);
+
+                } catch (ex) {
+                    
+                }
+            }
+        }
+    });
+}
+
+

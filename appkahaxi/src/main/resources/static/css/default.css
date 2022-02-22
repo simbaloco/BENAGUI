@@ -268,7 +268,7 @@ input.form-control.input-validation-error {
 .etiquetaAnulado {
 	/*pointer-events: none;*/
 	font-weight: bold !important;
-	font-size: medium !important;
+	font-size: small !important;
 	color: red !important;
 	background-color: wheat !important;
 	text-align: center !important;

@@ -28,8 +28,10 @@ public class CompraCabModel {
     private BigDecimal subTotal;
     private BigDecimal igv;
     private BigDecimal total;
+    private String nroSeguimiento;
     private String codigoEstadoProceso;
     private Integer activo;
+    private Integer flagEnvio;
     private String codigoUsuarioRegistra;
     private String fechaRegistro;
     private String codigoUsuarioModifica;

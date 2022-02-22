@@ -143,6 +143,7 @@ public class Constante {
     public static final String PARAM_SP_PORC_DCTO				= "PORC_DCTO";
     public static final String PARAM_SP_PRECIO_CON_DCTO			= "PRECIO_CON_DCTO";
     public static final String PARAM_SP_DATA_JSON				= "DATA_JSON";
+    public static final String PARAM_SP_NRO_SEGUIMIENTO			= "NRO_SEGUIMIENTO";
     
     public static final String PARAM_SP_COD_ESTANDAR		= "COD_ESTANDAR";
     public static final String PARAM_SP_COD_ANTIGUO			= "COD_ANTIGUO";

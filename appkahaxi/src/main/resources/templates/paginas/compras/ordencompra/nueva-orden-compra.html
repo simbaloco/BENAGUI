@@ -17,7 +17,7 @@
 
 	<input type="text" id="codigoProveedor" hidden="hidden"/>
 	<input type="text" id="email" hidden="hidden"/>
-	<input type="text" id="celular" hidden="hidden"/>
+	<input type="text" id="flagEnvio" hidden="hidden"/>
 	
 	<label id="numeroDocumento" th:text=${numeroDocumento} hidden="hidden"></label>
 	<label id="opcion" th:text=${opcion} hidden="hidden"></label>
@@ -250,21 +250,28 @@
 									    </option>
 									</select>
 								</div>
-
-								<div class="col-md-2">
-									<label class="label" for="tipoCambio">Tipo de Cambio:</label>
-									<input class="form-control" maxlength="250" size="50" type="text" id="tipoCambio" readonly="readonly" tabindex="-1"/>
-								</div>
 								
-								<div class="col-md-2">
-									<label class="label" for="lblAnulado">&nbsp;</label>
-									<input class="form-control etiquetaAnulado" type="text" id="lblAnulado" style="display: none" value="RECHAZADO"/>
+								<div class="col-md-1">
+									<label class="label" for="tipoCambio">Tipo de Cambio:</label>
+									<input class="form-control" maxlength="15" size="50" type="text" id="tipoCambio" tabindex="-1" required="required"/>
+									<div class="invalid-feedback">
+										Debe ingresar el tipo de cambio
+									</div>
+								</div>
+										
+														
+								<div class="col-md-2" id="divNroseguimiento">
+									<label class="label" for="nroSeguimiento">Nro. Seguimiento:</label>
+									<input class="form-control" maxlength="35" size="50" type="text" id="nroSeguimiento" tabindex="-1"/>
 								</div>
 								
 								<div class="col-md-6 alineacion-derecha">
 						 			<label class="label"></label>
 						 			<div>
-
+										<button  type="button" id="btnPdf" class="btn btn-danger" style="display: none">
+							                <span class="mr-2"><i class="far fa-file-pdf"></i></span>PDF 
+							            </button>
+							            
 										<button type="button" id="btnIrGuiaRemision" class="btn btn-primary my-1" style="display: none">
 											<span class="mr-2"><i class="fas fa-coins"></i></span>Ir a la Guía de Remisión
 										</button>
@@ -478,7 +485,28 @@
             	</div>
 		</div>
 	</div>
-
+	
+	<div class="form-content" style="display:none;">
+		   	<div class="box-body">
+		   	<form class="formEmail needs-validation" novalidate>
+		   		<div class="form-group row">
+		       		<div class="col-md-2">
+		        		<label for="emailPDF">Correo electrónico:</label>
+		        	</div>
+		        	<div class="col-md-10">	
+		        		<input type="email" class="form-control" id="emailPDF" placeholder="Ingrese correo electrónico" required="required" multiple="multiple"
+		        			   title="Puede ingresar varios correos separados por punto y coma (;)"></input>
+		        		<div class="mensaje-validado-falso invalid-feedback">
+		        			Ingrese un email o una lista de emails separados por comas
+		              	</div>
+		   			</div>
+		     	</div>		     
+           		
+		  	</form>
+		  	</div>
+		</div>
+	
+	
 </div>
 
 </body>

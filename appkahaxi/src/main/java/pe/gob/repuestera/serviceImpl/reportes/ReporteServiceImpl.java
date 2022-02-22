@@ -41,7 +41,10 @@ import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import pe.gob.repuestera.exception.ErrorControladoException;
+import pe.gob.repuestera.model.CompraCabModel;
+import pe.gob.repuestera.model.CompraDetModel;
 import pe.gob.repuestera.model.VentaCabModel;
+import pe.gob.repuestera.repository.compra.ordencompra.OrdenCompraMapper;
 import pe.gob.repuestera.repository.reportes.ReporteMapper;
 import pe.gob.repuestera.service.reportes.ReporteService;
 import pe.gob.repuestera.util.Constante;
@@ -53,7 +56,8 @@ public class ReporteServiceImpl implements ReporteService{
 	
 	@Autowired
 	private ReporteMapper reporteMapper;
-	
+	@Autowired
+	private OrdenCompraMapper ordenCompraMapper;
 
 	@Override
 	public VentaCabModel obtenerCabeceraCotizacionVenta(String numeroDocumento) throws Exception {
@@ -114,6 +118,66 @@ public class ReporteServiceImpl implements ReporteService{
 		
 		return listaDetalleCotizacionVenta;
 	}
+	
+	@Override
+	public CompraCabModel obtenerCabeceraOrdenCompra(String numeroDocumento) throws Exception {
+		logger.info("entrando obtenerCabeceraOrdenCompra.......");
+		CompraCabModel ordenCompraCab = null;
+        logger.info("numeroDocumento--->" + numeroDocumento);            
+        // seteando parámetros
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_NRO_DOCUMENTO, numeroDocumento);
+        // ejecutando la query
+        ordenCompraCab = ordenCompraMapper.buscarOrdenCompraCab(params);
+        logger.info("obtenerCabeceraOrdenCompra........obteniendo el retorno");		
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        logger.info("obtenerCabeceraOrdenCompra.......FLAG_RESULTADO------>" + flagResultado);
+		logger.info("obtenerCabeceraOrdenCompra.......MENSAJE_RESULTADO--->" + mensajeResultado);
+        
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+ 			logger.info("obtenerCabeceraOrdenCompra ----> success!!!");
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+		
+		return ordenCompraCab;
+	}
+
+	@Override
+	public List<HashMap> obtenerDetalleOrdenCompra(String numeroDocumento) throws Exception {
+		logger.info("entrando obtenerDetalleOrdenCompra.......");
+		List<HashMap> listaDetalleOrdenCompra = null;
+        logger.info("numeroDocumento--->" + numeroDocumento);            
+        // seteando parámetros
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_NRO_DOCUMENTO, numeroDocumento);
+        // ejecutando la query
+        listaDetalleOrdenCompra = reporteMapper.obtenerDetalleOrdenCompra(params);
+        logger.info("obtenerDetalleOrdenCompra........obteniendo el retorno");		
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        logger.info("obtenerDetalleOrdenCompra.......FLAG_RESULTADO------>" + flagResultado);
+		logger.info("obtenerDetalleOrdenCompra.......MENSAJE_RESULTADO--->" + mensajeResultado);
+        
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+ 			logger.info("obtenerDetalleOrdenCompra ----> success!!!");
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+		
+		return listaDetalleOrdenCompra;
+	}
 
 	@Override
 	public void generarReporte(String nombreJrxml, String nombreArchivo, Map<String, Object> parametros, List<HashMap> lista, String tipoReporte, HttpServletResponse response) throws Exception {
@@ -149,7 +213,7 @@ public class ReporteServiceImpl implements ReporteService{
 	}
 
 	@Override
-	public void enviarReportePorCorreo(String nombreJrxml, String nombreArchivo, String email, Map<String, Object> parametros, List<HashMap> lista, HttpServletResponse response) throws Exception {
+	public void enviarReportePorCorreo(String nombreJrxml, String nombreArchivo, String email, Map<String, Object> parametros, List<HashMap> lista, String asunto, String mensaje, HttpServletResponse response) throws Exception {
 		logger.info("entrando enviarReportePorCorreo.......");
         try {
         	// ENVIANDO EL REPORTE POR MAIL
@@ -159,7 +223,7 @@ public class ReporteServiceImpl implements ReporteService{
     		JasperExportManager.exportReportToPdfStream(jasperPrint, baos);
     		DataSource aAttachment =  new ByteArrayDataSource(baos.toByteArray(), "application/pdf");
     		
-    		String asunto = "COTIZACION - SOLICITUD DE CONFIRMACION DE CORREO";
+    		/*String asunto = "COTIZACION - SOLICITUD DE CONFIRMACION DE CORREO";
     	    String nombreUsuario = "XXX";
     	    //String rutaRaiz = request.getSession().getServletContext().getRealPath("");
     	    String mensaje = "<html><head><meta http-equiv=Content-Type content=text/html; charset=utf-8/></head><body><table align=center width=610 cellspacing=0 cellpadding=0 border=0 style='position:relative; font-size:12px; font-family:Arial, Helvetica, sans-serif; color: #00486A; background: #ffffff; border: solid 1px #bdcbcd; -moz-border-radius: 20px 20px 20px 20px; -ms-border-radius: 20px 20px 20px 20px; -webkit-border-radius: 20px 20px 20px 20px; border-radius: 20px 20px 20px 20px; padding:5px;''>"
@@ -175,7 +239,7 @@ public class ReporteServiceImpl implements ReporteService{
     	                    + "</td></tr><tr></tr><tr><td valign=middle height=50 bgcolor=#bdcbcd align=center style='font-size:11px; -moz-border-radius: 0px 0px 20px 20px; -ms-border-radius: 0px 0px 20px 20px; -webkit-border-radius: 0px 0px 20px 20px; border-radius: 0px 0px 20px 20px; padding:5px;' colspan=2 >"
     	                    + "<table width=570 cellspacing=0 cellpadding=0 border=0 align=center><tbody><tr>"
     	                    + "<td width=100% valign=middle align=left style='padding:5px; font-size:10px;'><b>KAHAXI</b><br/>"
-    	                    + "</td><td width=100% valign=top align=right ></td></tr></tbody></table></td></tr></tbody></table></body></html>";
+    	                    + "</td><td width=100% valign=top align=right ></td></tr></tbody></table></td></tr></tbody></table></body></html>";*/
     	   
     	    Properties prop = new Properties();
     	    prop.put("mail.smtp.host", "smtp.gmail.com");
