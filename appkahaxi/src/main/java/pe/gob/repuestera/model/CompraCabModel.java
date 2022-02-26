@@ -28,7 +28,8 @@ public class CompraCabModel {
     private BigDecimal subTotal;
     private BigDecimal igv;
     private BigDecimal total;
-    private String nroSeguimiento;
+    private String nroPedido;
+    private String cotizacionSap;
     private String codigoEstadoProceso;
     private Integer activo;
     private Integer flagEnvio;
@@ -36,6 +37,10 @@ public class CompraCabModel {
     private String fechaRegistro;
     private String codigoUsuarioModifica;
     private String fechaModificacion;
+    private String email;
+    private String fechaContabilizacionDmy;
+    private String fechaValidoHastaDmy;
+    private String fechaEntregaDmy;
 
     // soporte para los listados
 	private String nombreUsuario;

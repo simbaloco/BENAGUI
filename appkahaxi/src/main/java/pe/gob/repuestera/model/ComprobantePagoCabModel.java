@@ -15,7 +15,7 @@ public class ComprobantePagoCabModel {
     private String serie;
     private String correlativo;
 	// FK
-	private String codigoCliente;
+	private String codigoProv;
 	private String username;
     private String ordenCompra;
 	// columnas
@@ -41,8 +41,8 @@ public class ComprobantePagoCabModel {
 
     // soporte para los listados
 	private String nombreUsuario;
-	private String nroDocCliente; 
-	private String nombreCliente;
+	private String nroDocProv; 
+	private String nombreProv;
 	private String direccionFiscal;
 	private String email;
 	private String celular;

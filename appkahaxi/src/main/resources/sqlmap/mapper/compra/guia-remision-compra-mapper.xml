@@ -13,9 +13,9 @@
         <result property="ordenCompra"			    column="NRO_ORDEN_COMPRA" />
         <result property="username" 				column="USERNAME" />
         <result property="nombreUsuario" 			column="NOMBRE_USUARIO" />
-        <result property="codigoCliente" 			column="COD_CLIENTE" />
-        <result property="nroDocCliente" 			column="NRO_DOC_CLIENTE" />
-        <result property="nombreCliente" 			column="NOMBRE_CLIENTE" />
+        <result property="codigoProv"	 			column="COD_PROV" />
+        <result property="nroDocProv"	 			column="NRO_DOC_PROV" />
+        <result property="nombreProv"	 			column="NOMBRE_PROV" />
         <result property="direccionFiscal" 			column="DIRECCION_FISCAL" />
         <result property="fechaContabilizacion" 	column="FEC_CONTABILIZACION" />
         <result property="fechaDocumento" 		    column="FEC_DOCUMENTO" />
@@ -93,7 +93,7 @@
     <parameterMap id="registrarGuiaRemisionCompraParams" type="hashmap">
         <parameter property="SERIE"       	        jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="CORRELATIVO"       	jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="COD_CLIENTE"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_PROV"		       	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="USUARIO"				jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="NRO_ORDEN_COMPRA"		jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FEC_CONTABILIZACION"   jdbcType="VARCHAR"  mode="IN"/>

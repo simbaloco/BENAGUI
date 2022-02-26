@@ -243,18 +243,18 @@ function inicializarTabla(){
             {
                 "width": "5px",
                 "targets": [4],
-                "data": "codigoCliente",
+                "data": "codigoProv",
 				"visible": false
             },
             {
                 "width": "40px",
                 "targets": [5],
-                "data": "nroDocCliente"
+                "data": "nroDocProv"
             },
             {
                 "width": "300px",
                 "targets": [6],
-                "data": "nombreCliente"
+                "data": "nombreProv"
             },
             {
                 "width": "30px",

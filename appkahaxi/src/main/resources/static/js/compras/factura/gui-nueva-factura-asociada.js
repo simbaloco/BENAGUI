@@ -1,12 +1,13 @@
 var titulo;
 var codigo;
-var codigoCliente;
+var codigoProv;
 var nroDocReferencia;
 var numeroDocumento;
 var opcion;
 var datoBuscar;
 var nroComprobantePago;
 var nroGuiaRemision;
+var nroGr;
 var nroOrdenCompra;
 var codRepuesto;
 var fechaDesde;
@@ -19,8 +20,8 @@ var guiasReferencia;
 
 var formFactura;
 var OCReferencia;
-var documentoCliente;
-var nombreCliente;
+var documentoProv;
+var nombreProv;
 var direccion;
 var fecConta;
 var fecDocumento;
@@ -68,7 +69,7 @@ $(document).ready(function(){
 function inicializarVariables() {
 	titulo =  $("#titulo");
 	codigo = $("#codigo");
-	codigoCliente = $("#codigoCliente");
+	codigoProv = $("#codigoProv");
 	nroDocReferencia = $("#nroDocReferencia");
 	numeroDocumento = $('#numeroDocumento');
 	opcion = $("#opcion");
@@ -76,6 +77,7 @@ function inicializarVariables() {
 	datoBuscar =  $("#datoBuscar");
 	nroComprobantePago =  $("#nroComprobantePago");
 	nroGuiaRemision =  $("#nroGuiaRemision");
+	nroGr = $("#nroGr");
 	nroOrdenCompra =  $("#nroOrdenCompra");
 	codRepuesto =  $("#codRepuesto");
 	fechaDesde =  $("#fechaDesde");
@@ -87,8 +89,8 @@ function inicializarVariables() {
 
 	formFactura = $("#formFactura");
 	OCReferencia = $("#OCReferencia");
-	documentoCliente = $("#documentoCliente");
-	nombreCliente = $("#nombreCliente");
+	documentoProv = $("#documentoProv");
+	nombreProv = $("#nombreProv");
 	direccion = $("#direccion");
 	fecConta = $("#fecConta");
 	fecDocumento = $("#fecDocumento");
@@ -310,9 +312,9 @@ function cargarPantallaConDatosGuiaRemisionAsociadas() {
 function cargarPantallaHTMLFacturaConDatosGuiaRemisionAsociadas(data) {
 
 	OCReferencia.val(data.ordenCompra);
-	codigoCliente.val(data.codigoCliente);
-	documentoCliente.val(data.nroDocCliente);
-	nombreCliente.val(data.nombreCliente);
+	codigoProv.val(data.codigoProv);
+	documentoProv.val(data.nroDocProv);
+	nombreProv.val(data.nombreProv);
 	direccion.val(data.direccionFiscal);
 	tipoMoneda.val(data.codigoTipoMoneda);
 	condPago.val(data.codigoCondPago);
@@ -390,13 +392,16 @@ function habilitarPantallaConDatosGuiaRemisionAsociadas() {
 function cargarPantallaConDatosFactura() {
 	
 	var nroDocReferenciaVal; 
-	/*var desdeDocRef = desdeDocRefParam.text();
+	var desdeDocRef = desdeDocRefParam.text();
 	
-	if(desdeDocRef == Respuesta.SI){
+	/*if(desdeDocRef == Respuesta.SI){
 		nroDocReferenciaVal = nroComprobantePago.text();
+		console.log("nroComprobantePago.text()-->" + nroComprobantePago.text());
 	}else{*/
 		nroDocReferenciaVal = numeroDocumento.text();
-	//}
+	/*	console.log("numeroDocumento.text()-->" + numeroDocumento.text());
+	}	*/
+	
 	console.log("nroDocReferenciaVal-->" + nroDocReferenciaVal);
 	$.ajax({
 		type:"Get",
@@ -437,9 +442,9 @@ function cargarPantallaConDatosFactura() {
 function cargarPantallaHTMLFactura(data) {
 
 	OCReferencia.val(data.ordenCompra);
-	codigoCliente.val(data.codigoCliente);
-	documentoCliente.val(data.nroDocCliente);
-	nombreCliente.val(data.nombreCliente);
+	codigoProv.val(data.codigoProv);
+	documentoProv.val(data.nroDocProv);
+	nombreProv.val(data.nombreProv);
 	direccion.val(data.direccionFiscal);
 	tipoMoneda.val(data.codigoTipoMoneda);
 	condPago.val(data.codigoCondPago);
@@ -719,7 +724,8 @@ function evaluarCambioCondicionPago() {
 function grabarFactura() {
 
 	if (formFactura[0].checkValidity() == true) {
-		if(validarDetalleFactura()) {
+				
+		if(validarDetalleFactura()) {			
 			if(opcion.text() == Opcion.NUEVO) {
 				if(estadoPago.val() == EstadoPago.PENDIENTE) {
 					registrarFacturaCompra();
@@ -827,7 +833,7 @@ function registrarFacturaCompra(){
 	var ordenCompra  			= OCReferencia.val();
 	var serieVal 				= serie.val();
 	var correlativoVal 			= correlativo.val();
-	var codigoClienteVal  		= codigoCliente.val().trim();
+	var codigoProvVal  		= codigoProv.val().trim();
 	var fecContaVal 			= fecConta.datetimepicker('date').format('YYYY-MM-DD');
 	var fecDocumentoVal 		= fecDocumento.datetimepicker('date').format('YYYY-MM-DD');
 	var fecVencimientoVal 		= fecVencimiento.datetimepicker('date').format('YYYY-MM-DD');
@@ -854,7 +860,7 @@ function registrarFacturaCompra(){
 		ordenCompra:			ordenCompra,
 		serie:					serieVal,
 		correlativo:			correlativoVal,
-		codigoCliente:  		codigoClienteVal,
+		codigoProv:  			codigoProvVal,
 		fechaContabilizacion:   fecContaVal,
 		fechaDocumento:      	fecDocumentoVal,
 		fechaVencimiento:       fecVencimientoVal,
@@ -1118,8 +1124,13 @@ function mostrarOcultarBotonAnular() {
 		ocultarControl(btnAnular);
 		mostrarControl(btnGrabar);
 	} else{
-		mostrarControl(btnAnular);
-		ocultarControl(btnGrabar);
+		if (codigo.html() != CADENA_VACIA || codigo.html() > 0){
+			mostrarControl(btnAnular);
+			ocultarControl(btnGrabar);
+		}else{
+			mostrarControl(btnGrabar);
+			ocultarControl(btnAnular);
+		}	
 	}
 }
 
@@ -1183,19 +1194,20 @@ function volver(){
 	var params;
 	var dato 			= datoBuscar.text();
 	var nroFact 		= nroComprobantePago.text();
-	var nroGR 			= nroGuiaRemision.text();
+	var nroGRem			= nroGuiaRemision.text();
 	var nroOC 			= nroOrdenCompra.text();
 	var codRpto 		= codRepuesto.text();
 	var fecDesde 		= fechaDesde.text();
 	var fecHasta 		= fechaHasta.text();
 	var estParam		= estadoParam.text();
+	var nroDoc			= nroGr.text(); // este debe ser la GR
 	var desdeDocRef 	= desdeDocRefParam.text();
 	
 	if(desdeDocRef == Respuesta.SI){
 		
 		params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato + 
-				 "&nroGuiaRemision=" + nroGR + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
-			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI;
+				 "&nroGuiaRemision=" + nroGRem + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
+			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.NO;
 		window.location.href = "/appkahaxi/cargar-guia-remision-compra?" + params;
 	}else{
 		

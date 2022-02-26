@@ -222,25 +222,7 @@ public class ReporteServiceImpl implements ReporteService{
     		ByteArrayOutputStream baos = new ByteArrayOutputStream();
     		JasperExportManager.exportReportToPdfStream(jasperPrint, baos);
     		DataSource aAttachment =  new ByteArrayDataSource(baos.toByteArray(), "application/pdf");
-    		
-    		/*String asunto = "COTIZACION - SOLICITUD DE CONFIRMACION DE CORREO";
-    	    String nombreUsuario = "XXX";
-    	    //String rutaRaiz = request.getSession().getServletContext().getRealPath("");
-    	    String mensaje = "<html><head><meta http-equiv=Content-Type content=text/html; charset=utf-8/></head><body><table align=center width=610 cellspacing=0 cellpadding=0 border=0 style='position:relative; font-size:12px; font-family:Arial, Helvetica, sans-serif; color: #00486A; background: #ffffff; border: solid 1px #bdcbcd; -moz-border-radius: 20px 20px 20px 20px; -ms-border-radius: 20px 20px 20px 20px; -webkit-border-radius: 20px 20px 20px 20px; border-radius: 20px 20px 20px 20px; padding:5px;''>"
-    	                    + "<tbody><tr><td align=center bgcolor=#ffffff><img width=220 height=60 src='cid:identifier1234'/>"
-    	                    + "</td><td align=center bgcolor=#ffffff style='text-align: left; font-size:18px; padding-left:20px; color:#121D89;''><br>KAHAXI EIRL</td>"
-    	                    + "</tr><tr><td valign=middle align=center colspan=2>"
-    	                    + "<br><br><p style='text-align: left; font-size:14px; padding-left:20px; color:#121D89;'>Estimado(a) <b> "+ nombreUsuario +" </b>, <br/><br/>"
-    	                    + "Si has recibido un mensaje de este tipo, significa que te hemos enviado una cotización.<br/><br/>"
-    	                    + "</p>"
-    	                    + "<p style='text-align: left; font-size:14px; padding-left:20px; color:#121D89;''>Atentamente,<br>"+"KAHAXI"
-    	                    + "<br></p><p style='text-align: left; font-size:10px; padding-left:20px; color:#DF0101;''>"
-    	                    + "'Esta notificación ha sido enviada automáticamente. Por favor, no responda este correo.'</b></p><br/>"
-    	                    + "</td></tr><tr></tr><tr><td valign=middle height=50 bgcolor=#bdcbcd align=center style='font-size:11px; -moz-border-radius: 0px 0px 20px 20px; -ms-border-radius: 0px 0px 20px 20px; -webkit-border-radius: 0px 0px 20px 20px; border-radius: 0px 0px 20px 20px; padding:5px;' colspan=2 >"
-    	                    + "<table width=570 cellspacing=0 cellpadding=0 border=0 align=center><tbody><tr>"
-    	                    + "<td width=100% valign=middle align=left style='padding:5px; font-size:10px;'><b>KAHAXI</b><br/>"
-    	                    + "</td><td width=100% valign=top align=right ></td></tr></tbody></table></td></tr></tbody></table></body></html>";*/
-    	   
+    		    		
     	    Properties prop = new Properties();
     	    prop.put("mail.smtp.host", "smtp.gmail.com");
             prop.put("mail.smtp.port", "587");

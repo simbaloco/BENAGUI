@@ -240,31 +240,39 @@
 							</div>
 
 							<div class="row">
-
-								<div class="col-md-2">
-									<label class="label" for="estado">Estado:</label>
-									<select id="estado" class="form-control" disabled="disabled">
-										<option th:each="item : ${listaEstado}"
-									            th:value="${item.codigo}" 
-									            th:text="${item.descripcion}">
-									    </option>
-									</select>
-								</div>
-								
-								<div class="col-md-1">
-									<label class="label" for="tipoCambio">Tipo de Cambio:</label>
-									<input class="form-control" maxlength="15" size="50" type="text" id="tipoCambio" tabindex="-1" required="required"/>
-									<div class="invalid-feedback">
-										Debe ingresar el tipo de cambio
+							
+								<div class="col-md-6">
+									<div class="row">
+										<div class="col-md-4">
+											<label class="label" for="estado">Estado:</label>
+											<select id="estado" class="form-control" disabled="disabled">
+												<option th:each="item : ${listaEstado}"
+											            th:value="${item.codigo}" 
+											            th:text="${item.descripcion}">
+											    </option>
+											</select>
+										</div>
+										
+										<div class="col-md-4">
+											<label class="label" for="cotizacionSap">Cotización SAP:</label>
+											<input class="form-control" maxlength="35" size="50" type="text" id="cotizacionSap" tabindex="-1"/>
+										</div>
+										
+										<div class="col-md-2">
+											<label class="label" for="tipoCambio">T. Cambio:</label>
+											<input class="form-control" maxlength="15" size="50" type="text" id="tipoCambio" tabindex="-1" required="required"/>
+											<div class="invalid-feedback">
+												Debe ingresar el tipo de cambio
+											</div>
+										</div>									
+																
+										<div class="col-md-2" id="divNroPedido">
+											<label class="label" for="nroPedido">Nro. Pedido:</label>
+											<input class="form-control" maxlength="35" size="50" type="text" id="nroPedido" tabindex="-1"/>
+										</div>
 									</div>
 								</div>
-										
-														
-								<div class="col-md-2" id="divNroseguimiento">
-									<label class="label" for="nroSeguimiento">Nro. Seguimiento:</label>
-									<input class="form-control" maxlength="35" size="50" type="text" id="nroSeguimiento" tabindex="-1"/>
-								</div>
-								
+							
 								<div class="col-md-6 alineacion-derecha">
 						 			<label class="label"></label>
 						 			<div>

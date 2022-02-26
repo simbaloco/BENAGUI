@@ -72,7 +72,7 @@ public class GuiaRemisionCompraServiceImpl implements GuiaRemisionCompraService 
         Map<String, Object> params = new HashMap();
         params.put(Constante.PARAM_SP_SERIE, guiaRemisionCabModel.getSerie());
         params.put(Constante.PARAM_SP_CORRELATIVO, guiaRemisionCabModel.getCorrelativo());
-        params.put(Constante.PARAM_SP_COD_CLIENTE, guiaRemisionCabModel.getCodigoCliente());
+        params.put(Constante.PARAM_SP_COD_PROV, guiaRemisionCabModel.getCodigoProv());
         params.put(Constante.PARAM_SP_USUARIO, usuario);
         params.put(Constante.PARAM_SP_NRO_ORDEN_COMPRA, guiaRemisionCabModel.getOrdenCompra());
         params.put(Constante.PARAM_SP_FEC_CONTABILIZACION, guiaRemisionCabModel.getFechaContabilizacion());

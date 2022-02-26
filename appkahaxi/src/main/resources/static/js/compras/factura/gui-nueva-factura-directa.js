@@ -2,7 +2,7 @@ var indiceFilaDataTableDetalle = -1;
 //**************************************************************** */
 var titulo;
 var codigo;
-var codigoCliente;
+var codigoProv;
 var email;
 var celular;
 var nroDocReferencia;
@@ -16,12 +16,13 @@ var fechaDesde;
 var fechaHasta;
 var estadoParam;
 var volverParam;
+var desdeDocRef;
 
 var formFactura;
 var formObservaciones;
 
-var documentoCliente;
-var nombreCliente;
+var documentoProv;
+var nombreProv;
 var direccion;
 var fecConta;
 var fecDocumento;
@@ -74,7 +75,7 @@ $(document).ready(function(){
 function inicializarVariables() {
 	titulo =  $("#titulo");
 	codigo = $("#codigo");
-	codigoCliente = $("#codigoCliente");
+	codigoProv = $("#codigoProv");
 	email =  $("#email");
 	celular =  $("#celular");
 	nroDocReferencia = $("#nroDocReferencia");
@@ -88,10 +89,11 @@ function inicializarVariables() {
 	fechaHasta =  $("#fechaHasta");
 	estadoParam =  $("#estadoParam");
 	volverParam =  $("#volverParam");
+	desdeDocRef = $("#desdeDocRef");
 	
 	formFactura = $("#formFactura");
-	documentoCliente = $("#documentoCliente");
-	nombreCliente = $("#nombreCliente");
+	documentoProv = $("#documentoProv");
+	nombreProv = $("#nombreProv");
 	direccion = $("#direccion");
 	fecConta = $("#fecConta");
 	fecDocumento = $("#fecDocumento");
@@ -236,9 +238,9 @@ function habilitarAutocompletarBuscarCampos() {
 		select: function(event, ui) {
 			event.preventDefault();
 	    	
-			codigoCliente.val(ui.item.codigoSocio);
-			documentoCliente.val(ui.item.numeroDocumento);
-			nombreCliente.val(ui.item.nombreRazonSocial);
+			codigoProv.val(ui.item.codigoSocio);
+			documentoProv.val(ui.item.numeroDocumento);
+			nombreProv.val(ui.item.nombreRazonSocial);
 			direccion.val(ui.item.direccionFiscal);
 			email.val(ui.item.email);
 			celular.val(ui.item.celular);
@@ -411,9 +413,9 @@ function cargarPantallaConDatosFactura() {
 
 function cargarPantallaHTMLFactura(data) {
 
-	codigoCliente.val(data.codigoCliente);
-	documentoCliente.val(data.nroDocCliente);
-	nombreCliente.val(data.nombreCliente);
+	codigoProv.val(data.codigoProv);
+	documentoProv.val(data.nroDocProv);
+	nombreProv.val(data.nombreProv);
 	direccion.val(data.direccionFiscal);
 	email.val(data.email);
 	celular.val(data.celular);
@@ -424,6 +426,7 @@ function cargarPantallaHTMLFactura(data) {
 	correlativo.val(data.correlativo);
 	estadoPago.val(data.codigoEstadoPago);
 	tipoCambio.val(data.tipoCambio);
+	observaciones.val(data.observaciones);
 	
 	subTotalFactura.val(convertirNumeroAMoneda(data.subTotal));
     igvFactura.val(convertirNumeroAMoneda(data.igv));
@@ -472,9 +475,10 @@ function verPantallaFactura(data) {
 		}
 	}else{
 		// estado ANULADO
+		deshabilitarControl(estadoPago);
 		mostrarControl(lblAnulado);
 	}
-
+	mostrarControl(btnVolver);
 	deshabilitarControl(condPago);
 	deshabilitarControl(dias);
 	deshabilitarControl(serie);
@@ -625,7 +629,7 @@ function agregarHTMLColumnasDataTable(data) {
 /**************** EVENTOS DETALLE *******************/
 
 function buscarArticuloKeyUp(e, control, fila){
-	var codCliente = codigoCliente.val();
+	var codCliente = codigoProv.val();
 	var datoBuscar = control.value.trim();
 	var key = window.Event ? e.which : e.keyCode;
 	/*	| 38 | (Arriba) |
@@ -808,21 +812,25 @@ function evaluarCambioEstadoPago() {
 		ocultarControl(btnAnular);
 		mostrarControl(btnGrabar);
 	} else{
-		mostrarControl(btnAnular);
-		ocultarControl(btnGrabar);
+		if (codigo.html() != CADENA_VACIA || codigo.html() > 0){
+			mostrarControl(btnAnular);
+			ocultarControl(btnGrabar);
+		}else{
+			mostrarControl(btnGrabar);
+			ocultarControl(btnAnular);
+		}		
 	}
 }
 
 function grabarFactura() {
-	if(documentoCliente.val() == ''){
+	if(documentoProv.val() == ''){
 		mostrarDialogoInformacion("Debe buscar un proveedor", Boton.WARNING, $('#campoBuscar'));
 		return false;
 	}
 
 	if (formFactura[0].checkValidity() === true) {
-
-		if(validarDetalleFactura()) {
-
+		
+		if(validarDetalleFactura()) {			
 			if(opcion.text() == Opcion.NUEVO) {
 
 				if(estadoPago.val() == EstadoPago.PENDIENTE) {
@@ -949,7 +957,7 @@ function registrarFacturaCompra(){
 	var nroDocumento  			= codigo.html();
 	var serieVal 				= serie.val();
 	var correlativoVal 			= correlativo.val();
-	var codigoClienteVal  		= codigoCliente.val().trim();
+	var codigoProvVal  			= codigoProv.val().trim();
 	var fecContaVal 			= fecConta.datetimepicker('date').format('YYYY-MM-DD');
 	var fecDocumentoVal 		= fecDocumento.datetimepicker('date').format('YYYY-MM-DD');
 	var fecVencimientoVal 		= fecVencimiento.datetimepicker('date').format('YYYY-MM-DD');
@@ -975,7 +983,7 @@ function registrarFacturaCompra(){
 		numeroDocumento:		nroDocumento,
 		serie:					serieVal,
 		correlativo:			correlativoVal,
-		codigoCliente:  		codigoClienteVal,
+		codigoProv:  			codigoProvVal,
 		fechaContabilizacion:   fecContaVal,
 		fechaDocumento:      	fecDocumentoVal,
 		fechaVencimiento:       fecVencimientoVal,
@@ -1315,16 +1323,18 @@ function nuevaFacturaDirecta(){
 	var fecDesde 	= fechaDesde.text();
 	var fecHasta 	= fechaHasta.text();
 	var estParam	= estadoParam.text();
+	var desDocRef 	= desdeDocRef.text();
 	
 	var volver = volverParam.text();
+	console.log("volver: "+volver);
 	if(volver == Respuesta.SI){
 		// armando los parámetros
 		params = "numeroDocumento=&opcion=&datoBuscar=" + dato +  
 			 	 "&nroComprobantePago=" + nroFact + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +
-			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI;
+			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeDocRef=" + desDocRef;
 	}else{
 		params = "numeroDocumento=&opcion=&datoBuscar=&nroComprobantePago=" + 
-				 "&nroOrdenCompra=&codRepuesto=&fechaDesde=&fechaHasta=&estadoParam=&volver=0";
+				 "&nroOrdenCompra=&codRepuesto=&fechaDesde=&fechaHasta=&estadoParam=&volver=0&desdeDocRef=";
 	}
 	
 	console.log("cargarFactura---> params:" + params);
@@ -1355,8 +1365,8 @@ function limpiarFactura() {
 	inicializarFechas();
 
 	campoBuscar.val(CADENA_VACIA);
-	documentoCliente.val(CADENA_VACIA);
-	nombreCliente.val(CADENA_VACIA);
+	documentoProv.val(CADENA_VACIA);
+	nombreProv.val(CADENA_VACIA);
 	direccion.val(CADENA_VACIA);
 	serie.val(CADENA_VACIA);
 	correlativo.val(CADENA_VACIA);

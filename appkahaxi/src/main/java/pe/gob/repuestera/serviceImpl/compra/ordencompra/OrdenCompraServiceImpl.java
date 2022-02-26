@@ -55,6 +55,7 @@ public class OrdenCompraServiceImpl implements OrdenCompraService {
 		params.put(Constante.PARAM_SP_COD_ESTADO, compraCabModel.getCodigoEstado());
 		params.put(Constante.PARAM_SP_TIPO_CAMBIO, compraCabModel.getTipoCambio());
 		params.put(Constante.PARAM_SP_OBSERVACIONES, compraCabModel.getObservaciones());
+		params.put(Constante.PARAM_SP_COTIZACION_SAP, compraCabModel.getCotizacionSap());
 		params.put(Constante.PARAM_SP_NRO_DOCUMENTO_REF, compraCabModel.getNumeroDocumentoRef());
 		params.put(Constante.PARAM_SP_SUB_TOTAL, compraCabModel.getSubTotal());
 		params.put(Constante.PARAM_SP_IGV, compraCabModel.getIgv());
@@ -234,7 +235,8 @@ public class OrdenCompraServiceImpl implements OrdenCompraService {
 		params.put(Constante.PARAM_SP_USUARIO, usuario);
 		params.put(Constante.PARAM_SP_COD_ESTADO, compraCabModel.getCodigoEstado());
 		params.put(Constante.PARAM_SP_OBSERVACIONES, compraCabModel.getObservaciones());
-		params.put(Constante.PARAM_SP_NRO_SEGUIMIENTO, compraCabModel.getNroSeguimiento());
+		params.put(Constante.PARAM_SP_NRO_PEDIDO, compraCabModel.getNroPedido());
+		params.put(Constante.PARAM_SP_COTIZACION_SAP, compraCabModel.getCotizacionSap());
 		params.put(Constante.PARAM_SP_FEC_CONTABILIZACION, compraCabModel.getFechaContabilizacion());
 		params.put(Constante.PARAM_SP_FEC_VALIDO_HASTA, compraCabModel.getFechaValidoHasta());
 		params.put(Constante.PARAM_SP_FEC_ENTREGA, compraCabModel.getFechaEntrega());

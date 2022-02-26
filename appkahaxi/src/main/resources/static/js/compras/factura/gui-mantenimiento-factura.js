@@ -253,12 +253,12 @@ function inicializarTabla(){
             {
                 "width": "25px",
                 "targets": [5],
-                "data": "nroDocCliente"
+                "data": "nroDocProv"
             },
             {
                 "width": "200px",
                 "targets": [6],
-                "data": "nombreCliente"
+                "data": "nombreProv"
             },
             {
                 "width": "10px",
@@ -439,7 +439,9 @@ function cargarFacturaAsociada(numeroDocumento, opcion) {
 	// armando los parámetros
 	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar +
 			 "&nroComprobantePago=" + nroFacturaVal + "&nroOrdenCompra=" + nroOCVal + "&codRepuesto=" + codRpto +
-			 "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.NO + "&guias=";
+			 "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.NO + 
+			 "&nroGuiaRemision=&nroGr=" + numeroDocumento + "&guias=";
+		"&guias=";
 
 	window.location.href = "/appkahaxi/nueva-factura-compra-asociada?" + params;
 }

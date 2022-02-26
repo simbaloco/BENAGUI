@@ -34,8 +34,9 @@ var divDias;
 var estado;
 var fecEntrega;
 var tipoCambio;
-var nroSeguimiento;
-var divNroseguimiento;
+var nroPedido;
+var cotizacionSap;
+var divNroPedido;
 var referenciaDiv;
 var nroDocReferenciaVer;
 
@@ -112,11 +113,12 @@ function inicializarVariables() {
 	estado = $("#estado");
 	fecEntrega = $("#fecEntrega");
 	tipoCambio = $("#tipoCambio");
-	nroSeguimiento = $("#nroSeguimiento");
+	nroPedido = $("#nroPedido");
+	cotizacionSap = $("#cotizacionSap");
 	referenciaDiv = $("#referenciaDiv");
 	nroDocReferenciaVer = $("#nroDocReferenciaVer");
 
-	divNroseguimiento = $("#divNroseguimiento");
+	divNroPedido = $("#divNroPedido");
 	divMensajeEliminado = $("#divMensajeEliminado");
 	btnIrGuiaRemision = $("#btnIrGuiaRemision");
 	btnGenerarGuiaRemision = $("#btnGenerarGuiaRemision");
@@ -220,9 +222,10 @@ function habilitarAutocompletarBuscarCampos() {
 					response($.map(resultado, function(item) {
 						var AC = new Object();
 
+						console.log("item.email:"+item.email);
+
 						AC.label = item.numeroDocumento + ' - ' + item.nombreRazonSocial;
 						AC.value = request.term;
-
 						AC.codigoSocio = item.codigoSocio;
 						AC.numeroDocumento = item.numeroDocumento;
 						AC.nombreRazonSocial = item.nombreRazonSocial;
@@ -369,7 +372,7 @@ function cargarPantallaNueva() {
 	flgNuevo=1;
 	inicializarFechaContaHasta();
 	//obtenerTipoCambio(tipoCambio);
-	ocultarControl(divNroseguimiento);
+	ocultarControl(divNroPedido);
 	controlNoRequerido(observaciones);
 	titulo.text("NUEVA");
 	dias.val(Dias._30);
@@ -438,6 +441,8 @@ function cargarPantallaHTML(data) {
 	condPago.val(data.codigoCondPago);
 	dias.val(data.codigoDias);
 	estado.val(data.codigoEstado);
+	console.log("data.flagEnvio:"+ data.flagEnvio);
+	email.val(data.email);
 	flagEnvio.val(data.flagEnvio);
 	
 	subTotalOC.val(convertirNumeroAMoneda(data.subTotal));
@@ -446,7 +451,8 @@ function cargarPantallaHTML(data) {
 
 	tipoCambio.val(data.tipoCambio);
 	observaciones.val(data.observaciones);
-	nroSeguimiento.val(data.nroSeguimiento);
+	nroPedido.val(data.nroPedido);
+	cotizacionSap.val(data.cotizacionSap);
 	
 	// evaluando si tiene documento de referencia
 	if (data.numeroDocumentoRef != CADENA_VACIA) {
@@ -498,9 +504,10 @@ function verPantallaOrdenCompra(data) {
 		deshabilitarControl(dias);
 		deshabilitarControl(estado);
 		deshabilitarControl(tipoCambio);
-		mostrarControl(divNroseguimiento);
+		mostrarControl(divNroPedido);
 		mostrarControl(btnPdf);
-		deshabilitarControl(nroSeguimiento);
+		deshabilitarControl(nroPedido);
+		deshabilitarControl(cotizacionSap);
 		ocultarControl(btnGrabar);
 		ocultarControl(btnAgregarArticulo);
 		ocultarControl(btnEliminarTodosArticulos);
@@ -541,12 +548,12 @@ function verPantallaOrdenCompra(data) {
 		habilitarControl(dias);
 		habilitarControl(tipoCambio);
 		habilitarControl(estado);
-		habilitarControl(nroSeguimiento);		
- 		(flagEnvio.val() == 1) ? mostrarControl(divNroseguimiento) : ocultarControl(divNroseguimiento);
+		habilitarControl(nroPedido);
+		habilitarControl(cotizacionSap);		
+ 		(flagEnvio.val() == 1) ? mostrarControl(divNroPedido) : ocultarControl(divNroPedido);
 		
 		//mostrarControl(btnDuplicar);
 		estado.focus();
-
 		mostrarControl(btnGrabar);
 		mostrarControl(btnAgregarArticulo);
 		mostrarControl(btnEliminarTodosArticulos);
@@ -600,7 +607,7 @@ function duplicarPantallaOrdenCompra(nroDocRef) {
 
 	nroDocReferencia.val(nroDocRef);
 	mostrarControl(referenciaDiv);
-	ocultarControl(divNroseguimiento);
+	ocultarControl(divNroPedido);
 	estado.val(EstadoDocumentoInicial.POR_APROBAR);
 
 	//observaciones.val(CADENA_VACIA);
@@ -609,6 +616,7 @@ function duplicarPantallaOrdenCompra(nroDocRef) {
 	habilitarControl(dateTimePickerInput);
 	habilitarControl(tipoMoneda);
 	habilitarControl(condPago);
+	habilitarControl(cotizacionSap);
 	habilitarControl(dias);
 	deshabilitarControl(estado);
 	habilitarControl(observaciones);
@@ -985,7 +993,7 @@ function evaluarCambioEstado() {
 	} else {
 		// POR APROBAR
 		ocultarControl(btnGenerarGuiaRemision);
-		ocultarControl(btnGrabar);
+		mostrarControl(btnGrabar);
 		mostrarControl(btnDuplicar);
 		controlNoRequerido(observaciones);
 		deshabilitarControl(observaciones);
@@ -1154,6 +1162,7 @@ function registrarOrdenCompra() {
 	var estadoVal = estado.val();
 	var tipoCambioVal = tipoCambio.val();
 	var observacionesVal = observaciones.val().trim();
+	var nroCotizacionSap = cotizacionSap.val().trim();
 	var numeroDocumentoRefVal = nroDocReferencia.val();
 	var subTotalVal = convertirMonedaANumero(subTotalOC.val().trim());
 	var igvVal = convertirMonedaANumero(igvOC.val());
@@ -1178,6 +1187,7 @@ function registrarOrdenCompra() {
 		codigoEstado: estadoVal,
 		tipoCambio: tipoCambioVal,
 		observaciones: observacionesVal,
+		cotizacionSap: nroCotizacionSap,
 		numeroDocumentoRef: numeroDocumentoRefVal,
 		subTotal: subTotalVal,
 		igv: igvVal,
@@ -1219,16 +1229,15 @@ function registrarOrdenCompra() {
 				ocultarControl(btnAgregarArticulo);
 				ocultarControl(btnEliminarTodosArticulos);
 				mostrarControl(btnPdf);
-
 				deshabilitarControl(campoBuscar);
 				deshabilitarControl(dateTimePickerInput);
-
 				deshabilitarControl(tipoMoneda);
 				deshabilitarControl(condPago);
 				deshabilitarControl(dias);
-				habilitarControl(estado);
+				deshabilitarControl(estado);
+				deshabilitarControl(cotizacionSap);
+				deshabilitarControl(tipoCambio);
 				deshabilitarControl(observaciones);
-
 				deshabilitarDetalleOrdenCompra();
 
 				codigo.html(resultado);
@@ -1249,16 +1258,16 @@ function registrarOrdenCompra() {
 
 function actualizarOrdenCompra() {
 	
-	if(nroSeguimiento.val().trim() == CADENA_VACIA){
-		mostrarMensajeValidacion("Debe ingresar el número de seguimiento antes de grabar.", nroSeguimiento);
+	if(nroPedido.val().trim() == CADENA_VACIA && flagEnvio.val() == 1){
+		mostrarMensajeValidacion("Debe ingresar el número de pedido antes de grabar.", nroPedido);
 		return;
 	}
-	
-	
+		
 	var nroDocumento = codigo.html();
 	var estadoVal = estado.val();
 	var observacionesVal = observaciones.val().trim();
-	var numeroSeguimiento = nroSeguimiento.val().trim();	
+	var numeroPedido = nroPedido.val().trim();	
+	var nroCotizacionSap = cotizacionSap.val().trim();
 	var fecContaVal = fecConta.datetimepicker('date').format('YYYY-MM-DD');
 	var fecHastaVal = fecHasta.datetimepicker('date').format('YYYY-MM-DD');
 	var fecEntregaVal = fecEntrega.datetimepicker('date').format('YYYY-MM-DD');
@@ -1279,7 +1288,8 @@ function actualizarOrdenCompra() {
 		numeroDocumento: nroDocumento,
 		codigoEstado: estadoVal,
 		observaciones: observacionesVal,
-		nroSeguimiento: numeroSeguimiento,
+		nroPedido: numeroPedido,
+		cotizacionSap: nroCotizacionSap,
 		fechaContabilizacion: fecContaVal,
 		fechaValidoHasta: fecHastaVal,
 		fechaEntrega: fecEntregaVal,
@@ -1316,6 +1326,10 @@ function actualizarOrdenCompra() {
 				mostrarNotificacion("El registro fué actualizado correctamente.", "success");
 
 				if (estado.val() == EstadoDocumentoInicial.APROBADO) {
+					deshabilitarControl(estado);
+					deshabilitarControl(tipoCambio);
+					deshabilitarControl(nroPedido);
+					deshabilitarControl(cotizacionSap);
 					mostrarControl(btnGenerarGuiaRemision);
 					mostrarControl(btnDuplicar);
 					ocultarControl(btnGrabar);
@@ -1323,12 +1337,21 @@ function actualizarOrdenCompra() {
 					deshabilitarControl(estado);
 					controlNoRequerido(observaciones);
 					deshabilitarControl(observaciones);
+					ocultarControl(btnAgregarArticulo);
+					ocultarControl(btnEliminarTodosArticulos);
+					deshabilitarDetalleOrdenCompra();
+					deshabilitarControl(dateTimePickerInput);
+					deshabilitarControl(tipoMoneda);
+					deshabilitarControl(condPago);
+					deshabilitarControl(dias);
+					deshabilitarControl(tipoCambio);
 					mostrarControl(btnPdf);
 					window.scrollTo(0, 0);
 				} else if (estado.val() == EstadoDocumentoInicial.POR_APROBAR) {
 					deshabilitarControl(estado);
 					deshabilitarControl(tipoCambio);
-					deshabilitarControl(nroSeguimiento);
+					deshabilitarControl(nroPedido);
+					deshabilitarControl(cotizacionSap);
 					mostrarControl(btnPdf);	
 					mostrarControl(btnDuplicar);
 					ocultarControl(btnGrabar);
@@ -1527,7 +1550,8 @@ function cargarGuiaRemisionAsociada(numDocumento) {
 	var fecHasta = fechaHasta.text();
 	var estParam = estadoParam.text();
 
-	params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato +
+	//params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato +
+	params = "numeroDocumento=" + numDocumento + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato +
 		"&nroGuiaRemision=" + numDocumento + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +
 		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI;
 

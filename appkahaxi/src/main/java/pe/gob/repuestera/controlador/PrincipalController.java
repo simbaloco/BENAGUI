@@ -361,6 +361,8 @@ public class PrincipalController {
 									    @RequestParam(Constante.PARAM_ESTADO) String estadoParam,
 									    @RequestParam(Constante.PARAM_VOLVER) String volver,
 										@RequestParam(Constante.PARAM_DESDE_DOC_REF) String desdeDocRef,
+										@RequestParam(Constante.PARAM_NRO_GUIA_REMISION) String nroGuiaRemision,
+										@RequestParam(Constante.PARAM_NRO_GR_REF) String nroGr,
 										@RequestParam(Constante.PARAM_GUIAS) String guias) {
 		String retorno;
 
@@ -378,6 +380,8 @@ public class PrincipalController {
 			model.addAttribute("estadoParam", estadoParam);
 			model.addAttribute("volver", volver);
 			model.addAttribute("desdeDocRef", desdeDocRef);
+			model.addAttribute("nroGuiaRemision", nroGuiaRemision);
+			model.addAttribute("nroGr", nroGr);
 			model.addAttribute("guias", guias);
 			// llenando los combos
 			List<ComboModel> listaMoneda = genericService.cargarCombo(Constante.CATALOGO_MONEDA);

@@ -1,6 +1,6 @@
 var titulo;
 var codigo;
-var codigoCliente;
+var codigoProv;
 var nroDocReferencia;
 var numeroDocumento;
 
@@ -17,8 +17,8 @@ var desdeDocRefParam;
 
 var formGuiaRemision;
 var OCReferencia;
-var documentoCliente;
-var nombreCliente;
+var documentoProv;
+var nombreProv;
 var direccion;
 var fecConta;
 var fecDocumento;
@@ -80,7 +80,7 @@ $(document).ready(function(){
 function inicializarVariables() {
 	titulo =  $("#titulo");
 	codigo = $("#codigo");
-	codigoCliente = $("#codigoCliente");
+	codigoProv = $("#codigoProv");
 	nroDocReferencia = $("#nroDocReferencia");
 	numeroDocumento = $('#numeroDocumento');
 	
@@ -97,8 +97,8 @@ function inicializarVariables() {
 	
 	formGuiaRemision = $("#formGuiaRemision");
 	OCReferencia = $("#OCReferencia");
-	documentoCliente = $("#documentoCliente");
-	nombreCliente = $("#nombreCliente");
+	documentoProv = $("#documentoProv");
+	nombreProv = $("#nombreProv");
 	direccion = $("#direccion");
 	fecConta = $("#fecConta");
 	fecDocumento = $("#fecDocumento");
@@ -322,9 +322,9 @@ function cargarPantallaConDatosOrdenCompra() {
 }
 
 function cargarPantallaHTMLOrdenCompra(data) {
-	codigoCliente.val(data.codigoCliente);
-	documentoCliente.val(data.nroDocCliente);
-	nombreCliente.val(data.nombreCliente);
+	codigoProv.val(data.codigoProv);
+	documentoProv.val(data.nroDocProv);
+	nombreProv.val(data.nombreProv);
 	direccion.val(data.direccionFiscal);
 	tipoMoneda.val(data.codigoTipoMoneda);
 	tipoCambio.val(data.tipoCambio);
@@ -379,13 +379,17 @@ function nuevaPantallaGuiaRemision() {
 function cargarPantallaConDatosGuiaRemision() {
 
 	var nroDocReferenciaVal; 
-	var desdeDocRef = desdeDocRefParam.text();
+	//var desdeDocRef = desdeDocRefParam.text();
 	
-	if(desdeDocRef == Respuesta.SI){
-		nroDocReferenciaVal = nroGuiaRemision.text();
-	}else{
+	//if(desdeDocRef == Respuesta.SI){
+	//if(opcion.text() == Opcion.VER){
 		nroDocReferenciaVal = numeroDocumento.text();
-	}
+	/*	console.log("numeroDocumento.text():"+numeroDocumento.text());
+	}else{
+		nroDocReferenciaVal = nroGuiaRemision.text();
+		console.log("nroGuiaRemision.text():"+nroGuiaRemision.text());
+	}	
+	*/
 	
 	$.ajax({
 		type:"Get",
@@ -428,9 +432,9 @@ function cargarPantallaConDatosGuiaRemision() {
 
 function cargarPantallaHTMLGuiaRemision(data) {
 
-	codigoCliente.val(data.codigoCliente);
-	documentoCliente.val(data.nroDocCliente);
-	nombreCliente.val(data.nombreCliente);
+	codigoProv.val(data.codigoProv);
+	documentoProv.val(data.nroDocProv);
+	nombreProv.val(data.nombreProv);
 	direccion.val(data.direccionFiscal);
 	tipoMoneda.val(data.codigoTipoMoneda);
 	condPago.val(data.codigoCondPago);
@@ -714,12 +718,11 @@ function cantidadKeyDown(e, fila){
 
 function grabarGuiaRemision() {
 
-	if (formGuiaRemision[0].checkValidity() === true) {
-
+	if (formGuiaRemision[0].checkValidity() === true) {		
+				
 		if(validarDetalleGuiaRemision()) {
 
 			if(opcion.text() == Opcion.NUEVO) {
-
 				registrarGuiaRemisionCompra();
 			}
 		}
@@ -817,7 +820,7 @@ function registrarGuiaRemisionCompra(){
 	var nroDocumento  			= codigo.html();
 	var serieVal 				= serie.val();
 	var correlativoVal 			= correlativo.val();
-	var codigoClienteVal  		= codigoCliente.val().trim();
+	var codigoProvVal  			= codigoProv.val().trim();
 	var ordenCompra	  			= OCReferencia.val().trim();
 	var fecContaVal 			= fecConta.datetimepicker('date').format('YYYY-MM-DD');
 	var fecDocumentoVal 		= fecDocumento.datetimepicker('date').format('YYYY-MM-DD');
@@ -846,7 +849,7 @@ function registrarGuiaRemisionCompra(){
 		numeroDocumento:		nroDocumento,
 		serie:					serieVal,
 		correlativo:			correlativoVal,
-		codigoCliente:  		codigoClienteVal,
+		codigoProv:  			codigoProvVal,
 		ordenCompra: 			ordenCompra,
 		fechaContabilizacion:   fecContaVal,
 		fechaDocumento:      	fecDocumentoVal,
@@ -1409,9 +1412,20 @@ function generarFacturaAsociada() {
 	});
 
 	guiasRemision = guiasRemision.slice(0,-1);
-
+	
+	var nroGr = codigo.html();
+	var nroGrParam = nroGuiaRemision.text();
+	var OcRef = OCReferencia.val();
+	var dato = datoBuscar.text();
+	var fecDesde = fechaDesde.text();
+	var fecHasta = fechaHasta.text();
+	var estParam = estadoParam.text();
 	var opcion = Opcion.NUEVO;
-	var params = "numeroDocumento=" + OCReferencia.val() + "&opcion=" + opcion + "&datoBuscar=&fechaDesde=&fechaHasta=&estadoParam=&volver=0&guias=" + guiasRemision;
+	
+	//var params = "numeroDocumento=" + OCReferencia.val() + "&opcion=" + opcion + "&datoBuscar=&fechaDesde=&fechaHasta=&estadoParam=&volver=0&desdeDocRef=&guias=" + guiasRemision;
+	var params = "numeroDocumento=" + OcRef + "&opcion=" + opcion + "&datoBuscar=" + dato + "&fechaDesde=" + fecDesde + 
+				 "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI + 
+				 "&nroGuiaRemision=" + nroGrParam + "&nroGr=" + nroGr + "&guias=" + guiasRemision;
 	window.location.href = "/appkahaxi/nueva-factura-compra-asociada?" + params;
 
 }
@@ -1425,7 +1439,7 @@ function volver(){
 	var fecDesde 		= fechaDesde.text();
 	var fecHasta 		= fechaHasta.text();
 	var estParam		= estadoParam.text();
-	var nroDoc			= numeroDocumento.text(); // este debe ser la OC
+	var nroDoc			= OCReferencia.val(); //numeroDocumento.text(); // este debe ser la OC
 	var desdeDocRef 	= desdeDocRefParam.text();
 	
 	if(desdeDocRef == Respuesta.SI){
@@ -1451,20 +1465,20 @@ function cargarFacturaAsociada(numeroDocumento, opcion) {
 	console.log("cargar factura asociada--> nroDoc (GR origen)-->" + codigo.html());
 	var params;
 	var dato 		= datoBuscar.val();
-	var nroGR 		= nroGuiaRemision.text();
+	var nroGuiaRem	= nroGuiaRemision.text();
 	var nroOC 		= nroOrdenCompra.text();
 	var codRpto 	= codRepuesto.val();
 	var fecDesde 	= fechaDesde.text();
 	var fecHasta 	= fechaHasta.text();
 	var est 		= estadoParam.val();
 	// armando los parámetros
-	params = "numeroDocumento=" + codigo.html() + "&opcion=" + opcion + "&datoBuscar=" + dato +
+	//params = "numeroDocumento=" + codigo.html() + "&opcion=" + opcion + "&datoBuscar=" + dato +
+	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + dato +
 			 "&nroComprobantePago=" + numeroDocumento + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +
-			 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI + "&guias=";
-
+			 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + 
+			 "&desdeDocRef=" + Respuesta.SI + "&nroGuiaRemision=" + nroGuiaRem + "&nroGr=" + codigo.html() + "&guias=";
+	
 	window.location.href = "/appkahaxi/nueva-factura-compra-asociada?" + params;
-	
-	
 	
 }
 

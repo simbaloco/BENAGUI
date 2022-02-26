@@ -35,7 +35,12 @@
         <result property="activo"					column="ACTIVO" />
         <result property="flagEnvio"				column="FLAG_ENVIO" />
         <result property="fechaRegistro"			column="FEC_REGISTRO" />
-        <result property="nroSeguimiento"			column="NRO_SEGUIMIENTO" />        
+        <result property="nroPedido"				column="NRO_PEDIDO" />     
+        <result property="cotizacionSap"			column="COTIZACION_SAP" />
+        <result property="email" 					column="EMAIL" />
+        <result property="fechaContabilizacionDmy" 	column="FEC_CONTABILIZACION_DMY" />
+        <result property="fechaValidoHastaDmy" 		column="FEC_VALIDO_HASTA_DMY" />
+        <result property="fechaEntregaDmy" 		    column="FEC_ENTREGA_DMY" />
     </resultMap>
 
     <resultMap id="compraDet" type="CompraDetModel">
@@ -82,6 +87,7 @@
         <parameter property="COD_ESTADO"        	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="TIPO_CAMBIO"          	jdbcType="DECIMAL"  mode="IN"/>
         <parameter property="OBSERVACIONES"     	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COTIZACION_SAP"     	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="NRO_DOCUMENTO_REF"     jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="SUB_TOTAL"          	jdbcType="DECIMAL"  mode="IN"/>
         <parameter property="IGV"          			jdbcType="DECIMAL"  mode="IN"/>
@@ -97,7 +103,8 @@
         <parameter property="USUARIO"				jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="COD_ESTADO"        	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="OBSERVACIONES"     	jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="NRO_SEGUIMIENTO"  		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="NRO_PEDIDO"  			jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COTIZACION_SAP"     	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FEC_CONTABILIZACION"   jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FEC_VALIDO_HASTA"      jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FEC_ENTREGA"      		jdbcType="VARCHAR"  mode="IN"/>
@@ -141,11 +148,11 @@
     </select>
          
     <insert id="registrarOrdenCompra" parameterMap="registrarOrdenCompraParams" statementType="CALLABLE">
-    	{CALL SP_REGISTRAR_ORDEN_COMPRA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
+    	{CALL SP_REGISTRAR_ORDEN_COMPRA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
     </insert> 
    	
     <update id="actualizarOrdenCompra" parameterMap="actualizarOrdenCompraParams" statementType="CALLABLE">
-    	{CALL SP_ACTUALIZAR_ORDEN_COMPRA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
+    	{CALL SP_ACTUALIZAR_ORDEN_COMPRA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
     </update>
     
     <update id="actualizarEnvioOrdenCompra" parameterMap="actualizarEnvioOrdenCompraParams" statementType="CALLABLE">

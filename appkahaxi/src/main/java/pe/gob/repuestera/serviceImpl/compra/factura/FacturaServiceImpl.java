@@ -48,7 +48,7 @@ public class FacturaServiceImpl implements FacturaService {
         Map<String, Object> params = new HashMap();
         params.put(Constante.PARAM_SP_SERIE, comprobantePagoCabModel.getSerie());
         params.put(Constante.PARAM_SP_CORRELATIVO, comprobantePagoCabModel.getCorrelativo());
-        params.put(Constante.PARAM_SP_COD_CLIENTE, comprobantePagoCabModel.getCodigoCliente());
+        params.put(Constante.PARAM_SP_COD_PROV, comprobantePagoCabModel.getCodigoProv());
         params.put(Constante.PARAM_SP_USUARIO, usuario);
         params.put(Constante.PARAM_SP_NRO_ORDEN_COMPRA, comprobantePagoCabModel.getOrdenCompra());
         params.put(Constante.PARAM_SP_FEC_CONTABILIZACION, comprobantePagoCabModel.getFechaContabilizacion());
