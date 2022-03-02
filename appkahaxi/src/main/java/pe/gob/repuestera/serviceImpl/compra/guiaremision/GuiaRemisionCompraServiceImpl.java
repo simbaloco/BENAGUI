@@ -70,7 +70,7 @@ public class GuiaRemisionCompraServiceImpl implements GuiaRemisionCompraService 
         logger.info("List<CompraDetModel> ===> " + dataJSON);
 
         Map<String, Object> params = new HashMap();
-        params.put(Constante.PARAM_SP_SERIE, guiaRemisionCabModel.getSerie());
+        params.put(Constante.PARAM_SP_SERIE, guiaRemisionCabModel.getSerie().toUpperCase());
         params.put(Constante.PARAM_SP_CORRELATIVO, guiaRemisionCabModel.getCorrelativo());
         params.put(Constante.PARAM_SP_COD_PROV, guiaRemisionCabModel.getCodigoProv());
         params.put(Constante.PARAM_SP_USUARIO, usuario);

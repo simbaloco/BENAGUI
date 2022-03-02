@@ -354,7 +354,7 @@ function inicializarFechas(){
 }
 
 function cargarPantallaNueva() {
-	obtenerTipoCambio(tipoCambio);
+	//obtenerTipoCambio(tipoCambio);
 
 	controlNoRequerido(observaciones);
 	titulo.text("NUEVA");

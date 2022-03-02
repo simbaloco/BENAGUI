@@ -54,12 +54,26 @@
 			<div class="card">
 
 				<div class="card-header quitar-contornos" id="headingCabeceraFactura">
-					<h2 class="mb-0">
-						<button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseCabeceraFactura" aria-expanded="true" aria-controls="collapseCabeceraFactura">
-							<i class="fas fa-angle-up"></i><span>Datos de la Factura </span><span class="font-weight-bold" id="codigo"></span>
-							<div class="subrayado"></div>
-						</button>
-					</h2>
+					<div class="row">
+						<div class="col-md-6">
+							<h2 class="mb-0">
+								<button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseCabeceraFactura" aria-expanded="true" aria-controls="collapseCabeceraFactura">
+									<i class="fas fa-angle-up"></i><span>Datos de la Factura </span><span class="font-weight-bold" id="codigo"></span>
+									<div class="subrayado"></div>
+								</button>
+							</h2>
+						</div>
+						
+						<div class="col-md-6 alineacion-derecha">
+				     		<button type="button" id="btnGrabar" class="btn btn-primary">
+	                  			<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
+				            </button>
+				            
+			              	<button type="button" id="btnAnular" class="btn btn-primary" style="display: none">
+								<span class="mr-2"><i class="fas fa-trash"></i></span>Anular
+							</button>
+						</div>
+					</div>
 				</div>
 
 				<div id="collapseCabeceraFactura" class="collapse show" aria-labelledby="headingCabeceraFactura" data-parent="#accordionCabeceraFactura">
@@ -387,24 +401,7 @@
 							    </div>	
 		            		</div>
 				       	</div>
-				    </div>
-
-					<div class="row">
-						<div class="col-md-6">						     		
-				     	</div>
-				     	<div class="col-md-6 alineacion-derecha">
-				     		<div>
-					     		<button type="button" id="btnGrabar" class="btn btn-primary">
-		                  			<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
-					            </button>
-					            
-				              	<button type="button" id="btnAnular" class="btn btn-primary my-1" style="display: none">
-									<span class="mr-2"><i class="fas fa-trash"></i></span>Anular
-								</button>
-					        </div>
-				     	</div>
-					</div>
-					
+				    </div>					
 				</div>
 			</div>
 

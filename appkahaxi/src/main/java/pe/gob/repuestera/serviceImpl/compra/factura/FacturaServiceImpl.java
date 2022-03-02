@@ -46,7 +46,7 @@ public class FacturaServiceImpl implements FacturaService {
         logger.info("List<CompraDetModel> ===> " + dataJSON);
 
         Map<String, Object> params = new HashMap();
-        params.put(Constante.PARAM_SP_SERIE, comprobantePagoCabModel.getSerie());
+        params.put(Constante.PARAM_SP_SERIE, comprobantePagoCabModel.getSerie().toUpperCase());
         params.put(Constante.PARAM_SP_CORRELATIVO, comprobantePagoCabModel.getCorrelativo());
         params.put(Constante.PARAM_SP_COD_PROV, comprobantePagoCabModel.getCodigoProv());
         params.put(Constante.PARAM_SP_USUARIO, usuario);

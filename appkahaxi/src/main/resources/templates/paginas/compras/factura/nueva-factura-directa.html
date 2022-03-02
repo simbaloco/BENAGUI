@@ -43,14 +43,28 @@
 	    	<!-- <div class="accordion"> -->
 	    	<div class="box-body">
 	    		<div class="card">
-	                <div class="card-header quitar-contornos" id="headingOne">
-				        <h2 class="mb-0">
-					        <button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseOne"  aria-expanded="true" aria-controls="collapseOne">
-			                    <i class="fas fa-angle-up"></i><span>Datos de la Factura </span><span style="font-size: 20; font-weight: bold;" id="codigo"></span>
-			                    <div class="subrayado"></div>
-			                </button>
-		                </h2>
-		            </div>
+	                <div class="card-header quitar-contornos" id="headingCabeceraFactura">
+						<div class="row">
+							<div class="col-md-6">
+								<h2 class="mb-0">
+									<button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseCabeceraFactura" aria-expanded="true" aria-controls="collapseCabeceraFactura">
+										<i class="fas fa-angle-up"></i><span>Datos de la Factura </span><span class="font-weight-bold" id="codigo"></span>
+										<div class="subrayado"></div>
+									</button>
+								</h2>
+							</div>
+							
+							<div class="col-md-6 alineacion-derecha">
+					     		<button type="button" id="btnGrabar" class="btn btn-primary">
+		                  			<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
+					            </button>
+					            
+				              	<button type="button" id="btnAnular" class="btn btn-primary" style="display: none">
+									<span class="mr-2"><i class="fas fa-trash"></i></span>Anular
+								</button>
+							</div>
+						</div>
+					</div>
                 
 	                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionOne">
 	                	<div class="box-body">
@@ -174,7 +188,7 @@
 						    <div class="form-group row">
 						 		<div class="col-md-2">
 						 			<label class="label" for="tipoCambio">Tipo de Cambio:</label>
-						 			<input class="form-control" maxlength="250" size="50" type="text" id="tipoCambio" readonly="readonly" tabindex="-1"/>
+						 			<input class="form-control" maxlength="250" size="50" type="text" id="tipoCambio" readonly="readonly" tabindex="-1" value="3.3"/>
 						 		</div>			 		
 						 		
 						 		<div class="col-md-1">
@@ -378,21 +392,7 @@
 					    </div>
 					    </form>
 					    
-					    <div class="row">
-							<div class="col-md-6">						     		
-					     	</div>
-					     	<div class="col-md-6 alineacion-derecha">
-					     		<div>
-						     		<button type="button" id="btnGrabar" class="btn btn-primary">
-			                  			<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
-						            </button>
-						            
-					              	<button type="button" id="btnAnular" class="btn btn-primary my-1" style="display: none">
-										<span class="mr-2"><i class="fas fa-trash"></i></span>Anular
-									</button>
-						        </div>
-					     	</div>
-						</div>
+					    
                 	</div>
             	</div>
           	</div>
