@@ -666,6 +666,8 @@ function buscarArticuloKeyUp(e, control, fila){
 			        	*/
 			        	response($.map(resultado,function(item) {
 			        		var AC = new Object();
+
+			console.log(" item.precioVentaUnitario;:"+ item.precioVentaUnitario);
 			    			// requeridos
 			        		AC.label = item.codigoEstandar + ' / ' + item.descripcion + ' / ' + item.descripcionMarcaArticulo + ' / ' + 
 									   item.descripcionTipo + ' / ' + item.descripcionSeccion + ' / ' + item.descripcionUnidadMedida + ' / ' + 
@@ -677,7 +679,7 @@ function buscarArticuloKeyUp(e, control, fila){
 	                        AC.codEstandar				= item.codigoEstandar;
 							AC.descripcion				= item.descripcion;
 	                        AC.descripcionMarcaArticulo = item.descripcionMarcaArticulo;
-	                        //AC.precioVentaUnitario		= item.precioVentaUnitario;
+	                        AC.precioVentaUnitario		= item.precioVentaUnitario;
 							
 	                        return AC;
 	        	  		}));
@@ -705,7 +707,7 @@ function buscarArticuloKeyUp(e, control, fila){
 				
 				deshabilitarControlSoloLectura(null, '#cantidad_' + fila);
 				deshabilitarControlSoloLectura(null, '#precio_' + fila);
-				/*
+				
 				var tipMoneda = tipoMoneda.val();
 				if(tipMoneda == Moneda.SOLES){
 					precio 		= ui.item.precioVentaUnitario * tc;
@@ -714,9 +716,9 @@ function buscarArticuloKeyUp(e, control, fila){
 					precio 		= ui.item.precioVentaUnitario;
 					//$('.simbolo-moneda').removeClass("input-symbol-sol").addClass("input-symbol-dolar");
 				}
-				*/
-				//$('#precio_' + fila).val(convertirNumeroAMoneda(precio));
-				//$('#precio_' + fila).prop('min', precio);
+				
+				$('#precio_' + fila).val(convertirNumeroAMoneda(precio));
+				$('#precio_' + fila).prop('min', precio);
 				
 				$('#cantidad_' + fila).focus();
 				

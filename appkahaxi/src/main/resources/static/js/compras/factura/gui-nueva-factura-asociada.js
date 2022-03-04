@@ -419,8 +419,9 @@ function cargarPantallaConDatosFactura() {
 				if(data.codigoCondPago == CondicionPago.CREDITO) {
 					mostrarControl(divDias);
 				}
-
+				
 				verPantallaFactura(data);
+				console.log("codigo.html5: "+ codigo.html());
 			}
 
 			loadding(false);
@@ -435,9 +436,8 @@ function cargarPantallaConDatosFactura() {
 }
 
 function cargarPantallaHTMLFactura(data) {
-	console.log("data.numeroDocumento: "+ numeroDocumento.text());
-
-	codigo.html(numeroDocumento.text());
+	
+	//codigo.html(numeroDocumento.text());	
 	OCReferencia.val(data.ordenCompra);
 	codigoProv.val(data.codigoProv);
 	documentoProv.val(data.nroDocProv);
@@ -473,7 +473,6 @@ function cargarPantallaHTMLFactura(data) {
 		$('#subTotalIgv_' + indice).val(detalle.subTotalIgv);		
 		indice++;
 	}
-
 	dataTableDetalle.destroy();
 	inicializarTablaDetalle(true);
 }
@@ -483,12 +482,13 @@ function verPantallaFactura(data) {
 	
 	var desdeDocRef = desdeDocRefParam.text();
 	
-	if(desdeDocRef == Respuesta.SI){
+	codigo.html(data.numeroDocumento);
+	/*if(desdeDocRef == Respuesta.SI){
 		codigo.html(nroComprobantePago.text());
 	}else{
 		codigo.html(numeroDocumento.text());
-	}
-
+	}*/
+	
 	fecConta.datetimepicker('date', moment(data.fechaContabilizacion));
 	fecDocumento.datetimepicker('date', moment(data.fechaDocumento));
 	fecVencimiento.datetimepicker('date', moment(data.fechaEntrega));

@@ -36,7 +36,7 @@ var fecEntrega;
 var tipoCambio;
 var nroPedido;
 var cotizacionSap;
-var divNroPedido;
+var lblPedido;
 var referenciaDiv;
 var nroDocReferenciaVer;
 
@@ -118,7 +118,7 @@ function inicializarVariables() {
 	referenciaDiv = $("#referenciaDiv");
 	nroDocReferenciaVer = $("#nroDocReferenciaVer");
 
-	divNroPedido = $("#divNroPedido");
+	lblPedido = $("#lblPedido");
 	divMensajeEliminado = $("#divMensajeEliminado");
 	btnIrGuiaRemision = $("#btnIrGuiaRemision");
 	btnGenerarGuiaRemision = $("#btnGenerarGuiaRemision");
@@ -379,7 +379,8 @@ function cargarPantallaNueva() {
 	flgNuevo=1;
 	inicializarFechaContaHasta();
 	//obtenerTipoCambio(tipoCambio);
-	ocultarControl(divNroPedido);
+	ocultarControl(lblPedido);
+	ocultarControl(nroPedido);
 	controlNoRequerido(observaciones);
 	titulo.text("NUEVA");
 	dias.val(Dias._30);
@@ -511,7 +512,9 @@ function verPantallaOrdenCompra(data) {
 		deshabilitarControl(dias);
 		deshabilitarControl(estado);
 		deshabilitarControl(tipoCambio);
-		mostrarControl(divNroPedido);
+		//mostrarControl(divNroPedido);
+		mostrarControl(lblPedido);
+		mostrarControl(nroPedido);
 		mostrarControl(btnPdf);
 		deshabilitarControl(nroPedido);
 		deshabilitarControl(cotizacionSap);
@@ -548,7 +551,13 @@ function verPantallaOrdenCompra(data) {
 
 	if (opcion.text() == Opcion.MODIFICAR) {
 		titulo.text("MODIFICAR");
-		(flagEnvio.val() == 1) ? mostrarControl(divNroPedido) : ocultarControl(divNroPedido);
+		if (flagEnvio.val() == 1){
+			mostrarControl(lblPedido);
+			mostrarControl(nroPedido);
+		}else{
+			ocultarControl(lblPedido);
+			ocultarControl(nroPedido);
+		}// ? mostrarControl(divNroPedido) : ocultarControl(divNroPedido);
 		
 		if (data.codigoEstado == EstadoDocumentoInicial.POR_APROBAR) {
 			
@@ -561,7 +570,9 @@ function verPantallaOrdenCompra(data) {
 			habilitarControl(estado);
 			habilitarControl(nroPedido);
 			habilitarControl(cotizacionSap);
-			habilitarControl(divNroPedido);
+			//habilitarControl(divNroPedido);
+			habilitarControl(lblPedido);
+			habilitarControl(nroPedido);
 			estado.focus();
 			mostrarControl(btnGrabar);
 			mostrarControl(btnAgregarArticulo);
@@ -577,7 +588,9 @@ function verPantallaOrdenCompra(data) {
 			deshabilitarControl(estado);
 			deshabilitarControl(nroPedido);
 			deshabilitarControl(cotizacionSap);
-			deshabilitarControl(divNroPedido);
+			//deshabilitarControl(divNroPedido);
+			deshabilitarControl(lblPedido);
+			deshabilitarControl(nroPedido);			
 			deshabilitarControl(observaciones);
 			mostrarControl(btnDuplicar);
 			mostrarControl(btnGenerarGuiaRemision);
@@ -658,7 +671,9 @@ function duplicarPantallaOrdenCompra(nroDocRef) {
 
 	nroDocReferencia.val(nroDocRef);
 	mostrarControl(referenciaDiv);
-	ocultarControl(divNroPedido);
+	//ocultarControl(divNroPedido);
+	ocultarControl(lblPedido);
+	ocultarControl(nroPedido);
 	estado.val(EstadoDocumentoInicial.POR_APROBAR);
 
 	//observaciones.val(CADENA_VACIA);
@@ -1015,10 +1030,10 @@ function calcularPorTipoMoneda() {
 
 	if (tipoMonedaVal == Moneda.SOLES) {
 		$('.simbolo-moneda').removeClass("input-symbol-dolar").addClass("input-symbol-sol");
-		convertirMontosASoles();
+		//convertirMontosASoles();
 	} else {
 		$('.simbolo-moneda').removeClass("input-symbol-sol").addClass("input-symbol-dolar");
-		convertirMontosADolares();
+		//convertirMontosADolares();
 	}
 }
 
