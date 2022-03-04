@@ -317,6 +317,13 @@ function inicializarEventos() {
 	});
 
 	tipoMoneda.on('change', function() {
+		if (tipoMoneda.val() == Moneda.SOLES){
+			controlNoRequerido(tipoCambio);
+		}
+		else{
+			controlRequerido(tipoCambio);
+		}
+		
 		calcularPorTipoMoneda();
 	});
 
@@ -491,8 +498,8 @@ function verPantallaOrdenCompra(data) {
 	fecHasta.datetimepicker('date', moment(data.fechaValidoHasta));
 	fecEntrega.datetimepicker('date', moment(data.fechaEntrega));
 
-	deshabilitarControl(campoBuscar);	
-	deshabilitarControl(observaciones);		
+	deshabilitarControl(campoBuscar);
+	controlNoRequerido(observaciones);			
 	ocultarControl(btnNuevo);	
 	ocultarControl(btnLimpiar);
 
@@ -513,14 +520,13 @@ function verPantallaOrdenCompra(data) {
 		ocultarControl(btnEliminarTodosArticulos);
 		deshabilitarDetalleOrdenCompra();
 		mostrarControl(btnDuplicar);
-
+		
 		if (data.codigoEstado == EstadoDocumentoInicial.RECHAZADO) {
 			deshabilitarControl(estado);
-			//mostrarControl(btnDuplicar);
+			controlRequerido(observaciones);
 			mostrarControl(lblAnulado);
 		} else if (data.codigoEstado == EstadoDocumentoInicial.APROBADO) {
 			deshabilitarControl(estado);
-			//mostrarControl(btnDuplicar);
 			mostrarControl(btnGenerarGuiaRemision);
 			mostrarControl(btnIrGuiaRemision);
 
@@ -542,22 +548,67 @@ function verPantallaOrdenCompra(data) {
 
 	if (opcion.text() == Opcion.MODIFICAR) {
 		titulo.text("MODIFICAR");
-		habilitarControl(dateTimePickerInput);
-		habilitarControl(tipoMoneda);
-		habilitarControl(condPago);
-		habilitarControl(dias);
-		habilitarControl(tipoCambio);
-		habilitarControl(estado);
-		habilitarControl(nroPedido);
-		habilitarControl(cotizacionSap);		
- 		(flagEnvio.val() == 1) ? mostrarControl(divNroPedido) : ocultarControl(divNroPedido);
+		(flagEnvio.val() == 1) ? mostrarControl(divNroPedido) : ocultarControl(divNroPedido);
 		
-		//mostrarControl(btnDuplicar);
-		estado.focus();
-		mostrarControl(btnGrabar);
-		mostrarControl(btnAgregarArticulo);
-		mostrarControl(btnEliminarTodosArticulos);
-		habilitarDetalleOrdenCompra();
+		if (data.codigoEstado == EstadoDocumentoInicial.POR_APROBAR) {
+			
+			fecConta.datetimepicker('maxDate', moment());
+			habilitarControl(dateTimePickerInput);
+			habilitarControl(tipoMoneda);
+			habilitarControl(condPago);
+			habilitarControl(dias);
+			habilitarControl(tipoCambio);
+			habilitarControl(estado);
+			habilitarControl(nroPedido);
+			habilitarControl(cotizacionSap);
+			habilitarControl(divNroPedido);
+			estado.focus();
+			mostrarControl(btnGrabar);
+			mostrarControl(btnAgregarArticulo);
+			mostrarControl(btnEliminarTodosArticulos);
+			habilitarDetalleOrdenCompra();
+		} else {
+			// estado APROBADO O RECHAZADO
+			deshabilitarControl(dateTimePickerInput);
+			deshabilitarControl(tipoMoneda);
+			deshabilitarControl(condPago);
+			deshabilitarControl(dias);
+			deshabilitarControl(tipoCambio);
+			deshabilitarControl(estado);
+			deshabilitarControl(nroPedido);
+			deshabilitarControl(cotizacionSap);
+			deshabilitarControl(divNroPedido);
+			deshabilitarControl(observaciones);
+			mostrarControl(btnDuplicar);
+			mostrarControl(btnGenerarGuiaRemision);
+			mostrarControl(btnIrGuiaRemision);
+			deshabilitarDetalleOrdenCompra();
+			ocultarControl(btnAgregarArticulo);
+			ocultarControl(btnGrabar);
+			ocultarControl(btnEliminarTodosArticulos);
+			
+			if (data.codigoEstado == EstadoDocumentoInicial.APROBADO) {
+			
+				if (data.codigoEstadoProceso == EstadoProceso.ABIERTO) {
+					// estado proceso ABIERTO
+					habilitarControl(btnGenerarGuiaRemision);
+					if (data.cantidadGrAsociadas > 0) {
+						mostrarControl(btnIrGuiaRemision);
+					} else {
+						ocultarControl(btnIrGuiaRemision);
+					}
+				} else {
+					// estado proceso CERRADO
+					ocultarControl(btnGenerarGuiaRemision);
+					mostrarControl(btnIrGuiaRemision);
+				}
+			}else{
+				ocultarControl();
+				ocultarControl(btnGenerarGuiaRemision);
+				ocultarControl(btnIrGuiaRemision);				
+			}
+				
+		}
 	}
 
 
@@ -612,7 +663,6 @@ function duplicarPantallaOrdenCompra(nroDocRef) {
 
 	//observaciones.val(CADENA_VACIA);
 	controlNoRequerido(observaciones);
-
 	habilitarControl(dateTimePickerInput);
 	habilitarControl(tipoMoneda);
 	habilitarControl(condPago);
@@ -1348,22 +1398,23 @@ function actualizarOrdenCompra() {
 					mostrarControl(btnPdf);
 					window.scrollTo(0, 0);
 				} else if (estado.val() == EstadoDocumentoInicial.POR_APROBAR) {
-					deshabilitarControl(estado);
+					/*deshabilitarControl(estado);
 					deshabilitarControl(tipoCambio);
 					deshabilitarControl(nroPedido);
 					deshabilitarControl(cotizacionSap);
-					mostrarControl(btnPdf);	
-					mostrarControl(btnDuplicar);
-					ocultarControl(btnGrabar);
-					ocultarControl(btnLimpiar);		
-					ocultarControl(btnAgregarArticulo);
-					ocultarControl(btnEliminarTodosArticulos);
 					deshabilitarDetalleOrdenCompra();
 					deshabilitarControl(dateTimePickerInput);
 					deshabilitarControl(tipoMoneda);
 					deshabilitarControl(condPago);
 					deshabilitarControl(dias);
-					deshabilitarControl(tipoCambio);
+					deshabilitarControl(tipoCambio);*/
+					mostrarControl(btnPdf);	
+					mostrarControl(btnDuplicar);
+					mostrarControl(btnGrabar);
+					mostrarControl(btnLimpiar);		
+					mostrarControl(btnAgregarArticulo);
+					mostrarControl(btnEliminarTodosArticulos);
+					
 				}
 				else{
 					volver();
@@ -1535,7 +1586,8 @@ function generarGuiaRemisionPorOrden() {
 
 	params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.NUEVO + "&datoBuscar=" + dato +
 		"&nroGuiaRemision=&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +
-		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI;
+		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + 
+		"&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI + "&origenMnto=" + Respuesta.NO;
 
 	window.location.href = "/appkahaxi/cargar-guia-remision-compra?" + params;
 }
@@ -1553,7 +1605,8 @@ function cargarGuiaRemisionAsociada(numDocumento) {
 	//params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato +
 	params = "numeroDocumento=" + numDocumento + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato +
 		"&nroGuiaRemision=" + numDocumento + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +
-		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI;
+		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI + 
+		"&desdeDocRef=" + Respuesta.SI + "&origenMnto=" + Respuesta.NO;;
 
 	window.location.href = "/appkahaxi/cargar-guia-remision-compra?" + params;
 }

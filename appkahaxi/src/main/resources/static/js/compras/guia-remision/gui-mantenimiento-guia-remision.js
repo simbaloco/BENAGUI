@@ -384,7 +384,8 @@ function cargarGuiaRemision(numeroDocumento, opcion) {
 	// armando los parámetros
 	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar +  
 			 "&nroGuiaRemision=" + nroGuiaVal + "&nroOrdenCompra=" + nroOCVal + "&codRepuesto=" + codRpto + 
-		     "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.NO;
+		     "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + 
+			 "&desdeDocRef=" + Respuesta.NO + "&origenMnto=" + Respuesta.SI;
 	
 	window.location.href = "/appkahaxi/cargar-guia-remision-compra?" + params;
 }

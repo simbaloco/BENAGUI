@@ -263,6 +263,7 @@ public class Constante {
 	public static final String PARAM_ESTADO = "estadoParam";
 	public static final String PARAM_VOLVER = "volver";
 	public static final String PARAM_DESDE_DOC_REF = "desdeDocRef";
+	public static final String PARAM_ORIGEN_MNTO = "origenMnto";	
 	public static final String PARAM_DESDE_OC = "desdeOC";
 	public static final String PARAM_GUIAS = "guias";
 	public static final String PARAM_FECHA_INICIO = "fechaInicio";

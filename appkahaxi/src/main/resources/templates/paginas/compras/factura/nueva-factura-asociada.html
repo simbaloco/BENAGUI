@@ -33,6 +33,7 @@
 	<label id="guiasParam" th:text=${guias} hidden="hidden"></label>
 	<label id="desdeDocRefParam" th:text=${desdeDocRef} hidden="hidden"></label>
 	<label id="nroGr" th:text=${nroGr} hidden="hidden"></label>
+	<label id="origenMnto" th:text=${origenMnto} hidden="hidden"></label>	
 	
 	<div class="kahaxi_titulo">
 
@@ -352,7 +353,8 @@
 			<div class="card">
 
 				<div class="card-body">
-
+				
+					<form id="formObservaciones" class="needs-validation" novalidate>
 					<div class="form-group row">
 				     	<div class="col-md-8">
 				     		
@@ -362,6 +364,9 @@
 				            	</div>
 				            	<div class="col-md-9">	
 				            		<textarea class="form-control" rows="3" maxlength="250" id="observaciones"></textarea>
+				            		<div class="invalid-feedback">
+			                        	Debe ingresar observaciones
+			                        </div>
 							    </div>
 		            		</div>
 				     	</div>
@@ -401,7 +406,9 @@
 							    </div>	
 		            		</div>
 				       	</div>
-				    </div>					
+				    </div>	
+				    </form>
+				    				
 				</div>
 			</div>
 

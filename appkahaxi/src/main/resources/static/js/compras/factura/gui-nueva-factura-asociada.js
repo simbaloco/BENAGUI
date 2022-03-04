@@ -15,10 +15,12 @@ var fechaHasta;
 var estadoParam;
 var volverParam;
 var desdeDocRefParam;
+var origenMnto;
 
 var guiasReferencia;
 
 var formFactura;
+var formObservaciones;
 var OCReferencia;
 var documentoProv;
 var nombreProv;
@@ -59,6 +61,7 @@ var volverParam;
 var dateTimePickerInput;
 var valorIGV;
 var lblAnulado;
+var flagAnula=0;
 
 $(document).ready(function(){
 	inicializarVariables();
@@ -72,8 +75,8 @@ function inicializarVariables() {
 	codigoProv = $("#codigoProv");
 	nroDocReferencia = $("#nroDocReferencia");
 	numeroDocumento = $('#numeroDocumento');
-	opcion = $("#opcion");
-	
+	origenMnto = $('#origenMnto');
+	opcion = $("#opcion");	
 	datoBuscar =  $("#datoBuscar");
 	nroComprobantePago =  $("#nroComprobantePago");
 	nroGuiaRemision =  $("#nroGuiaRemision");
@@ -83,11 +86,10 @@ function inicializarVariables() {
 	fechaDesde =  $("#fechaDesde");
 	fechaHasta =  $("#fechaHasta");
 	estadoParam =  $("#estadoParam");
-	volverParam =  $("#volverParam");
-	
+	volverParam =  $("#volverParam");	
 	guiasReferencia = $("#guiasParam");
-
 	formFactura = $("#formFactura");
+	formObservaciones = $("#formObservaciones");
 	OCReferencia = $("#OCReferencia");
 	documentoProv = $("#documentoProv");
 	nombreProv = $("#nombreProv");
@@ -102,24 +104,18 @@ function inicializarVariables() {
 	serie = $("#serie");
 	correlativo = $("#correlativo");
 	tipoCambio = $("#tipoCambio");
-
 	divMensajeEliminado = $("#divMensajeEliminado");
 	btnAnular = $("#btnAnular");
 	btnLimpiar = $("#btnLimpiar");
 	btnVolver = $("#btnVolver");
-
 	tableDetalle = $("#tableDetalle");
 	tableNuevoDetalle = $("#tableNuevoDetalle");
-
 	observaciones = $("#observaciones");
 	subTotalFactura = $("#subTotalFactura");
 	igvFactura = $("#igvFactura");
 	totalFactura = $("#totalFactura");
-
 	btnGrabar = $("#btnGrabar");
-
 	estadoPago = $("#estadoPago");
-
 	volverParam = $("#volverParam");
 	desdeDocRefParam =  $("#desdeDocRefParam");
 	dateTimePickerInput = $(".datetimepicker-input");
@@ -127,7 +123,6 @@ function inicializarVariables() {
 }
 
 function inicializarComponentes() {
-
 	habilitarAnimacionAcordion();
 	habilitarMarquee();
 	construirFechasPicker();
@@ -136,11 +131,12 @@ function inicializarComponentes() {
 }
 
 function inicializarPantalla() {
-	 
+	inicializarFechas();
+	controlNoRequerido(observaciones);
+	
 	if(opcion.text() == Opcion.NUEVO) {
 		console.log("es NUEVO!!!")
 		inicializarTablaDetalle(true);
-		inicializarFechas();
 		cargarPantallaConDatosGuiaRemisionAsociadas();
 		
 	}else if(opcion.text() == Opcion.VER) {
@@ -171,7 +167,6 @@ function construirFechasPicker() {
 }
 
 function restringirSeleccionFechas() {
-
 	fecConta.datetimepicker('maxDate', new Date());
 
 	fecDocumento.on("change.datetimepicker", function (e) {
@@ -204,8 +199,8 @@ function inicializarEventos() {
 		limpiarFactura();
 	});
 
-	btnAnular.on("click", function() {
-		mostrarDialogoAnularFactura();
+	btnAnular.on("click", function(e) {
+		mostrarDialogoAnularFactura(e);
 	});
 
 	estadoPago.on('change', function(){
@@ -440,7 +435,9 @@ function cargarPantallaConDatosFactura() {
 }
 
 function cargarPantallaHTMLFactura(data) {
+	console.log("data.numeroDocumento: "+ numeroDocumento.text());
 
+	codigo.html(numeroDocumento.text());
 	OCReferencia.val(data.ordenCompra);
 	codigoProv.val(data.codigoProv);
 	documentoProv.val(data.nroDocProv);
@@ -456,18 +453,15 @@ function cargarPantallaHTMLFactura(data) {
 	subTotalFactura.val(data.subTotal);
 	igvFactura.val(data.igv);
 	totalFactura.val(data.total);
-	observaciones.val(data.observaciones);
-	
+	observaciones.val(data.observaciones);	
 	cantidadDetalleDuplicado = data.detalle.length;
 
 	var indice = 0;
 
 	for(i=0; i < cantidadDetalleDuplicado; i++) {
-
 		agregarFilaEnTablaDetalle(data);
 
 		var detalle = data.detalle[i];
-
 		$('#codigoGuiaRemision_' + indice).val(detalle.codGuiaRemision);
 		$('#lineaReferencia_' + indice).val(detalle.lineaReferencia);
 		$('#codigo_' + indice).val(detalle.codArticulo);
@@ -476,8 +470,7 @@ function cargarPantallaHTMLFactura(data) {
 		$('#cantidad_' + indice).val(detalle.cantidad);
 		$('#precio_' + indice).val(detalle.precioUnitario);
 		$('#subTotal_' + i).val(detalle.subTotal);
-		$('#subTotalIgv_' + indice).val(detalle.subTotalIgv);
-		
+		$('#subTotalIgv_' + indice).val(detalle.subTotalIgv);		
 		indice++;
 	}
 
@@ -486,10 +479,9 @@ function cargarPantallaHTMLFactura(data) {
 }
 
 function verPantallaFactura(data) {
-
 	titulo.text("VER");
 	
-	var desdeDocRef 	= desdeDocRefParam.text();
+	var desdeDocRef = desdeDocRefParam.text();
 	
 	if(desdeDocRef == Respuesta.SI){
 		codigo.html(nroComprobantePago.text());
@@ -500,17 +492,16 @@ function verPantallaFactura(data) {
 	fecConta.datetimepicker('date', moment(data.fechaContabilizacion));
 	fecDocumento.datetimepicker('date', moment(data.fechaDocumento));
 	fecVencimiento.datetimepicker('date', moment(data.fechaEntrega));
-
-	//deshabilitarControl('.datetimepicker-input');
 	deshabilitarControl(dateTimePickerInput);
 	deshabilitarControl(observaciones);
+	controlNoRequerido(observaciones);
 	
 	if(data.codigoEstado == EstadoFactura.GENERADO){
 		if(estadoPago.val() == EstadoPago.PAGADO) {
 			deshabilitarControl(estadoPago);
 			ocultarControl(btnAnular);
 		} else {
-			habilitarControl(observaciones);
+			deshabilitarControl(observaciones);
 			habilitarControl(estadoPago);
 			mostrarControl(btnAnular);
 		}
@@ -528,18 +519,13 @@ function verPantallaFactura(data) {
 	deshabilitarControl(correlativo);
 
 	if(volverParam.text() == Respuesta.NO) {
-
 		ocultarControl(btnVolver);
-
 	} else {
-
 		mostrarControl(btnVolver);
 	}
-
-
+	
 	ocultarControl(btnGrabar);
 	ocultarControl(btnLimpiar);
-
 	deshabilitarDetalleFactura();
 }
 
@@ -559,7 +545,6 @@ function deshabilitarDetalleFactura(){
 			deshabilitarControl($(this).find(".btn-delete"));
 		});
 	});
-
 }
 
 function agregarFilaEnTablaDetalle(data) {
@@ -908,22 +893,18 @@ function registrarFacturaCompra(){
 					deshabilitarControl(serie);
 					deshabilitarControl(correlativo);
 					deshabilitarControl(estadoPago);
-
 					deshabilitarControl(tipoMoneda);
 					deshabilitarControl(condPago);
 					deshabilitarControl(dias);
-
-					//deshabilitarControl('.datetimepicker-input');
 					deshabilitarControl(dateTimePickerInput);
-
+					deshabilitarControl(observaciones);
 					mostrarControl(btnAnular);
 					mostrarControl(btnVolver);
 					ocultarControl(btnGrabar);
 					ocultarControl(btnLimpiar);
 
 					// si se grabó con estado PENDIENTE, cambiar a opción = VER
-					opcion.text(Opcion.VER);
-					
+					opcion.text(Opcion.VER);					
 					deshabilitarDetalleFactura();
 
 				} else {
@@ -1081,7 +1062,7 @@ function mostrarDialogoRegistrarFacturaPagado() {
 	});
 }
 
-function mostrarDialogoAnularFactura() {
+function mostrarDialogoAnularFactura(event) {
 
 	bootbox.confirm({
 		message: "¿Está seguro que desea anular la Factura?",
@@ -1097,7 +1078,19 @@ function mostrarDialogoAnularFactura() {
 		},
 		callback: function (result) {
 			if(result == true){
-				anularFacturaCompra();
+				controlRequerido(observaciones);
+				habilitarControl(observaciones);
+				if (flagAnula == 0){
+					mostrarMensajeValidacion("Debe ingresar observaciones antes de anular.", observaciones);
+				}else{
+					if (formObservaciones[0].checkValidity() == true) {
+						anularFacturaCompra();
+					}else {
+						event.stopPropagation();
+					}
+					formObservaciones.addClass('was-validated');
+				}
+				flagAnula+=1;				
 			}
 		}
 	});
@@ -1123,13 +1116,16 @@ function mostrarOcultarBotonAnular() {
 	if(estadoPagoVal == EstadoPago.PAGADO){
 		ocultarControl(btnAnular);
 		mostrarControl(btnGrabar);
+		habilitarControl(observaciones);
 	} else{
+		habilitarControl(observaciones);
 		if (codigo.html() != CADENA_VACIA || codigo.html() > 0){
 			mostrarControl(btnAnular);
 			ocultarControl(btnGrabar);
+			//deshabilitarControl(observaciones);
 		}else{
 			mostrarControl(btnGrabar);
-			ocultarControl(btnAnular);
+			ocultarControl(btnAnular);			
 		}	
 	}
 }
@@ -1207,7 +1203,8 @@ function volver(){
 		
 		params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato + 
 				 "&nroGuiaRemision=" + nroGRem + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
-			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.NO;
+			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI + 
+				 "&desdeDocRef=" + Respuesta.NO + "&origenMnto=" + origenMnto.text();
 		window.location.href = "/appkahaxi/cargar-guia-remision-compra?" + params;
 	}else{
 		
@@ -1227,6 +1224,7 @@ function limpiarFactura() {
 	observaciones.val(CADENA_VACIA);
 	estadoPago.prop("selectedIndex", 0);
 	serie.focus();
+	formObservaciones.removeClass('was-validated');
 }
 
 /********************* CALCULOS NUMERICOS ********************/

@@ -30,7 +30,7 @@
 	<label id="estadoParam" th:text=${estadoParam} hidden="hidden"></label>
 	<label id="volverParam" th:text=${volver} hidden="hidden"></label>
 	<label id="desdeDocRefParam" th:text=${desdeDocRef} hidden="hidden"></label>
-	
+	<label id="origenMnto" th:text=${origenMnto} hidden="hidden"></label>	
 
 	<div class="modal fade" id="guiasPorOrdenCompraModal" role="dialog" aria-labelledby="guiasPorOrdenCompraModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-personalizado-medium modal-sm" role="document" >
@@ -92,11 +92,11 @@
 				</div>
 
 				<div class="modal-footer" style="border-top: none">
-					<button id="btnAceptarModal" type="button" class="btn btn-outline-primary">
+					<button id="btnAceptarModal" type="button" class="btn btn-primary">
 						<span class="mr-2"><i class="fas fa-save" ></i></span>Aceptar
 					</button>
 
-					<button id="btnCerrarModal" type="button" class="btn btn-outline-primary" data-dismiss="modal">
+					<button id="btnCerrarModal" type="button" class="btn btn-primary" data-dismiss="modal">
 						<span class="mr-2"><i class="fas fa-backspace" ></i></span>Cerrar
 					</button>
 				</div>
@@ -483,7 +483,8 @@
 			<div class="card">
 
 				<div class="card-body">
-
+					
+					<form id="formObservaciones" class="needs-validation" novalidate>
 					<div class="form-group row">
 				     	<div class="col-md-8">
 				     		
@@ -493,6 +494,9 @@
 				            	</div>
 				            	<div class="col-md-9">	
 				            		<textarea class="form-control" rows="3" maxlength="250" id="observaciones"></textarea>
+				            		<div class="invalid-feedback">
+			                        	Debe ingresar observaciones
+			                        </div>
 							    </div>
 		            		</div>
 				     	</div>
@@ -532,7 +536,9 @@
 							    </div>	
 		            		</div>
 				       	</div>
-				    </div>					
+				    </div>	
+				    </form>
+				    				
 				</div>
 			</div>
 

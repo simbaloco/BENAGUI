@@ -440,7 +440,7 @@ function cargarFacturaAsociada(numeroDocumento, opcion) {
 	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar +
 			 "&nroComprobantePago=" + nroFacturaVal + "&nroOrdenCompra=" + nroOCVal + "&codRepuesto=" + codRpto +
 			 "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.NO + 
-			 "&nroGuiaRemision=&nroGr=" + numeroDocumento + "&guias=";
+			 "&nroGuiaRemision=&nroGr=" + numeroDocumento + "&guias=" + "&origenMnto=" + Respuesta.NO;
 		"&guias=";
 
 	window.location.href = "/appkahaxi/nueva-factura-compra-asociada?" + params;
