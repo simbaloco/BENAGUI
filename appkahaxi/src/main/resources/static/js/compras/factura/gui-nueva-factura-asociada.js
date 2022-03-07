@@ -176,7 +176,7 @@ function restringirSeleccionFechas() {
 	fecConta.on("change.datetimepicker", function (e) {
 		fecDocumento.datetimepicker('maxDate', e.date < fecVencimiento.datetimepicker('date') ? e.date : fecVencimiento.datetimepicker('date'));
 	});
-/*
+	/*
 	fecVencimiento.on("change.datetimepicker", function (e) {
 		fecDocumento.datetimepicker('maxDate', e.date < fecConta.datetimepicker('date') ? e.date : fecConta.datetimepicker('date'));
 	});*/
