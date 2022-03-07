@@ -523,13 +523,14 @@ function verPantallaOrdenCompra(data) {
 		ocultarControl(btnEliminarTodosArticulos);
 		deshabilitarDetalleOrdenCompra();
 		mostrarControl(btnDuplicar);
+		habilitarControl(estado);
 		
 		if (data.codigoEstado == EstadoDocumentoInicial.RECHAZADO) {
-			deshabilitarControl(estado);
+			//deshabilitarControl(estado);
 			controlRequerido(observaciones);
 			mostrarControl(lblAnulado);
 		} else if (data.codigoEstado == EstadoDocumentoInicial.APROBADO) {
-			deshabilitarControl(estado);
+			//habilitarControl(estado);
 			mostrarControl(btnGenerarGuiaRemision);
 			mostrarControl(btnIrGuiaRemision);
 
@@ -1038,27 +1039,35 @@ function calcularPorTipoMoneda() {
 }
 
 function evaluarCambioEstado() {
-
+	mostrarControl(btnGrabar);
+	
 	if (estado.val() == EstadoDocumentoInicial.APROBADO) {
-
-		mostrarControl(btnGrabar);
+		
+		//mostrarControl(btnGrabar);
 		ocultarControl(btnDuplicar);
 		habilitarControl(observaciones);
+		habilitarControl(estado);
 		controlNoRequerido(observaciones);
-
+		
 	} else if (estado.val() == EstadoDocumentoInicial.RECHAZADO) {
-
 		ocultarControl(btnGenerarGuiaRemision);
 		ocultarControl(btnDuplicar);
-		mostrarControl(btnGrabar);
+		//mostrarControl(btnGrabar);
 		controlRequerido(observaciones);
 		habilitarControl(observaciones);
+		habilitarControl(estado);
 		mostrarMensajeValidacion("Debe ingresar observaciones antes de grabar.", observaciones);
-
+		
 	} else {
 		// POR APROBAR
+		if (flgNuevo == 1){
+			ocultarControl(btnGrabar);
+		}
+		else{
+			mostrarControl(btnGrabar);
+		}
 		ocultarControl(btnGenerarGuiaRemision);
-		mostrarControl(btnGrabar);
+		//mostrarControl(btnGrabar);
 		mostrarControl(btnDuplicar);
 		controlNoRequerido(observaciones);
 		deshabilitarControl(observaciones);
@@ -1287,7 +1296,6 @@ function registrarOrdenCompra() {
 				// despues de grabar, mostramos los botones de "Generar GR", "Nuevo", "Duplicar" y "Volver" (si fuera el caso)
 				mostrarControl(btnNuevo);
 				mostrarControl(btnDuplicar);
-
 				ocultarControl(btnGenerarGuiaRemision);
 				ocultarControl(btnLimpiar);
 				ocultarControl(btnGrabar);
@@ -1299,12 +1307,12 @@ function registrarOrdenCompra() {
 				deshabilitarControl(tipoMoneda);
 				deshabilitarControl(condPago);
 				deshabilitarControl(dias);
-				deshabilitarControl(estado);
+				habilitarControl(estado);
 				deshabilitarControl(cotizacionSap);
 				deshabilitarControl(tipoCambio);
 				deshabilitarControl(observaciones);
 				deshabilitarDetalleOrdenCompra();
-
+				
 				codigo.html(resultado);
 
 			} else if (xhr.status == HttpStatus.Accepted) {
