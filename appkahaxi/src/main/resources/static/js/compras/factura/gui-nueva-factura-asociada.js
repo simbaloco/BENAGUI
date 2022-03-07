@@ -167,7 +167,7 @@ function construirFechasPicker() {
 }
 
 function restringirSeleccionFechas() {
-	fecConta.datetimepicker('maxDate', new Date());
+	//fecConta.datetimepicker('maxDate', new Date());
 
 	fecDocumento.on("change.datetimepicker", function (e) {
 		fecVencimiento.datetimepicker('minDate', e.date);
@@ -176,10 +176,10 @@ function restringirSeleccionFechas() {
 	fecConta.on("change.datetimepicker", function (e) {
 		fecDocumento.datetimepicker('maxDate', e.date < fecVencimiento.datetimepicker('date') ? e.date : fecVencimiento.datetimepicker('date'));
 	});
-
+/*
 	fecVencimiento.on("change.datetimepicker", function (e) {
 		fecDocumento.datetimepicker('maxDate', e.date < fecConta.datetimepicker('date') ? e.date : fecConta.datetimepicker('date'));
-	});
+	});*/
 }
 
 function inicializarEventos() {
@@ -260,10 +260,11 @@ function inicializarTablaDetalle(paginacion) {
  *************************************************************************************************/
 
 function inicializarFechas(){
-	fecConta.datetimepicker('date', moment());
-	fecConta.datetimepicker('maxDate', moment());
-	fecDocumento.datetimepicker('date', moment());
+	//fecConta.datetimepicker('maxDate', moment());
 	fecVencimiento.datetimepicker('date', moment());
+	fecDocumento.datetimepicker('date', moment());
+	fecConta.datetimepicker('date', moment());
+	
 }
 
 function cargarPantallaConDatosGuiaRemisionAsociadas() {

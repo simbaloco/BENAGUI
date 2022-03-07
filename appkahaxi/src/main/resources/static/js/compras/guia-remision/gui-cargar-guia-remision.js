@@ -193,13 +193,13 @@ function construirFechasPicker() {
 
 function restringirSeleccionFechas() {
 
-	fecConta.datetimepicker('maxDate', new Date());
-
 	fecDocumento.on("change.datetimepicker", function (e) {
+		//reiniciarMinFechaEntrega();
 		fecEntrega.datetimepicker('minDate', e.date);
 	});
 
 	fecConta.on("change.datetimepicker", function (e) {
+		//reiniciarMaxFechas();
 		fecDocumento.datetimepicker('maxDate', e.date);
 		fecEntrega.datetimepicker('maxDate', e.date);
 	});
@@ -284,9 +284,9 @@ function inicializarTablaDetalle(paginacion) {
 
 function inicializarFechas(){
 	console.log("Inicializando fechas...");
-	fecConta.datetimepicker('date', moment());
-	fecDocumento.datetimepicker('date', moment());
 	fecEntrega.datetimepicker('date', moment());
+	fecDocumento.datetimepicker('date', moment());
+	fecConta.datetimepicker('date', moment());	
 }
 
 function cargarPantallaConDatosOrdenCompra() {
@@ -1465,6 +1465,17 @@ function volver(){
 			window.location.href = "/appkahaxi/mantenimiento-guia-remision-compra?" + params;	
 		}		
 	}
+}
+
+function reiniciarMinFechaEntrega() {
+	console.log("reiniciarMinFechaEntrega...inicio");
+	fecEntrega.datetimepicker('minDate', false);
+}
+
+function reiniciarMaxFechas() {
+	console.log("reiniciarMaxFechas...inicio");
+	fecDocumento.datetimepicker('maxDate', false);
+	fecEntrega.datetimepicker('maxDate', false);
 }
 
 function cargarFacturaAsociada(numeroDocumento, opcion) {
