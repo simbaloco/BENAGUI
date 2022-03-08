@@ -1365,12 +1365,12 @@ function registrarOrdenCompra() {
 }
 
 function actualizarOrdenCompra() {
-	
+	/*
 	if(nroPedido.val().trim() == CADENA_VACIA && flagEnvio.val() == 1){
 		mostrarMensajeValidacion("Debe ingresar el número de pedido antes de grabar.", nroPedido);
 		return;
 	}
-		
+	*/	
 	var nroDocumento = codigo.html();
 	var estadoVal = estado.val();
 	var observacionesVal = observaciones.val().trim();
