@@ -264,7 +264,7 @@ function inicializarFechas(){
 	fecVencimiento.datetimepicker('date', moment());
 	fecDocumento.datetimepicker('date', moment());
 	fecConta.datetimepicker('date', moment());
-	
+	fecConta.datetimepicker('maxDate', moment());
 }
 
 function cargarPantallaConDatosGuiaRemisionAsociadas() {

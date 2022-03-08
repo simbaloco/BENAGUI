@@ -287,6 +287,7 @@ function inicializarFechas(){
 	fecEntrega.datetimepicker('date', moment());
 	fecDocumento.datetimepicker('date', moment());
 	fecConta.datetimepicker('date', moment());	
+	fecConta.datetimepicker('maxDate', moment());
 }
 
 function cargarPantallaConDatosOrdenCompra() {

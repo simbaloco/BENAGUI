@@ -348,7 +348,7 @@ function inicializarTablaDetalle(paginacion) {
  *************************************************************************************************/
 
 function inicializarFechas(){
-	//fecConta.datetimepicker('maxDate', moment());
+	fecConta.datetimepicker('maxDate', moment());
 	fecVencimiento.datetimepicker('date', moment());
 	fecDocumento.datetimepicker('date', moment());
 	fecConta.datetimepicker('date', moment());
