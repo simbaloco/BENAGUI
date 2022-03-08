@@ -66,7 +66,7 @@ var indiceFilaDataTableDetalle;
 
 var guiasPorOrdenCompraModal;
 var modalCodigoOrdenCompra;
-var tableDetalleGuias;
+var tableSeleccionDocumento;
 var dataTableDetalleGuias;
 
 var dateTimePickerInput;
@@ -142,7 +142,7 @@ function inicializarVariables() {
 
 	guiasPorOrdenCompraModal = $("#guiasPorOrdenCompraModal");
 	modalCodigoOrdenCompra = $("#modalCodigoOrdenCompra");
-	tableDetalleGuias = $("#tableDetalleGuias");
+	tableSeleccionDocumento = $("#tableSeleccionDocumento");
 	btnAceptarModal = $("#btnAceptarModal");
 
 	dateTimePickerInput = $(".datetimepicker-input");
@@ -501,8 +501,9 @@ function verPantallaOrdenCompra(data) {
 
 	deshabilitarControl(campoBuscar);
 	controlNoRequerido(observaciones);			
-	ocultarControl(btnNuevo);	
-	ocultarControl(btnLimpiar);
+	ocultarControl(btnNuevo);
+	mostrarControl(btnPdf);
+	//ocultarControl(btnLimpiar);
 
 	if (opcion.text() == Opcion.VER) {
 		titulo.text("VER");
@@ -515,16 +516,36 @@ function verPantallaOrdenCompra(data) {
 		//mostrarControl(divNroPedido);
 		mostrarControl(lblPedido);
 		mostrarControl(nroPedido);
-		mostrarControl(btnPdf);
 		deshabilitarControl(nroPedido);
 		deshabilitarControl(cotizacionSap);
+		deshabilitarControl(observaciones);
+		
 		ocultarControl(btnGrabar);
+		btnDuplicar.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
+		
 		ocultarControl(btnAgregarArticulo);
 		ocultarControl(btnEliminarTodosArticulos);
 		deshabilitarDetalleOrdenCompra();
 		mostrarControl(btnDuplicar);
-		habilitarControl(estado);
 		
+		mostrarControl(btnGenerarGuiaRemision);
+		mostrarControl(btnIrGuiaRemision);
+
+		if (data.codigoEstadoProceso == EstadoProceso.ABIERTO) {
+			// estado proceso ABIERTO
+			habilitarControl(btnGenerarGuiaRemision);
+			if (data.cantidadGrAsociadas > 0) {
+				mostrarControl(btnIrGuiaRemision);
+			} else {
+				ocultarControl(btnIrGuiaRemision);
+			}
+		} else {
+			// estado proceso CERRADO
+			ocultarControl(btnGenerarGuiaRemision);
+			mostrarControl(btnIrGuiaRemision);
+		}
+		//habilitarControl(estado);
+		/*
 		if (data.codigoEstado == EstadoDocumentoInicial.RECHAZADO) {
 			//deshabilitarControl(estado);
 			controlRequerido(observaciones);
@@ -548,9 +569,8 @@ function verPantallaOrdenCompra(data) {
 				mostrarControl(btnIrGuiaRemision);
 			}
 		}
-	}
-
-	if (opcion.text() == Opcion.MODIFICAR) {
+		*/
+	}else if (opcion.text() == Opcion.MODIFICAR) {
 		titulo.text("MODIFICAR");
 		if (flagEnvio.val() == 1){
 			mostrarControl(lblPedido);
@@ -576,6 +596,7 @@ function verPantallaOrdenCompra(data) {
 			habilitarControl(nroPedido);
 			estado.focus();
 			mostrarControl(btnGrabar);
+			mostrarControl(btnDuplicar);
 			mostrarControl(btnAgregarArticulo);
 			mostrarControl(btnEliminarTodosArticulos);
 			habilitarDetalleOrdenCompra();
@@ -617,7 +638,6 @@ function verPantallaOrdenCompra(data) {
 					mostrarControl(btnIrGuiaRemision);
 				}
 			}else{
-				ocultarControl();
 				ocultarControl(btnGenerarGuiaRemision);
 				ocultarControl(btnIrGuiaRemision);				
 			}
@@ -1040,19 +1060,18 @@ function calcularPorTipoMoneda() {
 
 function evaluarCambioEstado() {
 	mostrarControl(btnGrabar);
+	mostrarControl(btnDuplicar);
+	btnDuplicar.removeClass('btn-flotante-grabar').addClass('btn-flotante-duplicar');
 	
 	if (estado.val() == EstadoDocumentoInicial.APROBADO) {
-		
-		//mostrarControl(btnGrabar);
-		ocultarControl(btnDuplicar);
+		//ocultarControl(btnDuplicar);
 		habilitarControl(observaciones);
 		habilitarControl(estado);
 		controlNoRequerido(observaciones);
 		
 	} else if (estado.val() == EstadoDocumentoInicial.RECHAZADO) {
+		//ocultarControl(btnDuplicar);
 		ocultarControl(btnGenerarGuiaRemision);
-		ocultarControl(btnDuplicar);
-		//mostrarControl(btnGrabar);
 		controlRequerido(observaciones);
 		habilitarControl(observaciones);
 		habilitarControl(estado);
@@ -1060,14 +1079,24 @@ function evaluarCambioEstado() {
 		
 	} else {
 		// POR APROBAR
-		if (flgNuevo == 1){
+		/*if (flgNuevo == 1){
 			ocultarControl(btnGrabar);
+			btnDuplicar.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
 		}
 		else{
 			mostrarControl(btnGrabar);
+			btnDuplicar.removeClass('btn-flotante-grabar').addClass('btn-flotante-duplicar');
 		}
+		*/
+		
+		if (opcion.text() == Opcion.VER || opcion.text() == CADENA_VACIA){
+			ocultarControl(btnGrabar);
+			btnDuplicar.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
+		}
+		
+		
+		
 		ocultarControl(btnGenerarGuiaRemision);
-		//mostrarControl(btnGrabar);
 		mostrarControl(btnDuplicar);
 		controlNoRequerido(observaciones);
 		deshabilitarControl(observaciones);
@@ -1295,10 +1324,14 @@ function registrarOrdenCompra() {
 
 				// despues de grabar, mostramos los botones de "Generar GR", "Nuevo", "Duplicar" y "Volver" (si fuera el caso)
 				mostrarControl(btnNuevo);
-				mostrarControl(btnDuplicar);
 				ocultarControl(btnGenerarGuiaRemision);
 				ocultarControl(btnLimpiar);
 				ocultarControl(btnGrabar);
+				
+				mostrarControl(btnDuplicar);
+				ocultarControl(btnGrabar);
+				btnDuplicar.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
+								
 				ocultarControl(btnAgregarArticulo);
 				ocultarControl(btnEliminarTodosArticulos);
 				mostrarControl(btnPdf);
@@ -1314,6 +1347,8 @@ function registrarOrdenCompra() {
 				deshabilitarDetalleOrdenCompra();
 				
 				codigo.html(resultado);
+				flgNuevo=0;
+				numeroDocumento.text(resultado);
 
 			} else if (xhr.status == HttpStatus.Accepted) {
 
@@ -1404,8 +1439,11 @@ function actualizarOrdenCompra() {
 					deshabilitarControl(nroPedido);
 					deshabilitarControl(cotizacionSap);
 					mostrarControl(btnGenerarGuiaRemision);
+					
 					mostrarControl(btnDuplicar);
 					ocultarControl(btnGrabar);
+					btnDuplicar.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
+					
 					ocultarControl(btnLimpiar);
 					deshabilitarControl(estado);
 					controlNoRequerido(observaciones);
@@ -1513,6 +1551,9 @@ function actualizarEnvioOrdenCompra() {
 		},
 		success: function(resultado, textStatus, xhr) {
 			console.log("OC enviada");
+			/*mostrarControl(lblPedido);
+			mostrarControl(nroPedido);
+			nroPedido.focus();*/
 			loadding(false);
 		},
 		error: function(xhr, error, code) {
@@ -1665,14 +1706,13 @@ function reiniciarFechaHasta() {
 function limpiarOrdenCompra() {
 	inicializarFechaContaHasta();
 
-	campoBuscar.val(CADENA_VACIA);
-	documentoProv.val(CADENA_VACIA);
-	nombreProv.val(CADENA_VACIA);
-	direccion.val(CADENA_VACIA);
 	tipoMoneda.val(Moneda.DOLARES);
 	condPago.val(CondicionPago.CONTADO);
 	dias.val(Dias._30);
 	estado.val(EstadoDocumentoInicial.POR_APROBAR);
+	cotizacionSap.val(CADENA_VACIA);
+	tipoCambio.val(CADENA_VACIA);
+	nroPedido.val(CADENA_VACIA);
 	subTotalOC.val(CADENA_VACIA);
 	igvOC.val(CADENA_VACIA);
 	totalOC.val(CADENA_VACIA);
@@ -1688,7 +1728,15 @@ function limpiarOrdenCompra() {
 	formOrdenCompra.removeClass('was-validated');
 	formObservaciones.removeClass('was-validated');
 
-	campoBuscar.focus();
+	if (opcion.text() != Opcion.MODIFICAR) {
+		campoBuscar.val(CADENA_VACIA);
+		documentoProv.val(CADENA_VACIA);
+		nombreProv.val(CADENA_VACIA);
+		direccion.val(CADENA_VACIA);
+		campoBuscar.focus();
+	}else{
+		cotizacionSap.focus();
+	}
 }
 
 function mostrarModalGuiasPorOrdenCompra(event) {
@@ -1703,14 +1751,14 @@ function obtenerDetalleGuiaPorOrdenCompra(event) {
 	event.preventDefault();
 	event.stopPropagation();
 
-	if ($.fn.dataTable.isDataTable('#tableDetalleGuias')) {
+	if ($.fn.dataTable.isDataTable('#tableSeleccionDocumento')) {
 
 		dataTableDetalleGuias.clear();
 		dataTableDetalleGuias.ajax.reload(null, true);
 
 	} else {
 
-		dataTableDetalleGuias = tableDetalleGuias.DataTable({
+		dataTableDetalleGuias = tableSeleccionDocumento.DataTable({
 
 			"ajax": {
 				data: function(d) {
@@ -1737,10 +1785,10 @@ function obtenerDetalleGuiaPorOrdenCompra(event) {
 					"width": "20px",
 					"targets": [0],
 					"data": "numeroDocumento",
-					"orderable": false,
+					"orderable": false/*,
 					"render": function(data, type, row) {
 						return '<a href="#" class="link-ver-guia">' + data + '</a>';
-					}
+					}*/
 				},
 				{
 					"width": "20px",
@@ -1814,13 +1862,19 @@ function obtenerDetalleGuiaPorOrdenCompra(event) {
 				"url": "/appkahaxi/language/Spanish.json"
 			}
 		});
-
-		$('#tableDetalleGuias tbody').on('click', '.link-ver-guia', function() {
+		/*
+		$('#tableSeleccionDocumento tbody').on('click', '.link-ver-guia', function() {
 
 			var data = dataTableDetalleGuias.row($(this).closest('tr')).data();
 			cargarGuiaRemisionAsociada(data.numeroDocumento);
 		});
-
+		*/
+		$('#tableSeleccionDocumento tbody').on('click', 'tr', function () {
+			var nTds = $('td', this);
+			var numeroDocumento = $(nTds[0]).text();
+			
+			cargarGuiaRemisionAsociada(numeroDocumento);			
+		});
 	}
 }
 

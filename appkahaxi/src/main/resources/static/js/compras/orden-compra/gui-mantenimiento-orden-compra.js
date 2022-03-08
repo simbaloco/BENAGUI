@@ -290,7 +290,9 @@ function inicializarTabla(){
                 "orderable": false,
                 "render":
                     function (data, type, row ) {		
-						(data.codigoEstado == EstadoDocumentoInicial.POR_APROBAR) ? habilita = "<button title='Modificar Orden' class='btn-edit btn btn-primary btn-xs'><span><i class=\"fas fa-edit\"></i></span>" : habilita = "<button title='Ver Orden' class='btn-view btn btn-primary btn-xs'><span><i class=\"fas fa-eye\"></i></span>";
+						(data.codigoEstado == EstadoDocumentoInicial.POR_APROBAR) ? 
+							habilita = "<button title='Modificar Orden' class='btn-edit btn btn-primary btn-xs'><span><i class=\"fas fa-edit\"></i></span>" : 
+							habilita = "<button title='Ver Orden' class='btn-view btn btn-primary btn-xs'><span><i class=\"fas fa-eye\"></i></span>";
 						
                     	return  "<div>" +
                         			"<button title='Descargar Orden' class='btn-download btn btn-info btn-xs'>" +
