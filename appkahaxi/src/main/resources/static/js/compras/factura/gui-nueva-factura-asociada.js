@@ -25,6 +25,8 @@ var OCReferencia;
 var documentoProv;
 var nombreProv;
 var direccion;
+var direccionDespacho;
+var personaContacto;
 var fecConta;
 var fecDocumento;
 var tipoMoneda;
@@ -76,7 +78,7 @@ function inicializarVariables() {
 	nroDocReferencia = $("#nroDocReferencia");
 	numeroDocumento = $('#numeroDocumento');
 	origenMnto = $('#origenMnto');
-	opcion = $("#opcion");	
+	opcion = $("#opcion");
 	datoBuscar =  $("#datoBuscar");
 	nroComprobantePago =  $("#nroComprobantePago");
 	nroGuiaRemision =  $("#nroGuiaRemision");
@@ -94,6 +96,8 @@ function inicializarVariables() {
 	documentoProv = $("#documentoProv");
 	nombreProv = $("#nombreProv");
 	direccion = $("#direccion");
+	direccionDespacho = $("#direccionDespacho");
+	personaContacto = $("#personaContacto");
 	fecConta = $("#fecConta");
 	fecDocumento = $("#fecDocumento");
 	tipoMoneda = $("#tipoMoneda");
@@ -312,6 +316,8 @@ function cargarPantallaHTMLFacturaConDatosGuiaRemisionAsociadas(data) {
 	documentoProv.val(data.nroDocProv);
 	nombreProv.val(data.nombreProv);
 	direccion.val(data.direccionFiscal);
+	direccionDespacho.val(data.direccionDespacho);
+	personaContacto.val(data.personaContacto);
 	tipoMoneda.val(data.codigoTipoMoneda);
 	condPago.val(data.codigoCondPago);
 	dias.val(data.codigoDias);
@@ -490,6 +496,8 @@ function verPantallaFactura(data) {
 		codigo.html(numeroDocumento.text());
 	}*/
 	
+	deshabilitarControl(direccionDespacho);
+	deshabilitarControl(personaContacto);
 	fecConta.datetimepicker('date', moment(data.fechaContabilizacion));
 	fecDocumento.datetimepicker('date', moment(data.fechaDocumento));
 	fecVencimiento.datetimepicker('date', moment(data.fechaEntrega));
@@ -625,17 +633,21 @@ function agregarHTMLColumnasDataTable(data) {
 				"id='precio_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
 				"</span></div>");
 				break;
-
+			
+			// PRECIO C/IGV
+			case 8: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+				"<input class='form-control alineacion-derecha' type='text' id='precioIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
+				"</span></div>");
+				break;
+			
 			// SUBTOTAL
-			case 8:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+			case 9:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
 				"<input class='form-control alineacion-derecha' type='text' id='subTotal_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
 				"</span></div>");
 				break;
 				
-			// SUBTOTAL C/IGV	
-			case 9:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
-				"<input class='form-control alineacion-derecha' type='text' id='subTotalIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
-				"</span></div>");
+			// SUBTOTAL C/IGV	 (OCULTO)
+			case 10:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha' type='text' id='subTotalIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
 				break;
 
 		}
@@ -819,7 +831,9 @@ function registrarFacturaCompra(){
 	var ordenCompra  			= OCReferencia.val();
 	var serieVal 				= serie.val();
 	var correlativoVal 			= correlativo.val();
-	var codigoProvVal  		= codigoProv.val().trim();
+	var codigoProvVal  			= codigoProv.val().trim();
+	var dirDespachoVal 			= direccionDespacho.val().trim();
+	var perContactoVal 			= personaContacto.val().trim();	
 	var fecContaVal 			= fecConta.datetimepicker('date').format('YYYY-MM-DD');
 	var fecDocumentoVal 		= fecDocumento.datetimepicker('date').format('YYYY-MM-DD');
 	var fecVencimientoVal 		= fecVencimiento.datetimepicker('date').format('YYYY-MM-DD');
@@ -847,6 +861,8 @@ function registrarFacturaCompra(){
 		serie:					serieVal,
 		correlativo:			correlativoVal,
 		codigoProv:  			codigoProvVal,
+		direccionDespacho: 		dirDespachoVal,
+		personaContacto: 		perContactoVal,
 		fechaContabilizacion:   fecContaVal,
 		fechaDocumento:      	fecDocumentoVal,
 		fechaVencimiento:       fecVencimientoVal,
@@ -893,6 +909,8 @@ function registrarFacturaCompra(){
 
 					deshabilitarControl(serie);
 					deshabilitarControl(correlativo);
+					deshabilitarControl(direccionDespacho);
+					deshabilitarControl(personaContacto);
 					deshabilitarControl(estadoPago);
 					deshabilitarControl(tipoMoneda);
 					deshabilitarControl(condPago);
@@ -996,7 +1014,8 @@ function tableToJSON(dataTable) {
 			if($($headers[cellIndex]).attr('id') == 'codArticulo' && $(this).find("input").val() == CADENA_VACIA){
 				return false;
 			}else{
-				if($($headers[cellIndex]).attr('id') == 'precioUnitario' || $($headers[cellIndex]).attr('id') == 'subTotalIgv' || $($headers[cellIndex]).attr('id') == 'subTotal'){
+				if($($headers[cellIndex]).attr('id') == 'precioUnitario' || $($headers[cellIndex]).attr('id') == 'precioUnitarioIgv' || 
+				   $($headers[cellIndex]).attr('id') == 'subTotalIgv' || $($headers[cellIndex]).attr('id') == 'subTotal'){
 					data[index][$($headers[cellIndex]).attr('id')] = convertirMonedaANumero($(this).find("input").val());
 				}else{
 					
@@ -1223,8 +1242,10 @@ function limpiarFactura() {
 	serie.val(CADENA_VACIA);
 	correlativo.val(CADENA_VACIA);
 	observaciones.val(CADENA_VACIA);
+	direccionDespacho.val(CADENA_VACIA);
+	personaContacto.val(CADENA_VACIA);
 	estadoPago.prop("selectedIndex", 0);
-	serie.focus();
+	direccionDespacho.focus();
 	formObservaciones.removeClass('was-validated');
 }
 

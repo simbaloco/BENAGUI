@@ -50,6 +50,8 @@ public class FacturaServiceImpl implements FacturaService {
         params.put(Constante.PARAM_SP_CORRELATIVO, comprobantePagoCabModel.getCorrelativo());
         params.put(Constante.PARAM_SP_COD_PROV, comprobantePagoCabModel.getCodigoProv());
         params.put(Constante.PARAM_SP_USUARIO, usuario);
+        params.put(Constante.PARAM_SP_DIR_DESPACHO, comprobantePagoCabModel.getDireccionDespacho());
+		params.put(Constante.PARAM_SP_PER_CONTACTO, comprobantePagoCabModel.getPersonaContacto());
         params.put(Constante.PARAM_SP_NRO_ORDEN_COMPRA, comprobantePagoCabModel.getOrdenCompra());
         params.put(Constante.PARAM_SP_FEC_CONTABILIZACION, comprobantePagoCabModel.getFechaContabilizacion());
         params.put(Constante.PARAM_SP_FEC_DOCUMENTO, comprobantePagoCabModel.getFechaDocumento());

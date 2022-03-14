@@ -17,6 +17,8 @@
         <result property="nroDocProv"	 			column="NRO_DOC_PROV" />
         <result property="nombreProv"	 			column="NOMBRE_PROV" />
         <result property="direccionFiscal" 			column="DIRECCION_FISCAL" />
+        <result property="direccionDespacho" 		column="DIRECCION_DESPACHO" />
+        <result property="personaContacto" 			column="PERSONA_CONTACTO" />
         <result property="fechaContabilizacion" 	column="FEC_CONTABILIZACION" />
         <result property="fechaDocumento" 		    column="FEC_DOCUMENTO" />
         <result property="fechaEntrega" 		    column="FEC_ENTREGA" />
@@ -50,6 +52,7 @@
         <result property="cantidad" 			column="CANTIDAD" />
         <result property="cantidadPendiente" 	column="CANTIDAD_PENDIENTE" />
         <result property="precioUnitario"		column="PRECIO_UNITARIO" />
+        <result property="precioUnitarioIgv"	column="PRECIO_UNITARIO_IGV" />
         <result property="subTotal" 			column="SUB_TOTAL" />
         <result property="subTotalIgv"		    column="SUB_TOTAL_IGV" />
     </resultMap>
@@ -95,6 +98,8 @@
         <parameter property="CORRELATIVO"       	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="COD_PROV"		       	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="USUARIO"				jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="DIRECCION_DESPACHO"   	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="PERSONA_CONTACTO"   	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="NRO_ORDEN_COMPRA"		jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FEC_CONTABILIZACION"   jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FEC_DOCUMENTO"         jdbcType="VARCHAR"  mode="IN"/>

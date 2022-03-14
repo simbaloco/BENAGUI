@@ -74,6 +74,8 @@ public class GuiaRemisionCompraServiceImpl implements GuiaRemisionCompraService 
         params.put(Constante.PARAM_SP_CORRELATIVO, guiaRemisionCabModel.getCorrelativo());
         params.put(Constante.PARAM_SP_COD_PROV, guiaRemisionCabModel.getCodigoProv());
         params.put(Constante.PARAM_SP_USUARIO, usuario);
+        params.put(Constante.PARAM_SP_DIR_DESPACHO, guiaRemisionCabModel.getDireccionDespacho());
+		params.put(Constante.PARAM_SP_PER_CONTACTO, guiaRemisionCabModel.getPersonaContacto());
         params.put(Constante.PARAM_SP_NRO_ORDEN_COMPRA, guiaRemisionCabModel.getOrdenCompra());
         params.put(Constante.PARAM_SP_FEC_CONTABILIZACION, guiaRemisionCabModel.getFechaContabilizacion());
         params.put(Constante.PARAM_SP_FEC_DOCUMENTO, guiaRemisionCabModel.getFechaDocumento());

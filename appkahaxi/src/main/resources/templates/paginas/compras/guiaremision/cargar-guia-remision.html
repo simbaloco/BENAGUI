@@ -248,14 +248,30 @@
 									<input class="form-control" maxlength="20" size="15" type="text" id="documentoProv" readonly="readonly" tabindex="-1" />
 								</div>
 
-								<div class="col-md-4">
+								<div class="col-md-2">
 									<label class="label" for="nombreProv">Nombre/Raz&oacute;n Social:</label>
 									<input class="form-control" maxlength="250" size="50" type="text" id="nombreProv" readonly="readonly" tabindex="-1"/>
 								</div>
 
-								<div class="col-md-4">
+								<div class="col-md-2">
 									<label class="label" for="direccion">Direcci&oacute;n:</label>
 									<input class="form-control" maxlength="250" size="50" type="text" id="direccion" readonly="readonly" tabindex="-1"/>
+								</div>
+								
+								<div class="col-md-2">
+									<label class="label" for="direccionDespacho">Direcci&oacute;n Despacho:</label>
+									<input class="marquee form-control" maxlength="250" size="50" type="text" id="direccionDespacho" required="required"/>
+									<div class="invalid-feedback">
+										Debe ingresar la dirección de despacho
+									</div>
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="personaContacto">Persona Contacto:</label>
+									<input class="marquee form-control" maxlength="250" size="50" type="text" id="personaContacto" required="required"/>
+									<div class="invalid-feedback">
+										Debe ingresar la persona de contacto
+									</div>
 								</div>
 
 							</div>
@@ -435,8 +451,9 @@
 												<th id="cantidad" width="7%" >Cantidad</th>
 												<th id="cantidadPendiente" width="7%" >Cantidad Pendiente</th>
 												<th id="precioUnitario" width="12%" >PU</th>
+												<th id="precioUnitarioIgv" width="10%">PU c/IGV</th>
 												<th id="subTotal" width="10%">SubTotal</th>
-												<th id="subTotalIgv" width="10%">SubTotal c/IGV</th>
+												<th id="subTotalIgv" style="display: none"></th>
 												<th id="lineaReferencia" class="d-none">Linea Referencia</th>
 												<th class="eliminar" width="4%">Eliminar</th>
 											</tr>

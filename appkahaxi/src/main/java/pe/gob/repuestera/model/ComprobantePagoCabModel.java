@@ -19,6 +19,8 @@ public class ComprobantePagoCabModel {
 	private String username;
     private String ordenCompra;
 	// columnas
+    private String direccionDespacho;
+	private String personaContacto;	
 	private String fechaContabilizacion;
     private String fechaDocumento;
     private String fechaVencimiento;

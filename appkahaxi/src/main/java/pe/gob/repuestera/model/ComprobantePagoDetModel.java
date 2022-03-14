@@ -21,6 +21,7 @@ public class ComprobantePagoDetModel {
     private Integer lineaReferencia;
 	private Integer cantidad;
     private BigDecimal precioUnitario;
+    private BigDecimal precioUnitarioIgv;
     private BigDecimal subTotal;
     private BigDecimal subTotalIgv;
     private Integer activo;
