@@ -46,6 +46,8 @@ public class OrdenCompraServiceImpl implements OrdenCompraService {
 		Map<String, Object> params = new HashMap();
 		params.put(Constante.PARAM_SP_COD_PROV, compraCabModel.getCodigoProv());
 		params.put(Constante.PARAM_SP_USUARIO, usuario);
+		params.put(Constante.PARAM_SP_DIR_DESPACHO, compraCabModel.getDireccionDespacho());
+		params.put(Constante.PARAM_SP_PER_CONTACTO, compraCabModel.getPersonaContacto());
 		params.put(Constante.PARAM_SP_FEC_CONTABILIZACION, compraCabModel.getFechaContabilizacion());
 		params.put(Constante.PARAM_SP_FEC_VALIDO_HASTA, compraCabModel.getFechaValidoHasta());
 		params.put(Constante.PARAM_SP_FEC_ENTREGA, compraCabModel.getFechaEntrega());
@@ -233,6 +235,8 @@ public class OrdenCompraServiceImpl implements OrdenCompraService {
 		Map<String, Object> params = new HashMap();
 		params.put(Constante.PARAM_SP_NRO_DOCUMENTO, compraCabModel.getNumeroDocumento());
 		params.put(Constante.PARAM_SP_USUARIO, usuario);
+		params.put(Constante.PARAM_SP_DIR_DESPACHO, compraCabModel.getDireccionDespacho());
+		params.put(Constante.PARAM_SP_PER_CONTACTO, compraCabModel.getPersonaContacto());
 		params.put(Constante.PARAM_SP_COD_ESTADO, compraCabModel.getCodigoEstado());
 		params.put(Constante.PARAM_SP_OBSERVACIONES, compraCabModel.getObservaciones());
 		params.put(Constante.PARAM_SP_NRO_PEDIDO, compraCabModel.getNroPedido());

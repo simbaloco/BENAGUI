@@ -57,8 +57,8 @@ var cantidadDetalleDuplicado;
 
 var guiasPorOrdenCompraModal;
 var modalCodigoOrdenCompra;
-var tableDetalleGuias;
-var dataTableDetalleGuias;
+var tableSeleccionDocumento;
+var datatableSeleccionDocumento;
 var btnAceptarModal;
 
 var btnIrFactura;
@@ -135,7 +135,7 @@ function inicializarVariables() {
 
 	guiasPorOrdenCompraModal = $("#guiasPorOrdenCompraModal");
 	modalCodigoOrdenCompra = $("#modalCodigoOrdenCompra");
-	tableDetalleGuias = $("#tableDetalleGuias");
+	tableSeleccionDocumento = $("#tableSeleccionDocumento");
 	btnAceptarModal = $("#btnAceptarModal");
 
 	btnIrFactura = $("#btnIrFactura");
@@ -527,6 +527,8 @@ function verPantallaGuiaRemision(data) {
 	}
 	
 	ocultarControl(btnGrabar);
+	btnAnular.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
+	
 	ocultarControl(btnLimpiar);
 
 	deshabilitarDetalleGuiaRemision();
@@ -905,14 +907,14 @@ function registrarGuiaRemisionCompra(){
 				deshabilitarDetalleGuiaRemision();
 
 			} else if(xhr.status == HttpStatus.Accepted){
-
+				console.log("aaaa")
 				mostrarMensajeValidacion(resultado);
 			}
 
 			loadding(false);
 		},
 		error: function (xhr, error, code){
-
+			console.log("bbbbb")
 			mostrarMensajeError(xhr.responseText);
 			loadding(false);
 		}
@@ -1141,14 +1143,14 @@ function obtenerDetalleGuiaPorOrdenCompra(event){
 	event.preventDefault();
 	event.stopPropagation();
 
-	if ( $.fn.dataTable.isDataTable('#tableDetalleGuias')) {
+	if ( $.fn.dataTable.isDataTable('#tableSeleccionDocumento')) {
 
-		dataTableDetalleGuias.clear();
-		dataTableDetalleGuias.ajax.reload(null, true);
+		datatableSeleccionDocumento.clear();
+		datatableSeleccionDocumento.ajax.reload(null, true);
 
 	} else {
 
-		dataTableDetalleGuias = tableDetalleGuias.DataTable({
+		datatableSeleccionDocumento = tableSeleccionDocumento.DataTable({
 
 			"ajax": {
 				data: function ( d ) {
@@ -1172,20 +1174,31 @@ function obtenerDetalleGuiaPorOrdenCompra(event){
 			"autoWidth"		: false,
 			"columnDefs"    : [
 				{
-					"width": "30px",
+					"width": "10px",
 					"targets": [0],
+					"data": "activo",
+					"className": "dt-body-center text-center",
+					"orderable": false,
+					
+					"render": function(data, type, row) {
+						return '<input type="checkbox" class="chk_guia_remision">';
+					}
+				},
+				{
+					"width": "30px",
+					"targets": [1],
 					"data": "numeroDocumento",
 					"orderable": false
 				},
 				{
 					"width": "30px",
-					"targets": [1],
+					"targets": [2],
 					"data": "serieCorrelativo",
 					"orderable": false
 				},
 				{
 					"width": "20px",
-					"targets": [2],
+					"targets": [3],
 					"data": "subTotal",
 					"orderable": false,
 					"render":
@@ -1195,7 +1208,7 @@ function obtenerDetalleGuiaPorOrdenCompra(event){
 				},
 				{
 					"width": "20px",
-					"targets": [3],
+					"targets": [4],
 					"data": "igv",
 					"orderable": false,
 					"render":
@@ -1205,48 +1218,54 @@ function obtenerDetalleGuiaPorOrdenCompra(event){
 				},
 				{
 					"width": "20px",
-					"targets": [4],
+					"targets": [5],
 					"data": "total",
 					"orderable": false,
 					"render":
 						function (data, type, row ) {
 							return  convertirNumeroAMoneda(data);
 						}
-				},
-				{
-					"width": "10px",
-					"targets": [5],
-					"data": "activo",
-					"className": "dt-body-left",
-					"orderable": false,
-					"render": function(data, type, row) {
-						return '<input type="checkbox" class="chk_guia_remision">';
-					},
-					"className": "dt-body-center text-center"
 				}
 			],
 			"fnRowCallback":
 				function(row, data, iDisplayIndex, iDisplayIndexFull){
 
 					if(data.codigoTipoMoneda == Moneda.SOLES){
-						$('td:eq(2)', row).addClass('dt-body-right listado-symbol-sol');
 						$('td:eq(3)', row).addClass('dt-body-right listado-symbol-sol');
 						$('td:eq(4)', row).addClass('dt-body-right listado-symbol-sol');
+						$('td:eq(5)', row).addClass('dt-body-right listado-symbol-sol');
 					}else{
-						$('td:eq(2)', row).addClass('dt-body-right listado-symbol-dolar');
 						$('td:eq(3)', row).addClass('dt-body-right listado-symbol-dolar');
 						$('td:eq(4)', row).addClass('dt-body-right listado-symbol-dolar');
+						$('td:eq(5)', row).addClass('dt-body-right listado-symbol-dolar');
 					}
 
 					// modificando el tamaño de los caracteres del listado
 					return row;
 
 				},
+			/*
+			"select": {
+	            "style":    "os",
+	            "selector": "td"
+	        },
+			"initComplete": 
+				function() {
+			        this.api().rows().select();
+			    },
+			*/
 			"language"  : {
 				"url": "/appkahaxi/language/Spanish.json"
 			}
 		});
-
+		/*
+		$('#tableSeleccionDocumento tbody').on('click', 'tr', function () {
+			var nTds = $('td', this);
+			var numeroDocumento = $(nTds[0]).text();
+			
+			cargarGuiaRemisionAsociada(numeroDocumento);			
+		});
+		*/
 	}
 }
 
@@ -1389,9 +1408,9 @@ function generarFacturaAsociada() {
 	var data = [];
 	var indice = 0;
 
-	var cabeceras = tableDetalleGuias.find("th").not(':last');
+	var cabeceras = tableSeleccionDocumento.find("th").not(':last');
 
-	tableDetalleGuias.find("tbody tr").each(function(index) {
+	tableSeleccionDocumento.find("tbody tr").each(function(index) {
 
 		var esSeleccionado = $(this).find("input").is(':checked');
 

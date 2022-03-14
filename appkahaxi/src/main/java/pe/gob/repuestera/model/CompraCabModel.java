@@ -15,6 +15,8 @@ public class CompraCabModel {
 	private String codigoProv;
 	private String username;
 	// columnas
+	private String direccionDespacho;
+	private String personaContacto;	
 	private String fechaContabilizacion;
     private String fechaValidoHasta;
     private String codigoTipoMoneda;

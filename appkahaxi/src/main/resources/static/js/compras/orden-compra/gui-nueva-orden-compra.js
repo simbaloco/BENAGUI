@@ -25,6 +25,8 @@ var campoBuscar;
 var documentoProv;
 var nombreProv;
 var direccion;
+var direccionDespacho;
+var personaContacto;
 var fecConta;
 var fecHasta;
 var tipoMoneda;
@@ -104,6 +106,8 @@ function inicializarVariables() {
 	documentoProv = $("#documentoProv");
 	nombreProv = $("#nombreProv");
 	direccion = $("#direccion");
+	direccionDespacho = $("#direccionDespacho");
+	personaContacto = $("#personaContacto");
 	fecConta = $("#fecConta");
 	fecHasta = $("#fecHasta");
 	tipoMoneda = $("#tipoMoneda");
@@ -258,6 +262,8 @@ function habilitarAutocompletarBuscarCampos() {
 			if (indiceFilaDataTableDetalle == -1) {
 				agregarFilaEnTablaDetalle();
 			}
+			
+			$('#direccionDespacho').focus();
 		}
 	});
 }
@@ -317,13 +323,14 @@ function inicializarEventos() {
 	});
 
 	tipoMoneda.on('change', function() {
+		/*
 		if (tipoMoneda.val() == Moneda.SOLES){
 			controlNoRequerido(tipoCambio);
 		}
 		else{
 			controlRequerido(tipoCambio);
 		}
-		
+		*/
 		calcularPorTipoMoneda();
 	});
 
@@ -445,11 +452,14 @@ function cargarPantallaHTML(data) {
 	documentoProv.val(data.nroDocProv);
 	nombreProv.val(data.nombreProv);
 	direccion.val(data.direccionFiscal);
+	
+	direccionDespacho.val(data.direccionDespacho);
+	personaContacto.val(data.personaContacto);	
+	
 	tipoMoneda.val(data.codigoTipoMoneda);
 	condPago.val(data.codigoCondPago);
 	dias.val(data.codigoDias);
 	estado.val(data.codigoEstado);
-	console.log("data.flagEnvio:"+ data.flagEnvio);
 	email.val(data.email);
 	flagEnvio.val(data.flagEnvio);
 	
@@ -486,7 +496,11 @@ function cargarPantallaHTML(data) {
 		$('#cantidad_' + i).val(detalle.cantidad);
 		$('#cantidadPend_' + i).val(detalle.cantidadPendiente);
 
-		$('#precio_' + i).val(convertirNumeroAMoneda(detalle.precioUnitario));
+		var precio = convertirNumeroAMoneda(detalle.precioUnitario);
+		var precioIgv = convertirNumeroAMoneda(detalle.precioUnitarioIgv);
+		$('#precio_' + i).val(precio);
+		$('#precioIgv_' + i).val(precioIgv);
+				
 		$('#subTotalIgv_' + i).val(convertirNumeroAMoneda(detalle.subTotalIgv));
 		$('#subTotal_' + i).val(convertirNumeroAMoneda(detalle.subTotal));
 	}
@@ -507,6 +521,8 @@ function verPantallaOrdenCompra(data) {
 
 	if (opcion.text() == Opcion.VER) {
 		titulo.text("VER");
+		deshabilitarControl(direccionDespacho);
+		deshabilitarControl(personaContacto);
 		deshabilitarControl(dateTimePickerInput);
 		deshabilitarControl(tipoMoneda);
 		deshabilitarControl(condPago);
@@ -521,6 +537,7 @@ function verPantallaOrdenCompra(data) {
 		deshabilitarControl(observaciones);
 		
 		ocultarControl(btnGrabar);
+		ocultarControl(btnLimpiar);
 		btnDuplicar.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
 		
 		ocultarControl(btnAgregarArticulo);
@@ -582,7 +599,9 @@ function verPantallaOrdenCompra(data) {
 		
 		if (data.codigoEstado == EstadoDocumentoInicial.POR_APROBAR) {
 			
-			fecConta.datetimepicker('maxDate', moment());
+			fecConta.datetimepicker('maxDate', moment());			
+			habilitarControl(direccionDespacho);
+			habilitarControl(personaContacto);			
 			habilitarControl(dateTimePickerInput);
 			habilitarControl(tipoMoneda);
 			habilitarControl(condPago);
@@ -602,6 +621,8 @@ function verPantallaOrdenCompra(data) {
 			habilitarDetalleOrdenCompra();
 		} else {
 			// estado APROBADO O RECHAZADO
+			deshabilitarControl(direccionDespacho);
+			deshabilitarControl(personaContacto);			
 			deshabilitarControl(dateTimePickerInput);
 			deshabilitarControl(tipoMoneda);
 			deshabilitarControl(condPago);
@@ -698,7 +719,9 @@ function duplicarPantallaOrdenCompra(nroDocRef) {
 	estado.val(EstadoDocumentoInicial.POR_APROBAR);
 
 	//observaciones.val(CADENA_VACIA);
-	controlNoRequerido(observaciones);
+	controlNoRequerido(observaciones);	
+	habilitarControl(direccionDespacho);
+	habilitarControl(personaContacto);	
 	habilitarControl(dateTimePickerInput);
 	habilitarControl(tipoMoneda);
 	habilitarControl(condPago);
@@ -861,17 +884,22 @@ function agregarHTMLColumnasDataTable() {
 				"id='precio_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
 				"</span></div>");
 				break;
-
-			// SUBTOTAL
+			
+			// PRECIO C/IGV
 			case 8: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+				"<input class='form-control alineacion-derecha' type='text' id='precioIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
+				"</span></div>");
+				break;
+				
+			// SUBTOTAL
+			case 9: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
 				"<input class='form-control alineacion-derecha' type='text' id='subTotal_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
 				"</span></div>");
 				break;
-
-			// SUBTOTAL C/IGV
-			case 9: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
-				"<input class='form-control alineacion-derecha' type='text' id='subTotalIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
-				"</span></div>");
+			
+			// SUBTOTAL C/IGV (OCULTO)
+			case 10: $(this).html(CADENA_VACIA).append("<input class='form-control' type='text' id='subTotalIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
+			
 
 		}
 	});
@@ -970,6 +998,10 @@ function buscarArticuloKeyUp(e, control, fila) {
 
 				$('#precio_' + fila).val(convertirNumeroAMoneda(precio));
 				$('#precio_' + fila).prop('min', precio);
+				
+				var precioIgv = precio + (precio * (ParametrosGenerales.IGV / 100));
+				$('#precioIgv_' + fila).val(convertirNumeroAMoneda(precioIgv));
+				
 				$('#cantidad_' + fila).focus();
 
 				var key = window.Event ? event.which : event.keyCode;
@@ -1015,7 +1047,9 @@ function precioKeyUp(control, fila) {
 
 	var subTotal = cantidad * precio;
 	var subTotalIgv = subTotal + (subTotal * (ParametrosGenerales.IGV / 100));
+	var precioIgv = precio + (precio * (ParametrosGenerales.IGV / 100));
 
+	$('#precioIgv_' + fila).val(convertirNumeroAMoneda(precioIgv));
 	$('#subTotal_' + fila).val(convertirNumeroAMoneda(subTotal));
 	$('#subTotalIgv_' + fila).val(convertirNumeroAMoneda(subTotalIgv));
 
@@ -1051,10 +1085,23 @@ function calcularPorTipoMoneda() {
 
 	if (tipoMonedaVal == Moneda.SOLES) {
 		$('.simbolo-moneda').removeClass("input-symbol-dolar").addClass("input-symbol-sol");
-		//convertirMontosASoles();
+		if(tipoCambio.val().trim() == CADENA_VACIA){
+			// sin valor en tc
+			convertirMontosASoles(false);	
+		}else{
+			// con valor en tc
+			convertirMontosASoles(true);
+		}
+		
 	} else {
 		$('.simbolo-moneda').removeClass("input-symbol-sol").addClass("input-symbol-dolar");
-		//convertirMontosADolares();
+		if(tipoCambio.val().trim() == CADENA_VACIA){
+			// sin valor en tc
+			convertirMontosADolares(false);	
+		}else{
+			// con valor en tc
+			convertirMontosADolares(true);
+		}
 	}
 }
 
@@ -1256,7 +1303,9 @@ function validarDetalleOrden() {
 function registrarOrdenCompra() {
 
 	var nroDocumento = codigo.html();
-	var codigoProvVal = codigoProveedor.val().trim();
+	var codigoProvVal = codigoProveedor.val().trim();	
+	var dirDespachoVal = direccionDespacho.val().trim();
+	var perContactoVal = personaContacto.val().trim();	
 	var fecContaVal = fecConta.datetimepicker('date').format('YYYY-MM-DD');
 	var fecHastaVal = fecHasta.datetimepicker('date').format('YYYY-MM-DD');
 	var fecEntregaVal = fecEntrega.datetimepicker('date').format('YYYY-MM-DD');
@@ -1281,6 +1330,8 @@ function registrarOrdenCompra() {
 
 		numeroDocumento: nroDocumento,
 		codigoProv: codigoProvVal,
+		direccionDespacho: dirDespachoVal,
+		personaContacto: perContactoVal,
 		fechaContabilizacion: fecContaVal,
 		fechaValidoHasta: fecHastaVal,
 		fechaEntrega: fecEntregaVal,
@@ -1323,7 +1374,7 @@ function registrarOrdenCompra() {
 				mostrarNotificacion("El registro fue grabado correctamente.", "success");
 
 				// despues de grabar, mostramos los botones de "Generar GR", "Nuevo", "Duplicar" y "Volver" (si fuera el caso)
-				mostrarControl(btnNuevo);
+				//mostrarControl(btnNuevo);
 				ocultarControl(btnGenerarGuiaRemision);
 				ocultarControl(btnLimpiar);
 				ocultarControl(btnGrabar);
@@ -1335,6 +1386,8 @@ function registrarOrdenCompra() {
 				ocultarControl(btnAgregarArticulo);
 				ocultarControl(btnEliminarTodosArticulos);
 				mostrarControl(btnPdf);
+				deshabilitarControl(direccionDespacho);
+				deshabilitarControl(personaContacto);
 				deshabilitarControl(campoBuscar);
 				deshabilitarControl(dateTimePickerInput);
 				deshabilitarControl(tipoMoneda);
@@ -1372,6 +1425,8 @@ function actualizarOrdenCompra() {
 	}
 	*/	
 	var nroDocumento = codigo.html();
+	var dirDespachoVal = direccionDespacho.val().trim();
+	var perContactoVal = personaContacto.val().trim();	
 	var estadoVal = estado.val();
 	var observacionesVal = observaciones.val().trim();
 	var numeroPedido = nroPedido.val().trim();	
@@ -1394,6 +1449,8 @@ function actualizarOrdenCompra() {
 
 	var objetoJson = {
 		numeroDocumento: nroDocumento,
+		direccionDespacho: dirDespachoVal,
+		personaContacto: perContactoVal,
 		codigoEstado: estadoVal,
 		observaciones: observacionesVal,
 		nroPedido: numeroPedido,
@@ -1434,6 +1491,8 @@ function actualizarOrdenCompra() {
 				mostrarNotificacion("El registro fué actualizado correctamente.", "success");
 
 				if (estado.val() == EstadoDocumentoInicial.APROBADO) {
+					deshabilitarControl(direccionDespacho);
+					deshabilitarControl(personaContacto);					
 					deshabilitarControl(estado);
 					deshabilitarControl(tipoCambio);
 					deshabilitarControl(nroPedido);
@@ -1510,7 +1569,8 @@ function tableToJSON(dataTable) {
 			if ($($headers[cellIndex]).attr('id') == 'codArticulo' && $(this).find("input").val() == CADENA_VACIA) {
 				return false;
 			} else {
-				if ($($headers[cellIndex]).attr('id') == 'precioUnitario' || $($headers[cellIndex]).attr('id') == 'subTotalIgv' || $($headers[cellIndex]).attr('id') == 'subTotal') {
+				if ($($headers[cellIndex]).attr('id') == 'precioUnitario' || $($headers[cellIndex]).attr('id') == 'precioUnitarioIgv' || 
+				    $($headers[cellIndex]).attr('id') == 'subTotalIgv' || $($headers[cellIndex]).attr('id') == 'subTotal') {
 					data[index][$($headers[cellIndex]).attr('id')] = convertirMonedaANumero($(this).find("input").val());
 				} else {
 					if ($($headers[cellIndex]).attr('id') != 'buscarArticulo') {
@@ -1709,7 +1769,9 @@ function limpiarOrdenCompra() {
 	tipoMoneda.val(Moneda.DOLARES);
 	condPago.val(CondicionPago.CONTADO);
 	dias.val(Dias._30);
-	estado.val(EstadoDocumentoInicial.POR_APROBAR);
+	estado.val(EstadoDocumentoInicial.POR_APROBAR);	
+	direccionDespacho.val(CADENA_VACIA);
+	personaContacto.val(CADENA_VACIA);
 	cotizacionSap.val(CADENA_VACIA);
 	tipoCambio.val(CADENA_VACIA);
 	nroPedido.val(CADENA_VACIA);
@@ -1717,14 +1779,15 @@ function limpiarOrdenCompra() {
 	igvOC.val(CADENA_VACIA);
 	totalOC.val(CADENA_VACIA);
 	observaciones.val(CADENA_VACIA);
-
+	/*
 	dataTableDetalle.clear().draw();
 	indiceFilaDataTableDetalle = -1;
-
-	ocultarControl(divDias);
 	ocultarControl(btnAgregarArticulo);
 	ocultarControl(btnEliminarTodosArticulos);
 
+	*/
+	ocultarControl(divDias);
+	
 	formOrdenCompra.removeClass('was-validated');
 	formObservaciones.removeClass('was-validated');
 
@@ -1735,7 +1798,7 @@ function limpiarOrdenCompra() {
 		direccion.val(CADENA_VACIA);
 		campoBuscar.focus();
 	}else{
-		cotizacionSap.focus();
+		direccionDespacho.focus();
 	}
 }
 
@@ -1914,9 +1977,9 @@ function calcularResumenOrdenCompra() {
 	totalOC.val(convertirNumeroAMoneda(total));
 }
 
-function convertirMontosASoles() {
+function convertirMontosASoles(existeTc) {
 	console.log("convertirMontosASoles.....");
-	var tc = Number(tipoCambio.val());
+	var tc;
 	var nvoPrecio;
 	var nvoIgv;
 	var nvoSubTotal;
@@ -1924,6 +1987,12 @@ function convertirMontosASoles() {
 	var igv;
 	var total;
 
+	if(existeTc){
+		tc = Number(tipoCambio.val());
+	}else{
+		tc = 1;
+	}
+	
 	var $headers = tableDetalle.find("th").not(':first').not(':last');
 	tableDetalle.DataTable().rows().iterator('row', function(context, index) {
 
@@ -1956,7 +2025,7 @@ function convertirMontosASoles() {
 	totalOC.val(convertirNumeroAMoneda(total));
 }
 
-function convertirMontosADolares() {
+function convertirMontosADolares(existeTc) {
 	console.log("convertirMontosADolares.....");
 	var tc = Number(tipoCambio.val());
 	var nvoPrecio;
@@ -1966,6 +2035,12 @@ function convertirMontosADolares() {
 	var igv;
 	var total;
 
+	if(existeTc){
+		tc = Number(tipoCambio.val());
+	}else{
+		tc = 1;
+	}
+	
 	var $headers = tableDetalle.find("th").not(':first').not(':last');
 	tableDetalle.DataTable().rows().iterator('row', function(context, index) {
 

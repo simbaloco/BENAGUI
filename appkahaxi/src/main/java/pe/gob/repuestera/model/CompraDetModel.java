@@ -18,6 +18,7 @@ public class CompraDetModel {
 	private Integer cantidad;
     private Integer cantidadPendiente;
     private BigDecimal precioUnitario;
+    private BigDecimal precioUnitarioIgv;
     private BigDecimal subTotal;
     private BigDecimal subTotalIgv;
     private Integer activo;

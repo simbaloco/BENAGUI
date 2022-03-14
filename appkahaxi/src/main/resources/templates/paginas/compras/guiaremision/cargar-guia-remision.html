@@ -31,7 +31,16 @@
 	<label id="volverParam" th:text=${volver} hidden="hidden"></label>
 	<label id="desdeDocRefParam" th:text=${desdeDocRef} hidden="hidden"></label>
 	<label id="origenMnto" th:text=${origenMnto} hidden="hidden"></label>	
-
+	
+	
+	
+	<button type="button" id="btnGrabar" class="btn-flotante-grabar">
+		<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
+    </button>			
+	<button type="button" id="btnAnular" class="btn-flotante-duplicar" style="display: none">
+		<span class="mr-2"><i class="fas fa-trash"></i></span>Anular
+	</button>
+	
 	<div class="modal fade" id="guiasPorOrdenCompraModal" role="dialog" aria-labelledby="guiasPorOrdenCompraModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-personalizado-medium modal-sm" role="document" >
 			<div class="modal-content">
@@ -61,16 +70,16 @@
 
 										<div class="table-responsive">
 
-											<table id="tableDetalleGuias" class="table table-hover table-striped table-bordered dt-responsive">
+											<table id="tableSeleccionDocumento" class="table table-hover table-striped table-bordered dt-responsive">
 
 												<thead class="text-center">
 												<tr>
+													<th width="15%">Seleccionar</th>
 													<th id="codigoGuiaRemision" width="20%" style="text-align: left;">Nro. Guía de Remision</th>
 													<th id="serieCorrelativoGuiaRemision" width="20%" style="text-align: left;">Serie-Correlativo</th>
 													<th id="subTotalGuiaRemision" width="15%" style="text-align: right;">SubTotal</th>
 													<th id="igvGuiaRemision" width="15%" style="text-align: right;">IGV</th>
-													<th id="totalGuiaRemision" width="15%" style="text-align: right;">Total</th>
-													<th width="15%">Seleccionar</th>
+													<th id="totalGuiaRemision" width="15%" style="text-align: right;">Total</th>													
 												</tr>
 												</thead>
 
@@ -206,13 +215,17 @@
 						</div>
 						
 						<div class="col-md-6 alineacion-derecha">
-				     		<button type="button" id="btnGrabar" class="btn btn-primary">
-	                  			<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
-				            </button>
-				            
-			              	<button type="button" id="btnAnular" class="btn btn-primary" style="display: none">
-								<span class="mr-2"><i class="fas fa-trash"></i></span>Anular
+				     		<button type="button" id="btnIrFactura" class="btn btn-primary my-1" style="display: none">
+								<span class="mr-2"><i class="fas fa-coins"></i></span>Ir a la Factura
 							</button>
+						
+							<button type="button" id="btnGenerarFactura" class="btn btn-primary my-1" style="display: none">
+								<span class="mr-2"><i class="fas fa-coins"></i></span>Registrar Factura
+							</button>
+
+			 				<button type="button" id="btnVolver" class="btn btn-primary" style="display: none">
+	                  			<span class="mr-2"><i class="fas fa-backspace"></i></span>Volver
+				            </button>
 						</div>
 					</div>
 				</div>
@@ -369,21 +382,8 @@
 								<div class="col-md-4 alineacion-derecha">
 						 			<label class="label"></label>
 						 			<div>
-
-										<button type="button" id="btnIrFactura" class="btn btn-primary my-1" style="display: none">
-											<span class="mr-2"><i class="fas fa-coins"></i></span>Ir a la Factura
-										</button>
-									
-										<button type="button" id="btnGenerarFactura" class="btn btn-primary my-1" style="display: none">
-											<span class="mr-2"><i class="fas fa-coins"></i></span>Generar Factura
-										</button>
-
-						 				<button type="button" id="btnLimpiar" class="btn btn-primary">
+										<button type="button" id="btnLimpiar" class="btn btn-primary">
 				                  			<span class="mr-2"><i class="fas fa-eraser"></i></span>Limpiar
-							            </button>
-							            
-							            <button type="button" id="btnVolver" class="btn btn-primary" style="display: none">
-				                  			<span class="mr-2"><i class="fas fa-backspace"></i></span>Volver
 							            </button>
 							        </div>
 						 		</div>	

@@ -113,6 +113,8 @@ public class Constante {
 	public static final String PARAM_SP_FEC_DOCUMENTO	 		= "FEC_DOCUMENTO";
     public static final String PARAM_SP_USUARIO					= "USUARIO";
     public static final String PARAM_SP_DATO_BUSCAR				= "DATO_BUSCAR";
+    public static final String PARAM_SP_DIR_DESPACHO			= "DIRECCION_DESPACHO";
+    public static final String PARAM_SP_PER_CONTACTO			= "PERSONA_CONTACTO";
     public static final String PARAM_SP_FEC_CONTABILIZACION		= "FEC_CONTABILIZACION";
     public static final String PARAM_SP_FEC_VALIDO_HASTA		= "FEC_VALIDO_HASTA";
 	public static final String PARAM_SP_FEC_ENTREGA				= "FEC_ENTREGA";
