@@ -174,7 +174,9 @@ function inicializarPantalla() {
 }
 
 function construirFechasPicker() {
-	// se construyen del último al primero para que funcionen con el botón "limpiar"
+	/* se construyen del último al primero para que funcionen con el botón "limpiar" */
+	
+	// La fecha de Entrega  no puede ser menor que la fecha de contabilización
 	fecEntrega.datetimepicker({
 		locale: 'es',
 		format: 'L',
@@ -183,6 +185,7 @@ function construirFechasPicker() {
 		minDate:	moment()
 	});
 	
+	// La fecha Válido hasta no puede ser menor que la fecha de contabilización
 	fecHasta.datetimepicker({
 		locale: 'es',
 		format: 'L',
@@ -192,6 +195,7 @@ function construirFechasPicker() {
 		minDate:	moment()
 	});
 	
+	// La fecha de contabilización no puede ser mayor a la fecha actual	
 	fecConta.datetimepicker({
 		locale: 'es',
 		format: 'L',
@@ -208,7 +212,7 @@ function restringirSeleccionFechas() {
 
 		fecHasta.datetimepicker('maxDate', moment(e.date).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'));
 		fecHasta.datetimepicker('minDate', e.date);
-		fecHasta.datetimepicker('date', moment(e.date).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'));
+		//fecHasta.datetimepicker('date', moment(e.date).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'));
 
 		fecEntrega.datetimepicker('minDate', e.date);
 	});
@@ -1807,7 +1811,6 @@ function limpiarOrdenCompra() {
 	fecConta.datetimepicker('destroy');
 	fecHasta.datetimepicker('destroy');
 	fecEntrega.datetimepicker('destroy');	
-	
 	construirFechasPicker();
 		
 	ocultarControl(dias);

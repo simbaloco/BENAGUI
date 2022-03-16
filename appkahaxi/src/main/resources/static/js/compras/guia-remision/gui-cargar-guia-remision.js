@@ -177,15 +177,24 @@ function inicializarPantalla() {
 }
 
 function construirFechasPicker() {
-	// se construyen del último al primero para que funcionen con el botón "limpiar"
+	/* se construyen del último al primero para que funcionen con el botón "limpiar" */
+	
+	// La fecha de Recepción de la Guía de Remisión:
+	// •	No puede ser mayor que la fecha actual.
+	// •	No puede ser mayor que la fecha de contabilización
+	// •	No puede ser menor que la fecha de Documento.
 	fecEntrega.datetimepicker({
 		locale: 		'es',
 		format: 		'L',
 		ignoreReadonly:  true,
 		date:		moment(),
+		maxDate:	moment(),
 		minDate:	moment()
 	});
 	
+	// La fecha de Documento de la Guía de Remisión:
+	// •	No puede ser mayor que la fecha actual.
+	// •	No puede ser mayor que la fecha de contabilización
 	fecDocumento.datetimepicker({
 		locale: 		'es',
 		format: 		'L',
@@ -194,6 +203,7 @@ function construirFechasPicker() {
 		maxDate:	moment()
 	});
 	
+	// La fecha de contabilización no puede ser mayor a la fecha actual	
 	fecConta.datetimepicker({
 		locale: 		'es',
 		format: 		'L',
@@ -1574,7 +1584,6 @@ function limpiarGuiaRemision() {
 	fecConta.datetimepicker('destroy');
 	fecDocumento.datetimepicker('destroy');
 	fecEntrega.datetimepicker('destroy');	
-	
 	construirFechasPicker();
 	
 	direccionDespacho.focus();
