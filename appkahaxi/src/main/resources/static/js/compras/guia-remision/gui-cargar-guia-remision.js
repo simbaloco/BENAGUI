@@ -59,15 +59,15 @@ var cantidadDetalleDuplicado;
 
 var guiasPorOrdenCompraModal;
 var modalCodigoOrdenCompra;
-var tableSeleccionDocumento;
-var datatableSeleccionDocumento;
+var tableSeleccionGR;
+var dataTableSeleccionGR;
 var btnAceptarModal;
 
 var btnIrFactura;
 var facturasPorGuiaRemisionModal;
 var modalCodigoGuiaRemision;
-var tableDetalleFactura;
-var dataTableDetalleFactura;
+var tableSeleccionDocumento;
+var dataTableSeleccionDocumento;
 
 var dateTimePickerInput;
 var valorIGV;
@@ -138,14 +138,14 @@ function inicializarVariables() {
 
 	guiasPorOrdenCompraModal = $("#guiasPorOrdenCompraModal");
 	modalCodigoOrdenCompra = $("#modalCodigoOrdenCompra");
-	tableSeleccionDocumento = $("#tableSeleccionDocumento");
+	tableSeleccionGR = $("#tableSeleccionGR");
 	btnAceptarModal = $("#btnAceptarModal");
 
 	btnIrFactura = $("#btnIrFactura");
 
 	facturasPorGuiaRemisionModal = $("#facturasPorGuiaRemisionModal");
 	modalCodigoGuiaRemision = $("#modalCodigoGuiaRemision");
-	tableDetalleFactura = $("#tableDetalleFactura");
+	tableSeleccionDocumento = $("#tableSeleccionDocumento");
 
 	dateTimePickerInput = $(".datetimepicker-input");
 	listaAlmacenModel = $("#listaAlmacenModel");
@@ -246,7 +246,8 @@ function inicializarEventos() {
 	});
 
 	btnGenerarFactura.on("click", function(event) {
-		mostrarDialogoGenerarFactura(event);
+		//mostrarDialogoGenerarFactura(event);
+		mostrarModalGuiasPorOrdenCompra(event);
 	});
 
 	btnAnular.on("click", function(event) {
@@ -1117,7 +1118,7 @@ function mostrarDialogoAnularGuiaRemision(event) {
 		}
 	});
 }
-
+/*
 function mostrarDialogoGenerarFactura(event) {
 
 	bootbox.confirm({
@@ -1139,7 +1140,7 @@ function mostrarDialogoGenerarFactura(event) {
 		}
 	});
 }
-
+*/
 function mostrarDialogoCantidadMayorAlPendiente(control, fila) {
 
 	bootbox.confirm({
@@ -1188,14 +1189,14 @@ function obtenerDetalleGuiaPorOrdenCompra(event){
 	event.preventDefault();
 	event.stopPropagation();
 
-	if ( $.fn.dataTable.isDataTable('#tableSeleccionDocumento')) {
+	if ( $.fn.dataTable.isDataTable('#tableSeleccionGR')) {
 
-		datatableSeleccionDocumento.clear();
-		datatableSeleccionDocumento.ajax.reload(null, true);
+		dataTableSeleccionGR.clear();
+		dataTableSeleccionGR.ajax.reload(null, true);
 
 	} else {
 
-		datatableSeleccionDocumento = tableSeleccionDocumento.DataTable({
+		dataTableSeleccionGR = tableSeleccionGR.DataTable({
 
 			"ajax": {
 				data: function ( d ) {
@@ -1224,7 +1225,6 @@ function obtenerDetalleGuiaPorOrdenCompra(event){
 					"data": "activo",
 					"className": "dt-body-center text-center",
 					"orderable": false,
-					
 					"render": function(data, type, row) {
 						return '<input type="checkbox" class="chk_guia_remision">';
 					}
@@ -1289,22 +1289,13 @@ function obtenerDetalleGuiaPorOrdenCompra(event){
 					return row;
 
 				},
-			/*
-			"select": {
-	            "style":    "os",
-	            "selector": "td"
-	        },
-			"initComplete": 
-				function() {
-			        this.api().rows().select();
-			    },
-			*/
+			
 			"language"  : {
 				"url": "/appkahaxi/language/Spanish.json"
 			}
 		});
 		/*
-		$('#tableSeleccionDocumento tbody').on('click', 'tr', function () {
+		$('#tableSeleccionGR tbody').on('click', 'tr', function () {
 			var nTds = $('td', this);
 			var numeroDocumento = $(nTds[0]).text();
 			
@@ -1319,14 +1310,14 @@ function obtenerDetalleFacturasPorGuiaRemision(event){
 	event.preventDefault();
 	event.stopPropagation();
 
-	if ( $.fn.dataTable.isDataTable('#tableDetalleFactura')) {
+	if ( $.fn.dataTable.isDataTable('#tableSeleccionDocumento')) {
 
-		dataTableDetalleFactura.clear();
-		dataTableDetalleFactura.ajax.reload(null, true);
+		dataTableSeleccionDocumento.clear();
+		dataTableSeleccionDocumento.ajax.reload(null, true);
 
 	} else {
 
-		dataTableDetalleFactura = tableDetalleFactura.DataTable({
+		dataTableSeleccionDocumento = tableSeleccionDocumento.DataTable({
 
 			"ajax": {
 				data: function ( d ) {
@@ -1355,9 +1346,9 @@ function obtenerDetalleFacturasPorGuiaRemision(event){
 					"targets": [0],
 					"data": "numeroDocumento",
 					"orderable": false,
-					"render": function(data, type, row) {
+					/*"render": function(data, type, row) {
 						return '<a href="#" class="link-ver-factura">' + data + '</a>';
-					}
+					}*/
 				},
 				{
 					"width": "30px",
@@ -1439,11 +1430,18 @@ function obtenerDetalleFacturasPorGuiaRemision(event){
 				"url": "/appkahaxi/language/Spanish.json"
 			}
 		});
+		/*
+		$('#tableSeleccionDocumento tbody').on('click','.link-ver-factura', function () {
 
-		$('#tableDetalleFactura tbody').on('click','.link-ver-factura', function () {
-
-			var data = dataTableDetalleFactura.row( $(this).closest('tr')).data();
+			var data = dataTableSeleccionDocumento.row( $(this).closest('tr')).data();
 			cargarFacturaAsociada(data.numeroDocumento, Opcion.VER);
+		});
+		*/
+		$('#tableSeleccionDocumento tbody').on('click', 'tr', function () {
+			var nTds = $('td', this);
+			var numeroDocumento = $(nTds[0]).text();
+			
+			cargarFacturaAsociada(numeroDocumento, Opcion.VER);			
 		});
 	}
 }
@@ -1453,9 +1451,9 @@ function generarFacturaAsociada() {
 	var data = [];
 	var indice = 0;
 
-	var cabeceras = tableSeleccionDocumento.find("th").not(':last');
+	var cabeceras = tableSeleccionGR.find("th").not(':last');
 
-	tableSeleccionDocumento.find("tbody tr").each(function(index) {
+	tableSeleccionGR.find("tbody tr").each(function(index) {
 
 		var esSeleccionado = $(this).find("input").is(':checked');
 

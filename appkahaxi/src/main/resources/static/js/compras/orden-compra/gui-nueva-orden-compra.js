@@ -312,7 +312,8 @@ function inicializarEventos() {
 	});
 
 	btnGenerarGuiaRemision.on("click", function() {
-		mostrarDialogoGenerarGuiaRemision();
+		//mostrarDialogoGenerarGuiaRemision();
+		generarGuiaRemisionPorOrden();
 	});
 
 	btnNuevo.click(function() {
@@ -1697,7 +1698,7 @@ function mostrarDialogoEliminarTodo(table) {
 		}
 	});
 }
-
+/*
 function mostrarDialogoGenerarGuiaRemision() {
 
 	bootbox.confirm({
@@ -1719,7 +1720,7 @@ function mostrarDialogoGenerarGuiaRemision() {
 		}
 	});
 }
-
+*/
 function generarGuiaRemisionPorOrden() {
 	var params;
 	var nroDoc = numeroDocumento.text();
