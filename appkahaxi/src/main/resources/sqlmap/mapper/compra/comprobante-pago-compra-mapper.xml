@@ -148,7 +148,7 @@
     </select>
 
     <insert id="registrarFacturaCompra" parameterMap="registrarComprobantePagoCompraParams" statementType="CALLABLE">
-        {CALL SP_REGISTRAR_COMPROBANTE_PAGO_COMPRA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
+        {CALL SP_REGISTRAR_COMPROBANTE_PAGO_COMPRA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
     </insert>
 
     <update id="actualizarFacturaCompra" parameterMap="actualizarComprobantePagoCompraParams" statementType="CALLABLE">

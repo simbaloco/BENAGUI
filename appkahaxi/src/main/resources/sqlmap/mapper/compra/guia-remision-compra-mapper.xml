@@ -150,7 +150,7 @@
     </select>
 
     <insert id="registrarGuiaRemisionCompra" parameterMap="registrarGuiaRemisionCompraParams" statementType="CALLABLE">
-        {CALL SP_REGISTRAR_GUIA_REMISION_COMPRA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
+        {CALL SP_REGISTRAR_GUIA_REMISION_COMPRA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
     </insert>
 
     <insert id="anularGuiaRemisionCompra" parameterMap="anularGuiaRemisionCompraParams" statementType="CALLABLE">

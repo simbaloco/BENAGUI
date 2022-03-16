@@ -130,7 +130,7 @@
 
 				<div class="card-header quitar-contornos" id="headingCabeceraOrden">
 					<div class="row">
-						<div class="col-md-4">
+						<div class="cabe col-md-4">
 							<h2 class="mb-0">
 								<button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseCabeceraOrden" aria-expanded="true" aria-controls="collapseCabeceraOrden">
 									<i class="fas fa-angle-up"></i><span>Datos de la Orden de Compra </span><span class="font-weight-bold" id="codigo"></span>
@@ -206,7 +206,7 @@
 								
 								<div class="col-md-2">
 									<label class="label" for="direccionDespacho">Direcci&oacute;n Despacho:</label>
-									<input class="marquee form-control" maxlength="250" size="50" type="text" id="direccionDespacho" required="required"/>
+									<input class="marquee form-control" maxlength="200" size="50" type="text" id="direccionDespacho" required="required"/>
 									<div class="invalid-feedback">
 										Debe ingresar la dirección de despacho
 									</div>
@@ -214,7 +214,7 @@
 
 								<div class="col-md-2">
 									<label class="label" for="personaContacto">Persona Contacto:</label>
-									<input class="marquee form-control" maxlength="250" size="50" type="text" id="personaContacto" required="required"/>
+									<input class="marquee form-control" maxlength="100" size="50" type="text" id="personaContacto" required="required"/>
 									<div class="invalid-feedback">
 										Debe ingresar la persona de contacto
 									</div>
@@ -266,9 +266,17 @@
 									    </option>
 									</select>
 								</div>
-
-								<div class="col-md-2">
-									<label class="label" for="condPago">Condición Pago:</label>
+								
+								<div class="col-md-1">
+									<label class="label" for="tipoCambio">Tipo Cambio:</label> <input
+										class="form-control" maxlength="15" size="50" type="text"
+										id="tipoCambio" required="required" />
+									<div class="invalid-feedback">Debe ingresar el tipo de
+										cambio</div>
+								</div>
+								
+								<div class="col-md-1">
+									<label class="label" for="condPago">Cond. Pago:</label>
 									<select id="condPago" class="form-control">
 										<option th:each="item : ${listaCondPago}"
 									            th:value="${item.codigo}" 
@@ -277,8 +285,8 @@
 									</select>
 								</div>
 
-								<div class="col-md-2" id="divDias" style="display: none">
-									<label class="label" for="dias">Días de crédito:</label>
+								<div class="col-md-2">
+									<label id="lblDias" class="label" for="dias">Días de crédito:</label>
 									<select id="dias" class="form-control">
 										<option th:each="item : ${listaDias}"
 									            th:value="${item.codigo}" 
@@ -292,7 +300,6 @@
 							</div>
 
 							<div class="row">
-									
 								<div class="col-md-2">
 									<label class="label" for="estado">Estado:</label> <select
 										id="estado" class="form-control" disabled="disabled">
@@ -300,14 +307,6 @@
 											th:value="${item.codigo}" th:text="${item.descripcion}">
 										</option>
 									</select>
-								</div>
-
-								<div class="col-md-1">
-									<label class="label" for="tipoCambio">Tipo Cambio:</label> <input
-										class="form-control" maxlength="15" size="50" type="text"
-										id="tipoCambio" required="required" />
-									<div class="invalid-feedback">Debe ingresar el tipo de
-										cambio</div>
 								</div>
 								
 								<div class="col-md-1">
@@ -323,7 +322,7 @@
 										type="text" id="nroPedido" />
 								</div>
 
-								<div class="col-md-7 alineacion-derecha">
+								<div class="col-md-8 alineacion-derecha">
 						 			<label class="label"></label>
 						 			<div>
 										<button type="button" id="btnLimpiar" class="btn btn-primary">

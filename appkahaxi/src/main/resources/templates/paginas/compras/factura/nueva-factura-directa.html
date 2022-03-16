@@ -30,10 +30,20 @@
 		<label id="volverParam" th:text=${volver} hidden="hidden"></label>
 		<label id="desdeDocRef" th:text=${desdeDocRef} hidden="hidden"></label>
 		
+		
+		
+		<button type="button" id="btnGrabar" class="btn-flotante-grabar">
+			<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
+	    </button>			
+		<button type="button" id="btnAnular" class="btn-flotante-duplicar" style="display: none">
+			<span class="mr-2"><i class="fas fa-trash"></i></span>Anular
+		</button>
+	
+	
 		<div class="kahaxi_titulo">
 	        <div class="kahaxi_titulo_container">
 	            <div class="kahaxi_titulo_logo"><i class="fas fa-cash-register"></i></div>
-	            <div class="kahaxi_titulo_text"><span id="titulo"></span> FACTURA</div>
+	            <div class="kahaxi_titulo_text"><span id="titulo"></span> FACTURA DIRECTA - COMPRA</div>
 	        </div>
 	        <div class="subrayado"></div>
 	        <br>
@@ -55,13 +65,13 @@
 							</div>
 							
 							<div class="col-md-6 alineacion-derecha">
-					     		<button type="button" id="btnGrabar" class="btn btn-primary">
-		                  			<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
+					     		<button type="button" id="btnVolver" class="btn btn-primary" style="display: none">
+		                  			<span class="mr-2"><i class="fas fa-backspace"></i></span>Volver
 					            </button>
-					            
-				              	<button type="button" id="btnAnular" class="btn btn-primary" style="display: none">
-									<span class="mr-2"><i class="fas fa-trash"></i></span>Anular
-								</button>
+					            							            
+					            <button  type="button" id="btnNuevo" class="btn btn-primary" style="display: none">
+		                        	<span class="mr-2"><i class="fas fa-plus-square"></i></span>Nuevo
+		                    	</button >
 							</div>
 						</div>
 					</div>
@@ -104,7 +114,7 @@
 						 		
 						 		<div class="col-md-2">
 									<label class="label" for="direccionDespacho">Direcci&oacute;n Despacho:</label>
-									<input class="marquee form-control" maxlength="250" size="50" type="text" id="direccionDespacho" required="required"/>
+									<input class="marquee form-control" maxlength="200" size="50" type="text" id="direccionDespacho" required="required"/>
 									<div class="invalid-feedback">
 										Debe ingresar la dirección de despacho
 									</div>
@@ -112,7 +122,7 @@
 
 								<div class="col-md-2">
 									<label class="label" for="personaContacto">Persona Contacto:</label>
-									<input class="marquee form-control" maxlength="250" size="50" type="text" id="personaContacto" required="required"/>
+									<input class="marquee form-control" maxlength="100" size="50" type="text" id="personaContacto" required="required"/>
 									<div class="invalid-feedback">
 										Debe ingresar la persona de contacto
 									</div>
@@ -168,8 +178,16 @@
 									</select>
 						 		</div>
 						 		
-						 		<div class="col-md-2">
-						 			<label class="label" for="condPago">Condición Pago:</label>
+						 		<div class="col-md-1">
+						 			<label class="label" for="tipoCambio">Tipo Cambio:</label>
+						 			<input class="form-control" maxlength="250" size="50" type="text" id="tipoCambio" required="required" />
+						 			<div class="invalid-feedback">
+						 				Debe ingresar el tipo de cambio
+						 			</div>
+						 		</div>			 		
+						 		
+						 		<div class="col-md-1">
+						 			<label class="label" for="condPago">Cond. Pago:</label>
 						 			<select id="condPago" class="form-control">
 										<option th:each="item : ${listaCondPago}"
 									            th:value="${item.codigo}" 
@@ -202,11 +220,6 @@
 						    </div>
 						    
 						    <div class="form-group row">
-						 		<div class="col-md-2">
-						 			<label class="label" for="tipoCambio">Tipo de Cambio:</label>
-						 			<input class="form-control" maxlength="250" size="50" type="text" id="tipoCambio" readonly="readonly" tabindex="-1" value="3.3"/>
-						 		</div>			 		
-						 		
 						 		<div class="col-md-1">
 									<label class="label" for="serie">Serie:</label>
 									<input class="form-control" maxlength="250" size="50" type="text" id="serie" required="required"/>
@@ -240,21 +253,13 @@
 									<input class="form-control etiquetaAnulado" type="text" id="lblAnulado" style="display: none" value="ANULADO"/>
 								</div>
 								
-						    	<div class="col-md-4 alineacion-derecha">
+						    	<div class="col-md-6 alineacion-derecha">
 						 			<label class="label"></label>
 						 			<div>
 
 						 				<button type="button" id="btnLimpiar" class="btn btn-primary">
 				                  			<span class="mr-2"><i class="fas fa-eraser"></i></span>Limpiar
 							            </button>
-							            
-							            <button type="button" id="btnVolver" class="btn btn-primary" style="display: none">
-				                  			<span class="mr-2"><i class="fas fa-backspace"></i></span>Volver
-							            </button>
-							            							            
-							            <button  type="button" id="btnNuevo" class="btn btn-primary" style="display: none">
-				                        	<span class="mr-2"><i class="fas fa-plus-square"></i></span>Nuevo
-				                    	</button >
 							        </div>
 						 		</div>	
 							</div>
@@ -331,7 +336,8 @@
 									        	<td></td>
 									        	<td></td>
 									        	<td></td>
-									        	<td>
+									        	<td class="d-none"></td>
+												<td>
 									        		<div style="display:flex;justify-content:space-around; ">
 									        			<button class="btn-edit btn btn-success btn-xs" style="display: none">
 									        				<span><i class="fas fa-edit"></i></span>

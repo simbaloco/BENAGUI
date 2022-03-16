@@ -188,7 +188,7 @@
 
 		<div class="kahaxi_titulo_container">
 			<div class="kahaxi_titulo_logo"><i class="fas fa-cash-register"></i></div>
-			<div class="kahaxi_titulo_text"><span id="titulo"></span> GUIA REMISIÓN</div>
+			<div class="kahaxi_titulo_text"><span id="titulo"></span> GUIA REMISIÓN - COMPRA</div>
 		</div>
 
 		<div class="subrayado">
@@ -250,17 +250,17 @@
 
 								<div class="col-md-2">
 									<label class="label" for="nombreProv">Nombre/Raz&oacute;n Social:</label>
-									<input class="form-control" maxlength="250" size="50" type="text" id="nombreProv" readonly="readonly" tabindex="-1"/>
+									<input class="marquee form-control" maxlength="250" size="50" type="text" id="nombreProv" readonly="readonly" tabindex="-1"/>
 								</div>
 
 								<div class="col-md-2">
 									<label class="label" for="direccion">Direcci&oacute;n:</label>
-									<input class="form-control" maxlength="250" size="50" type="text" id="direccion" readonly="readonly" tabindex="-1"/>
+									<input class="marquee form-control" maxlength="250" size="50" type="text" id="direccion" readonly="readonly" tabindex="-1"/>
 								</div>
 								
 								<div class="col-md-2">
 									<label class="label" for="direccionDespacho">Direcci&oacute;n Despacho:</label>
-									<input class="marquee form-control" maxlength="250" size="50" type="text" id="direccionDespacho" required="required"/>
+									<input class="marquee form-control" maxlength="200" size="50" type="text" id="direccionDespacho" required="required"/>
 									<div class="invalid-feedback">
 										Debe ingresar la dirección de despacho
 									</div>
@@ -268,7 +268,7 @@
 
 								<div class="col-md-2">
 									<label class="label" for="personaContacto">Persona Contacto:</label>
-									<input class="marquee form-control" maxlength="250" size="50" type="text" id="personaContacto" required="required"/>
+									<input class="marquee form-control" maxlength="100" size="50" type="text" id="personaContacto" required="required"/>
 									<div class="invalid-feedback">
 										Debe ingresar la persona de contacto
 									</div>
@@ -326,9 +326,14 @@
 									    </option>
 									</select>
 								</div>
-
-								<div class="col-md-2">
-									<label class="label" for="condPago">Condición Pago:</label>
+								
+								<div class="col-md-1">
+									<label class="label" for="tipoCambio">Tipo Cambio:</label>
+									<input class="form-control" maxlength="250" size="50" type="text" id="tipoCambio" readonly="readonly" tabindex="-1"/>
+								</div>
+								
+								<div class="col-md-1">
+									<label class="label" for="condPago">Cond. Pago:</label>
 									<select id="condPago" class="form-control">
 										<option th:each="item : ${listaCondPago}"
 									            th:value="${item.codigo}" 
@@ -360,11 +365,6 @@
 
 							<div class="row">
 
-								<div class="col-md-2">
-									<label class="label" for="tipoCambio">Tipo de Cambio:</label>
-									<input class="form-control" maxlength="250" size="50" type="text" id="tipoCambio" readonly="readonly" tabindex="-1"/>
-								</div>
-
 								<div class="col-md-1">
 									<label class="label" for="serie">Serie:</label>
 									<input class="form-control" maxlength="250" size="50" type="text" id="serie" required="required"/>
@@ -395,7 +395,7 @@
 									<input class="form-control etiquetaAnulado" type="text" id="lblAnulado" style="display: none" value="ANULADO"/>
 								</div>
 								
-								<div class="col-md-4 alineacion-derecha">
+								<div class="col-md-6 alineacion-derecha">
 						 			<label class="label"></label>
 						 			<div>
 										<button type="button" id="btnLimpiar" class="btn btn-primary">
@@ -479,6 +479,7 @@
 											<td></td>
 											<td></td>
 											<td class="d-none"></td>
+											<td class="d-none"></td>
 											<td>
 												<div class="text-center">
 													<button class="btn-delete btn btn-danger btn-xs">
@@ -510,7 +511,7 @@
 				            		<label class="label" for="observaciones">Observaciones</label>
 				            	</div>
 				            	<div class="col-md-9">	
-				            		<textarea class="form-control" rows="3" maxlength="250" id="observaciones" required="required"></textarea>
+				            		<textarea class="form-control" rows="3" maxlength="250" id="observaciones"></textarea>
 				            		<div class="invalid-feedback">
 			                        	Debe ingresar observaciones
 			                        </div>

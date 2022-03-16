@@ -428,9 +428,9 @@ function uncheckControl(id){
 
 function habilitarAnimacionAcordion() {
 	$(".collapse").on('show.bs.collapse', function(){
-    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-up');
+		$(this).prev(".card-header").find('.btn-link svg').attr('data-icon', 'angle-up');
     }).on('hide.bs.collapse', function(){
-    	$(this).prev(".card-header").find('svg').attr('data-icon', 'angle-down');
+    	$(this).prev(".card-header").find('.btn-link svg').attr('data-icon', 'angle-down');
     });
 }
 

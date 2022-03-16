@@ -283,8 +283,14 @@ function inicializarEventos() {
 		limpiarFactura();
 	});
 
-	btnAnular.on("click", function() {
-		mostrarDialogoAnularFactura();
+	btnAnular.on("click", function(e) {
+		if (observaciones.val().trim() == CADENA_VACIA){
+			controlRequerido(observaciones);
+			habilitarControl(observaciones);
+			mostrarMensajeValidacion("Debe ingresar observaciones antes de anular.", observaciones);
+		}else{
+			mostrarDialogoAnularFactura(e);
+		}
 	});
 	
 	btnNuevo.click(function(){
@@ -354,10 +360,10 @@ function inicializarTablaDetalle(paginacion) {
  *************************************************************************************************/
 
 function inicializarFechas(){
-	fecConta.datetimepicker('maxDate', moment());
 	fecVencimiento.datetimepicker('date', moment());
 	fecDocumento.datetimepicker('date', moment());
 	fecConta.datetimepicker('date', moment());
+	fecConta.datetimepicker('maxDate', moment());
 }
 
 function cargarPantallaNueva() {
@@ -473,6 +479,7 @@ function verPantallaFactura(data) {
 	deshabilitarControl(campoBuscar);
 	deshabilitarControl(dateTimePickerInput);
 	deshabilitarControl(tipoMoneda);
+	deshabilitarControl(tipoCambio);
 	deshabilitarControl(direccionDespacho);
 	deshabilitarControl(personaContacto);
 
@@ -483,6 +490,7 @@ function verPantallaFactura(data) {
 		} else {
 			habilitarControl(estadoPago);
 			mostrarControl(btnAnular);
+			btnAnular.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
 		}
 	}else{
 		// estado ANULADO
@@ -536,7 +544,7 @@ function agregarFilaEnTablaDetalle(data) {
 
 	agregarFilaHTMLEnTablaDetalle(data);
 
-	if(indiceFilaDataTableDetalle > 0) {
+	if(indiceFilaDataTableDetalle >= 0) {
 		mostrarControl(btnEliminarTodosArticulos);
 		mostrarControl(btnAgregarArticulo);
 	}
@@ -637,7 +645,7 @@ function agregarHTMLColumnasDataTable(data) {
 		}
 	});
 	habilitarMarquee();
-	window.scrollTo(0, document.body.scrollHeight);
+	//window.scrollTo(0, document.body.scrollHeight);
 }
 
 
@@ -735,6 +743,9 @@ function buscarArticuloKeyUp(e, control, fila){
 				$('#precio_' + fila).val(convertirNumeroAMoneda(precio));
 				$('#precio_' + fila).prop('min', precio);
 				
+				var precioIgv = precio + (precio * (ParametrosGenerales.IGV / 100));
+				$('#precioIgv_' + fila).val(convertirNumeroAMoneda(precioIgv));
+				
 				$('#cantidad_' + fila).focus();
 				
 				var key = window.Event ? event.which : event.keyCode;
@@ -779,7 +790,9 @@ function precioKeyUp(control, fila) {
 	
 	var subTotal = cantidad * precio;
 	var subTotalIgv = subTotal + (subTotal * (ParametrosGenerales.IGV/100));
-	
+	var precioIgv = precio + (precio * (ParametrosGenerales.IGV / 100));
+
+	$('#precioIgv_' + fila).val(convertirNumeroAMoneda(precioIgv));
 	$('#subTotalIgv_' + fila).val(convertirNumeroAMoneda(subTotalIgv));
 	$('#subTotal_' + fila).val(convertirNumeroAMoneda(subTotal));
 	
@@ -831,6 +844,8 @@ function evaluarCambioEstadoPago() {
 	} else{
 		if (codigo.html() != CADENA_VACIA || codigo.html() > 0){
 			mostrarControl(btnAnular);
+			btnAnular.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
+			
 			ocultarControl(btnGrabar);
 		}else{
 			mostrarControl(btnGrabar);
@@ -1054,6 +1069,7 @@ function registrarFacturaCompra(){
 				deshabilitarControl(tipoMoneda);
 				deshabilitarControl(condPago);
 				deshabilitarControl(dias);
+				deshabilitarControl(tipoCambio);
 
 				deshabilitarControl(dateTimePickerInput);
 
@@ -1065,7 +1081,9 @@ function registrarFacturaCompra(){
 				if(codigoEstadoPagoVal == EstadoPago.PENDIENTE) {
 					habilitarControl(observaciones);
 					habilitarControl(estadoPago);
+					
 					mostrarControl(btnAnular);
+					btnAnular.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
 					// si se grabó con estado PENDIENTE, cambiar a opción = VER
 					opcion.text(Opcion.VER); 
 				} else {
@@ -1266,7 +1284,7 @@ function mostrarDialogoRegistrarFacturaPagado() {
 	});
 }
 
-function mostrarDialogoAnularFactura() {
+function mostrarDialogoAnularFactura(event) {
 
 	bootbox.confirm({
 		message: "¿Está seguro que desea anular la Factura?",
@@ -1282,7 +1300,12 @@ function mostrarDialogoAnularFactura() {
 		},
 		callback: function (result) {
 			if(result == true){
-				anularFacturaCompra();
+				if (formObservaciones[0].checkValidity() == true) {
+					anularFacturaCompra();
+				}else {
+					event.stopPropagation();
+				}
+				formObservaciones.addClass('was-validated');
 			}
 		}
 	});

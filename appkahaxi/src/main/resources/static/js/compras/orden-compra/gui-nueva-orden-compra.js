@@ -32,7 +32,7 @@ var fecHasta;
 var tipoMoneda;
 var condPago;
 var dias;
-var divDias;
+var lblDias;
 var estado;
 var fecEntrega;
 var tipoCambio;
@@ -113,7 +113,7 @@ function inicializarVariables() {
 	tipoMoneda = $("#tipoMoneda");
 	condPago = $("#condPago");
 	dias = $("#dias");
-	divDias = $("#divDias");
+	lblDias = $("#lblDias");
 	estado = $("#estado");
 	fecEntrega = $("#fecEntrega");
 	tipoCambio = $("#tipoCambio");
@@ -174,30 +174,37 @@ function inicializarPantalla() {
 }
 
 function construirFechasPicker() {
-
-	fecConta.datetimepicker({
-		locale: 'es',
-		format: 'L',
-		ignoreReadonly: true
-	});
-
-	fecHasta.datetimepicker({
-		locale: 'es',
-		format: 'L',
-		ignoreReadonly: true
-	});
-
+	// se construyen del último al primero para que funcionen con el botón "limpiar"
 	fecEntrega.datetimepicker({
 		locale: 'es',
 		format: 'L',
-		ignoreReadonly: true
+		ignoreReadonly: true,
+		date:		moment(),
+		minDate:	moment()
+	});
+	
+	fecHasta.datetimepicker({
+		locale: 'es',
+		format: 'L',
+		ignoreReadonly: true,
+		date:		moment().add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'),
+		maxDate:	moment().add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'),
+		minDate:	moment()
+	});
+	
+	fecConta.datetimepicker({
+		locale: 'es',
+		format: 'L',
+		ignoreReadonly: true,
+		date:		moment(),
+		maxDate:	moment()
 	});
 }
 
 function restringirSeleccionFechas() {
 
 	fecConta.on("change.datetimepicker", function(e) {
-		reiniciarFechaHasta();
+		//reiniciarFechaHasta();
 
 		fecHasta.datetimepicker('maxDate', moment(e.date).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'));
 		fecHasta.datetimepicker('minDate', e.date);
@@ -225,8 +232,6 @@ function habilitarAutocompletarBuscarCampos() {
 
 					response($.map(resultado, function(item) {
 						var AC = new Object();
-
-						console.log("item.email:"+item.email);
 
 						AC.label = item.numeroDocumento + ' - ' + item.nombreRazonSocial;
 						AC.value = request.term;
@@ -370,7 +375,7 @@ function inicializarTabla(paginacion) {
 
 /**************** FUNCIONES DE SOPORTE ***********************************************************
  *************************************************************************************************/
-
+/*
 function inicializarFechaContaHasta() {
 	console.log("inicializarFechaContaHasta")
 
@@ -381,13 +386,16 @@ function inicializarFechaContaHasta() {
 	var nuevaFechaVal = moment(fecContaVal).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day');
 	fecHasta.datetimepicker('date', nuevaFechaVal);
 }
-
+*/
 function cargarPantallaNueva() {
 	flgNuevo=1;
-	inicializarFechaContaHasta();
+	//inicializarFechaContaHasta();
 	//obtenerTipoCambio(tipoCambio);
 	ocultarControl(lblPedido);
 	ocultarControl(nroPedido);
+	ocultarControl(lblDias);
+	ocultarControl(dias);
+	
 	controlNoRequerido(observaciones);
 	titulo.text("NUEVA");
 	dias.val(Dias._30);
@@ -479,7 +487,8 @@ function cargarPantallaHTML(data) {
 	}
 
 	if (data.codigoCondPago == CondicionPago.CREDITO) {
-		mostrarControl(divDias);
+		mostrarControl(dias);
+		mostrarControl(lblDias);		
 	}
 
 	// ******* DETALLE
@@ -527,6 +536,13 @@ function verPantallaOrdenCompra(data) {
 		deshabilitarControl(tipoMoneda);
 		deshabilitarControl(condPago);
 		deshabilitarControl(dias);
+		if (data.codigoCondPago == CondicionPago.CREDITO) {
+			mostrarControl(dias);
+			mostrarControl(lblDias);		
+		}else{
+			ocultarControl(dias);
+			ocultarControl(lblDias);
+		}
 		deshabilitarControl(estado);
 		deshabilitarControl(tipoCambio);
 		//mostrarControl(divNroPedido);
@@ -706,7 +722,7 @@ function duplicarPantallaOrdenCompra(nroDocRef) {
 	flgNuevo = 1;
 	titulo.text("DUPLICAR");
 	
-	inicializarFechaContaHasta();
+	//inicializarFechaContaHasta();
 	opcion.text(Opcion.DUPLICAR);	
 	//obtenerTipoCambio(tipoCambio);
 	codigo.html(CADENA_VACIA);
@@ -1073,10 +1089,12 @@ function evaluarCambioCondicionPago() {
 
 	if (condPagoVal == CondicionPago.CREDITO) {
 		controlRequerido(dias)
-		mostrarControl(divDias);
+		mostrarControl(dias);
+		mostrarControl(lblDias);
 	} else {
 		controlNoRequerido(dias);
-		ocultarControl(divDias);
+		ocultarControl(dias);
+		ocultarControl(lblDias);
 	}
 }
 
@@ -1755,16 +1773,16 @@ function volver() {
 		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam;
 	window.location.href = "/appkahaxi/mantenimiento-orden-compra?" + params;
 }
-
+/*
 function reiniciarFechaHasta() {
 	console.log("reiniciarFechaHasta...inicio");
 	fecHasta.datetimepicker('maxDate', false);
 	fecHasta.datetimepicker('minDate', false);
 
 }
-
+*/
 function limpiarOrdenCompra() {
-	inicializarFechaContaHasta();
+	//inicializarFechaContaHasta();
 
 	tipoMoneda.val(Moneda.DOLARES);
 	condPago.val(CondicionPago.CONTADO);
@@ -1786,7 +1804,14 @@ function limpiarOrdenCompra() {
 	ocultarControl(btnEliminarTodosArticulos);
 
 	*/
-	ocultarControl(divDias);
+	fecConta.datetimepicker('destroy');
+	fecHasta.datetimepicker('destroy');
+	fecEntrega.datetimepicker('destroy');	
+	
+	construirFechasPicker();
+		
+	ocultarControl(dias);
+	ocultarControl(lblDias);
 	
 	formOrdenCompra.removeClass('was-validated');
 	formObservaciones.removeClass('was-validated');
