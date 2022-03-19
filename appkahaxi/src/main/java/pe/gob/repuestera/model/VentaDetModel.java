@@ -16,6 +16,7 @@ public class VentaDetModel {
 	// columnas
 	private Integer cantidad;
     private BigDecimal precioUnitario;
+    private BigDecimal precioUnitarioIgv;
     private BigDecimal precioReferencia;
     private Integer porcentajeDcto;
     private BigDecimal precioConDcto;

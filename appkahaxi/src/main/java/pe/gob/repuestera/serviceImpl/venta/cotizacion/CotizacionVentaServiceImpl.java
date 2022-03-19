@@ -3,11 +3,14 @@ package pe.gob.repuestera.serviceImpl.venta.cotizacion;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pe.gob.repuestera.exception.ErrorControladoException;
+import pe.gob.repuestera.model.CompraDetModel;
 import pe.gob.repuestera.model.VentaCabModel;
 import pe.gob.repuestera.model.VentaDetModel;
 import pe.gob.repuestera.repository.venta.cotizacion.CotizacionVentaMapper;
@@ -225,6 +228,36 @@ public class CotizacionVentaServiceImpl implements CotizacionVentaService{
 
 		}
 		
+	}
+
+	@Override
+	public List<VentaDetModel> buscarCotizacionDetalleParaOrdenVenta(String numeroDocumento) throws Exception {
+		Map<String, Object> params = new HashMap();
+		params.put(Constante.PARAM_SP_NRO_DOCUMENTO, numeroDocumento);
+
+		logger.info("params ===> " + params);
+		
+		List<VentaDetModel> listCotizacionDetModel = cotizacionVentaMapper.buscarCotizacionVentaDet(params);
+
+		String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+		String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+
+		logger.info("flagResultado ===> " + flagResultado);
+		logger.info("mensajeResultado ===> " + mensajeResultado);
+
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+			logger.info("listCompraDetModel ===> " + listCotizacionDetModel.toString());
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+
+		return listCotizacionDetModel.stream()				
+				.collect(Collectors.toList());
 	}	
 	
 }

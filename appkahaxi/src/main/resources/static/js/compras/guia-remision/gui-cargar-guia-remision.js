@@ -350,7 +350,7 @@ function cargarPantallaHTMLOrdenCompra(data) {
 	direccionDespacho.val(data.direccionDespacho);
 	personaContacto.val(data.personaContacto);	
 	tipoMoneda.val(data.codigoTipoMoneda);
-	tipoCambio.val(data.tipoCambio);
+	obtenerTipoCambio(tipoCambio);
 	condPago.val(data.codigoCondPago);
 	dias.val(data.codigoDias);
 	subTotalGR.val(data.subTotal);
