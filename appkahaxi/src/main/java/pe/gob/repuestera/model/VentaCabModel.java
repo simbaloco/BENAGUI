@@ -14,8 +14,12 @@ public class VentaCabModel {
 	private String codigoCliente;
 	private String username;
 	// columnas
+	private String nroCotizVenta;
+	private String direccionDespacho;
+	private String personaContacto;
 	private String fechaContabilizacion;
     private String fechaValidoHasta;
+    private String fechaEntrega;
     private String codigoTipoMoneda;
     private String codigoCondPago;
     private String codigoDias;
@@ -37,6 +41,9 @@ public class VentaCabModel {
     private String fechaRegistro;
     private String codigoUsuarioModifica;
     private String fechaModificacion;
+    private String direccionDespachoConcat;
+	private String personaContactoConcat;
+	
     // soporte para los listados
 	private String nombreUsuario;
 	private String nroDocCliente; 
@@ -48,6 +55,7 @@ public class VentaCabModel {
 	private String descripcionCondPago;
 	private String descripcionDias;
 	private String descripcionEstado;
+	
     // para los objetos que necesiten referenciare el documento base
     private String numeroDocumentoBase;
     // DETALLE

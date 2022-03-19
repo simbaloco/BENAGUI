@@ -51,6 +51,8 @@ public class SocioNegociosModel {
     private String nombreRazonSocial;
 	private String telefono;
 	private String contacto;
+	private String direccionDespachoConcat;
+	private String personaContactoConcat;
 	
 	// DETALLE
     private List<SocioNegociosContactoModel> detalle;	

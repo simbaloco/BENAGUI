@@ -47,6 +47,7 @@
         <result property="marca" 				column="MARCA_PRODUCTO" />
         <result property="cantidad" 			column="CANTIDAD" />
         <result property="precioUnitario"		column="PRECIO_UNITARIO" />
+        <result property="precioUnitarioIgv"	column="PRECIO_UNITARIO_IGV" />
         <result property="precioReferencia"		column="PRECIO_REFERENCIA" />
         <result property="porcentajeDcto"		column="PORC_DCTO" />
         <result property="precioConDcto"		column="PRECIO_CON_DCTO" />

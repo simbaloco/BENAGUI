@@ -2,19 +2,23 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="pe.gob.repuestera.repository.venta.OrdenVentaMapper">
+<mapper namespace="pe.gob.repuestera.repository.venta.ordenventa.OrdenVentaMapper">
     
     <!-- *************** RESULTMAPS ******************* -->
     <resultMap id="ventaCab" type="VentaCabModel">
         <result property="numeroDocumento" 			column="NRO_DOCUMENTO" />
+        <result property="nroCotizVenta" 			column="NRO_COTIZ_VENTA" />
         <result property="username" 				column="USERNAME" />
         <result property="nombreUsuario" 			column="NOMBRE_USUARIO" />
         <result property="codigoCliente" 			column="COD_CLIENTE" />
         <result property="nroDocCliente" 			column="NRO_DOC_CLIENTE" />
         <result property="nombreCliente" 			column="NOMBRE_CLIENTE" />
+        <result property="direccionDespacho" 		column="DIRECCION_DESPACHO" />
+        <result property="personaContacto" 			column="PERSONA_CONTACTO" />
         <result property="direccionFiscal" 			column="DIRECCION_FISCAL" />
         <result property="fechaContabilizacion" 	column="FEC_CONTABILIZACION" />
         <result property="fechaValidoHasta" 		column="FEC_VALIDO_HASTA" />
+        <result property="fechaEntrega" 		    column="FEC_ENTREGA" />
         <result property="codigoTipoMoneda" 		column="COD_TIPO_MONEDA" />
         <result property="descripcionTipoMoneda"	column="DESC_TIPO_MONEDA" />
         <result property="codigoCondPago" 			column="COD_COND_PAGO" />
@@ -23,6 +27,7 @@
         <result property="descripcionDias" 			column="DESC_COD_DIAS" />
         <result property="codigoEstado" 			column="COD_ESTADO" />
         <result property="descripcionEstado"		column="DESC_ESTADO" />
+        <result property="tipoCambio"				column="TIPO_CAMBIO" />
         <result property="observaciones"			column="OBSERVACIONES" />
         <result property="numeroDocumentoRef"		column="NRO_DOC_REFERENCIA" />
         <result property="subTotal"					column="SUBTOTAL" />
@@ -30,6 +35,9 @@
         <result property="igv"						column="IGV" />
         <result property="total" 					column="TOTAL" />
         <result property="activo"					column="ACTIVO" />
+        <result property="fechaRegistro"			column="FEC_REGISTRO" />
+        <result property="direccionDespachoConcat" 	column="DIRECCION_DESPACHO_CONCAT" />
+        <result property="personaContactoConcat" 	column="PERSONA_CONTACTO_CONCAT" />
     </resultMap>
     
     <resultMap id="ventaDet" type="VentaDetModel">
@@ -47,15 +55,15 @@
     <!-- ********************* PARAMETERMAPS ********************* -->
     <parameterMap id="listarOrdenVentaParams" type="hashmap">
         <parameter property="DATO_BUSCAR"        	jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="COD_TIPO_MONEDA"       jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="COD_COND_PAGO"         jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="NRO_DOCUMENTO"     	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_REPUESTO"     		jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="COD_ESTADO"       		jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FEC_DESDE"       		jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FEC_HASTA"       		jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
         <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
-    </parameterMap> 
-        
+    </parameterMap>
+    
     <parameterMap id="buscarOrdenVentaParams" type="hashmap">
         <parameter property="NRO_DOCUMENTO"       	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
@@ -63,15 +71,19 @@
     </parameterMap> 
     
     <parameterMap id="registrarOrdenVentaParams" type="hashmap">
-        <parameter property="NRO_DOCUMENTO"       	jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="COD_CLIENTE"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_CLIENTE"      		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="NRO_COTIZ_VENTA"		jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="USUARIO"				jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="DIRECCION_DESPACHO"   	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="PERSONA_CONTACTO"   	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FEC_CONTABILIZACION"   jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FEC_VALIDO_HASTA"      jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_ENTREGA"      		jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="COD_TIPO_MONEDA"       jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="COD_COND_PAGO"       	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="COD_DIAS"       		jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="COD_ESTADO"        	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="TIPO_CAMBIO"          	jdbcType="DECIMAL"  mode="IN"/>
         <parameter property="OBSERVACIONES"     	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="NRO_DOCUMENTO_REF"     jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="PORC_DCTO_TOTAL"       jdbcType="DECIMAL"  mode="IN"/>
@@ -80,6 +92,7 @@
         <parameter property="IGV"          			jdbcType="DECIMAL"  mode="IN"/>
         <parameter property="TOTAL"          		jdbcType="DECIMAL"  mode="IN"/>
         <parameter property="DATA_JSON"          	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="NRO_DOCUMENTO"       	jdbcType="VARCHAR"  mode="OUT"/>
         <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
         <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
     </parameterMap>
@@ -104,7 +117,7 @@
     <!-- ************************* QUERYS ******************************* -->
     <!-- este SP es invocado desde el buscador de cotizaciones de venta -->
     <select id="listarOrdenesVenta" parameterMap="listarOrdenVentaParams" resultMap="ventaCab" statementType="CALLABLE">
-    	{CALL SP_LISTAR_ORDENES_VENTA(?,?,?,?,?,?,?,?) }
+    	{CALL SP_LISTAR_ORDEN_VENTA(?,?,?,?,?,?,?,?) }
     </select>
     
     <!-- este SP es invocado al pulsar ver/editar sobre una cotización del listado. Trae la cabecera -->
@@ -119,8 +132,12 @@
          
     <!-- este SP es invocado al grabar una cotización. Graba la cabecera -->
     <insert id="registrarOrdenVenta" parameterMap="registrarOrdenVentaParams" statementType="CALLABLE">
-    	{CALL SP_REGISTRAR_ORDEN_VENTA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
+    	{CALL SP_REGISTRAR_ORDEN_VENTA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
     </insert> 
+    
+    
+    
+    
    	
    	<!-- este SP es invocado al grabar una cotización. Graba la cabecera -->
     <update id="actualizarOrdenVenta" parameterMap="actualizarOrdenVentaParams" statementType="CALLABLE">

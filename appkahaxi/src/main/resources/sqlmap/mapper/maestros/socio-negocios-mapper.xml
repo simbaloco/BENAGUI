@@ -45,6 +45,8 @@
         <result property="nombreRazonSocial" 		column="NOMBRE_RAZON_SOCIAL" />
         <result property="telefono" 				column="TELEFONO" />
         <result property="ubigeo" 					column="UBIGEO" />
+        <result property="direccionDespachoConcat" 	column="DIRECCION_DESPACHO_CONCAT" />
+        <result property="personaContactoConcat" 	column="PERSONA_CONTACTO_CONCAT" />
 	</resultMap>	
 	
 	<resultMap id="socionegociosContactos" type="SocioNegociosContactoModel">

@@ -61,8 +61,9 @@ public class Constante {
 	public static final String PAGINA_MANTENIMIENTO_CATALOGO_DEPENDIENTE = "paginas/maestros/mantenimiento-catalogo-dependiente";
 	/* VENTAS */
 	public static final String PAGINA_MANTENIMIENTO_COTIZACION = "paginas/ventas/cotizacion/mantenimiento-cotizacion";
+	public static final String PAGINA_MANTENIMIENTO_ORDEN_VENTA= "paginas/ventas/ordenventa/mantenimiento-orden-venta";
 	public static final String PAGINA_NUEVA_COTIZACION = "paginas/ventas/cotizacion/nueva-cotizacion";
-	public static final String PAGINA_NUEVA_ORDEN_VENTA = "paginas/ventas/cotizacion/nueva-orden-venta";
+	public static final String PAGINA_NUEVA_ORDEN_VENTA = "paginas/ventas/ordenventa/nueva-orden-venta";
 	/* GUIA REMISION */
 	public static final String PAGINA_CARGAR_GUIA_REMISION_COMPRA = "paginas/compras/guiaremision/cargar-guia-remision";
 	public static final String PAGINA_MANTENIMIENTO_GUIA_REMISION_COMPRA = "paginas/compras/guiaremision/mantenimiento-guia-remision";
@@ -147,6 +148,7 @@ public class Constante {
     public static final String PARAM_SP_DATA_JSON				= "DATA_JSON";
     public static final String PARAM_SP_NRO_PEDIDO				= "NRO_PEDIDO";
     public static final String PARAM_SP_COTIZACION_SAP			= "COTIZACION_SAP";
+    public static final String PARAM_SP_NRO_COTIZ_VENTA			= "NRO_COTIZ_VENTA";
     
     public static final String PARAM_SP_COD_ESTANDAR		= "COD_ESTANDAR";
     public static final String PARAM_SP_COD_ANTIGUO			= "COD_ANTIGUO";
@@ -300,6 +302,8 @@ public class Constante {
 	public static final String PARAM_TIPO_PERSONA = "tipoPersona";
 	public static final String PARAM_TIPO_DOCUMENTO = "tipoDoc";
 	public static final String PARAM_TIPO_REPORTE = "tipoReporte";
+	public static final String PARAM_NRO_ORDEN_VENTA = "nroOrdenVenta";
+
 	
 	public static final String PARAM_DATO_CLIENTE = "datoCliente";
 	public static final String PARAM_COD_DATA_CATALOGO = "codDataCatalogo";

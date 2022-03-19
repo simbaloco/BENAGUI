@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
+import pe.gob.repuestera.model.CompraCabModel;
+import pe.gob.repuestera.model.CompraDetModel;
 import pe.gob.repuestera.model.UsuarioModel;
 import pe.gob.repuestera.model.VentaCabModel;
+import pe.gob.repuestera.model.VentaDetModel;
 import pe.gob.repuestera.service.venta.cotizacion.CotizacionVentaService;
 import pe.gob.repuestera.util.Constante;
 
@@ -78,6 +81,22 @@ public class CotizacionVentaRestController {
         logger.info("fin actualizarCotizacionVenta");		
         
         return new ResponseEntity<>(HttpStatus.OK);
-    }    
+    }  
+	
+	@GetMapping ("/buscarCotizacionParaOrdenVenta/{numeroDocumento}")
+    public ResponseEntity<VentaCabModel> buscarCotizacionParaOrdenVenta(@PathVariable(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento) throws Exception {
+
+        logger.info("Inicio buscarCotizacionParaOrdenVenta.......");
+
+        VentaCabModel ventaCabModel = cotizacionVentaService.buscarCotizacionVenta(numeroDocumento);
+
+        List<VentaDetModel> listVentaDetModel = cotizacionVentaService.buscarCotizacionDetalleParaOrdenVenta(numeroDocumento);
+        
+        ventaCabModel.setDetalle(listVentaDetModel);
+
+        logger.info("Fin buscarCotizacionParaOrdenVenta.......");
+
+        return new ResponseEntity<>(ventaCabModel, HttpStatus.OK);
+    }
     
 }
