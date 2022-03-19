@@ -134,7 +134,7 @@ function inicializarComponentes() {
 }
 
 function inicializarPantalla() {
-	inicializarFechas();
+	//inicializarFechas();
 	controlNoRequerido(observaciones);
 	
 	if(opcion.text() == Opcion.NUEVO) {
@@ -149,40 +149,57 @@ function inicializarPantalla() {
 }
 
 function construirFechasPicker() {
-
-	fecConta.datetimepicker({
-		locale: 		'es',
-		format: 		'L',
-		ignoreReadonly:  true
-	});
-
-	fecDocumento.datetimepicker({
-		locale: 		'es',
-		format: 		'L',
-		ignoreReadonly:  true
-	});
-
+	/* se construyen del último al primero para que funcionen con el botón "limpiar" */
+	
+	// La fecha de Vencimiento:
+	// •	No puede ser menor que la fecha de contabilización
 	fecVencimiento.datetimepicker({
 		locale: 		'es',
 		format: 		'L',
-		ignoreReadonly:  true
+		ignoreReadonly:  true,
+		date:		moment(),
+		minDate:	moment()
 	});
+	
+	// La fecha de Documento
+	// •	No puede ser mayor que la fecha de contabilización
+	// •	No puede ser mayor que la fecha actual.
+	fecDocumento.datetimepicker({
+		locale: 		'es',
+		format: 		'L',
+		ignoreReadonly:  true,
+		date:		moment(),
+		maxDate:	moment()
+	});
+
+	// La fecha de contabilización no puede ser mayor a la fecha actual	
+	fecConta.datetimepicker({
+		locale: 		'es',
+		format: 		'L',
+		ignoreReadonly:  true,
+		date:		moment(),
+		maxDate:	moment()
+	});	
 }
 
 function restringirSeleccionFechas() {
 	//fecConta.datetimepicker('maxDate', new Date());
-
+	/*
 	fecDocumento.on("change.datetimepicker", function (e) {
 		fecVencimiento.datetimepicker('minDate', e.date);
 	});
-
+	*/
 	fecConta.on("change.datetimepicker", function (e) {
-		fecDocumento.datetimepicker('maxDate', e.date < fecVencimiento.datetimepicker('date') ? e.date : fecVencimiento.datetimepicker('date'));
+		//fecDocumento.datetimepicker('maxDate', e.date < fecVencimiento.datetimepicker('date') ? e.date : fecVencimiento.datetimepicker('date'));
+		fecDocumento.datetimepicker('maxDate', e.date);
+		fecVencimiento.datetimepicker('minDate', e.date);
 	});
 	/*
 	fecVencimiento.on("change.datetimepicker", function (e) {
-		fecDocumento.datetimepicker('maxDate', e.date < fecConta.datetimepicker('date') ? e.date : fecConta.datetimepicker('date'));
-	});*/
+		//fecDocumento.datetimepicker('maxDate', e.date < fecConta.datetimepicker('date') ? e.date : fecConta.datetimepicker('date'));
+		fecDocumento.datetimepicker('maxDate', e.date);
+	});
+	*/
 }
 
 function inicializarEventos() {
@@ -267,7 +284,7 @@ function inicializarTablaDetalle(paginacion) {
 
 /**************** FUNCIONES DE SOPORTE ***********************************************************
  *************************************************************************************************/
-
+/*
 function inicializarFechas(){
 	//fecConta.datetimepicker('maxDate', moment());
 	fecVencimiento.datetimepicker('date', moment());
@@ -275,6 +292,7 @@ function inicializarFechas(){
 	fecConta.datetimepicker('date', moment());
 	fecConta.datetimepicker('maxDate', moment());
 }
+*/
 
 function cargarPantallaConDatosGuiaRemisionAsociadas() {
 	console.log("cargarPantallaConDatosGuiaRemisionAsociadas...");
@@ -1241,16 +1259,20 @@ function volver(){
 }
 
 function limpiarFactura() {
-	inicializarFechas();
-	
-	fecDocumento.datetimepicker('date', null);
-	fecVencimiento.datetimepicker('date', null);
+	//inicializarFechas();
+		
 	serie.val(CADENA_VACIA);
 	correlativo.val(CADENA_VACIA);
 	observaciones.val(CADENA_VACIA);
 	direccionDespacho.val(CADENA_VACIA);
 	personaContacto.val(CADENA_VACIA);
 	estadoPago.prop("selectedIndex", 0);
+	
+	fecConta.datetimepicker('destroy');
+	fecDocumento.datetimepicker('destroy');
+	fecVencimiento.datetimepicker('destroy');	
+	construirFechasPicker();
+	
 	direccionDespacho.focus();
 	formObservaciones.removeClass('was-validated');
 }
