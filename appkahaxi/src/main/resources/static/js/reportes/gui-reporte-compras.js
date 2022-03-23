@@ -260,7 +260,9 @@ function inicializarTabla(){
 		    },
             url: '/appkahaxi/listarReporteCompras/',
             dataSrc: function (json) {
-				console.log("listarReporteCompras...success");
+				console.log("listarReporteCompras...success , JSON-->" + json);
+				var data = JSON.stringify(json);
+				console.log("data--->" + data);
             	return json;
             },
             error: function (xhr, error, code){
@@ -269,34 +271,38 @@ function inicializarTabla(){
         },
         "responsive"	: false,
         "scrollCollapse": false,
-		"ordering"      : true,
-        "dom"			: '<ip<rt>lp>',
+		"dom"			: '<ip<rt>lp>',
        	"lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
         "deferRender"   : true,
         "autoWidth"		: false,
+		// por defecto, datatable ordena segùn criterio ASC, ignorando el order by de la query
+		// colocamos ordering true para que el usuario pueda reordenar las columnas
+		// e indicamos que se ordene según la 1ra columna.
+		"ordering"      : true,
+        "order"			: [[0, 'desc']],
         "columnDefs"    : [
             {
-                "width": "5px",
+                "width": "1px",
                 "targets": [0],
                 "data": "NRO_DOCUMENTO"
             },
             {
-                "width": "10px",
+                "width": "5px",
                 "targets": [1],
                 "data": "NRO_DOCUMENTO"
             },
             {
-                "width": "75px",
+                "width": "20px",
                 "targets": [2],
                 "data": "FEC_CONTABILIZACION"
             },			
 			{
-                "width": "50px",
+                "width": "20px",
                 "targets": [3],
                 "data": "NRO_DOC_PROVEEDOR"
             },
 			{
-                "width": "50px",
+                "width": "250px",
                 "targets": [4],
                 "data": "NOMBRE_PROVEEDOR"
             },			
@@ -327,13 +333,19 @@ function inicializarTabla(){
             }			        
          ],
          "fnRowCallback":
-                 function(row, data, iDisplayIndex, iDisplayIndexFull){					
-                     var index = iDisplayIndexFull + 1;
-					 // colocando la numeración
-                     $('td:eq(0)', row).html(index);
+                 function(row, data, iDisplayIndex, iDisplayIndexFull){
+                    var index = iDisplayIndexFull + 1;
+					 
+					// pintando las filas según estado
+		      		if(data.ESTADO_PAGO == EstadoPagoReporte.PENDIENTE){
+		            	$(row).addClass("estadoRechazado");
+		            }
+
+					// colocando la numeración
+                    $('td:eq(0)', row).html(index);
 					// modificando el tamaño de los caracteres del listado 
 					$(row).addClass("listado-tam-caracteres");
-                     return row;
+                    return row;
                  },
          "language"  : {
             "url": "/appkahaxi/language/Spanish.json"

@@ -18,6 +18,7 @@
 	<input type="text" id="codigoProveedor" hidden="hidden"/>
 	<input type="text" id="email" hidden="hidden"/>
 	<input type="text" id="flagEnvio" hidden="hidden"/>
+	<input type="text" id="tipoCambioSave" hidden="hidden"/>
 	
 	<label id="numeroDocumento" th:text=${numeroDocumento} hidden="hidden"></label>
 	<label id="opcion" th:text=${opcion} hidden="hidden"></label>
@@ -206,17 +207,21 @@
 								
 								<div class="col-md-2">
 									<label class="label" for="direccionDespacho">Direcci&oacute;n Despacho:</label>
-									<input class="marquee form-control" maxlength="200" size="50" type="text" id="direccionDespacho" required="required"/>
+									<select id="direccionDespacho" class="form-control" required="required">
+										<option value="" selected>-- SELECCIONAR --</option>										
+									</select>
 									<div class="invalid-feedback">
-										Debe ingresar la dirección de despacho
+										Debe seleccionar la dirección de despacho
 									</div>
 								</div>
 
 								<div class="col-md-2">
 									<label class="label" for="personaContacto">Persona Contacto:</label>
-									<input class="marquee form-control" maxlength="100" size="50" type="text" id="personaContacto" required="required"/>
+									<select id="personaContacto" class="form-control" required="required">
+										<option value="" selected>-- SELECCIONAR --</option>										
+									</select>
 									<div class="invalid-feedback">
-										Debe ingresar la persona de contacto
+										Debe seleccionar la persona de contacto
 									</div>
 								</div>
 
@@ -247,12 +252,9 @@
 								<div class="col-md-2">
 									<label class="label" for="fecEntrega">Fecha de entrega:</label>
 									<div class="input-group date" id="fecEntrega" data-target-input="nearest">
-										<input type="text" class="form-control datetimepicker-input" data-target="#fecEntrega" id="fecEntregaInput" required="required"/>
+										<input type="text" class="form-control datetimepicker-input" data-target="#fecEntrega" id="fecEntregaInput" />
 										<div class="input-group-append" data-target="#fecEntrega" data-toggle="datetimepicker">
 											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
-										</div>
-										<div class="invalid-feedback">
-											Ingrese Fecha de entrega
 										</div>
 									</div>
 								</div>

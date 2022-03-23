@@ -268,7 +268,7 @@ function cargarModalSerie(serie, opcion){
 			correlativoModal.val(CADENA_VACIA);
 			maxcorrelativoModal.val(CADENA_VACIA);
 			activoModal.prop('checked', true);		
-			titulo.text(DescripcionOpcion.DES_NUEVO);
+			titulo.text(DescripcionOpcion.DES_NUEVA);
 			
 			codigoModal.val('0');
 			ocultarControl(divCodigo);

@@ -44,6 +44,7 @@ function inicializarVariables() {
 	form_validado_usuario = $('#form_validado_usuario');
 	form_usuarioModal = $('#form_usuarioModal');
 	titulo = $('#titulo');
+	labelRoles = $('#labelRoles');
 	nombresModal = $('#nombresModal');
 	apepaternoModal = $('#apepaternoModal');
 	apematernoModal = $('#apematernoModal');
@@ -282,6 +283,7 @@ function cargarModalUsuario(usuario, opcion){
 			confirmacontrasenaModal.val(CADENA_VACIA);
 			activoModal.prop('checked', true);		
 			titulo.text(DescripcionOpcion.DES_NUEVO);
+			labelRoles.text("Seleccione los roles que desea asociar al usuario:");
 			
 			habilitarControl(nombresModal);
 			habilitarControl(apepaternoModal);
@@ -314,6 +316,8 @@ function cargarModalUsuario(usuario, opcion){
 			if(opcion == Opcion.VER){
 				iOpcion = Opcion.VER;
 				titulo.text(DescripcionOpcion.DES_VER);
+				labelRoles.text("Roles asociados al usuario:");
+				
 				deshabilitarControl(nombresModal);
 				deshabilitarControl(apepaternoModal);
 				deshabilitarControl(apematernoModal);
@@ -329,6 +333,8 @@ function cargarModalUsuario(usuario, opcion){
 			if(opcion == Opcion.MODIFICAR){
 				iOpcion = Opcion.MODIFICAR;
 				titulo.text(DescripcionOpcion.DES_MODIFICAR);
+				labelRoles.text("Puede modificar los roles asociados al usuario:");
+				
 				habilitarControl(nombresModal);
 				habilitarControl(apepaternoModal);
 				habilitarControl(apematernoModal);
@@ -453,7 +459,7 @@ function crearListaPerfiles(etiqueta,data,opcion){
 	        var habilita = (opcion == Opcion.VER) ? 'disabled = "disabled"' : CADENA_VACIA;
 			var checked = (nodo.check == 1) ? 'checked = "checked"' : CADENA_VACIA;
 			
-			html = "<li><span style='color:#5990e0;margin-right:20px;'></span><input "+ habilita +" type='checkbox' "+ checked +" class='form-check-input my-n1' id='"+idCheck+"' onclick='dinamicaListarOpciones("+nodo.idPerfil+")' ><label for='"+idCheck+"' class='label'>"+nodo.identificador+"</label></li>";
+			html = "<li><span style='color:#5990e0;margin-right:20px;'></span><input "+ habilita +" type='checkbox' "+ checked +" class='form-check-input my-n1' id='"+idCheck+"' onclick='dinamicaListarOpciones("+nodo.idPerfil+")'><label for='"+idCheck+"' class='label'>"+nodo.identificador+"</label></li>";
 			//html = html + "<button type='button' id='btn'"+nodo.idPerfil+"  class='btn btn-md' title='Ver Opciones'><span class='mr-1'><i class='far fa-arrow-alt-circle-right'></i></span></button></li>";
 			$("#"+idOpcion).append(html);	        
 		}

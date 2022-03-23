@@ -114,6 +114,7 @@ var Opcion = {
 };
 
 var DescripcionOpcion = {
+		DES_NUEVA		: "Nueva",
 		DES_NUEVO		: "Nuevo",
 		DES_MODIFICAR	: "Modificar",
 		DES_VER			: "Ver"
@@ -173,6 +174,11 @@ var Pais = {
 var EstadoPago = {
 	PENDIENTE		: "01",
 	PAGADO			: "02"
+};
+
+var EstadoPagoReporte = {
+	PENDIENTE		: "PENDIENTE",
+	CANCELADO		: "CANCELADO"
 };
 
 var Dias = {
@@ -785,7 +791,7 @@ function convertirNumeroAMoneda(numero){
     return formateadoSinSimbolo;
 };
 
-function obtenerTipoCambio(control){
+function obtenerTipoCambio(control, controlSave){
 	console.log("obtenerTipoCambio...entrando");
 	// obteniendo dia, mes y año
 	var f = new Date();
@@ -809,6 +815,11 @@ function obtenerTipoCambio(control){
         	if(xhr.status == HttpStatus.OK){
         		console.log("obtenerTipoCambio respondio exito.....");
 				control.val(resultado);
+				console.log("controlSave-->" + controlSave);
+				if(controlSave != UNDEFINED){
+					controlSave.val(resultado);
+					console.log("controlSave.val-->" + controlSave.val());
+				}
             }else if(xhr.status == HttpStatus.Accepted){
             	console.log("obtenerTipoCambio, Accepted....");
             	mostrarMensajeError(resultado);
