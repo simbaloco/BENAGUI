@@ -296,49 +296,54 @@ function inicializarTabla(){
                 "targets": [1],
                 "data": "NRO_DOCUMENTO"
             },
+			{
+                "width": "10px",
+                "targets": [2],
+                "data": "NRO_DOCUMENTO_INTERNO"
+            },
             {
                 "width": "75px",
-                "targets": [2],
+                "targets": [3],
                 "data": "FEC_CONTABILIZACION"
             },
 			{
                 "width": "50px",
-                "targets": [3],
+                "targets": [4],
                 "data": "NRO_DOC_CLIENTE"
             },
 			{
                 "width": "50px",
-                "targets": [4],
+                "targets": [5],
                 "data": "NOMBRE_CLIENTE"
             },
 			{
                 "width": "50px",
-                "targets": [5],
+                "targets": [6],
                 "data": "VENDEDOR"
             },			
             {
                 "width": "10px",
-                "targets": [6],
+                "targets": [7],
                 "data": "MONEDA"
             },            
             {
                 "width": "10px",
-                "targets": [7],
+                "targets": [8],
                 "data": "SUBTOTAL"
             },  
 			{
                 "width": "10px",
-                "targets": [8],
+                "targets": [9],
                 "data": "IGV"
             },  
 			{
                 "width": "10px",
-                "targets": [9],
+                "targets": [10],
                 "data": "TOTAL"
             },  
 			{
                 "width": "10px",
-                "targets": [10],
+                "targets": [11],
                 "data": "ESTADO_PAGO"
             }     
          ],

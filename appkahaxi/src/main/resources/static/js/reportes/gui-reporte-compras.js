@@ -291,44 +291,54 @@ function inicializarTabla(){
                 "targets": [1],
                 "data": "NRO_DOCUMENTO"
             },
-            {
-                "width": "20px",
+			{
+                "width": "10px",
                 "targets": [2],
-                "data": "FEC_CONTABILIZACION"
+                "data": "NRO_DOCUMENTO_INTERNO"
+            },
+            {
+				"width": "75px",
+                "targets": [3],
+				"data": "FEC_CONTABILIZACION"
             },			
 			{
-                "width": "20px",
-                "targets": [3],
-                "data": "NRO_DOC_PROVEEDOR"
+				"width": "50px",
+                "targets": [4],
+				"data": "NRO_DOC_PROVEEDOR"
             },
 			{
-                "width": "250px",
-                "targets": [4],
-                "data": "NOMBRE_PROVEEDOR"
+				"width": "50px",
+                "targets": [5],
+				"data": "NOMBRE_PROVEEDOR"
             },			
             {
                 "width": "10px",
-                "targets": [5],
+                "targets": [6],
                 "data": "MONEDA"
             },            
             {
                 "width": "10px",
-                "targets": [6],
+                "targets": [7],
                 "data": "SUBTOTAL"
             },  
 			{
                 "width": "10px",
-                "targets": [7],
+                "targets": [8],
                 "data": "IGV"
             },  
 			{
                 "width": "10px",
-                "targets": [8],
+                "targets": [9],
                 "data": "TOTAL"
-            },  
+            }, 
 			{
                 "width": "10px",
-                "targets": [9],
+                "targets": [10],
+                "data": "NRO_PEDIDO"
+            }, 
+			{
+                "width": "10px",
+                "targets": [11],
                 "data": "ESTADO_PAGO"
             }			        
          ],

@@ -49,18 +49,17 @@
     
     <resultMap id="repCompraDet" type="hashmap">
         <result property="NRO_DOCUMENTO" 		column="NRO_DOCUMENTO" />
+        <result property="NRO_DOCUMENTO_INTERNO" column="NRO_DOCUMENTO_INTERNO" />
         <result property="FEC_CONTABILIZACION" 	column="FEC_CONTABILIZACION" />
         <result property="ORDEN_COMPRA" 		column="ORDEN_COMPRA" />
         <result property="COD_PROVEEDOR" 		column="COD_PROVEEDOR" />
         <result property="NRO_DOC_PROVEEDOR" 	column="NRO_DOC_PROVEEDOR" />
         <result property="NOMBRE_PROVEEDOR"		column="NOMBRE_PROVEEDOR" />
-        <result property="SERIE"				column="SERIE" />
-        <result property="CORRELATIVO"			column="CORRELATIVO" />
         <result property="MONEDA"				column="MONEDA" />
         <result property="SUBTOTAL" 			column="SUBTOTAL" />
         <result property="IGV"					column="IGV" />
         <result property="TOTAL"				column="TOTAL" />
-        <result property="NRO_SEGUIMIENTO"		column="NRO_SEGUIMIENTO" />
+        <result property="NRO_PEDIDO"			column="NRO_PEDIDO" />
         <result property="ESTADO_PAGO"			column="ESTADO_PAGO" />
         <result property="ESTADO"				column="ESTADO" />
         <result property="FEC_REGISTRO" 		column="FEC_REGISTRO" />
@@ -101,14 +100,13 @@
     
     <resultMap id="repVentaDet" type="hashmap">
         <result property="NRO_DOCUMENTO" 		column="NRO_DOCUMENTO" />
+        <result property="NRO_DOCUMENTO_INTERNO" column="NRO_DOCUMENTO_INTERNO" />
         <result property="FEC_CONTABILIZACION" 	column="FEC_CONTABILIZACION" />
         <result property="ORDEN_VENTA" 			column="ORDEN_VENTA" />
         <result property="COD_CLIENTE" 			column="COD_CLIENTE" />
         <result property="NRO_DOC_CLIENTE"	 	column="NRO_DOC_CLIENTE" />
         <result property="NOMBRE_CLIENTE"		column="NOMBRE_CLIENTE" />
-        <result property="VENDEDOR"				column="VENDEDOR" />
-        <result property="SERIE"				column="SERIE" />
-        <result property="CORRELATIVO"			column="CORRELATIVO" />
+        <result property="VENDEDOR"				column="VENDEDOR" />        
         <result property="MONEDA"				column="MONEDA" />
         <result property="SUBTOTAL" 			column="SUBTOTAL" />
         <result property="IGV"					column="IGV" />
