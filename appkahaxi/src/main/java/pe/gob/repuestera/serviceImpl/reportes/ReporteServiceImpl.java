@@ -42,7 +42,6 @@ import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import pe.gob.repuestera.exception.ErrorControladoException;
 import pe.gob.repuestera.model.CompraCabModel;
-import pe.gob.repuestera.model.CompraDetModel;
 import pe.gob.repuestera.model.VentaCabModel;
 import pe.gob.repuestera.repository.compra.ordencompra.OrdenCompraMapper;
 import pe.gob.repuestera.repository.reportes.ReporteMapper;

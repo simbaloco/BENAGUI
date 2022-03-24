@@ -283,32 +283,32 @@ function inicializarTabla(){
                 "data": "FEC_ANULA"
             },
             {
-                "width": "75px",
+                "width": "20px",
                 "targets": [2],
                 "data": "USER_ANULA"
             },
 			{
-                "width": "50px",
+                "width": "100px",
                 "targets": [3],
                 "data": "TIPO_DOC"
             },
 			{
-                "width": "50px",
+                "width": "100px",
                 "targets": [4],
                 "data": "NRO_DOCUMENTO"
             },
 			{
-                "width": "50px",
+                "width": "10px",
                 "targets": [5],
                 "data": "FEC_CONTABILIZACION"
             },
 			{
-                "width": "50px",
+                "width": "100px",
                 "targets": [6],
                 "data": "NRO_DOC_SN"
             },
 			{
-                "width": "50px",
+                "width": "250px",
                 "targets": [7],
                 "data": "NOMBRE_SN"
             },

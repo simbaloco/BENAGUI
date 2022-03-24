@@ -53,22 +53,23 @@
 					                            Ingrese un tipo de documento.
 					                        </div> 
 		                        		</div>  
-		                        		<div class="col-md-3">
+		                        		<div class="col-md-2" id="divActivo">
+		                        			<label class="label" for="activoModal">Activo:</label>
+								            <input id="activoModal" type="checkbox" class="form-check">	
+		                        		</div>
+		                        		<div class="col-md-4"></div>
+		                        		
+		                        	</div>
+		                        	
+		                        	<div class="row">
+		                            	<div class="col-md-3">
 		                        			<label class="label" for="descripcionModal">Descripción:</label>
 							            	<input id="descripcionModal" type="text" class="form-control" required="required" maxlength="100">
 							            	<div class="invalid-feedback">
 					                            Ingrese una descripción válida.
 					                        </div> 
 		                        		</div>
-		                        		<div class="col-md-1"></div>
-		                        		<div class="col-md-2" id="divActivo">
-		                        			<label class="label" for="activoModal">Activo:</label>
-								            <input id="activoModal" type="checkbox" class="form-check">	
-		                        		</div>
-		                        	</div>
-		                        	
-		                        	<div class="row">
-		                            	<div class="col-md-3">
+		                        		<div class="col-md-3">
 		                        			<label class="label" for="nroserieModal">Serie:</label>
 							            	<input id="nroserieModal" type="text" class="form-control" required="required" maxlength="4">
 							            	<div class="invalid-feedback">
@@ -158,11 +159,11 @@
 							 		<div class="col-sm-6 alineacion-derecha">
 							 		<label></label>
 							 		<div>
-								 		<button  type="button" id="btnLimpiar" class="btn btn-outline-primary btn-sm">
+								 		<button  type="button" id="btnLimpiar" class="btn btn-primary btn-sm">
 							            	<span class="mr-2"><i class="fas fa-eraser"></i></span>Limpiar
 							            </button>
 							                
-							            <button  type="button" id="btnNuevo" class="btn btn-outline-primary btn-sm">
+							            <button  type="button" id="btnNuevo" class="btn btn-primary btn-sm">
 					                    	<span class="mr-2"><i class="fas fa-plus-square"></i></span>Nuevo
 					                    </button >
 						            </div>
