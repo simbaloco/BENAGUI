@@ -29,7 +29,7 @@ var tipoMoneda;
 var condPago;
 var dias;
 var divDias;
-var fecEntrega;
+var fecRecepcion;
 var tipoCambio;
 var serie;
 var correlativo;
@@ -112,7 +112,7 @@ function inicializarVariables() {
 	condPago = $("#condPago");
 	dias = $("#dias");
 	divDias = $("#divDias");
-	fecEntrega = $("#fecEntrega");
+	fecRecepcion = $("#fecRecepcion");
 	serie = $("#serie");
 	correlativo = $("#correlativo");
 	motivoTraslado = $("#motivoTraslado");
@@ -183,13 +183,13 @@ function construirFechasPicker() {
 	// •	No puede ser mayor que la fecha actual.
 	// •	No puede ser mayor que la fecha de contabilización
 	// •	No puede ser menor que la fecha de Documento.
-	fecEntrega.datetimepicker({
+	fecRecepcion.datetimepicker({
 		locale: 		'es',
 		format: 		'L',
 		ignoreReadonly:  true,
 		date:		moment(),
+		minDate:	moment(),
 		maxDate:	moment(),
-		minDate:	moment()
 	});
 	
 	// La fecha de Documento de la Guía de Remisión:
@@ -200,16 +200,16 @@ function construirFechasPicker() {
 		format: 		'L',
 		ignoreReadonly: true,
 		date:		moment(),
-		maxDate:	moment()
+		maxDate:	moment(),
 	});
-	
+		
 	// La fecha de contabilización no puede ser mayor a la fecha actual	
 	fecConta.datetimepicker({
 		locale: 		'es',
 		format: 		'L',
 		ignoreReadonly:  true,
 		date:		moment(),
-		maxDate:	moment()
+		maxDate:	moment(),
 	});	
 }
 
@@ -217,20 +217,24 @@ function restringirSeleccionFechas() {
 
 	fecDocumento.on("change.datetimepicker", function (e) {
 		//reiniciarMinFechaEntrega();
-		fecEntrega.datetimepicker('minDate', e.date);
+		fecRecepcion.datetimepicker('minDate', e.date);
 	});
 
 	fecConta.on("change.datetimepicker", function (e) {
 		//reiniciarMaxFechas();
 		fecDocumento.datetimepicker('maxDate', e.date);
-		fecEntrega.datetimepicker('maxDate', e.date);
+		fecRecepcion.datetimepicker('maxDate', e.date);
 	});
 }
 
 function inicializarEventos() {
 
 	$('#tableDetalle tbody').on('click','.btn-delete', function () {
-		mostrarDialogoEliminarFila(dataTableDetalle, $(this));
+		if(indiceFilaDataTableDetalle == 0){
+			mostrarMensajeValidacion("No se puede eliminar el único item de la Guía de Remisión.");
+		}else{
+			mostrarDialogoEliminarFila(dataTableDetalle, $(this));
+		}
 	});
 
 	$('.readonly').keydown(function(e){
@@ -313,7 +317,7 @@ function inicializarTablaDetalle(paginacion) {
 /*
 function inicializarFechas(){
 	console.log("Inicializando fechas...");
-	fecEntrega.datetimepicker('date', moment());
+	fecRecepcion.datetimepicker('date', moment());
 	fecDocumento.datetimepicker('date', moment());
 	fecConta.datetimepicker('date', moment());	
 	fecConta.datetimepicker('maxDate', moment());
@@ -361,6 +365,7 @@ function cargarPantallaHTMLOrdenCompra(data) {
 	direccionDespacho.val(data.direccionDespacho);
 	personaContacto.val(data.personaContacto);	
 	tipoMoneda.val(data.codigoTipoMoneda);
+	// se obtiene el tc del día
 	obtenerTipoCambio(tipoCambio);
 	condPago.val(data.codigoCondPago);
 	dias.val(data.codigoDias);
@@ -521,7 +526,7 @@ function verPantallaGuiaRemision(data) {
 	
 	fecConta.datetimepicker('date', moment(data.fechaContabilizacion));
 	fecDocumento.datetimepicker('date', moment(data.fechaDocumento));
-	fecEntrega.datetimepicker('date', moment(data.fechaEntrega));
+	fecRecepcion.datetimepicker('date', moment(data.fechaEntrega));
 
 	//deshabilitarControl('.datetimepicker-input');
 	deshabilitarControl(direccionDespacho);
@@ -804,8 +809,6 @@ function validarDetalleGuiaRemision(){
 			}
 		});
 	});
-	alert("contadorVacios-->" + contadorVacios);
-	alert("indiceFilaDataTableDetalle-->" + indiceFilaDataTableDetalle);
 	// si la cantidad de filas vacías es igual al contador de filas, mostrar mensaje
 	if(indiceFilaDataTableDetalle == UNDEFINED || (contadorVacios == (indiceFilaDataTableDetalle + 1))){
 		mostrarMensajeValidacion("No se puede grabar una Guía de Remisión sin artículos.", null, '#buscarArticulo_' + indiceFilaDataTableDetalle);
@@ -874,7 +877,7 @@ function registrarGuiaRemisionCompra(){
 	var ordenCompra	  			= OCReferencia.val().trim();
 	var fecContaVal 			= fecConta.datetimepicker('date').format('YYYY-MM-DD');
 	var fecDocumentoVal 		= fecDocumento.datetimepicker('date').format('YYYY-MM-DD');
-	var fecEntregaVal 			= fecEntrega.datetimepicker('date').format('YYYY-MM-DD');
+	var fecEntregaVal 			= fecRecepcion.datetimepicker('date').format('YYYY-MM-DD');
 	var tipoMonedaVal 			= tipoMoneda.val();
 	var condPagoVal 			= condPago.val();
 	var tipoCambioVal			= tipoCambio.val();
@@ -1083,7 +1086,6 @@ function mostrarDialogoEliminarFila(table, row){
 		callback: function (result) {
 
 			if(result == true){
-
 				table.row(row.closest('tr')).remove().draw();
 				indiceFilaDataTableDetalle--;
 				calcularResumenGuiaRemision();
@@ -1532,13 +1534,13 @@ function volver(){
 /*
 function reiniciarMinFechaEntrega() {
 	console.log("reiniciarMinFechaEntrega...inicio");
-	fecEntrega.datetimepicker('minDate', false);
+	fecRecepcion.datetimepicker('minDate', false);
 }
 
 function reiniciarMaxFechas() {
 	console.log("reiniciarMaxFechas...inicio");
 	fecDocumento.datetimepicker('maxDate', false);
-	fecEntrega.datetimepicker('maxDate', false);
+	fecRecepcion.datetimepicker('maxDate', false);
 }
 */
 function cargarFacturaAsociada(numeroDocumento, opcion) {
@@ -1575,17 +1577,19 @@ function limpiarGuiaRemision() {
 	serie.val(CADENA_VACIA);
 	correlativo.val(CADENA_VACIA);
 	observaciones.val(CADENA_VACIA);
-	direccionDespacho.val(CADENA_VACIA);
-	personaContacto.val(CADENA_VACIA);
 	motivoTraslado.prop("selectedIndex", 0);
 	
-	fecConta.datetimepicker('destroy');
+	//fecRecepcion.datetimepicker('destroy');
 	fecDocumento.datetimepicker('destroy');
-	fecEntrega.datetimepicker('destroy');	
+	fecConta.datetimepicker('destroy');
+	fecRecepcion.datetimepicker('minDate', false);
+	fecRecepcion.datetimepicker('maxDate', false);
+	//fecDocumento.datetimepicker('maxDate', false);
 	construirFechasPicker();
-	
-	direccionDespacho.focus();
+		
 	formObservaciones.removeClass('was-validated');
+	
+	serie.focus();
 }
 
 

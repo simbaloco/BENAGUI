@@ -1,4 +1,5 @@
 var indiceFilaDataTableDetalle = -1;
+var tipoCambioSave;
 //**************************************************************** */
 var titulo;
 var codigo;
@@ -26,14 +27,22 @@ var nombreProv;
 var direccion;
 var direccionDespacho;
 var personaContacto;
+var direccionDespachoInput;
+var personaContactoInput;
 var fecConta;
 var fecDocumento;
 var tipoMoneda;
 var condPago;
 var dias;
 var divDias;
+var divDirDespacho;
+var divPerContacto;
+var divDirDespachoInput;
+var divPerContactoInput;
+
 var fecVencimiento;
 var tipoCambio;
+var tipoCambioSave;
 var serie;
 var correlativo;
 
@@ -94,21 +103,30 @@ function inicializarVariables() {
 	desdeDocRef = $("#desdeDocRef");
 	
 	formFactura = $("#formFactura");
+	formObservaciones = $("#formObservaciones");
 	documentoProv = $("#documentoProv");
 	nombreProv = $("#nombreProv");
 	direccion = $("#direccion");
 	direccionDespacho = $("#direccionDespacho");
 	personaContacto = $("#personaContacto");
+	direccionDespachoInput = $("#direccionDespachoInput");
+	personaContactoInput = $("#personaContactoInput");
 	fecConta = $("#fecConta");
 	fecDocumento = $("#fecDocumento");
 	tipoMoneda = $("#tipoMoneda");
 	condPago = $("#condPago");
 	dias = $("#dias");
 	divDias = $("#divDias");
+	divDirDespacho = $("#divDirDespacho");
+	divPerContacto = $("#divPerContacto");
+	divDirDespachoInput = $("#divDirDespachoInput");
+	divPerContactoInput = $("#divPerContactoInput");
+	
 	fecVencimiento = $("#fecVencimiento");
 	serie = $("#serie");
 	correlativo = $("#correlativo");
 	tipoCambio = $("#tipoCambio");
+	tipoCambioSave =  $("#tipoCambioSave");
 
 	divMensajeEliminado = $("#divMensajeEliminado");
 	btnAnular = $("#btnAnular");
@@ -239,7 +257,9 @@ function habilitarAutocompletarBuscarCampos() {
 						AC.nombreRazonSocial	= item.nombreRazonSocial;
 						AC.direccionFiscal 		= item.direccionFiscal;
 						AC.email			    = item.email;
-						AC.celular				= item.celular;	
+						AC.celular				= item.celular;
+						AC.direccionDespachoConcat = item.direccionDespachoConcat
+						AC.personaContactoConcat = item.personaContactoConcat
 						
 						return AC;
 					}));
@@ -264,13 +284,21 @@ function habilitarAutocompletarBuscarCampos() {
 			email.val(ui.item.email);
 			celular.val(ui.item.celular);
 			
+			direccionDespacho.find('option').not(':first').remove();
+			personaContacto.find('option').not(':first').remove();
+
+			let dirDespachoArray = ui.item.direccionDespachoConcat.split('|');
+			let perContactoArray = ui.item.personaContactoConcat.split('|');
+
+			llenarCombosDirDespachoPerContacto(dirDespachoArray, perContactoArray);
+			
 			campoBuscar.val(CADENA_VACIA);
 			console.log("campobuscar indiceFilaDataTableDetalle--->" + indiceFilaDataTableDetalle);
 			if(indiceFilaDataTableDetalle == -1){
 				agregarFilaEnTablaDetalle();
 			}
 			
-			$('#direccionDespacho').focus();
+			direccionDespacho.focus();
 		}
 	});
 }
@@ -383,7 +411,8 @@ function inicializarFechas(){
 
 function cargarPantallaNueva() {
 	//obtenerTipoCambio(tipoCambio);
-
+	obtenerTipoCambio(tipoCambio, tipoCambioSave);	
+	
 	controlNoRequerido(observaciones);
 	titulo.text("NUEVA");
 	dias.val(Dias._30);
@@ -445,8 +474,15 @@ function cargarPantallaHTMLFactura(data) {
 	documentoProv.val(data.nroDocProv);
 	nombreProv.val(data.nombreProv);
 	direccion.val(data.direccionFiscal);
-	direccionDespacho.val(data.direccionDespacho);
-	personaContacto.val(data.personaContacto);	
+	
+	ocultarControl(divDirDespacho);
+	ocultarControl(divPerContacto);
+	mostrarControl(divDirDespachoInput);
+	mostrarControl(divPerContactoInput);
+	
+	direccionDespachoInput.val(data.direccionDespacho);
+	personaContactoInput.val(data.personaContacto);	
+	
 	email.val(data.email);
 	celular.val(data.celular);
 	tipoMoneda.val(data.codigoTipoMoneda);
@@ -477,6 +513,7 @@ function cargarPantallaHTMLFactura(data) {
     	$('#almacen_' + i).val(detalle.codAlmacen);
 		$('#cantidad_' + i).val(detalle.cantidad);
 		$('#precio_' + i).val(convertirNumeroAMoneda(detalle.precioUnitario));
+		$('#precioIgv_' + i).val(convertirNumeroAMoneda(detalle.precioUnitarioIgv));
 		$('#subTotal_' + i).val(convertirNumeroAMoneda(detalle.subTotal));
 		$('#subTotalIgv_' + i).val(convertirNumeroAMoneda(detalle.subTotalIgv));
 	}
@@ -756,7 +793,7 @@ function buscarArticuloKeyUp(e, control, fila){
 				}
 				
 				$('#precio_' + fila).val(convertirNumeroAMoneda(precio));
-				$('#precio_' + fila).prop('min', precio);
+				//$('#precio_' + fila).prop('min', precio);
 				
 				var precioIgv = precio + (precio * (ParametrosGenerales.IGV / 100));
 				$('#precioIgv_' + fila).val(convertirNumeroAMoneda(precioIgv));
@@ -838,15 +875,30 @@ function evaluarCambioCondicionPago() {
 	}
 }
 
-function evaluarCambioTipoMoneda() {
-	var tipoMonedaVal = tipoMoneda.val();
-
-	if(tipoMonedaVal == Moneda.SOLES) {
+function evaluarCambioTipoMoneda(){
+	if (tipoMoneda.val() == Moneda.SOLES){
+		controlNoRequerido(tipoCambio);
+		habilitarControlSoloLectura(tipoCambio);
 		$('.simbolo-moneda').removeClass("input-symbol-dolar").addClass("input-symbol-sol");
-		convertirMontosASoles();
-	}else{
+		if(tipoCambio.val().trim() == CADENA_VACIA){
+			// sin valor en tc
+			convertirMontosASoles(false);	
+		}else{
+			// con valor en tc
+			convertirMontosASoles(true);
+		}
+	}
+	else{
+		controlRequerido(tipoCambio);
+		deshabilitarControlSoloLectura(tipoCambio);
 		$('.simbolo-moneda').removeClass("input-symbol-sol").addClass("input-symbol-dolar");
-		convertirMontosADolares();
+		if(tipoCambio.val().trim() == CADENA_VACIA){
+			// sin valor en tc
+			convertirMontosADolares(false);	
+		}else{
+			// con valor en tc
+			convertirMontosADolares(true);
+		}
 	}
 }
 
@@ -1033,8 +1085,10 @@ function registrarFacturaCompra(){
 		serie:					serieVal,
 		correlativo:			correlativoVal,
 		codigoProv:  			codigoProvVal,
-		direccionDespacho: 		dirDespachoVal,
-		personaContacto: 		perContactoVal,
+		direccionDespacho: 		null,
+		personaContacto: 		null,
+		codDireccionDespacho: 	dirDespachoVal,
+		codPersonaContacto: 	perContactoVal,
 		fechaContabilizacion:   fecContaVal,
 		fechaDocumento:      	fecDocumentoVal,
 		fechaVencimiento:       fecVencimientoVal,
@@ -1425,23 +1479,27 @@ function volver(listadoTotal){
 function limpiarFactura() {
 	//inicializarFechas();
 
+	tipoMoneda.val(Moneda.DOLARES);
+	condPago.val(CondicionPago.CONTADO);
+	dias.val(Dias._30);
+	direccionDespacho.val(CADENA_VACIA);
+	personaContacto.val(CADENA_VACIA);
+	/*	
 	campoBuscar.val(CADENA_VACIA);
 	documentoProv.val(CADENA_VACIA);
 	nombreProv.val(CADENA_VACIA);
 	direccion.val(CADENA_VACIA);
-	direccionDespacho.val(CADENA_VACIA);
-	personaContacto.val(CADENA_VACIA);
-	serie.val(CADENA_VACIA);
-	correlativo.val(CADENA_VACIA);
-	estadoPago.val(EstadoPago.PENDIENTE);
-	condPago.val(CondicionPago.CONTADO);
-	tipoMoneda.val(Moneda.DOLARES);
-	observaciones.val(CADENA_VACIA);
 	
 	subTotalFactura.val(CADENA_VACIA);
 	igvFactura.val(CADENA_VACIA);
 	totalFactura.val(CADENA_VACIA);
-
+	*/
+	serie.val(CADENA_VACIA);
+	correlativo.val(CADENA_VACIA);
+	estadoPago.val(EstadoPago.PENDIENTE);
+	observaciones.val(CADENA_VACIA);
+	
+	
 	/*dataTableDetalle.clear().draw();
 	indiceFilaDataTableDetalle = -1;*/
 	
@@ -1451,12 +1509,17 @@ function limpiarFactura() {
 	construirFechasPicker();
 	
 	ocultarControl(divDias);
+	/*
 	ocultarControl(btnAgregarArticulo);
 	ocultarControl(btnEliminarTodosArticulos);
-
+	*/
 	formFactura.removeClass('was-validated');
+	formObservaciones.removeClass('was-validated');
 
-	campoBuscar.focus();
+	evaluarCambioTipoMoneda();
+	tipoCambio.val(tipoCambioSave.val());
+	
+	direccionDespacho.focus();
 }
 
 

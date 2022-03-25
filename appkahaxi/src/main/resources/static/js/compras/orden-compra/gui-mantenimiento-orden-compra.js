@@ -181,7 +181,6 @@ function inicializarEventos(){
 	
 function inicializarTabla(){
 	var habilita;
-	
 	console.log("estado-->" + estado.val());
 	dataTableOrdenCompra = tablaOrdenCompra.DataTable({
         "ajax": {

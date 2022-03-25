@@ -17,6 +17,7 @@
 		<input type="text" id="codigoProv" hidden="hidden"/>
 		<input type="text" id="email" hidden="hidden"/>
 		<input type="text" id="celular" hidden="hidden"/>
+		<input type="text" id="tipoCambioSave" hidden="hidden"/>
 		
 		<label id="numeroDocumento" th:text=${numeroDocumento} hidden="hidden"></label>
 		<label id="opcion" th:text=${opcion} hidden="hidden"></label>
@@ -112,20 +113,34 @@
 						          	<input class="marquee form-control" maxlength="250" size="50" type="text" id="direccion" readonly="readonly" tabindex="-1"/>
 						 		</div>
 						 		
-						 		<div class="col-md-2">
+						 		<div class="col-md-2" id="divDirDespacho">
 									<label class="label" for="direccionDespacho">Direcci&oacute;n Despacho:</label>
-									<input class="marquee form-control" maxlength="200" size="50" type="text" id="direccionDespacho" required="required"/>
+									<select id="direccionDespacho" class="form-control" required="required">
+										<option value="" selected>-- SELECCIONAR --</option>										
+									</select>
 									<div class="invalid-feedback">
-										Debe ingresar la dirección de despacho
+										Debe seleccionar la dirección de despacho
 									</div>
 								</div>
 
-								<div class="col-md-2">
+								<div class="col-md-2" id="divPerContacto">
 									<label class="label" for="personaContacto">Persona Contacto:</label>
-									<input class="marquee form-control" maxlength="100" size="50" type="text" id="personaContacto" required="required"/>
+									<select id="personaContacto" class="form-control" required="required">
+										<option value="" selected>-- SELECCIONAR --</option>										
+									</select>
 									<div class="invalid-feedback">
-										Debe ingresar la persona de contacto
+										Debe seleccionar la persona de contacto
 									</div>
+								</div>
+								
+								<div class="col-md-2" id="divDirDespachoInput" style="display: none">
+									<label class="label" for="direccionDespachoInput">Direcci&oacute;n Despacho:</label>
+									<input class="marquee form-control" maxlength="200" size="50" type="text" id="direccionDespachoInput" readonly="readonly" tabindex="-1" />
+								</div>
+
+								<div class="col-md-2" id="divPerContactoInput" style="display: none">
+									<label class="label" for="personaContactoInput">Persona Contacto:</label>
+									<input class="marquee form-control" maxlength="100" size="50" type="text" id="personaContactoInput" readonly="readonly" tabindex="-1" />
 								</div>
 						    </div>
 						    

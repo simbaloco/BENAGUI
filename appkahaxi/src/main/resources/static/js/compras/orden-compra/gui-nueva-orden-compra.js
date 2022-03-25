@@ -159,14 +159,16 @@ function inicializarVariables() {
 function inicializarComponentes() {
 	habilitarAnimacionAcordion();
 	habilitarMarquee();
+	habilitarAutocompletarBuscarCampos();
+	
 	construirFechasPicker();
 	restringirSeleccionFechas();
-	habilitarAutocompletarBuscarCampos();
-
+	
 	inicializarEventos();
 }
 
 function inicializarPantalla() {
+	
 	if (opcion.text() == Opcion.NUEVO) {
 		inicializarTabla(true);
 		cargarPantallaNueva();
@@ -178,15 +180,6 @@ function inicializarPantalla() {
 
 function construirFechasPicker() {
 	/* se construyen del último al primero para que funcionen con el botón "limpiar" */
-	
-	// La fecha de contabilización no puede ser mayor a la fecha actual	
-	fecConta.datetimepicker({
-		locale: 'es',
-		format: 'L',
-		ignoreReadonly: true,
-		date:		moment().format('DD/MM/YYYY'),
-		maxDate:	moment()
-	});
 	
 	// La fecha de Entrega  no puede ser menor que la fecha de contabilización
 	fecEntrega.datetimepicker({
@@ -206,6 +199,17 @@ function construirFechasPicker() {
 		maxDate:	moment().add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'),
 		minDate:	moment()
 	});
+	
+	// La fecha de contabilización no puede ser mayor a la fecha actual	
+	fecConta.datetimepicker({
+		locale: 'es',
+		format: 'L',
+		ignoreReadonly: true,
+		date:		moment(),
+		maxDate:	moment()
+	});
+	
+	
 }
 
 function restringirSeleccionFechas() {
@@ -278,24 +282,14 @@ function habilitarAutocompletarBuscarCampos() {
 			let dirDespachoArray = ui.item.direccionDespachoConcat.split('|');
 			let perContactoArray = ui.item.personaContactoConcat.split('|');
 
-			for (var i = 0; i < dirDespachoArray.length; i++) {
-				if (dirDespachoArray[i] != CADENA_VACIA && dirDespachoArray[i] != null) {
-					direccionDespacho.append($('<option />').val(dirDespachoArray[i]).html(dirDespachoArray[i]));
-				}
-			}
-
-			for (var i = 0; i < perContactoArray.length; i++) {
-				if (perContactoArray[i] != CADENA_VACIA && perContactoArray[i] != null) {
-					personaContacto.append($('<option />').val(perContactoArray[i]).html(perContactoArray[i]));
-				}
-			}
+			llenarCombosDirDespachoPerContacto(dirDespachoArray, perContactoArray);
 			
 			campoBuscar.val(CADENA_VACIA);
 			if (indiceFilaDataTableDetalle == -1) {
 				agregarFilaEnTablaDetalle();
 			}
 			
-			$('#direccionDespacho').focus();
+			direccionDespacho.focus();
 		}
 	});
 }
@@ -356,7 +350,7 @@ function inicializarEventos() {
 	});
 
 	tipoMoneda.on('change', function() {
-		evaluarTipoMoneda();
+		evaluarCambioTipoMoneda();
 	});
 		
 	estado.on('change', function() {
@@ -481,9 +475,12 @@ function cargarPantallaHTML(data) {
 	nombreProv.val(data.nombreProv);
 	direccion.val(data.direccionFiscal);
 	
-	direccionDespacho.val(data.direccionDespacho);
-	personaContacto.val(data.personaContacto);	
-	
+	//direccionDespacho.val(data.direccionDespacho);
+	//personaContacto.val(data.personaContacto);	
+	let dirDespachoArray = data.direccionDespachoConcat.split('|');
+	let perContactoArray = data.personaContactoConcat.split('|');
+	llenarCombosDirDespachoPerContacto(dirDespachoArray, perContactoArray, data.codDireccionDespacho, data.codPersonaContacto);
+		
 	tipoMoneda.val(data.codigoTipoMoneda);
 	condPago.val(data.codigoCondPago);
 	dias.val(data.codigoDias);
@@ -496,6 +493,7 @@ function cargarPantallaHTML(data) {
 	totalOC.val(convertirNumeroAMoneda(data.total));
 
 	tipoCambio.val(data.tipoCambio);
+	tipoCambioSave.val(data.tipoCambio);
 	observaciones.val(data.observaciones);
 	nroPedido.val(data.nroPedido);
 	cotizacionSap.val(data.cotizacionSap);
@@ -525,10 +523,8 @@ function cargarPantallaHTML(data) {
 		$('#cantidad_' + i).val(detalle.cantidad);
 		$('#cantidadPend_' + i).val(detalle.cantidadPendiente);
 
-		var precio = convertirNumeroAMoneda(detalle.precioUnitario);
-		var precioIgv = convertirNumeroAMoneda(detalle.precioUnitarioIgv);
-		$('#precio_' + i).val(precio);
-		$('#precioIgv_' + i).val(precioIgv);
+		$('#precio_' + i).val(convertirNumeroAMoneda(detalle.precioUnitario));
+		$('#precioIgv_' + i).val(convertirNumeroAMoneda(detalle.precioUnitarioIgv));
 				
 		$('#subTotalIgv_' + i).val(convertirNumeroAMoneda(detalle.subTotalIgv));
 		$('#subTotal_' + i).val(convertirNumeroAMoneda(detalle.subTotal));
@@ -540,13 +536,20 @@ function verPantallaOrdenCompra(data) {
 	codigo.html(numeroDocumento.text());
 	fecConta.datetimepicker('date', moment(data.fechaContabilizacion));
 	fecHasta.datetimepicker('date', moment(data.fechaValidoHasta));
-	fecEntrega.datetimepicker('date', moment(data.fechaEntrega));
+	fecEntrega.datetimepicker('date', data.fechaEntrega != null ? moment(data.fechaEntrega) : data.fechaEntrega);
 
 	deshabilitarControl(campoBuscar);
 	controlNoRequerido(observaciones);			
 	ocultarControl(btnNuevo);
 	mostrarControl(btnPdf);
 	//ocultarControl(btnLimpiar);
+	if (data.codigoCondPago == CondicionPago.CREDITO) {
+		mostrarControl(dias);
+		mostrarControl(lblDias);		
+	}else{
+		ocultarControl(dias);
+		ocultarControl(lblDias);
+	}
 
 	if (opcion.text() == Opcion.VER) {
 		titulo.text("VER");
@@ -556,13 +559,7 @@ function verPantallaOrdenCompra(data) {
 		deshabilitarControl(tipoMoneda);
 		deshabilitarControl(condPago);
 		deshabilitarControl(dias);
-		if (data.codigoCondPago == CondicionPago.CREDITO) {
-			mostrarControl(dias);
-			mostrarControl(lblDias);		
-		}else{
-			ocultarControl(dias);
-			ocultarControl(lblDias);
-		}
+		
 		deshabilitarControl(estado);
 		deshabilitarControl(tipoCambio);
 		//mostrarControl(divNroPedido);
@@ -1118,22 +1115,10 @@ function evaluarCambioCondicionPago() {
 	}
 }
 
-function evaluarTipoMoneda(){
+function evaluarCambioTipoMoneda(){
 	if (tipoMoneda.val() == Moneda.SOLES){
 		controlNoRequerido(tipoCambio);
 		habilitarControlSoloLectura(tipoCambio);
-	}
-	else{
-		controlRequerido(tipoCambio);
-		deshabilitarControlSoloLectura(tipoCambio);
-	}
-	calcularPorTipoMoneda();
-}
-
-function calcularPorTipoMoneda() {
-	var tipoMonedaVal = tipoMoneda.val();
-
-	if (tipoMonedaVal == Moneda.SOLES) {
 		$('.simbolo-moneda').removeClass("input-symbol-dolar").addClass("input-symbol-sol");
 		if(tipoCambio.val().trim() == CADENA_VACIA){
 			// sin valor en tc
@@ -1142,8 +1127,10 @@ function calcularPorTipoMoneda() {
 			// con valor en tc
 			convertirMontosASoles(true);
 		}
-		
-	} else {
+	}
+	else{
+		controlRequerido(tipoCambio);
+		deshabilitarControlSoloLectura(tipoCambio);
 		$('.simbolo-moneda').removeClass("input-symbol-sol").addClass("input-symbol-dolar");
 		if(tipoCambio.val().trim() == CADENA_VACIA){
 			// sin valor en tc
@@ -1358,7 +1345,7 @@ function registrarOrdenCompra() {
 	var perContactoVal = personaContacto.val().trim();	
 	var fecContaVal = fecConta.datetimepicker('date').format('YYYY-MM-DD');
 	var fecHastaVal = fecHasta.datetimepicker('date').format('YYYY-MM-DD');
-	var fecEntregaVal = fecEntrega.datetimepicker('date').format('YYYY-MM-DD');
+	var fecEntregaVal = fecEntrega.datetimepicker('date') != null ? fecEntrega.datetimepicker('date').format('YYYY-MM-DD') : fecEntrega.datetimepicker('date');
 	var tipoMonedaVal = tipoMoneda.val();
 	var condPagoVal = condPago.val();
 	var estadoVal = estado.val();
@@ -1483,7 +1470,8 @@ function actualizarOrdenCompra() {
 	var nroCotizacionSap = cotizacionSap.val().trim();
 	var fecContaVal = fecConta.datetimepicker('date').format('YYYY-MM-DD');
 	var fecHastaVal = fecHasta.datetimepicker('date').format('YYYY-MM-DD');
-	var fecEntregaVal = fecEntrega.datetimepicker('date').format('YYYY-MM-DD');
+	var fecEntregaVal = fecEntrega.datetimepicker('date') != null ? fecEntrega.datetimepicker('date').format('YYYY-MM-DD') : fecEntrega.datetimepicker('date');
+	
 	var tipoMonedaVal = tipoMoneda.val();
 	var condPagoVal = condPago.val();	
 	var tipoCambioVal = tipoCambio.val();	
@@ -1815,7 +1803,6 @@ function reiniciarFechaHasta() {
 */
 function limpiarOrdenCompra() {
 	//inicializarFechaContaHasta();
-
 	condPago.val(CondicionPago.CONTADO);
 	dias.val(Dias._30);
 	estado.val(EstadoDocumentoInicial.POR_APROBAR);	
@@ -1824,20 +1811,22 @@ function limpiarOrdenCompra() {
 	cotizacionSap.val(CADENA_VACIA);
 	//tipoCambio.val(CADENA_VACIA);
 	nroPedido.val(CADENA_VACIA);
+	observaciones.val(CADENA_VACIA);
+	
+	/*
 	subTotalOC.val(CADENA_VACIA);
 	igvOC.val(CADENA_VACIA);
 	totalOC.val(CADENA_VACIA);
-	observaciones.val(CADENA_VACIA);
-	/*
 	dataTableDetalle.clear().draw();
 	indiceFilaDataTableDetalle = -1;
 	ocultarControl(btnAgregarArticulo);
 	ocultarControl(btnEliminarTodosArticulos);
-
 	*/
-	fecConta.datetimepicker('destroy');
-	fecHasta.datetimepicker('destroy');
+	
 	fecEntrega.datetimepicker('destroy');	
+	fecHasta.datetimepicker('destroy');
+	fecConta.datetimepicker('destroy');
+	
 	construirFechasPicker();
 		
 	ocultarControl(dias);
@@ -1856,10 +1845,12 @@ function limpiarOrdenCompra() {
 		direccionDespacho.focus();
 	}
 	*/
-	tipoMoneda.val(Moneda.DOLARES);
-	evaluarTipoMoneda();
-	tipoCambio.val(tipoCambioSave.val());
-	
+	if(tipoMoneda.val() == Moneda.SOLES){
+		tipoMoneda.val(Moneda.DOLARES);
+		evaluarCambioTipoMoneda();
+		tipoCambio.val(tipoCambioSave.val());
+	}
+		
 	direccionDespacho.focus();
 }
 
@@ -2196,7 +2187,7 @@ function generarPdf(event){
 		$('.formEmailReal #emailPDF').focus();
 		//$('#emailPDF').focus();
 		console.log("correo del cliente-->" + correo + "/ NRO DOC-->" + nroDocumento);
-		$('.formEmailReal #emailPDF').val(correo);
+		$('.formEmailReal #emailPDF').val(correo + ";" + ParametrosGenerales.CC_CORREO_OC);
 	});
 }
 
