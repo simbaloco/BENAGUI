@@ -334,7 +334,7 @@ function inicializarTabla(){
 			{
                 "width": "10px",
                 "targets": [10],
-                "data": "NRO_PEDIDO"
+                "data": "NRO_PEDIDO" 
             }, 
 			{
                 "width": "10px",

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import pe.gob.repuestera.model.SocioNegociosContactoModel;
+import pe.gob.repuestera.model.SocioNegociosDirDespachoModel;
 import pe.gob.repuestera.model.SocioNegociosModel;
 
 @Repository
@@ -18,4 +19,5 @@ public interface SocioNegociosMapper {
 	void registrarSocioNegocio(Map params);
 	SocioNegociosModel buscarSocioNegocio(Map params) throws Exception;
 	List<SocioNegociosContactoModel> buscarSocioNegocioContacto(Map params) throws Exception;
+	List<SocioNegociosDirDespachoModel> buscarSocioNegocioDirDespacho(Map params) throws Exception;
 }

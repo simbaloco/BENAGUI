@@ -15,6 +15,7 @@ import pe.gob.repuestera.model.CompraCabModel;
 import pe.gob.repuestera.model.CompraDetModel;
 import pe.gob.repuestera.model.ParametrosGeneralesModel;
 import pe.gob.repuestera.model.SocioNegociosContactoModel;
+import pe.gob.repuestera.model.SocioNegociosDirDespachoModel;
 import pe.gob.repuestera.model.SocioNegociosModel;
 import pe.gob.repuestera.repository.maestros.SocioNegociosMapper;
 import pe.gob.repuestera.service.maestros.SocioNegociosService;
@@ -103,6 +104,7 @@ public class SocioNegociosServiceImpl implements SocioNegociosService{
 		List<ParametrosGeneralesModel> lista;
 		
 		String dataJSON = jsonUtils.obtenerJson(socioNegocioModel.getDetalle());
+		String dataJSONDir = jsonUtils.obtenerJson(socioNegocioModel.getDetalleDirDespacho());
 		
 		logger.info("List<ContactoSNModel> ===> " + dataJSON);
 		
@@ -118,11 +120,6 @@ public class SocioNegociosServiceImpl implements SocioNegociosService{
 		params.put(Constante.PARAM_SP_APELLIDO_PATERNO, socioNegocioModel.getApePaterno());
 		params.put(Constante.PARAM_SP_APELLIDO_MATERNO, socioNegocioModel.getApeMaterno());
 		params.put(Constante.PARAM_SP_DIRECCION_FISCAL, socioNegocioModel.getDireccionFiscal());
-		params.put(Constante.PARAM_SP_DIRECCION_DESPACHO1, socioNegocioModel.getDireccionDespacho());
-		params.put(Constante.PARAM_SP_DIRECCION_DESPACHO2, socioNegocioModel.getDireccionDespacho2());
-		params.put(Constante.PARAM_SP_DIRECCION_DESPACHO3, socioNegocioModel.getDireccionDespacho3());
-		params.put(Constante.PARAM_SP_DIRECCION_DESPACHO4, socioNegocioModel.getDireccionDespacho4());
-		params.put(Constante.PARAM_SP_DIRECCION_DESPACHO5, socioNegocioModel.getDireccionDespacho5());
 		params.put(Constante.PARAM_SP_EMAIL, socioNegocioModel.getEmail());
 		params.put(Constante.PARAM_SP_CELULAR, socioNegocioModel.getCelular());
 		params.put(Constante.PARAM_SP_TELEFONO_FIJO, socioNegocioModel.getTelefonoFijo());
@@ -138,6 +135,8 @@ public class SocioNegociosServiceImpl implements SocioNegociosService{
 		params.put(Constante.PARAM_SP_LISTA_PRECIOS, socioNegocioModel.getListaPrecios());
 		params.put(Constante.PARAM_SP_ACTIVO, socioNegocioModel.getActivo());
 		params.put(Constante.PARAM_SP_DATA_JSON, dataJSON);
+		params.put(Constante.PARAM_SP_DATA_JSON_DIR, dataJSONDir);
+		
 		params.put(Constante.PARAM_SP_USUARIO_REGISTRA, usuario);
 				
 		logger.info("params ===> " + params);
@@ -220,6 +219,34 @@ public class SocioNegociosServiceImpl implements SocioNegociosService{
 		}
 
 		return listContactosModel;
+	}
+
+	@Override
+	public List<SocioNegociosDirDespachoModel> buscarSocioNegocioDirDespacho(String codigoSn) throws Exception {
+		Map<String, Object> params = new HashMap();
+		params.put(Constante.PARAM_SP_COD_SOCIONEGOCIO, codigoSn);
+
+		logger.info("params ===> " + params);
+		
+		List<SocioNegociosDirDespachoModel> listDirDespachoModel = socioNegociosMapper.buscarSocioNegocioDirDespacho(params);		
+		String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+		String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+
+		logger.info("flagResultado ===> " + flagResultado);
+		logger.info("mensajeResultado ===> " + mensajeResultado);
+
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+			logger.info("listDirDespachoModel ===> " + listDirDespachoModel.toString());
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+
+		return listDirDespachoModel;
 	}
 
 	

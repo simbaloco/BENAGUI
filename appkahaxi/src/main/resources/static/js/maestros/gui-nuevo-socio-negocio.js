@@ -3,6 +3,7 @@ var opcion;
 var datoBuscar;
 var tipoSocio;
 var formSocioNegocio;
+var formContactos;
 var codigo;
 var codigoSocio;
 var tipoDocumento;
@@ -19,11 +20,9 @@ var provincia;
 var distrito;
 var ubigeo;
 var direccionFiscal;
-var direccionDespacho1;
-var direccionDespacho2;
-var direccionDespacho3;
-var direccionDespacho4;
-var direccionDespacho0;
+var direccionDespacho_0;
+var idDirDespachoSN_0;
+var activoDir_0;
 var telefonoFijo;
 var celular;
 var correo;
@@ -58,19 +57,16 @@ var divDepartamento;
 var divProvincia;
 var divDistrito;
 var divUbigeo;
-var divDespacho2;
-var divDespacho3;
-var divDespacho4;
-var divDespacho5;
 var contaDirec;
 var indiceContacto;
 var indiceRealContacto;
+var indiceDirDespacho;
+var indiceRealDirDespacho;
 var cantidadDetalle;
-
+var cantidadDetalleDirDespacho;
 
 $(document).ready(function() {
 	inicializarVariables();
-
 	inicializarPantalla();
 	inicializarComponentes();
 });
@@ -81,6 +77,7 @@ function inicializarVariables() {
 	tipoSocio = $("#tipoSn");
 	datoBuscar = $("#datoBuscar");
 	formSocioNegocio = $("#formSocioNegocio");
+	formContactos = $("#formContactos");
 	codigo = $("#codigo");
 	codigoSocio = $("#codigoSocio");
 	tipoDocu = $("#tipoDocu");
@@ -97,11 +94,9 @@ function inicializarVariables() {
 	distrito = $("#distrito");
 	ubigeo = $("#ubigeo");
 	direccionFiscal = $("#direccionFiscal");
-	direccionDespacho0 = $("#direccionDespacho0");
-	direccionDespacho1 = $("#direccionDespacho1");
-	direccionDespacho2 = $("#direccionDespacho2");
-	direccionDespacho3 = $("#direccionDespacho3");
-	direccionDespacho4 = $("#direccionDespacho4");
+	direccionDespacho_0 = $("#direccionDespacho_0");
+	idDirDespachoSN_0 = $("#idDirDespachoSN_0");
+	activoDir_0 = $("#activoDir_0");
 	telefonoFijo = $("#telefonoFijo");
 	celular = $("#celular");
 	correo = $("#correo");
@@ -136,10 +131,6 @@ function inicializarVariables() {
 	divProvincia = $("#divProvincia");
 	divDistrito = $("#divDistrito");
 	divUbigeo = $("#divUbigeo");
-	divDespacho2 = $("#divDespacho2");
-	divDespacho3 = $("#divDespacho3");
-	divDespacho4 = $("#divDespacho4");
-	divDespacho5 = $("#divDespacho5");
 
 }
 
@@ -181,7 +172,9 @@ function cargarPantallaNueva() {
 	activo.prop('checked', true);
 	contaDirec = 1;
 	indiceContacto = 1;
+	indiceDirDespacho = 1;
 	indiceRealContacto = 1;
+	indiceRealDirDespacho = 1;
 	pais.val(Pais.PERU);
 	mostrarCombosUbigeo();
 	codigo.html('');
@@ -259,12 +252,7 @@ function cargarPantallaHTML(data) {
 	provincia.trigger('click', [data.ubigeo, codProv]);
 	ubigeo.val(data.ubigeo);
 	mostrarCombosUbigeo();
-	direccionFiscal.val(data.direccionFiscal);
-	direccionDespacho0.val(data.direccionDespacho);
-	direccionDespacho1.val(data.direccionDespacho2);
-	direccionDespacho2.val(data.direccionDespacho3);
-	direccionDespacho3.val(data.direccionDespacho4);
-	direccionDespacho4.val(data.direccionDespacho5);
+	direccionFiscal.val(data.direccionFiscal);	
 	telefonoFijo.val(data.telefonoFijo);
 	celular.val(data.celular);
 	correo.val(data.email);
@@ -279,8 +267,11 @@ function cargarPantallaHTML(data) {
 	}
 
 	cantidadDetalle = data.detalle.length;
+	cantidadDetalleDirDespacho = data.detalleDirDespacho.length;
 	indiceContacto = 1;
+	indiceDirDespacho = 1;
 	indiceRealContacto = 1;
+	indiceRealDirDespacho = 1;
 
 	//Llenar detalle de contactos
 	for (i = 0; i < cantidadDetalle; i++) {
@@ -305,36 +296,55 @@ function cargarPantallaHTML(data) {
 		telefonos = det.telefono;
 		emails = det.email;
 		cant = 0;
+		
+		if (telefonos != null) {
+			while (telefonos.length > 0) {
 
-		while (telefonos.length > 0) {
-
-			if (telefonos.substring(0, substringIndex(telefonos, ';', 1).length).trim() != CADENA_VACIA) {
-				if (cant > 0) {
-					dinamicaAgregarTelefonoContacto(i);
+				if (telefonos.substring(0, substringIndex(telefonos, ';', 1).length).trim() != CADENA_VACIA) {
+					if (cant > 0) {
+						dinamicaAgregarTelefonoContacto(i);
+					}
+					$("#telContacto_" + i + "_" + cant).val(telefonos.substring(0, substringIndex(telefonos, ';', 1).length));
+					telefonos = telefonos.substring(substringIndex(telefonos, ';', 1).length + 1, telefonos.length);
+					cant = cant + 1;
 				}
-				$("#telContacto_" + i + "_" + cant).val(telefonos.substring(0, substringIndex(telefonos, ';', 1).length));
-				telefonos = telefonos.substring(substringIndex(telefonos, ';', 1).length + 1, telefonos.length);
-				cant = cant + 1;
-			}
-			else {
-				break;
+				else {
+					break;
+				}
 			}
 		}
 
 		cant = 0;
-		while (emails.length > 0) {
-			if (emails.substring(0, substringIndex(emails, ';', 1).length).trim() != CADENA_VACIA) {
-				if (cant > 0) {
-					dinamicaAgregarEmailContacto(i);
+		if (telefonos != null) {
+			while (emails.length > 0) {
+				if (emails.substring(0, substringIndex(emails, ';', 1).length).trim() != CADENA_VACIA) {
+					if (cant > 0) {
+						dinamicaAgregarEmailContacto(i);
+					}
+					$("#emailContacto_" + i + "_" + cant).val(emails.substring(0, substringIndex(emails, ';', 1).length));
+					emails = emails.substring(substringIndex(emails, ';', 1).length + 1, emails.length);
+					cant = cant + 1;
 				}
-				$("#emailContacto_" + i + "_" + cant).val(emails.substring(0, substringIndex(emails, ';', 1).length));
-				emails = emails.substring(substringIndex(emails, ';', 1).length + 1, emails.length);
-				cant = cant + 1;
-			}
-			else {
-				break;
+				else {
+					break;
+				}
 			}
 		}
+	}
+	
+	//Llenar detalle de direcciones de despacho
+	for (i = 0; i < cantidadDetalleDirDespacho; i++) {
+		var det = data.detalleDirDespacho[i];
+		
+		console.log("data.detalleDirDespacho: " + det);
+		
+		if (i > 0) {
+			dinamicaAgregarDirDespacho();
+		}
+		
+		$('#direccionDespacho_' + i).val(det.direccionDespacho);
+		$('#activoDir_' + i).val(det.activo);
+		$('#idDirDespachoSN_' + i).val(det.idDirDespachoSN);
 	}
 
 }
@@ -380,34 +390,7 @@ function controlDetalle(ic, opcion) {
 function dinamicaVerPantallaSocioNegocio() {
 
 	mostrarControl(btnVolver);
-	if (direccionDespacho1.val() != CADENA_VACIA) {
-		mostrarControl(divDespacho2);
-		contaDirec = 2;
-	} else {
-		ocultarControl(divDespacho2);
-	}
-
-	if (direccionDespacho2.val() != CADENA_VACIA) {
-		mostrarControl(divDespacho3);
-		contaDirec = 3;
-	} else {
-		ocultarControl(divDespacho3);
-	}
-
-	if (direccionDespacho3.val() != CADENA_VACIA) {
-		mostrarControl(divDespacho4);
-		contaDirec = 4;
-	} else {
-		ocultarControl(divDespacho4);
-	}
-
-	if (direccionDespacho4.val() != CADENA_VACIA) {
-		mostrarControl(divDespacho5);
-		contaDirec = 5;
-	} else {
-		ocultarControl(divDespacho5);
-	}
-
+	
 	if (opcion.text() == Opcion.VER) {
 		titulo.text(DescripcionOpcion.DES_VER.toUpperCase());
 		deshabilitarControl(tipoDocu);
@@ -423,11 +406,7 @@ function dinamicaVerPantallaSocioNegocio() {
 		deshabilitarControl(distrito);
 		deshabilitarControl(ubigeo);
 		deshabilitarControl(direccionFiscal);
-		deshabilitarControl(direccionDespacho0);
-		deshabilitarControl(direccionDespacho1);
-		deshabilitarControl(direccionDespacho2);
-		deshabilitarControl(direccionDespacho3);
-		deshabilitarControl(direccionDespacho4);
+		deshabilitarControl(direccionDespacho_0);
 		deshabilitarControl(telefonoFijo);
 		deshabilitarControl(celular);
 		deshabilitarControl(correo);
@@ -482,11 +461,7 @@ function dinamicaVerPantallaSocioNegocio() {
 		habilitarControl(provincia);
 		habilitarControl(distrito);
 		habilitarControl(direccionFiscal);
-		habilitarControl(direccionDespacho0);
-		habilitarControl(direccionDespacho1);
-		habilitarControl(direccionDespacho2);
-		habilitarControl(direccionDespacho3);
-		habilitarControl(direccionDespacho4);
+		habilitarControl(direccionDespacho_0);
 		habilitarControl(telefonoFijo);
 		habilitarControl(celular);
 		habilitarControl(correo);
@@ -609,7 +584,9 @@ function inicializarEventos() {
 	});
 
 	btnAgregarDireccion.on('click', function() {
-		dinamicaAgregarDireccionDespacho();
+		if (validarDireccionDespacho()) {
+			dinamicaAgregarDirDespacho();
+		}
 	});
 
 	//AGREGAR Y ELIMINAR CONTACTOS 
@@ -736,11 +713,7 @@ function limpiarSocioNegocio() {
 	distrito.val(CADENA_VACIA);
 	ubigeo.val(CADENA_VACIA);
 	direccionFiscal.val(CADENA_VACIA);
-	direccionDespacho0.val(CADENA_VACIA);
-	direccionDespacho1.val(CADENA_VACIA);
-	direccionDespacho2.val(CADENA_VACIA);
-	direccionDespacho3.val(CADENA_VACIA);
-	direccionDespacho4.val(CADENA_VACIA);
+	direccionDespacho_0.val(CADENA_VACIA);
 	telefonoFijo.val(CADENA_VACIA);
 	celular.val(CADENA_VACIA);
 	correo.val(CADENA_VACIA);
@@ -750,6 +723,7 @@ function limpiarSocioNegocio() {
 	comentarios.val(CADENA_VACIA);
 	limpiarContactosSocioNegocio();
 	formSocioNegocio.removeClass('was-validated');
+	formContactos.removeClass('was-validated');
 }
 
 function limpiarContactosSocioNegocio() {
@@ -902,6 +876,29 @@ function obtenerValoresMatriz() {
 	return array;
 }
 
+function obtenerValoresMatrizDirDespacho() {
+	var array = [];
+
+	for (i = 0; i < indiceDirDespacho; i++) {
+		array[i] = {};
+
+		if (document.getElementById("direccionDespacho_" + i)) {
+			array[i]['direccionDespacho'] = $('#direccionDespacho_' + i).val();
+		}
+
+		if (document.getElementById("idDirDespachoSN_" + i)) {
+			array[i]['idDirDespachoSN'] = $('#idDirDespachoSN_' + i).val();
+		}
+
+		if (document.getElementById("activoDir_" + i)) {
+			array[i]['activo'] = $('#activoDir_' + i).val();
+		}
+	};
+
+	return array;
+}
+
+
 function limpiarValoresDetalle(ic) {
 	var j;
 	var cantTel;
@@ -1048,6 +1045,17 @@ function dinamicaEliminarContacto(i) {
 	}
 }
 
+function dinamicaEliminarDirDespacho(i) {
+	console.log("indice direccion despacho:" + i);
+
+	ocultarControl($("#rowDirDespacho_" + i));
+	controlNoRequerido($('#direccionDespacho_' + i));
+	//$('#direccionDespacho_' + i).val(CADENA_VACIA);
+	$('#activoDir_' + i).val(0);
+	limpiarValoresDetalle(i);
+	indiceRealDirDespacho = indiceRealDirDespacho - 1;
+}
+
 function dinamicaAgregarEmailContacto(i) {
 	var htmlTel;
 	var cantTel = 0;
@@ -1125,50 +1133,23 @@ function dinamicaAgregarContacto() {
 	indiceRealContacto = indiceRealContacto + 1;
 }
 
+function dinamicaAgregarDirDespacho() {
+	var html = '';
 
-function dinamicaAgregarDireccionDespacho() {
-	if (contaDirec == 1) {
-		if (direccionDespacho0.val() == '') {
-			mostrarDialogoInformacion("Debe ingresar la dirección de despacho 1", Boton.WARNING, direccionDespacho0, null);
-			return false;
-		}
-		mostrarControl(divDespacho2);
-		contaDirec = contaDirec + 1;
-		return;
-	}
-	if (contaDirec == 2) {
-		if (direccionDespacho1.val() == '') {
-			mostrarDialogoInformacion("Debe ingresar la dirección de despacho 2", Boton.WARNING, direccionDespacho1, null);
-			return false;
-		}
-		mostrarControl(divDespacho3);
-		contaDirec = contaDirec + 1;
-		return;
-	}
-	if (contaDirec == 3) {
-		if (direccionDespacho2.val() == '') {
-			mostrarDialogoInformacion("Debe ingresar la dirección de despacho 3", Boton.WARNING, direccionDespacho2, null);
-			return false;
-		}
-		mostrarControl(divDespacho4);
-		contaDirec = contaDirec + 1;
-		return;
-	}
-	if (contaDirec == 4) {
-		if (direccionDespacho3.val() == '') {
-			mostrarDialogoInformacion("Debe ingresar la dirección de despacho 4", Boton.WARNING, direccionDespacho3, null);
-			return false;
-		}
-		mostrarControl(divDespacho5);
-		contaDirec = contaDirec + 1;
-		return;
-	}
-	if (contaDirec == 5) {
-		mostrarDialogoInformacion("Sólo puede agregar 5 direcciones de despacho", Boton.WARNING, null, direccionDespacho4);
-		return;
-	}
+	html = html + '<div class="row" id ="rowDirDespacho_' + indiceDirDespacho + '">';
+	html = html + '<div class="col-md-11"><label class="label">Dirección de despacho' + (indiceDirDespacho + 1) + ':</label><input class="form-control" maxlength="150" type="text" id="direccionDespacho_' + indiceDirDespacho + '" required = "required"></input>';
+	html = html + '<div class="invalid-feedback">Ingrese la dirección de despacho' + (indiceDirDespacho + 1) + '</div></div>';
+	html = html + '<div style="display: none" ><input type="text" id="idDirDespachoSN_' + indiceDirDespacho + '"></input></div>';
+	html = html + '<div style="display: none" ><input type="text" value="1" id="activoDir_' + indiceDirDespacho + '"></input></div>';
+	html = html + '<div class="col-md-1 alineacion-derecha"><label class="label"></label><button type="button" id="btnEliminarDirDespacho_' + indiceDirDespacho + '" class="btn btn-danger btn-sm input-group-append" title="Eliminar dirección" onclick="dinamicaEliminarDirDespacho(' + indiceDirDespacho + ');">';
+	html = html + '<span class="mr-1"><i class="far fa-trash-alt"></i></span></button></div>';
+	html = html + '</div>';
+
+	$('#collapseDireccionDespacho').append(html);
+
+	indiceDirDespacho = indiceDirDespacho + 1;
+	indiceRealDirDespacho = indiceRealDirDespacho + 1;
 }
-
 
 function registrarSocioNegocio() {
 
@@ -1201,6 +1182,7 @@ function registrarSocioNegocio() {
 	}
 
 	var detalle = obtenerValoresMatriz();
+	var detalleDirDespacho = obtenerValoresMatrizDirDespacho();
 
 	var objetoJson = {
 		codigoSocio: codigoSocio.text().trim(),
@@ -1214,11 +1196,6 @@ function registrarSocioNegocio() {
 		apePaterno: apePaterno.val().trim(),
 		apeMaterno: apeMaterno.val().trim(),
 		direccionFiscal: direccionFiscal.val().trim(),
-		direccionDespacho: direccionDespacho0.val().trim(),
-		direccionDespacho2: direccionDespacho1.val().trim(),
-		direccionDespacho3: direccionDespacho2.val().trim(),
-		direccionDespacho4: direccionDespacho3.val().trim(),
-		direccionDespacho5: direccionDespacho4.val().trim(),
 		email: correo.val().trim(),
 		celular: celular.val().trim(),
 		telefonoFijo: telefonoFijo.val().trim(),
@@ -1233,7 +1210,8 @@ function registrarSocioNegocio() {
 		listaPrecios: listaPrecio.val(),
 		dias: dias,
 		activo: chkActivo,
-		detalle: detalle
+		detalle: detalle,
+		detalleDirDespacho: detalleDirDespacho
 	};
 
 	var entityJsonStr = JSON.stringify(objetoJson);
@@ -1244,8 +1222,7 @@ function registrarSocioNegocio() {
 		type: "application/json"
 	}));
 
-	console.log("registrarSN:" + entityJsonStr);
-	console.log("detalleSN:" + detalle);
+	console.log("registrarSN:" + entityJsonStr); 
 
 	$.ajax({
 		type: "POST",
@@ -1277,7 +1254,7 @@ function registrarSocioNegocio() {
 
 function grabarSocioNegocio(e) {
 
-	if (formSocioNegocio[0].checkValidity() == false) {
+	if (formSocioNegocio[0].checkValidity() == false){ // && formContactos[0].checkValidity()== false ) {
 		e.stopPropagation();
 	}
 	else {
@@ -1288,7 +1265,7 @@ function grabarSocioNegocio(e) {
 		}
 	}
 	formSocioNegocio.addClass('was-validated');
-
+	formContactos.addClass('was-validated');
 }
 
 function validarCabecera() {
@@ -1441,5 +1418,28 @@ function validarContactos(tipo) {
 	return true;
 }
 
+function validarDireccionDespacho() {
+	var act;
+
+	if (direccionDespacho_0.val().trim() == CADENA_VACIA) {
+		mostrarDialogoInformacion('Debe ingresar la dirección de despacho', Boton.WARNING, null, '#direccionDespacho_0');
+		return false;
+	}
+
+	for (i = 0; i < indiceDirDespacho; i++) {
+		act = $('#activoDir_' + i).val();
+
+		if (act == '1') {
+			var dirDespacho = $('#direccionDespacho_' + i).val().trim();
+
+			if (dirDespacho == '') {
+				mostrarDialogoInformacion('Debe ingresar la dirección de despacho', Boton.WARNING, null, '#direccionDespacho_' + i);
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
 
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.w3.org/1999/xhtml"
+<html xmlns:layout="http://www.w3.org/1999/xhtml" 
 	  xmlns:th="http://www.thymeleaf.org"
 	  layout:decorate="~{fragments/layout}" lang="en">
 
@@ -178,71 +178,38 @@
 								</div>
 								
 							</div>
-							
-							<div class="row">
 
-								<div class="col-md-11">
-									<label class="label" for="direccionDespacho0">Dirección de Despacho 1:</label>
-									<input class="form-control" maxlength="150" type="text" id="direccionDespacho0" required="required"/>
-									<div class="invalid-feedback">
-										Ingrese la dirección de despacho 1
+								<div id="collapseDireccionDespacho" class="collapse show"
+									aria-labelledby="headingContacto"
+									data-parent="#accordionContactos">
+
+									<div class="row">
+										<div class="col-md-11">
+											<label class="label" for="direccionDespacho_0">Dirección
+												de Despacho 1:</label> <input class="form-control" maxlength="150"
+												type="text" id="direccionDespacho_0" required="required" />
+											<div class="invalid-feedback">Ingrese la dirección de
+												despacho 1</div>
+										</div>
+										<div style="display: none" ><input type="text" id="idDirDespachoSN_0" /></div>
+										<div style="display: none" ><input type="text" value="1" id="activoDir_0"></input></div>
+
+										<div class="col-md-1 alineacion-derecha">
+											<label class="label"></label>
+											<button type="button" id="btnAgregarDireccion"
+												class="btn btn-primary btn-sm input-group-append form-check-input"
+												title="Agregar dirección">
+												<span class="mr-1"><i class="fas fa-plus-square"></i></span>
+											</button>
+										</div>
 									</div>
-								</div>
-								
-								<div class="col-md-1 alineacion-derecha">
-									<label class="label"></label>
-									<button type="button" id="btnAgregarDireccion" class="btn btn-primary btn-sm input-group-append form-check-input" title="Agregar dirección" >
-										<span class="mr-1"><i class="fas fa-plus-square"></i></span>
-									</button>
-								</div>
-								
-							</div>
-							
-							<div class="row" style="display: none" id = "divDespacho2">
 
-								<div class="col-md-11">
-									<label class="label" for="direccionDespacho1">Dirección de Despacho 2:</label>
-									<input class="form-control" maxlength="150" type="text" id="direccionDespacho1"/>
-								</div>
-								
-								<div class="col-md-1"></div>
-																
-							</div>
-							
-							<div class="row" style="display: none" id = "divDespacho3">
 
-								<div class="col-md-11">
-									<label class="label" for="direccionDespacho2">Dirección de Despacho 3:</label>
-									<input class="form-control" maxlength="150" type="text" id="direccionDespacho2"/>
 								</div>
-								
-								<div class="col-md-1"></div>
-																
-							</div>
-							
-							<div class="row" style="display: none"  id = "divDespacho4">
 
-								<div class="col-md-11">
-									<label class="label" for="direccionDespacho3">Dirección de Despacho 4:</label>
-									<input class="form-control" maxlength="150" type="text" id="direccionDespacho3"/>
-								</div>
-								
-								<div class="col-md-1"></div>
-																
-							</div>
-							
-							<div class="row" style="display: none" id = "divDespacho5">
 
-								<div class="col-md-11">
-									<label class="label" for="direccionDespacho4">Dirección de Despacho 5:</label>
-									<input class="form-control" maxlength="150" type="text" id="direccionDespacho4"/>
-								</div>
-								
-								<div class="col-md-1"></div>
-																
-							</div>
-							
-							<div class="row">
+
+								<div class="row">
 
 								<div class="col-md-2">
 									<label class="label" for="telefonoFijo">Teléfono Fijo:</label>

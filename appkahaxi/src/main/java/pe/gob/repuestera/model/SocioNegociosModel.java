@@ -23,10 +23,6 @@ public class SocioNegociosModel {
 	private String apeMaterno;	
 	private String direccionFiscal;
 	private String direccionDespacho;
-	private String direccionDespacho2;
-	private String direccionDespacho3;
-	private String direccionDespacho4;
-	private String direccionDespacho5;
 	private String email;
 	private String celular;
 	private String telefonoFijo;
@@ -55,6 +51,9 @@ public class SocioNegociosModel {
 	private String personaContactoConcat;
 	
 	// DETALLE
-    private List<SocioNegociosContactoModel> detalle;	
+    private List<SocioNegociosContactoModel> detalle;
+    private List<SocioNegociosDirDespachoModel> detalleDirDespacho;
     
 }
+
+

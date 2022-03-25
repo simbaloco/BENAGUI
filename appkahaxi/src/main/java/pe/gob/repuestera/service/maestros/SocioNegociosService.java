@@ -2,6 +2,7 @@ package pe.gob.repuestera.service.maestros;
 
 import java.util.List;
 import pe.gob.repuestera.model.SocioNegociosContactoModel;
+import pe.gob.repuestera.model.SocioNegociosDirDespachoModel;
 import pe.gob.repuestera.model.SocioNegociosModel;
 
 public interface SocioNegociosService {
@@ -11,5 +12,6 @@ public interface SocioNegociosService {
 	void registrarSocioNegocio(SocioNegociosModel socioNegocioModel, String usuario) throws Exception;
 	SocioNegociosModel buscarSocioNegocio(String codigoSn) throws Exception;
 	List<SocioNegociosContactoModel> buscarSocioNegocioContacto(String codigoSn) throws Exception;
+	List<SocioNegociosDirDespachoModel> buscarSocioNegocioDirDespacho(String codigoSn) throws Exception;
 	
 }

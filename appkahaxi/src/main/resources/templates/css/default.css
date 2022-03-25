@@ -1,0 +1,348 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 08/11/2020, 02:57:37 PM
+    Author     : vbendezu
+*/
+.border-class
+{
+  border:thin black solid;
+  margin:20px;
+  padding:20px;
+}
+
+table.dataTable tbody tr td {
+    word-wrap: break-word;
+    vertical-align: middle;
+    padding: 0px 3px;
+}
+
+table.dataTable thead tr th {
+    word-wrap: break-word;
+    vertical-align: middle;
+}
+
+.page-item.active .page-link {
+    z-index: 0;
+}
+
+#titulo_interno {
+    color:#004370;
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:22px;
+    font-weight:normal;
+    line-height:28px;
+    text-align:right;
+    text-decoration:none;
+}
+
+#txt_nav {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    color: #004370;
+    text-decoration: none;
+    text-align: right;
+    vertical-align: bottom;
+}
+
+.searchStyleTop
+{
+	padding: 5px 12px;
+	margin-top: -28px;
+}
+
+.searchStyleBottom
+{
+	padding: 1px 12px;
+	margin-top: 10px;
+	margin-bottom: -10px;
+}
+
+
+/* para simular el disabled en el textfield */
+/*
+input.disabled-input {
+	pointer-events: none;
+	background-color: #e9ecef;
+	opacity: 1;
+}
+*/
+
+
+
+/*Titulos*/
+.kahaxi_titulo .kahaxi_titulo_container{
+    display: flex;
+    align-items: center;
+    height: 34px;
+    color: #4886FE;
+}
+.kahaxi_titulo .kahaxi_titulo_container .kahaxi_titulo_logo{
+    font-size: 24px;
+    margin-right: 5px;
+}
+.kahaxi_titulo .kahaxi_titulo_container .kahaxi_titulo_text{
+    font-size: 13px;
+}
+
+
+.kahaxi_titulo .subrayado{
+    border: 1px solid #4886FE;
+    width: 72px;
+    margin-left: 9px;
+}
+
+
+/*Substitulos*/
+.subtitle{
+    color:#4886FE;
+    margin-bottom: 15px;
+    font-size: 15px;
+}
+.subtitle .subrayado{
+    border-top: 1px solid #4886FE;
+    width: 24px;
+}
+
+.accordion .fas{
+        margin-right: 0.5rem;
+}
+
+.red{
+	background-color: red !important;
+	color: white;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.facturaDirecta{
+	font-weight: bold;
+	color: #8a290d;
+}
+
+.facturaDirectaCerrada{
+	font-weight: bold;
+	color: #8a290d;
+	background-color: #cbffee !important; /* lightcyan aquamarine */
+}
+
+.facturaDirectaAnulada{
+	font-weight: bold;
+	color: #8a290d;
+	background-color: wheat !important;
+}
+
+.estadoRechazado{
+	background-color: wheat !important;
+}
+
+.estadoAprobadoAbierto{
+	background-color: #cbffee !important; /* lightcyan aquamarine */
+}
+
+.estadoAprobadoCerrado{
+	background-color: #cbffee !important; /* lightcyan aquamarine */
+	font-weight: bold;
+}
+
+.ui-autocomplete {
+    max-height: 200px;
+    font-size: small;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+  }
+  
+.principal {
+    padding-top: 7px;
+    padding-left: 7px;
+    padding-right: 7px;
+    padding-bottom: 7px;
+}
+
+.atenuar-input-disabled{
+	color: #cccccc3d !important;
+}
+
+.alineacion-derecha{
+	text-align: right; 
+}
+
+.input-symbol-sol {
+     position: relative;
+     color:	#089dff !important;
+     font-size: 10px !important;
+     font-weight: bold;
+ }
+ .input-symbol-sol input {
+     padding-left:18px;
+ }
+ .input-symbol-sol:before {
+     position: absolute;
+     top: 5px;
+     content:"SOL ";
+     left: 5px;
+     z-index: 1;
+ }
+
+.listado-symbol-sol {
+     position: relative;
+     /*color:	#000000;*/
+     font-size: smaller !important;
+ }
+ 
+ .listado-symbol-sol:before {
+     position: initial;
+     top: 5px;
+     content:"SOL ";
+     left: 5px;
+     z-index: 1;
+ }
+ 
+.input-symbol-dolar {
+     position: relative;
+     color:	#089dff !important;
+     font-size: 10px !important;
+     font-weight: bold;
+ }
+ .input-symbol-dolar input {
+     padding-left:18px;
+ }
+ .input-symbol-dolar:before {
+     position: absolute;
+     top: 5px;
+     content:"USD ";
+     left: 5px;
+     z-index: 1;
+ }
+ 
+.listado-symbol-dolar {
+     position: relative;
+     /*color:	#000000;*/
+     font-size: smaller !important;
+ }
+ .listado-symbol-dolar:before {
+     position: initial;
+     top: 5px;
+     content:"USD ";
+     left: 5px;
+     z-index: 1;
+ }
+ 
+input.form-control.input-validation-error {
+    border: 1px solid #e80c4d !important;
+}
+
+.quitar-contornos {
+	padding-left: 0px !important;
+    padding-bottom: 0px !important;
+    padding-top: 0px !important;
+    padding-right: 15px !important;
+}
+
+.quitar-contornos-tabla {
+	padding-left: 15px !important;
+    padding-bottom: 0px !important;
+    padding-top: 5px !important;
+    padding-right: 20px !important;
+}
+.listado-tam-caracteres {
+     font-size: smaller !important;
+ }
+
+.textoCheckboxTop {
+	padding-top: 10px !important;
+}
+
+.fijo {
+    width: 100%;
+    position: fixed;
+    top: 0;
+}
+
+.etiquetaAnulado {
+	/*pointer-events: none;*/
+	font-weight: bold !important;
+	font-size: small !important;
+	color: red !important;
+	background-color: wheat !important;
+	text-align: center !important;
+	vertical-align: middle !important;
+	/*opacity: 1;*/
+}
+
+.btn-flotante-grabar {
+	font-size: 16px; /* Cambiar el tamaño de la tipografia */
+	/*text-transform: uppercase; /* Texto en mayusculas */
+	/*font-weight: bold; /* Fuente en negrita o bold */
+	color: #ffffff; /* Color del texto */
+	border-radius: 5px; /* Borde del boton */
+	/*letter-spacing: 2px; /* Espacio entre letras */
+	background-color: #007bff; /* Color de fondo */
+	padding: 10px 15px; /* Relleno del boton */
+	position: fixed;
+	bottom: 5px;
+	right: 36px;
+	transition: all 300ms ease 0ms;
+	box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+	z-index: 99;
+}
+.btn-flotante-grabar:hover {
+	color: #ffffff; /* Color del texto */
+	background-color: #0069d9; /* Color de fondo al pasar el cursor */
+	box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.3);
+	transform: translateY(-5px);
+}
+@media only screen and (max-width: 600px) {
+	.btn-flotante-grabar {
+		font-size: 14px;
+		padding: 12px 20px;
+		bottom: 5px;
+		right: 36px;
+	}
+}
+
+.btn-flotante-duplicar {
+	font-size: 16px; /* Cambiar el tamaño de la tipografia */
+	/*text-transform: uppercase; /* Texto en mayusculas */
+	/*font-weight: bold; /* Fuente en negrita o bold */
+	color: #ffffff; /* Color del texto */
+	border-radius: 5px; /* Borde del boton */
+	/*letter-spacing: 2px; /* Espacio entre letras */
+	background-color: #007bff; /* Color de fondo */
+	padding: 10px 15px; /* Relleno del boton */
+	position: fixed;
+	bottom: 5px;
+	right: 146px;
+	transition: all 300ms ease 0ms;
+	box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+	z-index: 99;
+}
+.btn-flotante-duplicar:hover {
+	color: #ffffff; /* Color del texto */
+	background-color: #0069d9; /* Color de fondo al pasar el cursor */
+	box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.3);
+	transform: translateY(-5px);
+}
+@media only screen and (max-width: 600px) {
+	.btn-flotante-duplicar {
+		font-size: 14px;
+		padding: 12px 20px;
+		bottom: 5px;
+		right: 146px;
+	}
+}
+
+#tableSeleccionDocumento tbody tr {
+	cursor: pointer;
+}
+
+#tableSeleccionDocumento tbody tr:hover {
+	color: blue;
+	text-decoration: underline;
+}

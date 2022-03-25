@@ -20,6 +20,7 @@ import pe.gob.repuestera.model.ArticuloModel;
 import pe.gob.repuestera.model.CompraCabModel;
 import pe.gob.repuestera.model.CompraDetModel;
 import pe.gob.repuestera.model.SocioNegociosContactoModel;
+import pe.gob.repuestera.model.SocioNegociosDirDespachoModel;
 import pe.gob.repuestera.model.SocioNegociosModel;
 import pe.gob.repuestera.model.UsuarioModel;
 import pe.gob.repuestera.service.maestros.SocioNegociosService;
@@ -86,8 +87,10 @@ public class SocioNegociosRestController {
 		SocioNegociosModel socioNegocioModel = socioNegociosService.buscarSocioNegocio(codigoSn);
 
         List<SocioNegociosContactoModel> listContactosModel = socioNegociosService.buscarSocioNegocioContacto(codigoSn);
+        List<SocioNegociosDirDespachoModel> listDirDespachoModel = socioNegociosService.buscarSocioNegocioDirDespacho(codigoSn);
 
         socioNegocioModel.setDetalle(listContactosModel);
+        socioNegocioModel.setDetalleDirDespacho(listDirDespachoModel);
 
         logger.info("Fin buscarSocioNegocio.......");
 

@@ -146,6 +146,7 @@ public class Constante {
     public static final String PARAM_SP_PORC_DCTO				= "PORC_DCTO";
     public static final String PARAM_SP_PRECIO_CON_DCTO			= "PRECIO_CON_DCTO";
     public static final String PARAM_SP_DATA_JSON				= "DATA_JSON";
+    public static final String PARAM_SP_DATA_JSON_DIR			= "DATA_JSON_DIR";
     public static final String PARAM_SP_NRO_PEDIDO				= "NRO_PEDIDO";
     public static final String PARAM_SP_COTIZACION_SAP			= "COTIZACION_SAP";
     public static final String PARAM_SP_NRO_COTIZ_VENTA			= "NRO_COTIZ_VENTA";

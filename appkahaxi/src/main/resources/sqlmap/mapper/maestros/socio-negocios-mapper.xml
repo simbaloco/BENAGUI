@@ -17,12 +17,7 @@
         <result property="nombres" 					column="NOMBRES" />
         <result property="apePaterno" 				column="APELLIDO_PATERNO" />
         <result property="apeMaterno" 				column="APELLIDO_MATERNO" />
-        <result property="direccionFiscal" 			column="DIRECCION_FISCAL" />
-        <result property="direccionDespacho" 		column="DIRECCION_DESPACHO" />  
-        <result property="direccionDespacho2" 		column="DIRECCION_DESPACHO2" /> 
-        <result property="direccionDespacho3" 		column="DIRECCION_DESPACHO3" /> 
-        <result property="direccionDespacho4" 		column="DIRECCION_DESPACHO4" /> 
-        <result property="direccionDespacho5" 		column="DIRECCION_DESPACHO5" /> 
+        <result property="direccionFiscal" 			column="DIRECCION_FISCAL" />        
         <result property="contacto"					column="CONTACTO" />       
         <result property="email" 					column="EMAIL" />
         <result property="celular" 					column="CELULAR" />   
@@ -64,7 +59,18 @@
         <result property="codigoUsuarioModifica" 	column="COD_USU_MODIFICA" />
         <result property="fechaModificacion" 		column="FEC_MODIFICACION" />
 	</resultMap>
-    
+	
+	<resultMap id="socionegociosDirDespacho" type="SocioNegociosDirDespachoModel">
+        <result property="codigoSocio" 				column="COD_SN" />
+        <result property="idDirDespachoSN" 			column="ID_DIR_DESPACHO_SN" />
+        <result property="direccionDespacho" 		column="DIRECCION_DESPACHO" />        
+        <result property="activo" 					column="ACTIVO" />
+        <result property="codigoUsuarioRegistra" 	column="COD_USU_REGISTRA" />
+        <result property="fechaRegistro" 			column="FEC_REGISTRO" />
+        <result property="codigoUsuarioModifica" 	column="COD_USU_MODIFICA" />
+        <result property="fechaModificacion" 		column="FEC_MODIFICACION" />
+	</resultMap>
+	    
     
     <!-- ********************* PARAMETERMAPS ********************* -->
     <parameterMap id="buscarSnLikeParams" type="hashmap">
@@ -93,12 +99,7 @@
         <parameter property="NOMBRES"				jdbcType="VARCHAR"  mode="IN"/>        
         <parameter property="APELLIDO_PATERNO"		jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="APELLIDO_MATERNO"     	jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="DIRECCION_FISCAL"    	jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="DIRECCION_DESPACHO1"   jdbcType="VARCHAR"  mode="IN"/>    
-        <parameter property="DIRECCION_DESPACHO2"   jdbcType="VARCHAR"  mode="IN"/>    
-        <parameter property="DIRECCION_DESPACHO3"   jdbcType="VARCHAR"  mode="IN"/>    
-        <parameter property="DIRECCION_DESPACHO4"   jdbcType="VARCHAR"  mode="IN"/>    
-        <parameter property="DIRECCION_DESPACHO5"   jdbcType="VARCHAR"  mode="IN"/>       
+        <parameter property="DIRECCION_FISCAL"    	jdbcType="VARCHAR"  mode="IN"/>             
         <parameter property="EMAIL"    				jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="CELULAR"				jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="TELEFONO_FIJO"			jdbcType="VARCHAR"  mode="IN"/>        
@@ -114,6 +115,7 @@
         <parameter property="LISTA_PRECIOS"         jdbcType="INTEGER"  mode="IN"/>        
         <parameter property="ACTIVO"     			jdbcType="INTEGER"  mode="IN"/>
         <parameter property="DATA_JSON"          	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="DATA_JSON_DIR"        	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="USUARIO_REGISTRA"		jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
         <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
@@ -135,7 +137,7 @@
     </select>
     
     <insert id="registrarSocioNegocio" parameterMap="registrarSocioNegocioParams" statementType="CALLABLE">
-    	{CALL SP_REGISTRAR_SOCIO_NEGOCIO(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
+    	{CALL SP_REGISTRAR_SOCIO_NEGOCIO(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
     </insert> 
     
     <select id="buscarSocioNegocio" parameterMap="buscarSocioNegocioParams" resultMap="socioNegocios" statementType="CALLABLE">
@@ -144,6 +146,10 @@
     
     <select id="buscarSocioNegocioContacto" parameterMap="buscarSocioNegocioParams" resultMap="socionegociosContactos" statementType="CALLABLE">
     	{CALL SP_BUSCAR_SOCIO_NEGOCIO_CONTACTOS(?,?,?) }
+    </select>
+    
+    <select id="buscarSocioNegocioDirDespacho" parameterMap="buscarSocioNegocioParams" resultMap="socionegociosDirDespacho" statementType="CALLABLE">
+    	{CALL SP_BUSCAR_SOCIO_NEGOCIO_DIRECCION_DESPACHO(?,?,?) }
     </select>
     
 </mapper>
