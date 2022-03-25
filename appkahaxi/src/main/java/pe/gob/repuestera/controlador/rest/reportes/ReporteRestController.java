@@ -27,6 +27,7 @@ import pe.gob.repuestera.model.UsuarioModel;
 import pe.gob.repuestera.model.VentaCabModel;
 import pe.gob.repuestera.service.reportes.ReporteService;
 import pe.gob.repuestera.util.Constante;
+import pe.gob.repuestera.util.ConvertNumberLetter;
 
 @RestController
 public class ReporteRestController {
@@ -67,6 +68,7 @@ public class ReporteRestController {
  		params.put("DIRECCION", cotizacionVentaCab.getDireccionFiscal());
  		params.put("FECHA", cotizacionVentaCab.getFechaContabilizacion());
  		params.put("ASUNTO", cotizacionVentaCab.getAsunto());
+ 		params.put("TOTAL_LETRAS", ConvertNumberLetter.convertir(cotizacionVentaCab.getTotal().toString(), cotizacionVentaCab.getCodigoTipoMoneda()));
  		params.put("imagen", getClass().getResourceAsStream("/static/images/logo_kahaxi.png"));
  		
  		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalleCotizacionVenta, "PDF", response);
@@ -99,16 +101,16 @@ public class ReporteRestController {
  		String asunto = "COTIZACION - SOLICITUD DE CONFIRMACION DE CORREO";
 	    String nombreUsuario = "XXX";
 	    String mensaje = "<html><head><meta http-equiv=Content-Type content=text/html; charset=utf-8/></head><body><table align=center width=610 cellspacing=0 cellpadding=0 border=0 style='position:relative; font-size:12px; font-family:Arial, Helvetica, sans-serif; color: #00486A; background: #ffffff; border: solid 1px #bdcbcd; -moz-border-radius: 20px 20px 20px 20px; -ms-border-radius: 20px 20px 20px 20px; -webkit-border-radius: 20px 20px 20px 20px; border-radius: 20px 20px 20px 20px; padding:5px;''>"
-	                    + "<tbody><tr><td align=center bgcolor=#ffffff><img width=220 height=60 src='cid:identifier1234'/>"
+	                    + "<tbody><tr><td align=center bgcolor=#ffffff><img width=220 height=60 src='cid:logo_kahaxi.png'/> "
 	                    + "</td><td align=center bgcolor=#ffffff style='text-align: left; font-size:18px; padding-left:20px; color:#121D89;''><br>KAHAXI EIRL</td>"
 	                    + "</tr><tr><td valign=middle align=center colspan=2>"
 	                    + "<br><br><p style='text-align: left; font-size:14px; padding-left:20px; color:#121D89;'>Estimado(a) <b> "+ nombreUsuario +" </b>, <br/><br/>"
 	                    + "Si has recibido un mensaje de este tipo, significa que te hemos enviado una cotización.<br/><br/>"
 	                    + "</p>"
-	                    + "<p style='text-align: left; font-size:14px; padding-left:20px; color:#121D89;''>Atentamente,<br>"+"KAHAXI"
+	                    + "<p style='text-align: left; font-size:14px; padding-left:20px; color:#0A0203;''>Atentamente,<br>"+"KAHAXI"
 	                    + "<br></p><p style='text-align: left; font-size:10px; padding-left:20px; color:#DF0101;''>"
 	                    + "'Esta notificación ha sido enviada automáticamente. Por favor, no responda este correo.'</b></p><br/>"
-	                    + "</td></tr><tr></tr><tr><td valign=middle height=50 bgcolor=#bdcbcd align=center style='font-size:11px; -moz-border-radius: 0px 0px 20px 20px; -ms-border-radius: 0px 0px 20px 20px; -webkit-border-radius: 0px 0px 20px 20px; border-radius: 0px 0px 20px 20px; padding:5px;' colspan=2 >"
+	                    + "</td></tr><tr></tr><tr><td valign=middle height=50 bgcolor=#404040 align=center style='font-size:11px; -moz-border-radius: 0px 0px 20px 20px; -ms-border-radius: 0px 0px 20px 20px; -webkit-border-radius: 0px 0px 20px 20px; border-radius: 0px 0px 20px 20px; padding:5px;' colspan=2 >"
 	                    + "<table width=570 cellspacing=0 cellpadding=0 border=0 align=center><tbody><tr>"
 	                    + "<td width=100% valign=middle align=left style='padding:5px; font-size:10px;'><b>KAHAXI</b><br/>"
 	                    + "</td><td width=100% valign=top align=right ></td></tr></tbody></table></td></tr></tbody></table></body></html>";
@@ -123,8 +125,9 @@ public class ReporteRestController {
  		params.put("RUC", cotizacionVentaCab.getNroDocCliente() );
  		params.put("DIRECCION", cotizacionVentaCab.getDireccionFiscal());
  		params.put("FECHA", cotizacionVentaCab.getFechaContabilizacion());
- 		params.put("ASUNTO", "ASUNTO DE PRUEBA");
+ 		params.put("ASUNTO", cotizacionVentaCab.getAsunto());
  		params.put("ATENCION", "ATENCION DE PRUEBA");
+ 		params.put("TOTAL_LETRAS", ConvertNumberLetter.convertir(cotizacionVentaCab.getTotal().toString(), cotizacionVentaCab.getCodigoTipoMoneda()));
  		
  		reporteService.enviarReportePorCorreo(nombreJrxml, nombreArchivo.toString(), email, params, listaDetalleCotizacionVenta, asunto, mensaje, response);
      		
@@ -152,17 +155,18 @@ public class ReporteRestController {
  		params.put("RAZON_SOCIAL", ordenCompraCab.getNombreProv());
  		params.put("RUC", ordenCompraCab.getNroDocProv() );
  		params.put("DIRECCION", ordenCompraCab.getDireccionFiscal());
- 		params.put("FECHA_CONTABILIZA", ordenCompraCab.getFechaContabilizacionDmy());
- 		params.put("VALIDO_HASTA", ordenCompraCab.getFechaValidoHastaDmy());
+ 		params.put("FECHA_CONTABILIZA", ordenCompraCab.getFechaContabilizacionDmy()); 		
  		params.put("FECHA_ENTREGA", ordenCompraCab.getFechaEntregaDmy());
  		params.put("MONEDA", ordenCompraCab.getCodigoTipoMoneda());
- 		params.put("TIPO_CAMBIO", ordenCompraCab.getTipoCambio());
+ 		params.put("PERSONA_CONTACTO", ordenCompraCab.getPersonaContacto());
+ 		params.put("DIRECCION_DESPACHO", ordenCompraCab.getDireccionDespacho());
  		params.put("FORMA_PAGO", ordenCompraCab.getDescripcionCondPago());
- 		params.put("NRO_PEDIDO", ordenCompraCab.getNroPedido());
+ 		params.put("OBSERVACIONES", ordenCompraCab.getObservaciones());
  		params.put("COTIZACION_SAP", ordenCompraCab.getCotizacionSap());
  		params.put("SUB_TOTAL", ordenCompraCab.getSubTotal());
  		params.put("IGV", ordenCompraCab.getIgv());
  		params.put("TOTAL", ordenCompraCab.getTotal());
+ 		params.put("TOTAL_LETRAS", ConvertNumberLetter.convertir(ordenCompraCab.getTotal().toString(), ordenCompraCab.getCodigoTipoMoneda()));
  		params.put("imagen", getClass().getResourceAsStream("/static/images/logo_kahaxi.png"));
  		
  		logger.info("Hashmap:" + params);
@@ -191,22 +195,22 @@ public class ReporteRestController {
         String nombreJrxml = "/reportes/compras/orden_compra.jrxml"; 
         
         String asunto = "ORDEN DE COMPRA - SOLICITUD DE CONFIRMACION DE CORREO";
-	    String nombreUsuario = "XXX";
-	    String mensaje = "<html><head><meta http-equiv=Content-Type content=text/html; charset=utf-8/></head><body><table align=center width=610 cellspacing=0 cellpadding=0 border=0 style='position:relative; font-size:12px; font-family:Arial, Helvetica, sans-serif; color: #00486A; background: #ffffff; border: solid 1px #bdcbcd; -moz-border-radius: 20px 20px 20px 20px; -ms-border-radius: 20px 20px 20px 20px; -webkit-border-radius: 20px 20px 20px 20px; border-radius: 20px 20px 20px 20px; padding:5px;''>"
-	                    + "<tbody><tr><td align=center bgcolor=#ffffff><img width=220 height=60 src='cid:identifier1234'/>"
-	                    + "</td><td align=center bgcolor=#ffffff style='text-align: left; font-size:18px; padding-left:20px; color:#121D89;''><br>KAHAXI EIRL</td>"
-	                    + "</tr><tr><td valign=middle align=center colspan=2>"
-	                    + "<br><br><p style='text-align: left; font-size:14px; padding-left:20px; color:#121D89;'>Estimado(a) <b> "+ nombreUsuario +" </b>, <br/><br/>"
-	                    + "Si has recibido un mensaje de este tipo, significa que te hemos enviado una Orden de Compra.<br/><br/>"
-	                    + "</p>"
-	                    + "<p style='text-align: left; font-size:14px; padding-left:20px; color:#121D89;''>Atentamente,<br>"+"KAHAXI"
-	                    + "<br></p><p style='text-align: left; font-size:10px; padding-left:20px; color:#DF0101;''>"
-	                    + "'Esta notificación ha sido enviada automáticamente. Por favor, no responda este correo.'</b></p><br/>"
-	                    + "</td></tr><tr></tr><tr><td valign=middle height=50 bgcolor=#bdcbcd align=center style='font-size:11px; -moz-border-radius: 0px 0px 20px 20px; -ms-border-radius: 0px 0px 20px 20px; -webkit-border-radius: 0px 0px 20px 20px; border-radius: 0px 0px 20px 20px; padding:5px;' colspan=2 >"
-	                    + "<table width=570 cellspacing=0 cellpadding=0 border=0 align=center><tbody><tr>"
-	                    + "<td width=100% valign=middle align=left style='padding:5px; font-size:10px;'><b>KAHAXI</b><br/>"
-	                    + "</td><td width=100% valign=top align=right ></td></tr></tbody></table></td></tr></tbody></table></body></html>";
- 		
+	    String nombreUsuario = ordenCompraCab.getNombreProv();
+	    String mensaje = "<html><head><meta http-equiv=Content-Type content=text/html; charset=utf-8/></head><body><table align=center width=610 cellspacing=0 cellpadding=0 border=0 style='position:relative; font-size:12px; font-family:Arial, Helvetica, sans-serif; color: #404040; background: #ffffff; border: solid 1px #bdcbcd; -moz-border-radius: 20px 20px 20px 20px; -ms-border-radius: 20px 20px 20px 20px; -webkit-border-radius: 20px 20px 20px 20px; border-radius: 20px 20px 20px 20px; padding:5px;''>"
+                + "<tbody><tr>"
+                + "<td align=center bgcolor=#ffffff style='text-align: left; font-size:18px; padding-left:20px; color:#404040;''><br>KAHAXI EIRL</td>"
+                + "</tr><tr><td valign=middle align=center colspan=2>"
+                + "<br><br><p style='text-align: left; font-size:14px; padding-left:20px; color:#404040;'>Estimado(a) "+ nombreUsuario +", <br/><br/>"
+                + "Se envía adjunto la orden de compra para su atención. En caso de tener alguna consulta favor de comunicarse con su contacto directo.<br/><br/>"
+                + "</p>"
+                + "<p style='text-align: left; font-size:14px; padding-left:20px; color:#404040;''>Atentamente,<br>"+"KAHAXI"
+                + "<br></p><p style='text-align: left; font-size:10px; padding-left:20px; color:#DF0101;''>"
+                + "'Esta notificación ha sido enviada automáticamente. Por favor, no responda este correo.'</b></p><br/>"
+                + "</td></tr><tr></tr><tr><td valign=middle height=50 bgcolor=#c2c0c0 align=center style='font-size:11px; -moz-border-radius: 0px 0px 20px 20px; -ms-border-radius: 0px 0px 20px 20px; -webkit-border-radius: 0px 0px 20px 20px; border-radius: 0px 0px 20px 20px; padding:5px;' colspan=2 >"
+                + "<table width=570 cellspacing=0 cellpadding=0 border=0 align=center><tbody><tr>"
+                + "<td width=100% valign=middle align=left style='padding:5px; font-size:10px;'><b>KAHAXI</b><br/>"
+                + "</td><td width=100% valign=top align=right ></td></tr></tbody></table></td></tr></tbody></table></body></html>";
+	    
  		StringBuilder nombreArchivo = new StringBuilder();
  		nombreArchivo.append("ordenCompra-").append(numeroDocumento).append(".pdf");
  		
@@ -216,22 +220,25 @@ public class ReporteRestController {
  		params.put("RAZON_SOCIAL", ordenCompraCab.getNombreProv());
  		params.put("RUC", ordenCompraCab.getNroDocProv() );
  		params.put("DIRECCION", ordenCompraCab.getDireccionFiscal());
- 		params.put("FECHA_CONTABILIZA", ordenCompraCab.getFechaContabilizacionDmy());
- 		params.put("VALIDO_HASTA", ordenCompraCab.getFechaValidoHastaDmy());
+ 		params.put("FECHA_CONTABILIZA", ordenCompraCab.getFechaContabilizacionDmy()); 		
  		params.put("FECHA_ENTREGA", ordenCompraCab.getFechaEntregaDmy());
  		params.put("MONEDA", ordenCompraCab.getCodigoTipoMoneda());
- 		params.put("TIPO_CAMBIO", ordenCompraCab.getTipoCambio());
+ 		params.put("PERSONA_CONTACTO", ordenCompraCab.getPersonaContacto());
+ 		params.put("DIRECCION_DESPACHO", ordenCompraCab.getDireccionDespacho());
  		params.put("FORMA_PAGO", ordenCompraCab.getDescripcionCondPago());
- 		params.put("NRO_PEDIDO", ordenCompraCab.getNroPedido());
+ 		params.put("OBSERVACIONES", ordenCompraCab.getObservaciones());
  		params.put("COTIZACION_SAP", ordenCompraCab.getCotizacionSap());
  		params.put("SUB_TOTAL", ordenCompraCab.getSubTotal());
  		params.put("IGV", ordenCompraCab.getIgv());
  		params.put("TOTAL", ordenCompraCab.getTotal());
+ 		params.put("TOTAL_LETRAS", ConvertNumberLetter.convertir(ordenCompraCab.getTotal().toString(), ordenCompraCab.getCodigoTipoMoneda()));
  		params.put("imagen", getClass().getResourceAsStream("/static/images/logo_kahaxi.png"));
+ 		
+ 		logger.info("enviarCodigo--->" + enviarCodigo);   
  		
  		reporteService.enviarReportePorCorreo(nombreJrxml, nombreArchivo.toString(), email, params, listaDetalleOrdenCompra, asunto, mensaje, response);
      		
-        logger.info("fin enviarEmailReporteOrdenCompra");
+ 		logger.info("fin enviarEmailReporteOrdenCompra");
     }	
 	
 	@PostMapping ("/reporteCompras/")

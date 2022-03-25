@@ -236,7 +236,7 @@ public class ReporteServiceImpl implements ReporteService{
                     });
            
         	MimeBodyPart attachmentBP = new MimeBodyPart();
-            attachmentBP.setFileName("yo.pdf");
+            attachmentBP.setFileName(nombreArchivo);
             attachmentBP.setDataHandler(new DataHandler(aAttachment));
             
         	BodyPart texto = new MimeBodyPart();
