@@ -16,6 +16,10 @@
         <result property="direccionFiscal" 			column="DIRECCION_FISCAL" />        
         <result property="direccionDespacho" 		column="DIRECCION_DESPACHO" />
         <result property="personaContacto" 			column="PERSONA_CONTACTO" />
+        <result property="codDireccionDespacho" 	column="COD_DIRECCION_DESPACHO" />
+        <result property="codPersonaContacto" 		column="COD_PERSONA_CONTACTO" />
+        <result property="direccionDespachoConcat" 	column="DIRECCION_DESPACHO_CONCAT" />
+        <result property="personaContactoConcat" 	column="PERSONA_CONTACTO_CONCAT" />
         <result property="fechaContabilizacion" 	column="FEC_CONTABILIZACION" />
         <result property="fechaValidoHasta" 		column="FEC_VALIDO_HASTA" />
         <result property="fechaEntrega" 		    column="FEC_ENTREGA" />

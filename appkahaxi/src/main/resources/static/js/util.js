@@ -217,7 +217,8 @@ var ParametrosGenerales = {
 		RANGO_DIAS_BUSCADOR_FECHAS_INICIO	: "",
 		IGV									: "",
 		RANGO_DIAS_FECHA_VALIDEZ			: "",
-		RANGO_DIAS_BUSCADOR_FECHAS_REPORTES : ""
+		RANGO_DIAS_BUSCADOR_FECHAS_REPORTES : "",
+		CC_CORREO_OC						: ""
 }
 
 var TipoCampo = {
@@ -811,6 +812,9 @@ function obtenerTipoCambio(control, controlSave){
         },
 		success:function(resultado,textStatus,xhr){
         	console.log("obtenerTipoCambio resultado--->" + resultado);
+			if(resultado == CADENA_VACIA){
+				window.location.href = "/appkahaxi/principal";
+			}
         	// evaluando el retorno
         	if(xhr.status == HttpStatus.OK){
         		console.log("obtenerTipoCambio respondio exito.....");
@@ -834,6 +838,38 @@ function obtenerTipoCambio(control, controlSave){
         	loadding(false);
         }
     });
+}
+
+function llenarCombosDirDespachoPerContacto(dirDespachoArray, perContactoArray, dirDespachoSelected, perContactoSelected){
+	for (var i = 0; i < dirDespachoArray.length; i++) {
+		if (dirDespachoArray[i] != CADENA_VACIA && dirDespachoArray[i] != null) {
+			let dirDesp = dirDespachoArray[i].split('$');
+			if(dirDespachoSelected != UNDEFINED){
+				if(dirDesp[0] == dirDespachoSelected){
+					direccionDespacho.append($('<option selected />').val(dirDesp[0]).html(dirDesp[1]));
+				}else{
+					direccionDespacho.append($('<option />').val(dirDesp[0]).html(dirDesp[1]));
+				}
+			}else{
+				direccionDespacho.append($('<option />').val(dirDesp[0]).html(dirDesp[1]));	
+			}
+		}
+	}
+		
+	for (var i = 0; i < perContactoArray.length; i++) {
+		if (perContactoArray[i] != CADENA_VACIA && perContactoArray[i] != null) {
+			let perCon = perContactoArray[i].split('$');
+			if(perContactoSelected != UNDEFINED){
+				if(perCon[0] == perContactoSelected){
+					personaContacto.append($('<option selected />').val(perCon[0]).html(perCon[1]));
+				}else{
+					personaContacto.append($('<option />').val(perCon[0]).html(perCon[1]));
+				}
+			}else{
+				personaContacto.append($('<option />').val(perCon[0]).html(perCon[1]));	
+			}		
+		}
+	}
 }
 
 function returnYYYYMMDD(numFromToday = 0){
@@ -872,9 +908,27 @@ const removeEmptyObject = (function() {
   }
 }());
 
+// PLUGIN para lograr el ordenamiento de fechas en un datatable al dar click en el encabezado de columna
+$.fn.dataTable.moment = function ( format, locale ) {
+    var types = $.fn.dataTable.ext.type;
+ 
+    // Add type detection
+    types.detect.unshift( function ( d ) {
+        return moment( d, format, locale, true ).isValid() ?
+            'moment-'+format :
+            null;
+    } );
+ 
+    // Add sorting method - use an integer for the sorting
+    types.order[ 'moment-'+format+'-pre' ] = function ( d ) {
+        return moment( d, format, locale, true ).unix();
+    };
+};
 
 $(document).ready(function () {
 	console.log("aqui ready yee util.js");
+	// inicializando el PLUGIN de ordenamiento de fechas en un datatable
+	$.fn.dataTable.moment( 'DD/MM/YYYY' );
 	
 	let array = $('ul>li').toArray().map(item => $(item).html());
 	console.log(array);
@@ -906,6 +960,9 @@ $(document).ready(function () {
 							break;
 				case "08" : // RANGO DE DIAS REPORTES
 							ParametrosGenerales.RANGO_DIAS_BUSCADOR_FECHAS_REPORTES = newArray[2];
+							break;
+				case "09" : // CC PARA CORREOS DE OC
+							ParametrosGenerales.CC_CORREO_OC = newArray[2];
 							break;
 			} 
 		}

@@ -346,7 +346,9 @@ function cargarPantallaHTMLFacturaConDatosGuiaRemisionAsociadas(data) {
 	dias.val(data.codigoDias);
 	serie.val(data.serie);
 	correlativo.val(data.correlativo);
-	tipoCambio.val(data.tipoCambio);
+	// se obtiene el tc del día
+	obtenerTipoCambio(tipoCambio);
+	//tipoCambio.val(data.tipoCambio);
 	subTotalFactura.val(data.subTotal);
 	igvFactura.val(data.igv);
 	totalFactura.val(data.total);
@@ -418,7 +420,7 @@ function habilitarPantallaConDatosGuiaRemisionAsociadas() {
 function cargarPantallaConDatosFactura() {
 	
 	var nroDocReferenciaVal; 
-	var desdeDocRef = desdeDocRefParam.text();
+	//var desdeDocRef = desdeDocRefParam.text();
 	
 	/*if(desdeDocRef == Respuesta.SI){
 		nroDocReferenciaVal = nroComprobantePago.text();
@@ -514,7 +516,7 @@ function cargarPantallaHTMLFactura(data) {
 function verPantallaFactura(data) {
 	titulo.text("VER");
 	
-	var desdeDocRef = desdeDocRefParam.text();
+	//var desdeDocRef = desdeDocRefParam.text();
 	
 	codigo.html(data.numeroDocumento);
 	/*if(desdeDocRef == Respuesta.SI){
@@ -891,6 +893,8 @@ function registrarFacturaCompra(){
 		codigoProv:  			codigoProvVal,
 		direccionDespacho: 		dirDespachoVal,
 		personaContacto: 		perContactoVal,
+		codDireccionDespacho: 	null,
+		codPersonaContacto: 	null,
 		fechaContabilizacion:   fecContaVal,
 		fechaDocumento:      	fecDocumentoVal,
 		fechaVencimiento:       fecVencimientoVal,
@@ -1264,17 +1268,19 @@ function limpiarFactura() {
 	serie.val(CADENA_VACIA);
 	correlativo.val(CADENA_VACIA);
 	observaciones.val(CADENA_VACIA);
-	direccionDespacho.val(CADENA_VACIA);
-	personaContacto.val(CADENA_VACIA);
-	estadoPago.prop("selectedIndex", 0);
-	
+	estadoPago.val(EstadoPago.PENDIENTE);
+	condPago.val(CondicionPago.CONTADO);
+	dias.val(Dias._30);
+		
 	fecConta.datetimepicker('destroy');
 	fecDocumento.datetimepicker('destroy');
 	fecVencimiento.datetimepicker('destroy');	
 	construirFechasPicker();
 	
-	direccionDespacho.focus();
 	formObservaciones.removeClass('was-validated');
+	
+	serie.focus();
+	
 }
 
 /********************* CALCULOS NUMERICOS ********************/

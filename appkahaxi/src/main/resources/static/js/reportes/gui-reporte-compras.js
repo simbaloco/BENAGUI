@@ -136,6 +136,11 @@ function campoBuscarKeyUp(e){
 }
 
 function limpiar(){
+	var order = dataTableCompras.order();
+	alert("aa->"+order)
+	alert("bb-->"+order[0][0])
+	alert("cc-->"+order[0][1])
+	
 	campoBuscar.val(CADENA_VACIA);	
 	inicializarFechaInicioFin();
 	buscar();

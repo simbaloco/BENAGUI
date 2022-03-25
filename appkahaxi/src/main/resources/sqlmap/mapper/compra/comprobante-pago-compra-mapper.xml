@@ -87,30 +87,32 @@
     </parameterMap>
 
     <parameterMap id="registrarComprobantePagoCompraParams" type="hashmap">
-        <parameter property="SERIE"       	        jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="CORRELATIVO"       	jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="COD_PROV"       		jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="USUARIO"				jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="DIRECCION_DESPACHO"   	jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="PERSONA_CONTACTO"   	jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="NRO_ORDEN_COMPRA"		jdbcType="VARCHAR"  mode="IN"/>        
-        <parameter property="FEC_CONTABILIZACION"   jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="FEC_DOCUMENTO"         jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="FEC_VENCIMIENTO"       jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="COD_TIPO_MONEDA"       jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="COD_COND_PAGO"       	jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="COD_DIAS"       		jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="COD_ESTADO_PAGO"       jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="COD_ESTADO"            jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="TIPO_CAMBIO"          	jdbcType="DECIMAL"  mode="IN"/>
-        <parameter property="SUB_TOTAL"          	jdbcType="DECIMAL"  mode="IN"/>
-        <parameter property="IGV"          			jdbcType="DECIMAL"  mode="IN"/>
-        <parameter property="TOTAL"          		jdbcType="DECIMAL"  mode="IN"/>
-        <parameter property="OBSERVACIONES"     	jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="DATA_JSON"          	jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="NRO_DOCUMENTO"       	jdbcType="VARCHAR"  mode="OUT"/>
-        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
-        <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="SERIE"       	        	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="CORRELATIVO"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_PROV"       			jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="USUARIO"					jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="DIRECCION_DESPACHO"   		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="PERSONA_CONTACTO"   		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_DIRECCION_DESPACHO"   	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_PERSONA_CONTACTO"   	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="NRO_ORDEN_COMPRA"			jdbcType="VARCHAR"  mode="IN"/>        
+        <parameter property="FEC_CONTABILIZACION"   	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_DOCUMENTO"         	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_VENCIMIENTO"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_TIPO_MONEDA"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_COND_PAGO"       		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_DIAS"       			jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_ESTADO_PAGO"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_ESTADO"            	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="TIPO_CAMBIO"          		jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="SUB_TOTAL"          		jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="IGV"          				jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="TOTAL"          			jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="OBSERVACIONES"     		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="DATA_JSON"          		jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="NRO_DOCUMENTO"       		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="FLAG_RESULTADO"   			jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO" 		jdbcType="VARCHAR"  mode="OUT"/>
     </parameterMap>
 
     <parameterMap id="actualizarComprobantePagoCompraParams" type="hashmap">
@@ -148,7 +150,7 @@
     </select>
 
     <insert id="registrarFacturaCompra" parameterMap="registrarComprobantePagoCompraParams" statementType="CALLABLE">
-        {CALL SP_REGISTRAR_COMPROBANTE_PAGO_COMPRA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
+        {CALL SP_REGISTRAR_COMPROBANTE_PAGO_COMPRA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
     </insert>
 
     <update id="actualizarFacturaCompra" parameterMap="actualizarComprobantePagoCompraParams" statementType="CALLABLE">
