@@ -3,6 +3,7 @@ var opcion;
 var datoBuscar; 
 var tipoSocio;
 var formSocioNegocio;
+var formContactos;
 var codigo;
 var codigoSocio;
 var tipoDocumento;
@@ -78,6 +79,7 @@ function inicializarVariables() {
 	tipoSocio = $("#tipoSn");
 	datoBuscar = $("#datoBuscar");
 	formSocioNegocio = $("#formSocioNegocio");
+	formContactos = $("#formContactos");
 	codigo = $("#codigo");
 	codigoSocio = $("#codigoSocio");
 	tipoDocu = $("#tipoDocu");
@@ -234,7 +236,7 @@ function cargarPantallaHTML(data) {
 	console.log("cargarPantallaHTML...success" + data.ubigeo);
 
 	var codProv = data.codigoDepartamento + data.codigoProvincia;
-	var telefonos;
+	var telefonos; 
 	var emails;
 	var cant;
 
@@ -694,7 +696,8 @@ function validarCamposInsertarCampos(i, tipo) {
 				return false;
 			}
 
-			if ($('#emailContacto_' + i + "_" + indiceEma).val().trim() != '') {
+			dinamicaAgregarEmailContacto(i);
+			/*if ($('#emailContacto_' + i + "_" + indiceEma).val().trim() != '') {
 				if (validaEmail($('#emailContacto_' + i + "_" + indiceEma).val().trim()) == 0) {
 					mostrarDialogoInformacion('Debe ingresar un email válido para el contacto', Boton.WARNING, null, '#emailContacto_' + i + "_" + indiceEma);
 					return false;
@@ -702,7 +705,7 @@ function validarCamposInsertarCampos(i, tipo) {
 				else {
 					dinamicaAgregarEmailContacto(i);
 				}
-			}
+			}*/		
 		}
 	}
 }
@@ -733,6 +736,7 @@ function limpiarSocioNegocio() {
 	limpiarContactosSocioNegocio();
 	ocultarControl(divDias);
 	formSocioNegocio.removeClass('was-validated');
+	formContactos.removeClass('was-validated');
 }
 
 function limpiarContactosSocioNegocio() {
@@ -1036,6 +1040,10 @@ function dinamicaEliminarContacto(i) {
 			callback: function(result) {
 				if (result == true) {
 					ocultarControl($("#field_" + i));
+					controlNoRequerido($('#contacto_' + i));
+					controlNoRequerido($('#cargo_' + i));	
+					controlNoRequerido($('#telContacto_' + i + '_0'));	
+					controlNoRequerido($('#emailContacto_' + i + '_0'));			
 					$('#contacto_' + i).val(CADENA_VACIA);
 					$('#cargo_' + i).val(CADENA_VACIA);
 					$('#asignadoDef_' + i).val(CADENA_VACIA);
@@ -1111,10 +1119,10 @@ function dinamicaAgregarContacto() {
 	/* AGREGAR LEGEND EN BLANCO */
 	html = '<div id="field_' + indiceContacto + '" class="card">';
 	html = html + '<div id="div_contacto_' + indiceContacto + '" class="card-body" style="margin-top:-12px"><div class="row">';
-	html = html + '<div class="col-md-3"><label class="label">Nombre:</label><input class="form-control" maxlength="100" type="text" id="contacto_' + indiceContacto + '"></input></div>';
+	html = html + '<div class="col-md-3"><label class="label">Nombre:</label><input class="form-control" maxlength="100" type="text" id="contacto_' + indiceContacto + '" required="required"></input><div class="invalid-feedback">Ingrese el nombre</div></div>';
 	html = html + '<div class="col-md-1"><input type="text" style="display: none" id="id_contacto_' + indiceContacto + '"></input></div>';
 
-	html = html + '<div class="col-md-3"><label class="label">Cargo:</label><input class="form-control" maxlength="100" type="text" id="cargo_' + indiceContacto + '"></input></div>';
+	html = html + '<div class="col-md-3"><label class="label">Cargo:</label><input class="form-control" maxlength="100" type="text" id="cargo_' + indiceContacto + '" required="required"></input><div class="invalid-feedback">Ingrese el cargo</div></div>';
 	html = html + '<div class="col-md-1"><input type="text" style="display: none" value="1" id="activo_' + indiceContacto + '"></input></div>';
 
 	html = html + '<div class="col-md-3"><label class="label">Email factura:</label><input class="form-control" maxlength="100" type="email" id="emailfactura_' + indiceContacto + '"></input></div>';
@@ -1123,10 +1131,10 @@ function dinamicaAgregarContacto() {
 	html = html + '</div>';
 
 	html = html + '<div class="row">';
-	html = html + '<div class="col-md-3"><label class="label">Teléfono 1:</label><input class="form-control" maxlength="20" type="text" id="telContacto_' + indiceContacto + '_0" onkeypress="soloEnteros(event);"></input></div>';
+	html = html + '<div class="col-md-3"><label class="label">Teléfono 1:</label><input class="form-control" maxlength="20" type="text" id="telContacto_' + indiceContacto + '_0" onkeypress="soloEnteros(event);" required="required"></input><div class="invalid-feedback">Ingrese el teléfono de contacto</div></div>';
 	html = html + '<div class="col-md-1"><label class="label"></label><button type="button" id="btnAgregarTelefono_' + indiceContacto + '" class="btn btn-primary btn-sm input-group-append form-check-input" title="Agregar teléfono" onclick="validarCamposInsertarCampos(' + indiceContacto + ', 0);">';
 	html = html + '<span class="mr-1"><i class="fas fa-plus-square"></i></span></button></div>';
-	html = html + '<div class="col-md-3"><label class="label">Email 1:</label><input class="form-control" maxlength="100" type="email" id="emailContacto_' + indiceContacto + '_0"></input></div>';
+	html = html + '<div class="col-md-3"><label class="label">Email 1:</label><input class="form-control" maxlength="100" type="email" id="emailContacto_' + indiceContacto + '_0" required="required"></input><div class="invalid-feedback">Ingrese el email de contacto</div></div>';
 	html = html + '<div class="col-md-1"><label class="label"></label><button type="button" id="btnAgregarEmail_' + indiceContacto + '" class="btn btn-primary btn-sm input-group-append form-check-input" title="Agregar email" onclick="validarCamposInsertarCampos(' + indiceContacto + ', 1);">';
 	html = html + '<span class="mr-1"><i class="fas fa-plus-square"></i></span></button></div>';
 	html = html + '<div class="col-md-3"><label class="label"></label><div class="form-check"><input class="form-check-input" type="checkbox" id="asignadoDef_' + indiceContacto + '"></input>';
@@ -1139,7 +1147,6 @@ function dinamicaAgregarContacto() {
 	indiceContacto = indiceContacto + 1;
 	indiceRealContacto = indiceRealContacto + 1;
 }
-
 
 function dinamicaAgregarDirDespacho() {
 	var html = '';
@@ -1261,7 +1268,7 @@ function registrarSocioNegocio() {
 
 function grabarSocioNegocio(e) {
 
-	if (formSocioNegocio[0].checkValidity() == false) {
+	if (formSocioNegocio[0].checkValidity() == false || formContactos[0].checkValidity()== false ) {
 		e.stopPropagation();
 	}
 	else {
@@ -1272,7 +1279,7 @@ function grabarSocioNegocio(e) {
 		}
 	}
 	formSocioNegocio.addClass('was-validated');
-
+	formContactos.addClass('was-validated');
 }
 
 function validarCabecera() {
@@ -1366,22 +1373,22 @@ function validarContactos(tipo) {
 		console.log("activo:" + $('#activo_' + i).val());
 
 		if (act == '1') {
-			var nombreCon = $('#contacto_' + i).val().trim();
-			var cargo = $('#cargo_' + i).val().trim();
+			//var nombreCon = $('#contacto_' + i).val().trim();
+			//var cargo = $('#cargo_' + i).val().trim();
 			var telefonodet = $('#telContacto_' + i + "_0").val();
 			var emaildet = $('#emailContacto_' + i + "_0").val();
 
 			if ($('#asignadoDef_' + i).is(':checked')) {
 				cant = cant + 1;
 			}
-			if (nombreCon == '') {
+			/*if (nombreCon == '') {
 				mostrarDialogoInformacion('Debe ingresar el nombre del contacto', Boton.WARNING, null, '#contacto_' + i);
 				return false;
 			}
 			if (cargo == '') {
 				mostrarDialogoInformacion('Debe ingresar el cargo del contacto', Boton.WARNING, null, '#cargo_' + i);
 				return false;
-			}
+			}*/
 			if (telefonodet == '') {
 				mostrarDialogoInformacion('Debe ingresar al menos un teléfono para el contacto', Boton.WARNING, null, '#telContacto_' + i + "_0");
 				return false;
@@ -1397,10 +1404,10 @@ function validarContactos(tipo) {
 				return false;
 			}
 
-			if (validaEmail(emaildet.trim()) == 0) {
+			/*if (validaEmail(emaildet.trim()) == 0) {
 				mostrarDialogoInformacion('Debe ingresar un email válido para el contacto', Boton.WARNING, null, '#emailContacto_' + i + "_0");
 				return false;
-			}
+			}*/
 
 		}
 	}

@@ -1,183 +1,189 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.w3.org/1999/xhtml" 
-	  xmlns:th="http://www.thymeleaf.org"
-	  layout:decorate="~{fragments/layout}" lang="en">
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	layout:decorate="~{fragments/layout}" lang="en">
 
 <head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<script th:src="@{/js/maestros/gui-nuevo-proveedor.js}" ></script>
+<script th:src="@{/js/maestros/gui-nuevo-proveedor.js}"></script>
 </head>
 
 <body>
 
-<div layout:fragment="content" th:remove="tag">
+	<div layout:fragment="content" th:remove="tag">
 
-	<label id="codigoSocio" th:text=${codigoSocio} hidden="hidden"></label>
-	<label id="opcion" th:text=${opcion} hidden="hidden"></label>
-	<label id="datoBuscar" th:text=${datoBuscar} hidden="hidden"></label>	
-	<label id="tipoDocumento" th:text=${tipoDoc} hidden="hidden"></label>
-	<label id="tipoSn" th:text=${tipoSn} hidden="hidden"></label>
-	<label id="volverParam" th:text=${volver} hidden="hidden"></label>
-	
-	
-	<div class="kahaxi_titulo">
+		<label id="codigoSocio" th:text=${codigoSocio} hidden="hidden"></label>
+		<label id="opcion" th:text=${opcion} hidden="hidden"></label> <label
+			id="datoBuscar" th:text=${datoBuscar} hidden="hidden"></label> <label
+			id="tipoDocumento" th:text=${tipoDoc} hidden="hidden"></label> <label
+			id="tipoSn" th:text=${tipoSn} hidden="hidden"></label> <label
+			id="volverParam" th:text=${volver} hidden="hidden"></label>
 
-		<div class="kahaxi_titulo_container">
-			<div class="kahaxi_titulo_logo"><i class="fas fa-cash-register"></i></div>
-			<div class="kahaxi_titulo_text"><span id="titulo"></span> PROVEEDOR</div>
-		</div>
 
-		<div class="subrayado">
-		</div>
+		<div class="kahaxi_titulo">
 
-		<br>
-	</div>
-
-	<div class="box bg-box" id="accordionCabeceraOrden">
-
-		<div class="box-body">
-
-			<div class="card">
-
-				<div class="card-header quitar-contornos" id="headingCabeceraOrden">
-					<h2 class="mb-0">
-						<button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseCabeceraOrden" aria-expanded="true" aria-controls="collapseCabeceraOrden">
-							<i class="fas fa-angle-up"></i><span>Datos del Proveedor </span><span class="font-weight-bold" id="codigo"></span>
-							<div class="subrayado"></div>
-						</button>
-					</h2>
+			<div class="kahaxi_titulo_container">
+				<div class="kahaxi_titulo_logo">
+					<i class="fas fa-cash-register"></i>
 				</div>
+				<div class="kahaxi_titulo_text">
+					<span id="titulo"></span> PROVEEDOR
+				</div>
+			</div>
 
-				<div id="collapseCabeceraOrden" class="collapse show" aria-labelledby="headingCabeceraOrden" data-parent="#accordionCabeceraOrden">
+			<div class="subrayado"></div>
 
-					<div class="box-body">
+			<br>
+		</div>
 
-						<form id="formSocioNegocio" class="needs-validation" novalidate>
-						 	
-							<div class="row">
+		<div class="box bg-box" id="accordionCabeceraOrden">
 
-								<div class="col-md-2">
-									<label class="label" for="tipoDocu">Tipo de Documento:</label>
-									<select id="tipoDocu" class="form-control"  required="required">
-										<option value="" selected>-- SELECCIONAR --</option>
-										<option th:each="item : ${listaTipoDocumento}"
-									            th:value="${item.codigo}" 
-									            th:text="${item.descripcion}">
-									    </option>
-									</select>
-									<div class="invalid-feedback">
-					                	Seleccione el tipo de documento
-					                </div>
-								</div>
+			<div class="box-body">
 
-								<div class="col-md-2">
-									<label class="label" for="nroDocumento">Nro. Documento:</label>
-									<input class="form-control" maxlength="20" type="text" id="nroDocumento" required="required" />
-									<div class="invalid-feedback">
-										Ingrese el Nro. de documento
+				<div class="card">
+
+					<div class="card-header quitar-contornos" id="headingCabeceraOrden">
+						<h2 class="mb-0">
+							<button class="subtitle btn btn-link" data-toggle="collapse"
+								data-target="#collapseCabeceraOrden" aria-expanded="true"
+								aria-controls="collapseCabeceraOrden">
+								<i class="fas fa-angle-up"></i><span>Datos del Proveedor
+								</span><span class="font-weight-bold" id="codigo"></span>
+								<div class="subrayado"></div>
+							</button>
+						</h2>
+					</div>
+
+					<div id="collapseCabeceraOrden" class="collapse show"
+						aria-labelledby="headingCabeceraOrden"
+						data-parent="#accordionCabeceraOrden">
+
+						<div class="box-body">
+
+							<form id="formSocioNegocio" class="needs-validation" novalidate>
+
+								<div class="row">
+
+									<div class="col-md-2">
+										<label class="label" for="tipoDocu">Tipo de Documento:</label>
+										<select id="tipoDocu" class="form-control" required="required">
+											<option value="" selected>-- SELECCIONAR --</option>
+											<option th:each="item : ${listaTipoDocumento}"
+												th:value="${item.codigo}" th:text="${item.descripcion}">
+											</option>
+										</select>
+										<div class="invalid-feedback">Seleccione el tipo de
+											documento</div>
 									</div>
-								</div>
-								
-								<div class="col-md-2">
-									<label class="label" for="tipoPersona">Tipo de Persona:</label>
-									<select id="tipoPersona" class="form-control"  required="required">
-										<option value="" selected>-- SELECCIONAR --</option>
-										<option th:each="item : ${listatipoPersona}"
-									            th:value="${item.codigo}" 
-									            th:text="${item.descripcion}">
-									    </option>
-									</select>
-									<div class="invalid-feedback">
-					                	Seleccione el tipo de persona
-					                </div>
-								</div>
-								
-								<div class="col-md-6" style="display: none" id ="divRazSocial">
-									<label class="label" for="razonSocial">Raz&oacute;n Social:</label>
-									<input class="form-control" maxlength="100" type="text" id="razonSocial"/>									
-								</div>
-								
-								<div class="col-md-2" style="display: none" id = "divNombres">
-									<label class="label" for="nombre">Nombres:</label>
-									<input class="form-control" maxlength="50" type="text" id="nombre"/>
-								</div>
-								
-								<div class="col-md-2" style="display: none" id = "divApePaterno">
-									<label class="label" for="apePaterno">Apellido Paterno:</label>
-									<input class="form-control" maxlength="50" type="text" id="apePaterno"/>
-								</div>
-								
-								<div class="col-md-2" style="display: none" id = "divApeMaterno">
-									<label class="label" for="apeMaterno">Apellido Materno:</label>
-									<input class="form-control" maxlength="50" type="text" id="apeMaterno"/>
-								</div>
 
-							</div>
-							
-							<div class="row">
-							
-								<div class="col-md-2">
-									<label class="label" for="pais">País:</label>
-									<select id="pais" class="form-control">
-										<option value="" selected>-- SELECCIONAR --</option>
-										<option th:each="item : ${listaPais}"
-									            th:value="${item.codigo}" 
-									            th:text="${item.descripcion}">
-									    </option>
-									</select>
-									<div class="invalid-feedback">
-					                	Seleccione el país
-					                </div>
-								</div>
-
-								<div class="col-md-2" style="display: none" id = "divDepartamento">
-									<label class="label" for="departamento">Departamento:</label>
-									<select id="departamento" class="form-control">
-										<option value="" selected>-- SELECCIONAR --</option>
-										<option th:each="item : ${listaDepartamento}"
-									            th:value="${item.codigo}" 
-									            th:text="${item.descripcion}">
-									    </option>
-									</select>
-								</div>
-								
-								<div class="col-md-2" style="display: none" id = "divProvincia">
-									<label class="label" for="provincia">Provincia:</label>
-									<select id="provincia" class="form-control">
-										<option value="" selected>-- SELECCIONAR --</option>										
-									</select>
-								</div>
-
-								<div class="col-md-2" style="display: none" id = "divDistrito">
-									<label class="label" for="distrito">Distrito:</label>
-									<select id="distrito" class="form-control">
-										<option value="" selected>-- SELECCIONAR --</option>
-									</select>
-								</div>
-								
-								<div class="col-md-2" style="display: none" id = "divUbigeo">
-									<label class="label" for="ubigeo">Ubigeo:</label>
-									<input class="form-control" maxlength="6" type="text" id="ubigeo" disabled="disabled"/>
-								</div>
-								
-								<div class="col-md-2"></div>
-								
-							</div>
-							
-							<div class="row">
-							
-								<div class="col-md-12">
-									<label class="label" for="direccionFiscal">Dirección Fiscal:</label>
-									<input class="form-control" maxlength="150" type="text" id="direccionFiscal" required="required"/>
-									<div class="invalid-feedback">
-										Ingrese la dirección fiscal
+									<div class="col-md-2">
+										<label class="label" for="nroDocumento">Nro.
+											Documento:</label> <input class="form-control" maxlength="20"
+											type="text" id="nroDocumento" required="required" />
+										<div class="invalid-feedback">Ingrese el Nro. de
+											documento</div>
 									</div>
+
+									<div class="col-md-2">
+										<label class="label" for="tipoPersona">Tipo de
+											Persona:</label> <select id="tipoPersona" class="form-control"
+											required="required">
+											<option value="" selected>-- SELECCIONAR --</option>
+											<option th:each="item : ${listatipoPersona}"
+												th:value="${item.codigo}" th:text="${item.descripcion}">
+											</option>
+										</select>
+										<div class="invalid-feedback">Seleccione el tipo de
+											persona</div>
+									</div>
+
+									<div class="col-md-6" style="display: none" id="divRazSocial">
+										<label class="label" for="razonSocial">Raz&oacute;n
+											Social:</label> <input class="form-control" maxlength="100"
+											type="text" id="razonSocial" />
+									</div>
+
+									<div class="col-md-2" style="display: none" id="divNombres">
+										<label class="label" for="nombre">Nombres:</label> <input
+											class="form-control" maxlength="50" type="text" id="nombre" />
+									</div>
+
+									<div class="col-md-2" style="display: none" id="divApePaterno">
+										<label class="label" for="apePaterno">Apellido
+											Paterno:</label> <input class="form-control" maxlength="50"
+											type="text" id="apePaterno" />
+									</div>
+
+									<div class="col-md-2" style="display: none" id="divApeMaterno">
+										<label class="label" for="apeMaterno">Apellido
+											Materno:</label> <input class="form-control" maxlength="50"
+											type="text" id="apeMaterno" />
+									</div>
+
 								</div>
-								
-							</div>
+
+								<div class="row">
+
+									<div class="col-md-2">
+										<label class="label" for="pais">País:</label> <select
+											id="pais" class="form-control">
+											<option value="" selected>-- SELECCIONAR --</option>
+											<option th:each="item : ${listaPais}"
+												th:value="${item.codigo}" th:text="${item.descripcion}">
+											</option>
+										</select>
+										<div class="invalid-feedback">Seleccione el país</div>
+									</div>
+
+									<div class="col-md-2" style="display: none"
+										id="divDepartamento">
+										<label class="label" for="departamento">Departamento:</label>
+										<select id="departamento" class="form-control">
+											<option value="" selected>-- SELECCIONAR --</option>
+											<option th:each="item : ${listaDepartamento}"
+												th:value="${item.codigo}" th:text="${item.descripcion}">
+											</option>
+										</select>
+									</div>
+
+									<div class="col-md-2" style="display: none" id="divProvincia">
+										<label class="label" for="provincia">Provincia:</label> <select
+											id="provincia" class="form-control">
+											<option value="" selected>-- SELECCIONAR --</option>
+										</select>
+									</div>
+
+									<div class="col-md-2" style="display: none" id="divDistrito">
+										<label class="label" for="distrito">Distrito:</label> <select
+											id="distrito" class="form-control">
+											<option value="" selected>-- SELECCIONAR --</option>
+										</select>
+									</div>
+
+									<div class="col-md-2" style="display: none" id="divUbigeo">
+										<label class="label" for="ubigeo">Ubigeo:</label> <input
+											class="form-control" maxlength="6" type="text" id="ubigeo"
+											disabled="disabled" />
+									</div>
+
+									<div class="col-md-2"></div>
+
+								</div>
+
+								<div class="row">
+
+									<div class="col-md-12">
+										<label class="label" for="direccionFiscal">Dirección
+											Fiscal:</label> <input class="form-control" maxlength="150"
+											type="text" id="direccionFiscal" required="required" />
+										<div class="invalid-feedback">Ingrese la dirección
+											fiscal</div>
+									</div>
+
+								</div>
 
 								<div id="collapseDireccionDespacho" class="collapse show"
 									aria-labelledby="headingContacto"
@@ -191,8 +197,12 @@
 											<div class="invalid-feedback">Ingrese la dirección de
 												despacho 1</div>
 										</div>
-										<div style="display: none" ><input type="text" id="idDirDespachoSN_0" /></div>
-										<div style="display: none" ><input type="text" value="1" id="activoDir_0"></input></div>
+										<div style="display: none">
+											<input type="text" id="idDirDespachoSN_0" />
+										</div>
+										<div style="display: none">
+											<input type="text" value="1" id="activoDir_0"></input>
+										</div>
 
 										<div class="col-md-1 alineacion-derecha">
 											<label class="label"></label>
@@ -209,211 +219,238 @@
 
 
 
+								<div class="row"> 
+
+									<div class="col-md-2">
+										<label class="label" for="telefonoFijo">Teléfono Fijo:</label>
+										<input class="form-control" type="text" maxlength="15"
+											id="telefonoFijo" required="required" />
+										<div class="invalid-feedback">Ingrese el teléfono fijo</div>
+									</div>
+
+									<div class="col-md-2">
+										<label class="label" for="celular">Celular:</label> <input
+											class="form-control" type="text" maxlength="20" id="celular"
+											required="required" />
+										<div class="invalid-feedback">Ingrese el celular</div>
+									</div>
+
+									<div class="col-md-2">
+										<label class="label" for="correo">Correo Electrónico:</label>
+										<input class="form-control" maxlength="100" type="email"
+											id="correo" required="required" />
+										<div class="invalid-feedback">Ingrese el correo
+											electrónico</div>
+									</div>
+
+									<div class="col-md-2">
+										<label class="label" for="condicion">Condición de
+											pago:</label> <select id="condicion" class="form-control"
+											required="required">
+											<option value="" selected>-- SELECCIONAR --</option>
+											<option th:each="item : ${listaCondicion}"
+												th:value="${item.codigo}" th:text="${item.descripcion}">
+											</option>
+										</select>
+										<div class="invalid-feedback">Seleccione la condición de
+											pago</div>
+									</div>
+
+									<div class="col-md-2" id="divDias" style="display: none">
+										<label class="label" for="dias">Días de crédito:</label> <select
+											id="dias" class="form-control">
+											<option value="" selected>-- SELECCIONAR --</option>
+											<option th:each="item : ${listaDias}"
+												th:value="${item.codigo}" th:text="${item.descripcion}">
+											</option>
+										</select>
+									</div>
+
+									<div class="col-md-2">
+										<label id="lblActivo" class="label" for="activo">Activo:</label>
+										<input id="activo" type="checkbox" class="form-check">
+									</div>
+
+								</div>
+
 								<div class="row">
 
-								<div class="col-md-2">
-									<label class="label" for="telefonoFijo">Teléfono Fijo:</label>
-									<input class="form-control" type="text" maxlength="15" id="telefonoFijo" required="required"/>
-									<div class="invalid-feedback">
-										Ingrese el teléfono fijo
+									<div class="col-md-12">
+										<label class="label" for="comentarios">Comentarios:</label>
+										<textarea rows="3" cols="30" id="comentarios"
+											class="form-control" maxlength="250" style="width: 100%"></textarea>
 									</div>
+
 								</div>
 
-								<div class="col-md-2">
-									<label class="label" for="celular">Celular:</label>
-									<input class="form-control" type="text" maxlength="20" id="celular" required="required" />
-									<div class="invalid-feedback">
-										Ingrese el celular
-									</div>
-								</div>
 
-								<div class="col-md-2">
-									<label class="label" for="correo">Correo Electrónico:</label>
-									<input class="form-control" maxlength="100" type="email" id="correo" required="required"/>
-									<div class="invalid-feedback">
-										Ingrese el correo electrónico
-									</div>
-								</div>
-								
-								<div class="col-md-2">
-									<label class="label" for="condicion">Condición de pago:</label>
-									<select id="condicion" class="form-control" required="required">
-										<option value="" selected>-- SELECCIONAR --</option>
-										<option th:each="item : ${listaCondicion}"
-									            th:value="${item.codigo}" 
-									            th:text="${item.descripcion}">
-									    </option>
-									</select>
-									<div class="invalid-feedback">
-					                	Seleccione la condición de pago
-					                </div>
-								</div>
-								
-								<div class="col-md-2" id="divDias" style="display: none">
-									<label class="label" for="dias">Días de crédito:</label>
-									<select id="dias" class="form-control">
-										<option value="" selected>-- SELECCIONAR --</option>
-										<option th:each="item : ${listaDias}"
-									            th:value="${item.codigo}" 
-									            th:text="${item.descripcion}">
-									    </option>
-									</select>									
-								</div>
-								
-								<div class="col-md-2">
-					            	<label id="lblActivo" class="label" for="activo">Activo:</label>
-					            	<input id="activo" type="checkbox" class="form-check">
-					            </div>
+							</form>
 
-							</div>
-							
-							<div class="row">
-
-								<div class="col-md-12">
-									<label class="label" for="comentarios">Comentarios:</label>
-									<textarea rows="3" cols="30" id="comentarios" class="form-control" maxlength="250" style="width:100%"></textarea>
-								</div>								
-								
-							</div>
-							
-							
-						</form>
-
-					</div>
-
-				</div>
-
-			</div>
-			
-
-			<div class="card">
-
-				<div class="card-header quitar-contornos" id="headingContacto">
-					<button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseDatosContacto1" aria-expanded="true" aria-controls="collapseDatosContacto1">
-						<i class="fas fa-angle-up"></i><span>Datos de Contactos</span>
-						<div class="subrayado"></div>
-					</button>
-					
-					<button type="button" id="btnAgregarContacto" class="btn btn-primary btn-sm alineacion-derecha" title="Agregar contacto" >
-						<span class="mr-1"><i class="fas fa-plus-square"></i></span>
-					</button>
-
-				</div>
-
-				<div id="collapseDatosContacto1" class="collapse show" aria-labelledby="headingContacto" data-parent="#accordionContactos">
-				
-					<fieldset id="field_0"  class="card">
-						<div id ="div_contacto_0" class="card-body" style="margin-top:-12px">
-	
-							<div class="row">
-								
-								<div class="col-md-3">
-									<label class="label" for="contacto_0">Nombre:</label>
-									<input class="form-control" maxlength="100" type="text" id="contacto_0"/>
-								</div>
-								<div class="col-md-1">
-									<input type="text" id="id_contacto_0" style="display: none"/>
-								</div>
-	
-								<div class="col-md-3">
-									<label class="label" for="cargo_0">Cargo:</label>
-									<input class="form-control" maxlength="100" type="text" id="cargo_0" />
-								</div>
-								<div class="col-md-1">
-									<input type="text" id="activo_0" value="1" style="display: none"/>
-								</div>
-	
-								<div class="col-md-3">
-									<label class="label" for="emailfactura_0">Email factura:</label>
-									<input class="form-control" maxlength="100" type="email" id="emailfactura_0"/>
-								</div>
-								<div class="col-md-1 alineacion-derecha">
-						        	<label class="label"></label>
-							        <button type="button" id="btnEliminarContacto_0" class="btn btn-danger btn-sm btn-group-append" title="Eliminar contacto">
-										<span class="mr-1"><i class="far fa-trash-alt"></i></span>
-									</button>
-								</div>
-								
-							</div>
-							
-							<div class="row">
-								
-								<div class="col-md-3">
-									<label class="label" for="telContacto_0_0">Teléfono 1:</label>
-									<input class="form-control" maxlength="20" type="text" id="telContacto_0_0"/>
-								</div>
-								<div class="col-md-1" >
-									<label class="label"></label>
-									<button type="button" id="btnAgregarTelefono_0" class="btn btn-primary btn-sm input-group-append form-check-input" title="Agregar teléfono" >
-										<span class="mr-1"><i class="fas fa-plus-square"></i></span>
-									</button>
-								</div>
-	
-								<div class="col-md-3">
-									<label class="label" for="emailContacto_0_0">Email 1:</label>
-									<input class="form-control" maxlength="100" type="email" id="emailContacto_0_0" />
-								</div>
-	
-								<div class="col-md-1">
-									<label class="label"></label>
-									<button type="button" id="btnAgregarEmail_0" class="btn btn-primary btn-sm input-group-append form-check-input" title="Agregar email" >
-										<span class="mr-1"><i class="fas fa-plus-square"></i></span>
-									</button>
-								</div>
-								
-								<div class="col-md-3">
-									<label class="label"></label>
-									<div class="form-check">
-										<input id="asignadoDef_0" type="checkbox" class="form-check-input">
-										<label id="lblAsignadoDef0" class="label my-2" for="asignadoDef_0">Asignado por defecto</label>
-								    </div>									
-						        </div>
-						        
-						        <div class="col-md-1"></div>
-																
-							</div>
-							
-						</div>
-					</fieldset>
-					
-				</div>
-			</div>
-
-			<div class="card">
-
-				<div class="card-body">				
-
-					<div class="row">
-
-						<div class="col-md-6">
-						</div>
-
-						<div class="col-md-6 alineacion-derecha">
-							<div>
-								<button type="button" id="btnVolver" class="btn btn-primary" style="display: none">
-				                	<span class="mr-2"><i class="fas fa-backspace"></i></span>Volver
-							    </button>
-								
-								<button type="button" id="btnLimpiar" class="btn btn-primary my-1" style="display: none">
-									<span class="mr-2"><i class="far fa fa-eraser"></i></span>Limpiar
-								</button>
-								
-								<button type="button" id="btnGrabar" class="btn btn-primary my-1" style="display:none">
-									<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
-								</button>								
-							</div>
 						</div>
 
 					</div>
-					
+
 				</div>
+
+
+				<form id="formContactos" class="needs-validation" novalidate>
+
+					<div class="card">
+
+						<div class="card-header quitar-contornos" id="headingContacto">
+							<button class="subtitle btn btn-link" data-toggle="collapse"
+								data-target="#collapseDatosContacto1" aria-expanded="true"
+								aria-controls="collapseDatosContacto1">
+								<i class="fas fa-angle-up"></i><span>Datos de Contactos</span>
+								<div class="subrayado"></div>
+							</button>
+
+							<button type="button" id="btnAgregarContacto"
+								class="btn btn-primary btn-sm alineacion-derecha"
+								title="Agregar contacto">
+								<span class="mr-1"><i class="fas fa-plus-square"></i></span>
+							</button>
+
+						</div>
+
+						<div id="collapseDatosContacto1">
+
+							<div id="field_0" class="card">
+								<div id="div_contacto_0" class="card-body"
+									style="margin-top: -12px">
+
+									<div class="row">
+
+										<div class="col-md-3">
+											<label class="label" for="contacto_0">Nombre:</label><input
+												class="form-control" maxlength="100" type="text"
+												id="contacto_0" required="required" />
+											<div class="invalid-feedback">Ingrese el nombre</div>
+										</div>
+										<div class="col-md-1">
+											<input type="text" id="id_contacto_0" style="display: none" />
+										</div>
+
+										<div class="col-md-3">
+											<label class="label" for="cargo_0">Cargo:</label> <input
+												class="form-control" maxlength="100" type="text"
+												id="cargo_0" required="required" />
+											<div class="invalid-feedback">Ingrese el cargo</div>
+										</div>
+										<div class="col-md-1">
+											<input type="text" id="activo_0" value="1"
+												style="display: none" />
+										</div>
+
+										<div class="col-md-3">
+											<label class="label" for="emailfactura_0">Email
+												factura:</label> <input class="form-control" maxlength="100"
+												type="email" id="emailfactura_0" />
+										</div>
+										<div class="col-md-1 alineacion-derecha">
+											<label class="label"></label>
+											<button type="button" id="btnEliminarContacto_0"
+												class="btn btn-danger btn-sm btn-group-append"
+												title="Eliminar contacto">
+												<span class="mr-1"><i class="far fa-trash-alt"></i></span>
+											</button>
+										</div>
+
+									</div>
+
+									<div class="row">
+
+										<div class="col-md-3">
+											<label class="label" for="telContacto_0_0">Teléfono
+												1:</label> <input class="form-control" maxlength="20" type="text"
+												id="telContacto_0_0" required="required" />
+											<div class="invalid-feedback">Ingrese el teléfono de
+												contacto</div>
+										</div>
+										<div class="col-md-1">
+											<label class="label"></label>
+											<button type="button" id="btnAgregarTelefono_0"
+												class="btn btn-primary btn-sm input-group-append form-check-input"
+												title="Agregar teléfono">
+												<span class="mr-1"><i class="fas fa-plus-square"></i></span>
+											</button>
+										</div>
+
+										<div class="col-md-3">
+											<label class="label" for="emailContacto_0_0">Email 1:</label>
+											<input class="form-control" maxlength="100" type="email"
+												id="emailContacto_0_0" required="required" />
+											<div class="invalid-feedback">Ingrese el email de
+												contacto</div>
+										</div>
+
+										<div class="col-md-1">
+											<label class="label"></label>
+											<button type="button" id="btnAgregarEmail_0"
+												class="btn btn-primary btn-sm input-group-append form-check-input"
+												title="Agregar email">
+												<span class="mr-1"><i class="fas fa-plus-square"></i></span>
+											</button>
+										</div>
+
+										<div class="col-md-3">
+											<label class="label"></label>
+											<div class="form-check">
+												<input id="asignadoDef_0" type="checkbox"
+													class="form-check-input"> <label
+													id="lblAsignadoDef1" class="label my-2" for="asignadoDef_0">Asignar
+													como predeterminado</label>
+											</div>
+										</div>
+
+										<div class="col-md-1"></div>
+
+									</div>
+
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</form>
+
+				<div class="card">
+
+					<div class="card-body">
+
+						<div class="row">
+
+							<div class="col-md-6"></div>
+
+							<div class="col-md-6 alineacion-derecha">
+								<div>
+									<button type="button" id="btnVolver" class="btn btn-primary"
+										style="display: none">
+										<span class="mr-2"><i class="fas fa-backspace"></i></span>Volver
+									</button>
+
+									<button type="button" id="btnLimpiar"
+										class="btn btn-primary my-1" style="display: none">
+										<span class="mr-2"><i class="far fa fa-eraser"></i></span>Limpiar
+									</button>
+
+									<button type="button" id="btnGrabar"
+										class="btn btn-primary my-1" style="display: none">
+										<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
+									</button>
+								</div>
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+
+
 			</div>
-
-
 		</div>
-	</div>
 
-</div>
+	</div>
 
 </body>
 </html>

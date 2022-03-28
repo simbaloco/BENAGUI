@@ -709,7 +709,7 @@ function cargarComboUbigeo(control, borrarTodoMenosPrimero, codTipo, codDepartam
 	        data : null,
 	        dataType: 'text',
 	        success:function(result,textStatus,xhr){
-	        	console.log("cargarComboUbigeo, success--->" + xhr.status);
+	        	console.log("cargarComboUbigeo, success--->" + xhr.status + " - Tipo:"+codTipo);
 	        	
 	        	var resultado = JSON.parse(result);
 	            // evaluando el retorno
