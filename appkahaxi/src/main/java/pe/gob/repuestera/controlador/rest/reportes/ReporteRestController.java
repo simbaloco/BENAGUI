@@ -25,6 +25,7 @@ import pe.gob.repuestera.model.CompraCabModel;
 import pe.gob.repuestera.model.GenericModel;
 import pe.gob.repuestera.model.UsuarioModel;
 import pe.gob.repuestera.model.VentaCabModel;
+import pe.gob.repuestera.service.maestros.ListaPrecioService;
 import pe.gob.repuestera.service.reportes.ReporteService;
 import pe.gob.repuestera.util.Constante;
 import pe.gob.repuestera.util.ConvertNumberLetter;
@@ -36,6 +37,8 @@ public class ReporteRestController {
 	
 	@Autowired
 	ReporteService reporteService;
+	@Autowired
+	ListaPrecioService listaPrecioService;
 	@Autowired
     HttpSession session;
 		
@@ -581,6 +584,32 @@ public class ReporteRestController {
         
         return new ResponseEntity<List<HashMap>>(listaAnulados, HttpStatus.OK);  
     
+    }
+	
+	@PostMapping ("/plantillaListaPrecios/")
+    public void plantillaListaPrecios(@RequestParam(Constante.PARAM_ID_LISTA_PRECIO) int idListaPrecio,
+    									HttpServletResponse response) throws Exception{
+        
+        logger.info("entrando plantillaListaPrecios.......");
+    	
+    	String usuario = ((UsuarioModel)session.getAttribute("usuarioLogueado")).getUsername();
+    	
+        List<HashMap> listaDetalle = reporteService.plantillaListaPrecioDet(idListaPrecio);
+        
+        // GENERANDO EL REPORTE
+        String nombreJrxml;
+        
+ 		nombreJrxml = "/reportes/reporte_lista_precios.jrxml"; 		
+ 		StringBuilder nombreArchivo = new StringBuilder();
+ 		 		
+ 		nombreArchivo.append("plantilla_LP").append(".xlsx");
+		 		
+ 		// seteando parámetros
+        Map<String, Object> params = new HashMap();
+ 		
+ 		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalle, "EXCEL", response);
+ 		
+        logger.info("fin plantillaListaPrecios");
     }
 	
 	

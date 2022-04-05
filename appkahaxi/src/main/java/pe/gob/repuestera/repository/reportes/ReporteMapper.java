@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import pe.gob.repuestera.model.ListaPreciosDetModel;
 import pe.gob.repuestera.model.VentaCabModel;
 
 @Repository
@@ -23,5 +24,5 @@ public interface ReporteMapper {
 	public List<HashMap> obtenerDetalleReporteAnalisisVentasCliente(Map params);
 	public List<HashMap> obtenerDetalleReporteAnalisisVentasArticulo(Map params);
 	public List<HashMap> obtenerDetalleReporteDocumentosAnulados(Map params);
-	
+	public List<HashMap> plantillaListaPrecioDet(Map params);
 }

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  layout:decorate="~{fragments/layout}" lang="en">
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<script th:src="@{/js/maestros/gui-ver-lista-precio.js}" ></script>
+</head>
+
+<body>
+
+<div layout:fragment="content" th:remove="tag">
+
+	<label id="idListaPrecio" th:text=${idListaPrecio} hidden="hidden"></label>
+	<label id="opcion" th:text=${opcion} hidden="hidden"></label>
+	<label id="datoBuscar" th:text=${datoBuscar} hidden="hidden"></label>
+	<input id="tipoCambio" hidden="hidden" style="display:none"></input>
+
+	
+	<div class="kahaxi_titulo">
+
+		<div class="kahaxi_titulo_container">
+			<div class="kahaxi_titulo_logo"><i class="fas fa-cash-register"></i></div>
+			<div class="kahaxi_titulo_text">VER LISTA DE PRECIOS</div>
+		</div>
+		
+		<div class="subrayado">
+		</div>
+
+		<br>
+	</div>
+
+	<div class="box bg-box" id="accordionCabeceraLista">
+
+		<div class="box-body">
+
+			<div class="card">
+
+					<div class="card-header quitar-contornos" id="headingCabeceraLista">
+						<div class="row">
+							<div class="cabe col-md-4">
+								<h2 class="mb-0">
+									<button class="subtitle btn btn-link" data-toggle="collapse"
+										data-target="#collapseCabeceraLista" aria-expanded="true"
+										aria-controls="collapseCabeceraLista">
+										<i class="fas fa-angle-up"></i><span>Datos de la Lista de
+											Precios </span><span class="font-weight-bold" id="codigo"></span>
+										<div class="subrayado"></div>
+									</button>
+								</h2>
+							</div>
+							<div class="col-md-8 alineacion-derecha">
+								<div>
+									<button type="button" id="btnVolver" class="btn btn-primary">
+										<span class="mr-2"><i class="fas fa-backspace"></i></span>Volver
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="collapseCabeceraLista" class="collapse show" aria-labelledby="headingCabeceraLista" data-parent="#accordionCabeceraLista">
+
+					<div class="box-body">
+
+						<form id="formListaPrecio" class="needs-validation" novalidate>
+						 	
+							<div class="row">
+
+								<div class="col-md-4">
+									<label class="label" for="descripcion">Descripción:</label>
+									<input class="form-control" maxlength="100" size="15" type="text" id="descripcion" required="required"/>
+									<div class="invalid-feedback">
+					                	Ingrese una descripción.
+					                </div>
+								</div>
+
+								<div class="col-md-3">
+									<label class="label" for="moneda">Moneda:</label>
+									<select id="moneda" class="form-control" required="required">										
+										<option th:each="item : ${listaMoneda}"
+											th:value="${item.codigo}" 
+											th:text="${item.descripcion}">
+										</option>
+									</select>
+									<div class="invalid-feedback">
+					                	Ingrese una moneda.
+					                </div>
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="activoCab">Activo:</label>
+									<input id="activoCab" type="checkbox" class="form-check">
+								</div>
+								
+								<div class="col-md-3"></div>
+
+							</div>
+							
+							<div class="row">
+						 		<div class="col-md-12">
+						 			<label class="label"></label>
+						 		</div>
+						    </div>
+
+						</form>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="box bg-box" id="accordionDetalleLista">
+
+		<div class="box-body">
+
+			<div class="card">
+
+				<div id="collapseDetalleLista" class="collapse show" aria-labelledby="headingDetalleLista" data-parent="#accordionDetalleLista">
+
+					<div class="card-body quitar-contornos-tabla">
+
+						<div class="row">
+
+							<div class="col-md-10">
+							</div>
+
+							<div class="col-md-2 alineacion-derecha">
+								
+								<button type="button" id="btnAgregarArticulo" class="btn btn-primary btn-md" title="Agregar artículo" style="display: none">
+									<span class="mr-2"><i class="fas fa-plus-square"></i></span>
+								</button>
+								
+							</div>
+						</div>
+
+						<div class="row">
+
+							<div class="col-md-12">
+
+								<div class="table-responsive">
+
+									<table id="tableDetalle" class="table table-hover table-striped table-bordered dt-responsive">
+
+										<thead class="text-center">
+											<tr>    
+												<th width="1%">Item</th>
+								                <th id="codArticulo">C&oacute;d. Artículo</th>
+								                <th id="codEstandarArticulo" width="10%">C&oacute;d. Estandar</th>
+								                <th id="codAntiguoArticulo" width="10%">C&oacute;d. Antiguo</th>
+								                <th id="descripcion" width="16%">Descripci&oacute;n</th>
+								                <th id="marcaArticulo" width="8%">Marca Art</th>
+								                <th id="tipo" width="8%">Tipo</th>
+								                <th id="seccion" width="8%">Sección</th>
+								                <th id="undMedida" width="8%">UM</th>												
+												<th id="ultPreCompra" width="10%">Ult. Precio Compra</th>
+												<th id="precioRef" width="10%" >Precio Ref.</th>
+												<th id="precio" width="10%">Precio</th>
+												<th id="activo" width="1%">Activo</th>
+											</tr>
+										</thead>
+
+										<tbody>
+										</tbody>
+
+									</table>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</div>
+
+</body>
+</html>
