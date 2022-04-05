@@ -2,12 +2,13 @@ var fileAdjunto;
 var campoBuscar;
 // botones
 var titulo;
-var lblDescripcion;
 var listaPrecioModal;
 var form_validado_listaPrecio;
 var btnLimpiar;
 var btnNuevo;
 var btnDescargar;
+var btnDescargarMod;
+var divDescargar;
 
 var frmListaPrecios;
 var idListaPre;
@@ -19,13 +20,11 @@ var nombreArchivo;
 var btnCargar;
 var btnGrabarModal;
 var btnCerrarModal;
-var divCargar;
-var divDescargar;
 
 // tablas
 var tablaListaPrecios;
 var dataTableListaPrecios;
-var flgDescargaPlantilla=0;
+
 
 /**************** CARGA INICIAL DE FORMULARIO ****************************************************
  *************************************************************************************************/
@@ -43,8 +42,8 @@ function inicializarVariables() {
 	form_validado_listaPrecio = $('#form_validado_listaPrecio');
 	btnNuevo = $('#btnNuevo');
 	btnDescargar = $('#btnDescargar');
-	lblDescripcion = $('#lblDescripcion');
-	
+	btnDescargarMod = $('#btnDescargarMod');
+	divDescargar = $('#divDescargar');
 	tablaListaPrecios  = $('#tablaListaPrecios');
 	frmListaPrecios = $('#frmListaPrecios');
 	idListaPre = $('#idListaPre');
@@ -57,8 +56,6 @@ function inicializarVariables() {
 	
 	btnGrabarModal = $('#btnGrabarModal');
 	btnCerrarModal = $('#btnCerrarModal');
-	divDescargar = $('#divDescargar');
-	divCargar = $('#divCargar');
 	titulo = $('#titulo');
 }
 
@@ -72,10 +69,6 @@ function inicializarPantalla() {
 	idListaPre.text('0');
 	activoModal.prop('checked', true);
 	deshabilitarControl(nombreArchivo);
-	ocultarControl(btnGrabarModal);
-	ocultarControl(frmListaPrecios);
-	ocultarControl(divCargar);
-	mostrarControl(divDescargar);
 	campoBuscar.focus();
 }
 
@@ -97,14 +90,13 @@ function inicializarEventos(){
 	});
 	
 	btnDescargar.on("click", function(e) {
-		descargar();
-		flgDescargaPlantilla=1;
-		mostrarControl(frmListaPrecios);
-		mostrarControl(btnGrabarModal);
-		ocultarControl(divDescargar);
-		mostrarControl(divCargar);
+		descargar('0');
 		descripcionModal.focus();
 	});
+	
+	btnDescargarMod.on("click", function(e) {
+		descargar(idListaPre.text());
+	});	
 	
 	btnCargar.on("click", function(e) {
 		console.log("boton");
@@ -155,10 +147,9 @@ function inicializarEventos(){
         
 	btnNuevo.on("click", function() {
 		form_validado_listaPrecio.removeClass('was-validated');
+		ocultarControl(divDescargar);
 		mostrarModal(listaPrecioModal);
 		titulo.text(DescripcionOpcion.DES_NUEVO);
-		lblDescripcion.text("Descargar Plantilla");
-		flgDescargaPlantilla=0;
 		fileAdjunto = CADENA_VACIA;
 		idListaPre.text('0');
 	});
@@ -394,16 +385,12 @@ function editarListaPrecio(data){
 	
 	fileAdjunto = CADENA_VACIA;
 	titulo.text(DescripcionOpcion.DES_MODIFICAR);
-	lblDescripcion.text(lblDescripcion.text() + " (Opcional)");
 	idListaPre.text(id);
 	descripcionModal.val(data.descripcion);
 	monedaModal.val(data.codMoneda);
 	(data.activo == FlagActivo.ACTIVO) ? activoModal.prop('checked', true) : activoModal.prop('checked', false);	
-	mostrarControl(btnGrabarModal);
-	mostrarControl(divCargar);
 	mostrarControl(divDescargar);
-	mostrarControl(frmListaPrecios);
-	mostrarModal(listaPrecioModal);
+	mostrarModal(listaPrecioModal);	
 }
 
 
@@ -414,20 +401,16 @@ function limpiar(){
 }
 
 function limpiarModal(){
-	flgDescargaPlantilla=0;
 	fileAdjunto = CADENA_VACIA;
-	ocultarControl(btnGrabarModal);
-	ocultarControl(frmListaPrecios);
-	mostrarControl(divDescargar);
-	ocultarControl(divCargar);
 	monedaModal.val(CADENA_VACIA);
 	descripcionModal.val(CADENA_VACIA);
 	fileExcel.val(CADENA_VACIA);
 	nombreArchivo.text(CADENA_VACIA);
-	ocultarModal(listaPrecioModal);
+	mostrarControl(divDescargar);
+	ocultarModal(listaPrecioModal);	
 }
 
-function descargar() {
+function descargar(id) {
 
 	$.ajax({
 		type: "Post",
@@ -436,7 +419,7 @@ function descargar() {
 			responseType: 'blob'
 		},
 		data: {
-				idListaPrecio	:0
+				idListaPrecio : id
 		},
 		beforeSend: function(xhr) {
 			loadding(true);

@@ -30,27 +30,11 @@
 	                    <div class="box-body">
 	                        <form id="form_validado_listaPrecio" class="needs-validation" novalidate enctype="multipart/form-data" style="padding:0px 15px 0px 15px">
 								<label id="idListaPre" hidden="hidden"></label>
-								
-								<div class="row">
-									<div class="col-md-6" id="divDescargar">
-										<span style="font-weight:bold">Paso 1: </span><label id="lblDescripcion" class="label" for="descripcionModal">Descargar Plantilla</label>
-										<button id="btnDescargar" type="button" class="btn btn-success btn-sm">
-											<span style="padding-right: 6px;"><i class="far fa-file-excel"></i></span>
-										</button>
-									</div>
-									
-									<div class="col-md-6" id="divCargar">
-										<label id="lblDescripcion" class="label" for="descripcionModal"><span style="font-weight:bold">Paso 2: </span>Cargar Lista de precios</label>
-										<!-- <button id="btnCargar" type="button" class="btn btn-danger btn-sm">
-											<span style="padding-right: 6px;"><i class="fas fa-solid fa-upload"></i></span>
-										</button> -->
-									</div>
-								</div>
-
+															
 								<div id="frmListaPrecios">
 									<div class="row">
 										<div class="col-md-8">
-											<label id="lblDescripcion" class="label"
+											<label class="label"
 												for="descripcionModal">Descripci&oacute;n:</label> <input
 												id="descripcionModal" type="text" class="form-control"
 												required="required" maxlength="250" />
@@ -59,7 +43,7 @@
 										</div>
 
 										<div class="col-md-3">
-											<label id="lblMarca" class="label" for="monedaModal">Moneda:</label>
+											<label class="label" for="monedaModal">Moneda:</label>
 											<select id="monedaModal" class="form-control"
 												required="required">
 												<option value="" selected>-- SELECCIONAR --</option>
@@ -78,14 +62,18 @@
 									</div>
 									
 									<div class="row">
+										<div class="col-sm-3" id="divDescargar">
+											<button id="btnDescargarMod" type="button" class="btn btn-outline-success">
+												<span style="padding-right: 6px;"><i class="far fa-file-excel"></i></span>Descargar Lista
+											</button>
+										</div>
 										<div class="col-sm-3">
-											<!-- <label class="label" for="fileExcel">Cargar archivo:</label> -->
 											<input type="file" id="fileExcel" accept=".xls,.xlsx" name="archivoExcel" hidden="hidden">
 											<button type="button" id="btnCargar" class="btn btn-outline-primary my-1">
-												<span style='margin-right: 5px'><i class="fas fa-upload"></i></span>Cargar Archivo										</button>
-											
+												<span style='margin-right: 5px'><i class="fas fa-upload"></i></span>Cargar Archivo
+											</button>											
 										</div>
-										<div class="col-md-9">
+										<div class="col-md-6">
 											<label class="label" id="nombreArchivo"></label>
 											<!-- <input class="form-control disabled-input" type="text" id="nombreArchivo" size="25" required> -->
 											<div class="invalid-tooltip">Debe seleccionar un archivo
@@ -153,6 +141,10 @@
 							            <button  type="button" id="btnNuevo" class="btn btn-primary btn-sm">
 					                    	<span class="mr-2"><i class="fas fa-plus-square"></i></span>Nuevo
 					                    </button >
+					                    
+					                    <button id="btnDescargar" type="button" class="btn btn-success btn-sm">
+											<span style="padding-right: 6px;"><i class="far fa-file-excel"></i></span>Descargar Plantilla
+										</button>
 						            </div>
 							 	</div>
 						    </div>

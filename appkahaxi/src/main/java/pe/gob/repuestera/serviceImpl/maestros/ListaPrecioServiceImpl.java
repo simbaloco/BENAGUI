@@ -93,7 +93,7 @@ public class ListaPrecioServiceImpl implements ListaPrecioService {
 		
 		Map<String, Object> params = new HashMap();
 		params.put(Constante.PARAM_SP_ID_LISTA_PRECIO, idListaPrecio);
-
+		
 		logger.info("params ===> " + params);
 
 		List<ListaPreciosDetModel> listaPrecioDetModel = listaPrecioMapper.buscarListaPrecioDet(params);
@@ -123,7 +123,7 @@ public class ListaPrecioServiceImpl implements ListaPrecioService {
 		
 		logger.info("listaPrecioModel ===> " + listaPrecioModel.toString());
 		logger.info("usuario ===> " + usuario);
-
+		
 		String dataJSON = jsonUtils.obtenerJson(listaPrecioModel.getDetalle());
 
 		logger.info("List<ListaPreciosDetModel> ===> " + dataJSON);

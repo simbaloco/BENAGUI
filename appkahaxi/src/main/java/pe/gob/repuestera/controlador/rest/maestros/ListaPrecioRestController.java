@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import pe.gob.repuestera.exception.ErrorControladoException;
 import pe.gob.repuestera.model.ListaPreciosDetModel;
 import pe.gob.repuestera.model.ListaPreciosModel;
 import pe.gob.repuestera.model.UsuarioModel;
@@ -72,32 +73,33 @@ public class ListaPrecioRestController {
 		listaModel.setFlgFile(1);
     	List<ListaPreciosDetModel> listaDetPrecio = new ArrayList<>();
     	ListaPreciosDetModel itemListaPrecio = null;
-    	    	
-		XSSFWorkbook workbook = new XSSFWorkbook(archivoExcel.getInputStream());
-		XSSFSheet worksheet = workbook.getSheetAt(0);
-		
-		// recorremos todas las filas
-		for (int i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) {
-			XSSFRow row = worksheet.getRow(i);
-			
-			
-			String arti;
-			arti = row.getCell(0).toString();
-			
-			
-			// procesamos las celdas con valor activo = 1
-			if (row.getCell(11).toString().equals("1") || row.getCell(11).toString().equals("1.0")) {	
-				itemListaPrecio = new ListaPreciosDetModel();				
-				itemListaPrecio.setCodArticulo(row.getCell(0).toString());
-				itemListaPrecio.setPrecioRef(Double.valueOf(row.getCell(9).toString()));
-				itemListaPrecio.setPrecio(Double.valueOf(row.getCell(10).toString()));
-				listaDetPrecio.add(itemListaPrecio);
-			}			
+    	int i = 1;
+    			
+    	try {
+    		XSSFWorkbook workbook = new XSSFWorkbook(archivoExcel.getInputStream());
+    		XSSFSheet worksheet = workbook.getSheetAt(0);
+    		
+    		// recorremos todas las filas
+    		for (i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) {
+    			XSSFRow row = worksheet.getRow(i);
+    			
+    			// procesamos las celdas con valor activo = 1
+    			if (row.getCell(11).toString().equals("1") || row.getCell(11).toString().equals("1.0")) {
+    				itemListaPrecio = new ListaPreciosDetModel();				
+    				itemListaPrecio.setCodArticulo(row.getCell(0).toString());
+    				itemListaPrecio.setPrecioRef(Double.valueOf(row.getCell(9).toString()));
+    				itemListaPrecio.setPrecio(Double.valueOf(row.getCell(10).toString()));
+    				listaDetPrecio.add(itemListaPrecio);
+    			}
+    		}
+    		
+		} catch (Exception e) {
+			throw new ErrorControladoException("Error al cargar la plantilla. Datos incorrectos en la fila " + (i+1));
 		}
-
-		listaModel.setDetalle(listaDetPrecio);
-    	listaPrecioService.registrarListaPrecio(listaModel, usuario);			
-        
+    	
+    	listaModel.setDetalle(listaDetPrecio);
+    	listaPrecioService.registrarListaPrecio(listaModel, usuario);
+		
         logger.info("Fin registrarListaPrecioCf.......");
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -110,9 +112,7 @@ public class ListaPrecioRestController {
 		logger.info("Inicio buscarListaPrecio......." + idListaPrecio);
 		
 		ListaPreciosModel listaPrecioModel = listaPrecioService.buscarListaPrecio(idListaPrecio);
-		//List<ListaPreciosDetModel> listaPrecioDetModel = listaPrecioService.buscarListaPrecioDet(idListaPrecio);		
-		//listaPrecioModel.setDetalle(listaPrecioDetModel);
-        		
+			
         logger.info("Fin buscarListaPrecio.......");
         
         return new ResponseEntity<>(listaPrecioModel, HttpStatus.OK);
@@ -129,7 +129,6 @@ public class ListaPrecioRestController {
         logger.info("Fin buscarListaPrecioDetalle.......");
         
         return new ResponseEntity<>(listaPrecioDetModel, HttpStatus.OK);
-        
 	}
 	
 }
