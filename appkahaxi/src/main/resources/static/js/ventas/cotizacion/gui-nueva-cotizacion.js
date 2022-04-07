@@ -268,7 +268,7 @@ function inicializarEventos(){
 	});
 	
 	btnGenerarOV.click(function() {
-		mostrarDialogoGenerarOrdenVenta();
+		generarOrdenVenta();
 	});
 	
 	btnVolver.click(function() {
@@ -1777,27 +1777,6 @@ function mostrarDialogoEliminarTodo(table){
 				
 				calcularResumenCotizacion();
 				ocultarControl(btnEliminarTodosArticulos);
-	        }
-	    }
-	});
-}
-
-function mostrarDialogoGenerarOrdenVenta(){
-	bootbox.confirm({
-	    message: "¿Está seguro de generar Orden de Venta?",
-	    buttons: {
-	        confirm: {
-	            label: 'Sí',
-	            className: 'btn-success'
-	        },
-	        cancel: {
-	            label: 'No',
-	            className: 'btn-danger'
-	        }
-	    },
-	    callback: function (result) {
-	        if(result == true){
-	        	generarOrdenVenta();
 	        }
 	    }
 	});

@@ -162,8 +162,8 @@ function inicializarComponentes() {
 	habilitarAutocompletarBuscarCampos();
 	
 	construirFechasPicker();
-	restringirSeleccionFechas();
 	inicializarFechas();
+	restringirSeleccionFechas();
 	
 	inicializarEventos();
 }

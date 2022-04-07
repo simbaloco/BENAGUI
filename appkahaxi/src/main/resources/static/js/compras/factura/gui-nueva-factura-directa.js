@@ -157,9 +157,10 @@ function inicializarComponentes() {
 
 	habilitarAnimacionAcordion();
 	habilitarMarquee();
+	habilitarAutocompletarBuscarCampos();
+	
 	construirFechasPicker();
 	restringirSeleccionFechas();
-	habilitarAutocompletarBuscarCampos();
 	
 	inicializarEventos();
 }

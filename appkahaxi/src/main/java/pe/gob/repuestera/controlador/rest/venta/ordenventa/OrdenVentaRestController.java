@@ -1,21 +1,24 @@
 package pe.gob.repuestera.controlador.rest.venta.ordenventa;
 
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import pe.gob.repuestera.model.CompraCabModel;
-import pe.gob.repuestera.model.CompraDetModel;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+
 import pe.gob.repuestera.model.UsuarioModel;
 import pe.gob.repuestera.model.VentaCabModel;
-import pe.gob.repuestera.service.compra.ordencompra.OrdenCompraService;
 import pe.gob.repuestera.service.venta.ordenventa.OrdenVentaService;
 import pe.gob.repuestera.util.Constante;
-
-import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @RestController
 public class OrdenVentaRestController {

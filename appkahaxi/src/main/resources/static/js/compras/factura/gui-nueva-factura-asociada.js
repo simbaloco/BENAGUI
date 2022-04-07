@@ -130,8 +130,8 @@ function inicializarComponentes() {
 	habilitarMarquee();
 	
 	construirFechasPicker();
-	restringirSeleccionFechas();
 	inicializarFechas();
+	restringirSeleccionFechas();
 	
 	inicializarEventos();
 }

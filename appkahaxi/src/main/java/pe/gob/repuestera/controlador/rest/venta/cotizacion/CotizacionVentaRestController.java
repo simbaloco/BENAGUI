@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
-import pe.gob.repuestera.model.CompraCabModel;
-import pe.gob.repuestera.model.CompraDetModel;
 import pe.gob.repuestera.model.UsuarioModel;
 import pe.gob.repuestera.model.VentaCabModel;
 import pe.gob.repuestera.model.VentaDetModel;

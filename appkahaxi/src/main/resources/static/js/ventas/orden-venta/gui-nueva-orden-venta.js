@@ -170,10 +170,12 @@ function inicializarVariables() {
 function inicializarComponentes() {
 	habilitarAnimacionAcordion();
 	habilitarMarquee();
-	construirFechasPicker();
-	restringirSeleccionFechas();
 	habilitarAutocompletarBuscarCampos();
 
+	construirFechasPicker();
+	inicializarFechas();
+	restringirSeleccionFechas();
+	
 	inicializarEventos();
 }
 
@@ -189,44 +191,66 @@ function inicializarPantalla() {
 }
 
 function construirFechasPicker() {
-	// se construyen del último al primero para que funcionen con el botón "limpiar"
+	/* se construyen del último al primero para que funcionen con el botón "limpiar" */
+	
+	// La fecha de Entrega  no puede ser menor que la fecha de contabilización
 	fecEntrega.datetimepicker({
 		locale: 'es',
 		format: 'L',
 		ignoreReadonly: true,
-		date: moment(),
-		minDate: moment()
+		//date:		moment(),
+		//minDate:	moment()
 	});
-
+	
+	// La fecha Válido hasta no puede ser menor que la fecha de contabilización
 	fecHasta.datetimepicker({
 		locale: 'es',
 		format: 'L',
 		ignoreReadonly: true,
-		date: moment().add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'),
-		maxDate: moment().add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'),
-		minDate: moment()
+		date:		moment().add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'),
+		//maxDate:	moment().add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'),
+		//minDate:	moment()
 	});
-
+	
+	// La fecha de contabilización no puede ser mayor a la fecha actual	
 	fecConta.datetimepicker({
 		locale: 'es',
 		format: 'L',
 		ignoreReadonly: true,
-		date: moment(),
-		maxDate: moment()
+		//date:		moment(),
+		//maxDate:	moment()
 	});
+	
+	
 }
 
 function restringirSeleccionFechas() {
 
 	fecConta.on("change.datetimepicker", function(e) {
 		//reiniciarFechaHasta();
+		console.log("xxx")
 
 		fecHasta.datetimepicker('maxDate', moment(e.date).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'));
 		fecHasta.datetimepicker('minDate', e.date);
-		fecHasta.datetimepicker('date', moment(e.date).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'));
+		//fecHasta.datetimepicker('date', moment(e.date).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'));
 
 		fecEntrega.datetimepicker('minDate', e.date);
 	});
+}
+
+function inicializarFechas(){
+	console.log("inicializarFechas...")
+	fecConta.datetimepicker('date', moment());
+	fecEntrega.datetimepicker('date', moment());
+	
+	fecEntrega.datetimepicker('minDate', moment());
+	fecHasta.datetimepicker('minDate', moment());
+	
+	fecConta.datetimepicker('maxDate', moment());
+	fecHasta.datetimepicker('maxDate', moment().add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'));
+	
+	fecHasta.datetimepicker('date', moment().add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'));
+	
 }
 
 function habilitarAutocompletarBuscarCampos() {
@@ -2132,50 +2156,18 @@ function reiniciarFechaHasta() {
 
 }
 */
-function limpiarOrdenCompra() {
-	//inicializarFechaContaHasta();
-
-	tipoMoneda.val(Moneda.DOLARES);
-	condPago.val(CondicionPago.CONTADO);
-	dias.val(Dias._30);
-	estado.val(EstadoDocumentoInicial.POR_APROBAR);
+function limpiarOrdenVenta() {
 	direccionDespacho.val(CADENA_VACIA);
 	personaContacto.val(CADENA_VACIA);
-	cotizacionSap.val(CADENA_VACIA);
-	tipoCambio.val(CADENA_VACIA);
-	nroPedido.val(CADENA_VACIA);
-	subTotalOV.val(CADENA_VACIA);
-	igvOV.val(CADENA_VACIA);
-	totalOV.val(CADENA_VACIA);
-	observaciones.val(CADENA_VACIA);
-	/*
-	dataTableDetalle.clear().draw();
-	indiceFilaDataTableDetalle = -1;
-	ocultarControl(btnAgregarArticulo);
-	ocultarControl(btnEliminarTodosArticulos);
-
-	*/
-	fecConta.datetimepicker('destroy');
+	
+	fecEntrega.datetimepicker('destroy');	
 	fecHasta.datetimepicker('destroy');
-	fecEntrega.datetimepicker('destroy');
-
+	fecConta.datetimepicker('destroy');
+	
 	construirFechasPicker();
-
-	ocultarControl(dias);
-	ocultarControl(lblDias);
-
-	formOrdenCompra.removeClass('was-validated');
-	formObservaciones.removeClass('was-validated');
-
-	if (opcion.text() != Opcion.MODIFICAR) {
-		campoBuscar.val(CADENA_VACIA);
-		documentoProv.val(CADENA_VACIA);
-		nombreProv.val(CADENA_VACIA);
-		direccion.val(CADENA_VACIA);
-		campoBuscar.focus();
-	} else {
-		direccionDespacho.focus();
-	}
+	inicializarFechas();
+	
+	direccionDespacho.focus();
 }
 
 function mostrarModalGuiasPorOrdenCompra(event) {
