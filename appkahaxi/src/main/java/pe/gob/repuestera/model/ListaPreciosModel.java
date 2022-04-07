@@ -14,6 +14,7 @@ public class ListaPreciosModel {
 	private String codMoneda;
 	private String desMoneda;
 	private Integer activo;
+	private Integer flgFile;
     private String codigoUsuarioRegistra;
     private String fechaRegistro;
     private String codigoUsuarioModifica;

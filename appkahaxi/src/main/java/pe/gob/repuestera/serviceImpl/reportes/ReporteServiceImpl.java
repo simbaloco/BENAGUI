@@ -37,7 +37,7 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import pe.gob.repuestera.exception.ErrorControladoException;
@@ -195,7 +195,7 @@ public class ReporteServiceImpl implements ReporteService{
     			response.setContentType("application/vnd.ms-excel");
     			response.setHeader("Content-disposition", "inline; filename=" + nombreArchivo);
     			
-    			JRXlsExporter  exporter = new JRXlsExporter ();
+    			JRXlsxExporter  exporter = new JRXlsxExporter ();
     			ServletOutputStream out = response.getOutputStream();
     			
     	        exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
@@ -504,6 +504,36 @@ public class ReporteServiceImpl implements ReporteService{
 		
 		return listaDetalle;
 		
+	}
+	
+	@Override
+	public List<HashMap> plantillaListaPrecioDet(int idListaPrecio) throws Exception {
+		
+		Map<String, Object> params = new HashMap();
+		params.put(Constante.PARAM_SP_ID_LISTA_PRECIO, idListaPrecio);
+
+		logger.info("params ===> " + params);
+
+		List<HashMap> listaPrecioDetModel = reporteMapper.plantillaListaPrecioDet(params);
+		
+		String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+		String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+
+		logger.info("flagResultado ===> " + flagResultado);
+		logger.info("mensajeResultado ===> " + mensajeResultado);
+
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+			logger.info("plantillaListaPrecioDet ===> " + listaPrecioDetModel.toString());			
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+
+		return listaPrecioDetModel;
 	}
 
 	/*@Override

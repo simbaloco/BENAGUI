@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import pe.gob.repuestera.model.CompraCabModel;
 import pe.gob.repuestera.model.CompraDetModel;
+import pe.gob.repuestera.model.ListaPreciosDetModel;
 import pe.gob.repuestera.model.VentaCabModel;
 
 public interface ReporteService {
@@ -22,6 +23,7 @@ public interface ReporteService {
 	public List<HashMap> obtenerDetalleReporteVentas(String fechaInicio, String fechaFin, String datoBuscar) throws Exception;
 	public List<HashMap> obtenerDetalleReporteAnalisisVentas(String fechaInicio, String fechaFin, String opcion) throws Exception;
 	public List<HashMap> obtenerDetalleReporteDocumentosAnulados(String fechaInicio, String fechaFin, String codTipo) throws Exception;
+	public List<HashMap> plantillaListaPrecioDet(int idListaPrecio) throws Exception;
 	
 	public void generarReporte(String nombreJrxml, String nombreArchivo, Map<String, Object> parametros, List<HashMap> lista, String tipoReporte, HttpServletResponse response) throws Exception;
 	public void enviarReportePorCorreo(String nombreJrxml, String nombreArchivo, String email, Map<String, Object> parametros, List<HashMap> lista, String asunto, String mensaje, HttpServletResponse response) throws Exception;

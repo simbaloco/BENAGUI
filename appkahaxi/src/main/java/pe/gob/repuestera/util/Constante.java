@@ -54,6 +54,7 @@ public class Constante {
 	public static final String PAGINA_MANTENIMIENTO_PERFILES = "paginas/maestros/mantenimiento-perfil";
 	public static final String PAGINA_MANTENIMIENTO_LISTA_PRECIOS = "paginas/maestros/mantenimiento-lista-precios";
 	public static final String PAGINA_NUEVA_LISTA_PRECIO = "paginas/maestros/nueva-lista-precio";
+	public static final String PAGINA_VER_LISTA_PRECIO = "paginas/maestros/ver-lista-precio";
 	public static final String PAGINA_MANTENIMIENTO_SERIE = "paginas/maestros/mantenimiento-serie";
 	/* CATALOGOS */
 	public static final String PAGINA_BUSCAR_IGV = "paginas/maestros/buscar-igv";
@@ -100,6 +101,7 @@ public class Constante {
 	public static final String PARAM_SP_COD_PADRE 				= "COD_PADRE";
 	public static final String PARAM_SP_FLG_SUNAT				= "FLAG_SUNAT";
 	public static final String PARAM_SP_ACTIVO					= "ACTIVO";
+	public static final String PARAM_SP_FLG_FILE				= "FLG_FILE";	
 	public static final String PARAM_SP_COD_USU_REGISTRA		= "COD_USU_REGISTRA";
 	public static final String PARAM_SP_COD_USU_MODIFICA		= "COD_USU_MODIFICA";	
 	public static final String PARAM_SP_USERNAME 				= "USERNAME";
@@ -306,6 +308,7 @@ public class Constante {
 	public static final String PARAM_TIPO_DOCUMENTO = "tipoDoc";
 	public static final String PARAM_TIPO_REPORTE = "tipoReporte";
 	public static final String PARAM_NRO_ORDEN_VENTA = "nroOrdenVenta";
+	public static final String PARAM_ARCHIVO_EXCEL= "archivoExcel";
 
 	
 	public static final String PARAM_DATO_CLIENTE = "datoCliente";

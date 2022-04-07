@@ -62,6 +62,7 @@
         <parameter property="DESCRIPCION"			jdbcType="VARCHAR"  mode="IN"/>     
         <parameter property="COD_MONEDA"			jdbcType="VARCHAR"  mode="IN"/>     
         <parameter property="ACTIVO"          		jdbcType="INTEGER" 	mode="IN"/>
+        <parameter property="FLG_FILE"          	jdbcType="INTEGER" 	mode="IN"/>
         <parameter property="DATA_JSON"          	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="USUARIO"				jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
@@ -83,7 +84,7 @@
     </select>
    	
     <insert id="registrarListaPrecio" parameterMap="registrarListaPrecioParams" statementType="CALLABLE">
-    	{CALL SP_REGISTRAR_LISTA_PRECIO(?,?,?,?,?,?,?,?) }
+    	{CALL SP_REGISTRAR_LISTA_PRECIO(?,?,?,?,?,?,?,?,?) }
     </insert> 
             
 </mapper>

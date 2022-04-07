@@ -1,10 +1,30 @@
+var fileAdjunto;
 var campoBuscar;
 // botones
+var titulo;
+var listaPrecioModal;
+var form_validado_listaPrecio;
 var btnLimpiar;
 var btnNuevo;
+var btnDescargar;
+var btnDescargarMod;
+var divDescargar;
+
+var frmListaPrecios;
+var idListaPre;
+var descripcionModal;
+var monedaModal;
+var activoModal;
+var fileExcel;
+var nombreArchivo;
+var btnCargar;
+var btnGrabarModal;
+var btnCerrarModal;
+
 // tablas
 var tablaListaPrecios;
 var dataTableListaPrecios;
+
 
 /**************** CARGA INICIAL DE FORMULARIO ****************************************************
  *************************************************************************************************/
@@ -13,14 +33,30 @@ $(document).ready(function() {
 	inicializarVariables();
 	inicializarComponentes();
 	inicializarPantalla();
-
 });
 
 function inicializarVariables() {
 	campoBuscar = $('#campoBuscar');	
 	btnLimpiar = $('#btnLimpiar');
+	listaPrecioModal = $('#listaPrecioModal');
+	form_validado_listaPrecio = $('#form_validado_listaPrecio');
 	btnNuevo = $('#btnNuevo');
+	btnDescargar = $('#btnDescargar');
+	btnDescargarMod = $('#btnDescargarMod');
+	divDescargar = $('#divDescargar');
 	tablaListaPrecios  = $('#tablaListaPrecios');
+	frmListaPrecios = $('#frmListaPrecios');
+	idListaPre = $('#idListaPre');
+	descripcionModal = $('#descripcionModal');
+	monedaModal = $('#monedaModal');
+	activoModal = $('#activoModal'); 
+	fileExcel = $('#fileExcel');
+	nombreArchivo = $('#nombreArchivo');
+	btnCargar = $('#btnCargar');
+	
+	btnGrabarModal = $('#btnGrabarModal');
+	btnCerrarModal = $('#btnCerrarModal');
+	titulo = $('#titulo');
 }
 
 function inicializarComponentes() {
@@ -30,6 +66,9 @@ function inicializarComponentes() {
 }
 
 function inicializarPantalla() {
+	idListaPre.text('0');
+	activoModal.prop('checked', true);
+	deshabilitarControl(nombreArchivo);
 	campoBuscar.focus();
 }
 
@@ -49,13 +88,80 @@ function inicializarEventos(){
     btnLimpiar.on("click", function(e) {
 		limpiar();
 	});
-    
-    btnNuevo.click(function(){
-    	nuevaListaPrecio(0, Opcion.NUEVO);
+	
+	btnDescargar.on("click", function(e) {
+		descargar('0');
+		descripcionModal.focus();
 	});
 	
-}
+	btnDescargarMod.on("click", function(e) {
+		descargar(idListaPre.text());
+	});	
 	
+	btnCargar.on("click", function(e) {
+		console.log("boton");
+		fileExcel.click();
+	});
+	
+	fileExcel.on("change",function(){
+		console.log("fileexcel");
+        var file =  fileExcel.get(0).files[0];
+
+        if ($(this).val() != CADENA_VACIA) {
+            nombreFile   =   file.name;
+            var ext      =   file.name.split('.').pop().toLowerCase();
+			var bytes 	 = 	 fileExcel[0].files[0].size;
+
+            if(ext == 'xls' || ext == 'xlsx'){
+                // máximo 100kb
+                if(bytes > 307200){
+					mostrarDialogoInformacion("Se solicita un archivo con un tamaño no mayor a 300KB . Por favor verificar.", Boton.WARNING);
+                }
+				else if(bytes == 0){
+					mostrarDialogoInformacion("El archivo no puede estar vacío. Por favor verificar.", Boton.WARNING);
+                }
+				else{
+					nombreArchivo.text(nombreFile);
+					fileAdjunto = file;
+				}
+            }else{
+				mostrarDialogoInformacion("Sólo se permite un archivo Excel (extensión xls o xlsx). Extensión no permitida: " + ext, Boton.WARNING);
+            }
+        }
+    });
+
+	btnGrabarModal.on("click", function(e) {
+		e.preventDefault();			
+        if (form_validado_listaPrecio[0].checkValidity() === false) {            
+            e.stopPropagation();
+        }else {
+            console.log('else registra lista--->');
+        	registrarListaPrecio();
+        }
+        form_validado_listaPrecio.addClass('was-validated');
+	});
+	
+	btnCerrarModal.on("click", function(e) {
+		limpiarModal();
+	});
+        
+	btnNuevo.on("click", function() {
+		form_validado_listaPrecio.removeClass('was-validated');
+		ocultarControl(divDescargar);
+		mostrarModal(listaPrecioModal);
+		titulo.text(DescripcionOpcion.DES_NUEVO);
+		fileAdjunto = CADENA_VACIA;
+		idListaPre.text('0');
+	});
+	
+	listaPrecioModal.modal({
+        show: false,
+        backdrop: 'static',
+        keyboard: false
+    });
+	
+}
+
 function inicializarTabla(){
 	
 	dataTableListaPrecios = tablaListaPrecios.DataTable({
@@ -160,12 +266,12 @@ function inicializarTabla(){
 
 	$('#tablaListaPrecios tbody').on( 'click','.btn-view', function () {
 	    var data = dataTableListaPrecios.row( $(this).closest('tr')).data();
-		nuevaListaPrecio((data.idListaPrecio == null) ? 0 : data.idListaPrecio, Opcion.VER);
+		verListaPrecio((data.idListaPrecio == null) ? 0 : data.idListaPrecio, Opcion.VER);
 	});
   
 	$('#tablaListaPrecios tbody').on( 'click','.btn-edit', function () {
 	    var data = dataTableListaPrecios.row( $(this).closest('tr')).data();		
-		nuevaListaPrecio((data.idListaPrecio == null) ? 0 : data.idListaPrecio, Opcion.MODIFICAR);
+		editarListaPrecio(data);
 	});
 }
 
@@ -188,6 +294,16 @@ function nuevaListaPrecio(idListaPrecio, opcion){
 	window.location.href = "/appkahaxi/nueva-lista-precio?" + params;
 }
 
+function verListaPrecio(idListaPrecio, opcion){
+	var params;
+	var datoBuscar 	= campoBuscar.val();
+	
+	// armando los parámetros
+	params = "idListaPrecio=" + idListaPrecio + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar;
+	console.log("verListaPrecio---> params:" + params);
+	window.location.href = "/appkahaxi/ver-lista-precio?" + params;
+}
+
 function buscar(){	
 	if ( $.fn.dataTable.isDataTable(tablaListaPrecios)) {
 		console.log("ya existe el dt....");
@@ -196,8 +312,174 @@ function buscar(){
 	}
 }
 
+
+function registrarListaPrecio() {
+	var chkActivo = null;
+	var idLP;
+	var metodo = CADENA_VACIA;
+	
+	(activoModal.is(':checked')) ? chkActivo = 1 : chkActivo = 0;
+	(idListaPre.text().trim() == CADENA_VACIA) ? idLP = 0 : idLP = idListaPre.text();
+		
+	var objetoJson = {
+		idListaPrecio	: idLP,
+		descripcion		: descripcionModal.val(),
+		codMoneda		: monedaModal.val(),
+		activo			: chkActivo		
+	};
+	
+	var entityJsonStr = JSON.stringify(objetoJson);
+	var formData = new FormData();
+	
+	formData.append('registro', new Blob([entityJsonStr], {
+		type: "application/json"
+	}));
+	
+	console.log("fileAdjunto:"+fileAdjunto);
+	
+	if (fileAdjunto != CADENA_VACIA && fileAdjunto != UNDEFINED) {		
+		if (fileAdjunto instanceof Uint8Array) {
+			fileAdjunto = new File(fileAdjunto, fileAdjunto.name, { type: "application/octet-stream" })
+		}
+		formData.append('archivoExcel', fileAdjunto);
+		metodo = 'registrarListaPrecioCf';
+	}else {
+		metodo = 'registrarListaPrecioSf';
+	}
+	
+	console.log("metodo:" + metodo);
+	console.log("registrarListaPrecio:" + entityJsonStr);
+
+	$.ajax({
+		type: "POST",
+		contentType: false,
+		processData: false,
+		url: '/appkahaxi/' + metodo + '/',
+		data: formData,
+		beforeSend: function(xhr) {
+			loadding(true);
+		},
+		success: function(resultado, textStatus, xhr) {
+			if (xhr.status == HttpStatus.OK) {
+				mostrarNotificacion("El registro fue grabado correctamente.", "success");
+				ocultarModal(listaPrecioModal);
+				limpiarModal();
+				buscar();
+			} else if (xhr.status == HttpStatus.Accepted) {
+				mostrarMensajeValidacion(resultado);
+			}
+			loadding(false);
+		},
+		error: function(xhr, error, code) {
+
+			mostrarMensajeError(xhr.responseText);
+			loadding(false);
+		}
+	});
+
+}
+
+function editarListaPrecio(data){
+	console.log(data);
+	var id = (data.idListaPrecio == null) ? 0 : data.idListaPrecio;
+	
+	fileAdjunto = CADENA_VACIA;
+	titulo.text(DescripcionOpcion.DES_MODIFICAR);
+	idListaPre.text(id);
+	descripcionModal.val(data.descripcion);
+	monedaModal.val(data.codMoneda);
+	(data.activo == FlagActivo.ACTIVO) ? activoModal.prop('checked', true) : activoModal.prop('checked', false);	
+	mostrarControl(divDescargar);
+	mostrarModal(listaPrecioModal);	
+}
+
+
 function limpiar(){
 	campoBuscar.val(CADENA_VACIA);
 	buscar();	
 	campoBuscar.focus();
 }
+
+function limpiarModal(){
+	fileAdjunto = CADENA_VACIA;
+	monedaModal.val(CADENA_VACIA);
+	descripcionModal.val(CADENA_VACIA);
+	fileExcel.val(CADENA_VACIA);
+	nombreArchivo.text(CADENA_VACIA);
+	mostrarControl(divDescargar);
+	ocultarModal(listaPrecioModal);	
+}
+
+function descargar(id) {
+
+	$.ajax({
+		type: "Post",
+		url: '/appkahaxi/plantillaListaPrecios/',
+		xhrFields: {
+			responseType: 'blob'
+		},
+		data: {
+				idListaPrecio : id
+		},
+		beforeSend: function(xhr) {
+			loadding(true);
+		},
+		error: function(xhr, error, code) {
+			mostrarMensajeError(xhr.responseText);
+			loadding(false);
+		},
+		success: function(result, status, xhr) {
+			if (result.size > 0) {
+				var filename = "nombre.pdf";
+				var disposition = xhr.getResponseHeader('Content-Disposition');
+
+				if (disposition) {
+					var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+					var matches = filenameRegex.exec(disposition);
+					if (matches !== null && matches[1]) filename = matches[1].replace(/['"]/g, CADENA_VACIA);
+				}
+				var linkelem = document.createElement('a');
+				try {
+					var blob = new Blob([result], { type: 'application/octet-stream' });
+
+					if (typeof window.navigator.msSaveBlob !== 'undefined') {
+						//   IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
+						window.navigator.msSaveBlob(blob, null);
+					} else {
+						var URL = window.URL || window.webkitURL;
+						var downloadUrl = URL.createObjectURL(blob);
+
+						if (filename) {
+							// use HTML5 a[download] attribute to specify filename
+							var a = document.createElement("a");
+
+							// safari doesn't support this yet
+							if (typeof a.download === 'undefined') {
+								window.location = downloadUrl;
+							} else {
+								a.href = downloadUrl;
+								a.download = filename;
+								document.body.appendChild(a);
+								a.target = "_blank";
+								a.click();
+
+								window.onfocus = function() {
+									//document.body.removeChild(a);
+									window.URL.revokeObjectURL(downloadUrl);
+								}
+							}
+						} else {
+							window.location = downloadUrl;
+						}
+					}
+					loadding(false);
+
+				} catch (ex) {
+
+				}
+			}
+		}
+	});
+}
+
+

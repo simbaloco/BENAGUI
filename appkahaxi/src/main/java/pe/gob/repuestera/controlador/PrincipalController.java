@@ -1143,7 +1143,9 @@ public class PrincipalController {
 		String retorno;
 		try {
 			logger.info("entrando al método cargarMantenimientoListaPrecios");
+			List<ComboModel> listaMoneda = genericService.cargarCombo(Constante.CATALOGO_MONEDA);
 			
+			model.addAttribute("listaMoneda", listaMoneda);
 			model.addAttribute("datoBuscar", datoBuscar);
 			retorno = Constante.PAGINA_MANTENIMIENTO_LISTA_PRECIOS;
 			
@@ -1157,6 +1159,35 @@ public class PrincipalController {
     }
 	
 	@GetMapping("/nueva-lista-precio")
+	public String nuevaListaPrecio(Model model,
+										@RequestParam(Constante.PARAM_ID_LISTA_PRECIO) String idListaPrecio,
+									    @RequestParam(Constante.PARAM_OPCION) String opcion,
+									    @RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar) {
+		String retorno;
+
+		try {
+			logger.info("entrando al método nuevaListaPrecio");
+			
+			model.addAttribute("idListaPrecio", idListaPrecio);
+			model.addAttribute("opcion", opcion);
+			model.addAttribute("datoBuscar", datoBuscar);
+			
+			// llenando los combos
+			List<ComboModel> listaMoneda = genericService.cargarCombo(Constante.CATALOGO_MONEDA);
+			
+			model.addAttribute("listaMoneda", listaMoneda);
+			retorno = Constante.PAGINA_NUEVA_LISTA_PRECIO;
+			
+			logger.info("saliendo del método nuevaListaPrecio");
+		}catch (Exception e) {
+			// TODO: handle exception
+			retorno = Constante.PAGINA_ERROR;
+			model.addAttribute("mensajeError", e.toString());
+		}
+		return retorno;
+	}
+	
+	@GetMapping("/ver-lista-precio")
 	public String cargarListaPrecio(Model model,
 										@RequestParam(Constante.PARAM_ID_LISTA_PRECIO) String idListaPrecio,
 									    @RequestParam(Constante.PARAM_OPCION) String opcion,
@@ -1174,7 +1205,7 @@ public class PrincipalController {
 			List<ComboModel> listaMoneda = genericService.cargarCombo(Constante.CATALOGO_MONEDA);
 			
 			model.addAttribute("listaMoneda", listaMoneda);
-			retorno = Constante.PAGINA_NUEVA_LISTA_PRECIO;
+			retorno = Constante.PAGINA_VER_LISTA_PRECIO;
 			
 			logger.info("saliendo del método cargarListaPrecio");
 		}catch (Exception e) {

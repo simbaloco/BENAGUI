@@ -15,6 +15,91 @@
 
 	<div layout:fragment="content" th:remove="tag">
 		
+        <div class="modal fade bd-example-modal-lg" id="listaPrecioModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg box bg-box modal-content" role="document">
+                <div class="box-body">
+					 <div class="card">
+						
+	                    <div class="modal-header card-header">
+	                        <h6 class="modal-title" id="exampleModalLabel"><span id="titulo"></span> Lista de Precios</h6>
+	                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                            <span aria-hidden="true" style="color:#5990e0">&times;</span>
+	                        </button>
+	                    </div>
+	
+	                    <div class="box-body">
+	                        <form id="form_validado_listaPrecio" class="needs-validation" novalidate enctype="multipart/form-data" style="padding:0px 15px 0px 15px">
+								<label id="idListaPre" hidden="hidden"></label>
+															
+								<div id="frmListaPrecios">
+									<div class="row">
+										<div class="col-md-8">
+											<label class="label"
+												for="descripcionModal">Descripci&oacute;n:</label> <input
+												id="descripcionModal" type="text" class="form-control"
+												required="required" maxlength="250" />
+											<div class="invalid-feedback">Ingrese una descripción
+												válida.</div>
+										</div>
+
+										<div class="col-md-3">
+											<label class="label" for="monedaModal">Moneda:</label>
+											<select id="monedaModal" class="form-control"
+												required="required">
+												<option value="" selected>-- SELECCIONAR --</option>
+												<option th:each="item : ${listaMoneda}"
+													th:value="${item.codigo}" th:text="${item.descripcion}">
+												</option>
+											</select>
+											<div class="invalid-feedback">Ingrese una moneda
+												válida.</div>
+										</div>
+										
+										<div class="col-md-1" id="divActivo">
+					                    	<label id="lblActivo" class="label" for="seccion">Activo:</label>
+					                        <input id="activoModal" type="checkbox" class="form-check">
+					                    </div>
+									</div>
+									
+									<div class="row">
+										<div class="col-sm-3" id="divDescargar">
+											<button id="btnDescargarMod" type="button" class="btn btn-outline-success">
+												<span style="padding-right: 6px;"><i class="far fa-file-excel"></i></span>Descargar Lista
+											</button>
+										</div>
+										<div class="col-sm-3">
+											<input type="file" id="fileExcel" accept=".xls,.xlsx" name="archivoExcel" hidden="hidden">
+											<button type="button" id="btnCargar" class="btn btn-outline-primary my-1">
+												<span style='margin-right: 5px'><i class="fas fa-upload"></i></span>Cargar Archivo
+											</button>											
+										</div>
+										<div class="col-md-6">
+											<label class="label" id="nombreArchivo"></label>
+											<!-- <input class="form-control disabled-input" type="text" id="nombreArchivo" size="25" required> -->
+											<div class="invalid-tooltip">Debe seleccionar un archivo
+												Excel (xls, xlxs)</div>
+										</div>
+									</div>
+								</div>
+								
+
+				                  	
+	                        </form>
+	                    </div>
+	
+	                  	<div class="modal-footer" style="border-top: none">
+	                  		<button id="btnGrabarModal" type="button" class="btn btn-danger"> <!-- class="btn btn-primary"> fa-solid -->
+								<span style="padding-right: 6px;"><i class="fas fa-save"></i></span>Grabar
+							</button>
+	                        <button id="btnCerrarModal" type="button" class="btn btn-primary" data-dismiss="modal">	
+	                       		<span style="padding-right: 6px;"><i class="fas fa-backspace" ></i></span>Cerrar
+	                        </button>
+	                    </div>
+	                </div>
+                </div>
+            </div>
+        </div>
+		
 		
 		<div class="kahaxi_titulo">
 	        <div class="kahaxi_titulo_container">
@@ -56,6 +141,10 @@
 							            <button  type="button" id="btnNuevo" class="btn btn-primary btn-sm">
 					                    	<span class="mr-2"><i class="fas fa-plus-square"></i></span>Nuevo
 					                    </button >
+					                    
+					                    <button id="btnDescargar" type="button" class="btn btn-success btn-sm">
+											<span style="padding-right: 6px;"><i class="far fa-file-excel"></i></span>Descargar Plantilla
+										</button>
 						            </div>
 							 	</div>
 						    </div>

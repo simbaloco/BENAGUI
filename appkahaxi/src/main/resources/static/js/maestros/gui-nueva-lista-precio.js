@@ -136,8 +136,8 @@ function agregarFilaHTMLEnTablaDetalle() {
 
 		switch(i) {
 			
-			// CODIGO ART (OCULTO)
-			case 0:		$(this).html(CADENA_VACIA).append("<input class='form-control' type='text' id='codArticulo_" + indiceFilaDataTableDetalle + "' readonly='readonly' tabindex='-1' >");
+			// CODIGO ART
+			case 0:		$(this).html(CADENA_VACIA).append("<input class='marquee form-control' type='text' id='codArticulo_" + indiceFilaDataTableDetalle + "' readonly='readonly' tabindex='-1' >");
 						break;
 						
 			// CODIGO ESTANDAR ART

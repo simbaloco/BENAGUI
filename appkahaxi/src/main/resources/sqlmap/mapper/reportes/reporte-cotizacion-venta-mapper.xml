@@ -148,6 +148,27 @@
         <result property="TOTAL"				column="TOTAL" />
     </resultMap>
     
+    <resultMap id="listaPrecioDet" type="hashmap">
+        <result property="ID"						column="ID" />
+        <result property="ID_LISTA_PRECIO" 			column="ID_LISTA_PRECIO" />
+        <result property="COD_ARTICULO" 			column="COD_ARTICULO" />
+        <result property="COD_ESTANDAR" 			column="COD_ESTANDAR" />
+        <result property="COD_ANTIGUO" 				column="COD_ANTIGUO" />
+        <result property="DESCRIPCION" 				column="DESCRIPCION" />
+        <result property="DESC_MARCA_ARTICULO" 		column="DESC_MARCA_ARTICULO" />
+        <result property="DESC_TIPO" 				column="DESC_TIPO" />
+        <result property="DESC_SECCION" 			column="DESC_SECCION" />
+        <result property="DESC_UND_MEDIDA" 			column="DESC_UND_MEDIDA" />     
+        <result property="PRECIO" 					column="PRECIO" />
+        <result property="PRECIO_REF" 				column="PRECIO_REF" />
+       	<result property="ULT_PRECIO_COMPRA" 		column="ULT_PRECIO_COMPRA" />
+        <result property="ACTIVO" 					column="ACTIVO" />
+        <result property="FEC_REGISTRO" 			column="COD_USU_REGISTRA" />
+        <result property="fechaRegistro" 			column="FEC_REGISTRO" />
+        <result property="COD_USU_MODIFICA" 		column="COD_USU_MODIFICA" />
+        <result property="FEC_MODIFICACION" 		column="FEC_MODIFICACION" /> 
+    </resultMap>
+    
     <!-- ********************* PARAMETERMAPS ********************* -->
     <parameterMap id="cotizacionVentaParams" type="hashmap">
         <parameter property="NRO_DOCUMENTO"			jdbcType="VARCHAR"  mode="IN"/>
@@ -215,6 +236,12 @@
         <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
     </parameterMap>
     
+    <parameterMap id="buscarListaPrecioDetParams" type="hashmap">
+        <parameter property="ID_LISTA_PRECIO"       jdbcType="INTEGER"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap> 
+    
     
     <!-- ************************* QUERYS ******************************* -->
     <select id="obtenerCabeceraCotizacionVenta" parameterMap="cotizacionVentaParams" resultMap="ventaCab" statementType="CALLABLE">
@@ -255,6 +282,10 @@
     
     <select id="obtenerDetalleReporteDocumentosAnulados" parameterMap="reporteDocumentosAnuladosParams" resultMap="repAnuladosDet" statementType="CALLABLE">
       {CALL SP_REPORTE_DOCUMENTOS_ANULADOS(?,?,?,?,?) }
+    </select>
+    
+    <select id="plantillaListaPrecioDet" parameterMap="buscarListaPrecioDetParams" resultMap="listaPrecioDet" statementType="CALLABLE">
+    	{CALL SP_BUSCAR_LISTA_PRECIO_DET(?,?,?) }
     </select>
         
 </mapper>
