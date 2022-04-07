@@ -521,18 +521,7 @@ function cargarPantallaHTMLCotizacion(data) {
 
 	let dirDespachoArray = data.direccionDespachoConcat.split('|');
 	let perContactoArray = data.personaContactoConcat.split('|');
-
-	for (var i = 0; i < dirDespachoArray.length; i++) {
-		if (dirDespachoArray[i] != CADENA_VACIA && dirDespachoArray[i] != null) {
-			direccionDespacho.append($('<option />').val(dirDespachoArray[i]).html(dirDespachoArray[i]));
-		}
-	}
-
-	for (var i = 0; i < perContactoArray.length; i++) {
-		if (perContactoArray[i] != CADENA_VACIA && perContactoArray[i] != null) {
-			personaContacto.append($('<option />').val(perContactoArray[i]).html(perContactoArray[i]));
-		}
-	}
+	llenarCombosDirDespachoPerContacto(dirDespachoArray, perContactoArray, data.codDireccionDespacho, data.codPersonaContacto);
 	
 	nroCotiReferencia.val(numeroDocumento.text());
 	codigoCliente.val(data.codigoCliente);
@@ -1096,7 +1085,7 @@ function agregarHTMLColumnasDataTable() {
 			case 6: $(this).html(CADENA_VACIA).append(
 				"<div>" +
 				"<span class='simbolo-moneda input-symbol-dolar'>" +
-				"<input class='form-control alineacion-derecha pvu-det' type='number' maxlength='13' " +
+				"<input class='form-control alineacion-derecha pvu-det' type='text' maxlength='13' " +
 				"onkeyup='precioKeyUp(this, " + indiceFilaDataTableDetalle + ");' " +
 				"onchange='precioKeyUp(this, " + indiceFilaDataTableDetalle + ");' " +
 				"onkeydown='precioKeyDown(event, " + indiceFilaDataTableDetalle + ")' " +
@@ -1107,17 +1096,9 @@ function agregarHTMLColumnasDataTable() {
 				break;
 
 			// PVU C/IGV
-			case 7: $(this).html(CADENA_VACIA).append(
-				"<div>" +
-				"<span class='simbolo-moneda input-symbol-dolar'>" +
-				"<input class='form-control alineacion-derecha pvu-det' type='number' maxlength='13' " +
-				"onkeyup='precioKeyUp(this, " + indiceFilaDataTableDetalle + ");' " +
-				"onchange='precioKeyUp(this, " + indiceFilaDataTableDetalle + ");' " +
-				"onkeydown='precioKeyDown(event, " + indiceFilaDataTableDetalle + ")' " +
-				"onkeypress='return soloDecimales(event, this);' readonly='readonly' " +
-				"id='precioIgv_" + indiceFilaDataTableDetalle + "'  >" +
-				"</span>" +
-				"</div>");
+			case 7: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+				"<input class='form-control alineacion-derecha' type='text' id='precioIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly' tabindex='-1'>" +
+				"</span></div>");
 				break;
 
 			// PVU REFERENCIA
@@ -1257,7 +1238,7 @@ function buscarArticuloKeyUp(e, control, fila) {
 				}
 
 				$('#precio_' + fila).val(convertirNumeroAMoneda(precio));
-				$('#precio_' + fila).prop('min', precio);
+				//$('#precio_' + fila).prop('min', precio);
 
 				var precioIgv = precio + (precio * (ParametrosGenerales.IGV / 100));
 				$('#precioIgv_' + fila).val(convertirNumeroAMoneda(precioIgv));
@@ -1279,7 +1260,7 @@ function buscarArticuloKeyUp(e, control, fila) {
 function cantidadKeyUp(control, fila) {
 
 	var cantidad = Number(control.value);
-	var precio = Number($('#precio_' + fila).val());
+	var precio = convertirMonedaANumero($('#precio_' + fila).val());
 	var subTotal = cantidad * precio;
 	var subTotalIgv = subTotal + (subTotal * (ParametrosGenerales.IGV / 100));
 
@@ -1328,7 +1309,7 @@ function precioKeyDown(e) {
 function porcDctoKeyUp(control, fila) {
 	console.log("porcDctoKeyUp....");
 	var cantidad = Number($('#cantidad_' + fila).val());
-	var precio = Number($('#precio_' + fila).val());
+	var precio = convertirMonedaANumero($('#precio_' + fila).val());
 	var subTotal;
 
 	var porcDcto = Number(control.value);
@@ -1644,10 +1625,13 @@ function validarDetalleOrden() {
 						exitEach = true;
 						console.log("cantidad es cadena vacia");
 						return false;
-					} else if (convertirMonedaANumero(cantidad) == 0) {
-						mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $(this).find("input"));
-						exitEach = true;
-						return false;
+					} else {
+						var c = convertirMonedaANumero(cantidad);
+						if (c == 0 || c < 0) {
+							mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $(this).find("input"));
+							exitEach = true;
+							return false;
+						}
 					}
 				}
 			}

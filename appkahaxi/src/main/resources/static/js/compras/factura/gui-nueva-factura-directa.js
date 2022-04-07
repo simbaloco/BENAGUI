@@ -554,7 +554,7 @@ function verPantallaFactura(data) {
 	deshabilitarControl(dias);
 	deshabilitarControl(serie);
 	deshabilitarControl(correlativo);
-	deshabilitarControl(observaciones);
+	//deshabilitarControl(observaciones);
 
 	ocultarControl(btnGrabar);
 	ocultarControl(btnLimpiar);
@@ -669,7 +669,7 @@ function agregarHTMLColumnasDataTable(data) {
 
 			// PRECIO UNITARIO
 			case 7:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
-						"<input class='form-control alineacion-derecha precio-det' type='number' maxlength='13' " +
+						"<input class='form-control alineacion-derecha precio-det' type='text' maxlength='13' " +
 							"onkeyup='precioKeyUp(this, " + indiceFilaDataTableDetalle + ")' " +
 							"onkeypress='return soloDecimales(event, this);' " +
 							"onchange='precioKeyUp(this, " + indiceFilaDataTableDetalle + ");'  readonly='readonly' " + 
@@ -815,7 +815,7 @@ function buscarArticuloKeyUp(e, control, fila){
 function cantidadKeyUp(control, fila) {
 
 	var cantidad = Number(control.value);
-	var precio = Number($('#precio_' + fila).val());		
+	var precio = convertirMonedaANumero($('#precio_' + fila).val());
 	var subTotal = cantidad * precio;
 	var subTotalIgv = subTotal + (subTotal * (ParametrosGenerales.IGV/100));
 	
@@ -1015,10 +1015,13 @@ function validarDetalleFactura(){
 						exitEach = true;
 						console.log("cantidad es cadena vacia");
 						return false;
-					}else if(convertirMonedaANumero(cantidad) == 0){
-						mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $(this).find("input"));
-						exitEach = true;
-						return false;
+					}else {
+						var c = convertirMonedaANumero(cantidad);
+						if (c == 0 || c < 0) {
+							mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $(this).find("input"));
+							exitEach = true;
+							return false;
+						}
 					}
 				}
 			}
@@ -1075,7 +1078,7 @@ function registrarFacturaCompra(){
 	var detalle 				= tableToJSON(tableDetalle);
 	var diasVal					= null;
 
-	if(condPagoVal == '02') {
+	if(condPagoVal == CondicionPago.CREDITO) {
 		diasVal					= dias.val();
 	}
 

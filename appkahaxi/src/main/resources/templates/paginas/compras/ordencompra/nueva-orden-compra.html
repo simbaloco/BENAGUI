@@ -232,7 +232,7 @@
 								<div class="col-md-2">
 									<label class="label" for="fecConta">Fecha de contabilización:</label>
 									<div class="input-group date" id="fecConta" data-target-input="nearest">
-										<input type="text" class="form-control datetimepicker-input" data-target="#fecConta" id="fecContaInput" readonly="readonly"/>
+										<input type="text" class="form-control datetimepicker-input" data-target="#fecConta" readonly="readonly"/>
 										<div class="input-group-append" data-target="#fecConta" data-toggle="datetimepicker">
 											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
 										</div>
@@ -242,7 +242,7 @@
 								<div class="col-md-2">
 									<label class="label" for="fecHasta">Válido hasta:</label>
 									<div class="input-group date" id="fecHasta" data-target-input="nearest">
-										<input type="text" class="form-control datetimepicker-input" data-target="#fecHasta" id="fecHastaInput" readonly="readonly"/>
+										<input type="text" class="form-control datetimepicker-input" data-target="#fecHasta" readonly="readonly"/>
 										<div class="input-group-append" data-target="#fecHasta" data-toggle="datetimepicker">
 											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
 										</div>
@@ -252,7 +252,7 @@
 								<div class="col-md-2">
 									<label class="label" for="fecEntrega">Fecha de entrega:</label>
 									<div class="input-group date" id="fecEntrega" data-target-input="nearest">
-										<input type="text" class="form-control datetimepicker-input" data-target="#fecEntrega" id="fecEntregaInput" />
+										<input type="text" class="form-control datetimepicker-input" data-target="#fecEntrega" />
 										<div class="input-group-append" data-target="#fecEntrega" data-toggle="datetimepicker">
 											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
 										</div>
@@ -324,7 +324,12 @@
 										type="text" id="nroPedido" />
 								</div>
 
-								<div class="col-md-8 alineacion-derecha">
+								<div class="col-md-2">
+									<label class="label" for="lblAnulado">&nbsp;</label>
+									<input class="form-control etiquetaAnulado" type="text" id="lblAnulado" style="display: none" value="RECHAZADO"/>
+								</div>
+								
+								<div class="col-md-6 alineacion-derecha">
 						 			<label class="label"></label>
 						 			<div>
 										<button type="button" id="btnLimpiar" class="btn btn-primary">
@@ -519,8 +524,8 @@
 		        		<label for="emailPDF">Correo electrónico:</label>
 		        	</div>
 		        	<div class="col-md-10">	
-		        		<input type="email" class="form-control" id="emailPDF" placeholder="Ingrese correo electrónico" required="required" multiple="multiple"
-		        			   title="Puede ingresar varios correos separados por punto y coma (;)"></input>
+		        		<input type="email" class="form-control" id="emailPDF" placeholder="Puede ingresar varios correos separados por coma (,)" required="required" multiple="multiple"
+		        			   title="Puede ingresar varios correos separados por coma (,)"></input>
 		        		<div class="mensaje-validado-falso invalid-feedback">
 		        			Ingrese un email o una lista de emails separados por comas
 		              	</div>

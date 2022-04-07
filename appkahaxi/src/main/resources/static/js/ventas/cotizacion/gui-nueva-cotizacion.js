@@ -708,7 +708,7 @@ function agregarHTMLColumnasDataTable() {
 			case 6:		$(this).html(CADENA_VACIA).append(
 									"<div>" + 
 										"<span class='simbolo-moneda input-symbol-dolar'>" + 
-											"<input class='form-control alineacion-derecha pvu-det' type='number' maxlength='13' " +
+											"<input class='form-control alineacion-derecha pvu-det' type='text' maxlength='13' " +
 													"onkeyup='precioKeyUp(this, " + indiceFilaDataTableDetalle + ");' " + 
 													"onchange='precioKeyUp(this, " + indiceFilaDataTableDetalle + ");' " + 
 													"onkeydown='precioKeyDown(event, " + indiceFilaDataTableDetalle + ")' " +
@@ -719,18 +719,10 @@ function agregarHTMLColumnasDataTable() {
     					break;
 			
 			// PVU C/IGV
-			case 7:		$(this).html(CADENA_VACIA).append(
-									"<div>" + 
-										"<span class='simbolo-moneda input-symbol-dolar'>" + 
-											"<input class='form-control alineacion-derecha pvu-det' type='number' maxlength='13' " +
-													"onkeyup='precioKeyUp(this, " + indiceFilaDataTableDetalle + ");' " + 
-													"onchange='precioKeyUp(this, " + indiceFilaDataTableDetalle + ");' " + 
-													"onkeydown='precioKeyDown(event, " + indiceFilaDataTableDetalle + ")' " +
-													"onkeypress='return soloDecimales(event, this);' readonly='readonly' " +
-													"id='precioIgv_" + indiceFilaDataTableDetalle + "'  >" +
-										"</span>" + 
-									"</div>");
-    					break;
+			case 7:		$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+						"<input class='form-control alineacion-derecha' type='text' id='precioIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly' tabindex='-1'>" +
+						"</span></div>");
+						break;
     					
     		// PVU REFERENCIA
 			case 8:		$(this).html(CADENA_VACIA).append(
@@ -874,7 +866,7 @@ function buscarArticuloKeyUp(e, control, fila){
 				}
 				
 				$('#precio_' + fila).val(convertirNumeroAMoneda(precio));
-				$('#precio_' + fila).prop('min', precio);
+				//$('#precio_' + fila).prop('min', precio);
 				
 				var precioIgv = precio + (precio * (ParametrosGenerales.IGV / 100));
 				$('#precioIgv_' + fila).val(convertirNumeroAMoneda(precioIgv));
@@ -898,7 +890,7 @@ function cantidadKeyUp(control, fila){
 	console.log("cantidadKeyUp...");
 	
 	var cantidad = Number(control.value);
-	var precio = Number($('#precio_' + fila).val());		
+	var precio = convertirMonedaANumero($('#precio_' + fila).val());
 	var subTotal = cantidad * precio;
 	var subTotalIgv = subTotal + (subTotal * (ParametrosGenerales.IGV/100));
 	
@@ -953,7 +945,7 @@ function precioKeyDown(e, fila){
 function porcDctoKeyUp(control, fila){
 	console.log("porcDctoKeyUp....");
 	var cantidad = Number($('#cantidad_' + fila).val());
-	var precio = Number($('#precio_' + fila).val());
+	var precio = convertirMonedaANumero($('#precio_' + fila).val());
 	var subTotal;
 	
 	var porcDcto = Number(control.value);
@@ -1163,10 +1155,13 @@ function validar(){
 						exitEach = true;
 						console.log("cantidad es cadena vacia");
 						return false;
-					}else if(convertirMonedaANumero(cantidad) == 0){
-						mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $(this).find("input"));
-						exitEach = true;
-						return false;
+					}else {
+						var c = convertirMonedaANumero(cantidad);
+						if (c == 0 || c < 0) {
+							mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $(this).find("input"));
+							exitEach = true;
+							return false;
+						}
 					}
 				}
 			}

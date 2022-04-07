@@ -181,6 +181,11 @@ var EstadoPagoReporte = {
 	CANCELADO		: "CANCELADO"
 };
 
+var MotivoTraslado = {
+	VENTA_NACIONAL		: "01",
+	COMPRA_NACIONAL		: "02"
+};
+
 var Dias = {
 		_7		: "01",
 		_15		: "02",
@@ -774,8 +779,10 @@ function convertirNumeroAMoneda(numero){
 	if(numero != null && numero != ''){
 		// Redondear y convertir a cadena
 	    let numeroComoCadena = parseFloat(numero).toFixed(ParametrosGenerales.CANTIDAD_DECIMALES);
+		
 		// Comenzar desde la izquierda del separador o desde el final de la cadena si no se proporciona
 	    let posicionDelSeparador = numeroComoCadena.indexOf(ParametrosGenerales.SEPARADOR_DECIMALES);
+		
 		if (posicionDelSeparador === -1) posicionDelSeparador = numeroComoCadena.length;
 	    
 		let formateadoSinDecimales = "", indice = posicionDelSeparador;
@@ -784,9 +791,11 @@ function convertirNumeroAMoneda(numero){
 	        let limiteInferior = indice - CIFRAS_MILES;
 	        // Agregar separador si cortamos más de 3
 	        formateadoSinDecimales = (limiteInferior > 0 ? ParametrosGenerales.SEPARADOR_MILES : "") + numeroComoCadena.substring(limiteInferior, indice) + formateadoSinDecimales;
-	        indice -= CIFRAS_MILES;
+	        
+			indice -= CIFRAS_MILES;
 	    }
 	    formateadoSinSimbolo = `${formateadoSinDecimales}${numeroComoCadena.substr(posicionDelSeparador, ParametrosGenerales.CANTIDAD_DECIMALES + 1)}`;
+		
 	}
 	
     return formateadoSinSimbolo;

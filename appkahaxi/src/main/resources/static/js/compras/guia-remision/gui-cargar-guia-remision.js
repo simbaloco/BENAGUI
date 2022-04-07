@@ -155,9 +155,11 @@ function inicializarVariables() {
 function inicializarComponentes() {
 	habilitarAnimacionAcordion();
 	habilitarMarquee();
+	
 	construirFechasPicker();
+	inicializarFechas();
 	restringirSeleccionFechas();
-	//habilitarAutocompletarBuscarCampos();
+	
 	inicializarEventos();
 }
 
@@ -177,6 +179,7 @@ function inicializarPantalla() {
 }
 
 function construirFechasPicker() {
+	console.log("construirFechasPicker...")
 	/* se construyen del último al primero para que funcionen con el botón "limpiar" */
 	
 	// La fecha de Recepción de la Guía de Remisión:
@@ -188,8 +191,8 @@ function construirFechasPicker() {
 		format: 		'L',
 		ignoreReadonly:  true,
 		date:		moment(),
-		minDate:	moment(),
-		maxDate:	moment(),
+		//minDate:	moment(),
+		//maxDate:	moment(),
 	});
 	
 	// La fecha de Documento de la Guía de Remisión:
@@ -200,7 +203,7 @@ function construirFechasPicker() {
 		format: 		'L',
 		ignoreReadonly: true,
 		date:		moment(),
-		maxDate:	moment(),
+		//maxDate:	moment(),
 	});
 		
 	// La fecha de contabilización no puede ser mayor a la fecha actual	
@@ -209,22 +212,49 @@ function construirFechasPicker() {
 		format: 		'L',
 		ignoreReadonly:  true,
 		date:		moment(),
-		maxDate:	moment(),
+		//maxDate:	moment(),
 	});	
 }
 
 function restringirSeleccionFechas() {
 
 	fecDocumento.on("change.datetimepicker", function (e) {
+		console.log("aaa");
 		//reiniciarMinFechaEntrega();
 		fecRecepcion.datetimepicker('minDate', e.date);
 	});
 
 	fecConta.on("change.datetimepicker", function (e) {
 		//reiniciarMaxFechas();
+		console.log("bbb");
+		
 		fecDocumento.datetimepicker('maxDate', e.date);
 		fecRecepcion.datetimepicker('maxDate', e.date);
 	});
+}
+
+function inicializarFechas(){
+	console.log("inicializarFechas...");
+	
+	fecConta.datetimepicker('maxDate', moment());
+	console.log("1");
+		
+	fecConta.datetimepicker('date', moment());
+	console.log("2");
+	
+	fecDocumento.datetimepicker('date', moment());
+	console.log("3");
+			
+	fecRecepcion.datetimepicker('date', moment());
+	console.log("4");
+	
+	fecDocumento.datetimepicker('maxDate', moment());
+	console.log("5");
+	
+	//fecRecepcion.datetimepicker('minDate', moment());
+	//fecRecepcion.datetimepicker('maxDate', moment());
+	
+	
 }
 
 function inicializarEventos() {
@@ -365,6 +395,7 @@ function cargarPantallaHTMLOrdenCompra(data) {
 	direccionDespacho.val(data.direccionDespacho);
 	personaContacto.val(data.personaContacto);	
 	tipoMoneda.val(data.codigoTipoMoneda);
+	motivoTraslado.val(MotivoTraslado.COMPRA_NACIONAL);
 	// se obtiene el tc del día
 	obtenerTipoCambio(tipoCambio);
 	condPago.val(data.codigoCondPago);
@@ -620,7 +651,6 @@ function agregarFilaHTMLEnTablaDetalle(data) {
 }
 
 function agregarHTMLColumnasDataTable(data) {
-	console.log("5...");
 	var row = tableDetalle.DataTable().row(':last').nodes().to$().closest("tr").off("mousedown");
 
 	var $tds = row.find("td").not(':first').not(':last');
@@ -848,10 +878,13 @@ function validarDetalleGuiaRemision(){
 						exitEach = true;
 						console.log("cantidad es cadena vacia");
 						return false;
-					}else if(convertirMonedaANumero(cantidad) == 0){
-						mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $(this).find("input"));
-						exitEach = true;
-						return false;
+					}else {
+						var c = convertirMonedaANumero(cantidad);
+						if (c == 0 || c < 0) {
+							mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $(this).find("input"));
+							exitEach = true;
+							return false;
+						}
 					}
 				}
 			}
@@ -1572,20 +1605,32 @@ function cargarFacturaAsociada(numeroDocumento, opcion) {
 }
 
 function limpiarGuiaRemision() {
-
+	console.log("limpiarGuiaRemision...")
 	//inicializarFechas();
 	serie.val(CADENA_VACIA);
 	correlativo.val(CADENA_VACIA);
 	observaciones.val(CADENA_VACIA);
-	motivoTraslado.prop("selectedIndex", 0);
+	motivoTraslado.val(MotivoTraslado.COMPRA_NACIONAL);
 	
-	//fecRecepcion.datetimepicker('destroy');
-	fecDocumento.datetimepicker('destroy');
-	fecConta.datetimepicker('destroy');
-	fecRecepcion.datetimepicker('minDate', false);
-	fecRecepcion.datetimepicker('maxDate', false);
+	
+	//fecRecepcion.datetimepicker('minDate', false);
+	//fecRecepcion.datetimepicker('maxDate', false);
+	
 	//fecDocumento.datetimepicker('maxDate', false);
+	//fecConta.datetimepicker('maxDate', false);
+	fecRecepcion.datetimepicker('destroy');
+	console.log("xxx")
+	
+	fecDocumento.datetimepicker('destroy');	
+	console.log("yyy")
+	
+	fecConta.datetimepicker('destroy');
+	console.log("zzz")
+	
+	
 	construirFechasPicker();
+	//restringirSeleccionFechas();
+	inicializarFechas();
 		
 	formObservaciones.removeClass('was-validated');
 	

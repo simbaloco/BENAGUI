@@ -128,8 +128,11 @@ function inicializarVariables() {
 function inicializarComponentes() {
 	habilitarAnimacionAcordion();
 	habilitarMarquee();
+	
 	construirFechasPicker();
 	restringirSeleccionFechas();
+	inicializarFechas();
+	
 	inicializarEventos();
 }
 
@@ -157,8 +160,8 @@ function construirFechasPicker() {
 		locale: 		'es',
 		format: 		'L',
 		ignoreReadonly:  true,
-		date:		moment(),
-		minDate:	moment()
+		//date:		moment(),
+		//minDate:	moment()
 	});
 	
 	// La fecha de Documento
@@ -168,8 +171,8 @@ function construirFechasPicker() {
 		locale: 		'es',
 		format: 		'L',
 		ignoreReadonly:  true,
-		date:		moment(),
-		maxDate:	moment()
+		//date:		moment(),
+		//maxDate:	moment()
 	});
 
 	// La fecha de contabilización no puede ser mayor a la fecha actual	
@@ -177,8 +180,8 @@ function construirFechasPicker() {
 		locale: 		'es',
 		format: 		'L',
 		ignoreReadonly:  true,
-		date:		moment(),
-		maxDate:	moment()
+		//date:		moment(),
+		//maxDate:	moment()
 	});	
 }
 
@@ -202,11 +205,27 @@ function restringirSeleccionFechas() {
 	*/
 }
 
+function inicializarFechas(){
+	
+	fecVencimiento.datetimepicker('date', moment());
+	fecConta.datetimepicker('date', moment());
+	
+	fecVencimiento.datetimepicker('minDate', moment());
+		
+	fecDocumento.datetimepicker('maxDate', moment());
+	fecConta.datetimepicker('maxDate', moment());
+	fecDocumento.datetimepicker('date', moment());	
+}
+
 function inicializarEventos() {
 	$('#tableDetalle tbody').on('click','.btn-delete', function () {
-		mostrarDialogoEliminarFila(dataTableDetalle, $(this));
+		if(indiceFilaDataTableDetalle == 0){
+			mostrarMensajeValidacion("No se puede eliminar el único item de la Factura.");
+		}else{
+			mostrarDialogoEliminarFila(dataTableDetalle, $(this));
+		}
 	});
-
+	
 	$('.readonly').keydown(function(e){
 		e.preventDefault();
 	});
@@ -295,7 +314,7 @@ function inicializarFechas(){
 */
 
 function cargarPantallaConDatosGuiaRemisionAsociadas() {
-	console.log("cargarPantallaConDatosGuiaRemisionAsociadas...");
+	console.log("cargarPantallaConDatosGuiaRemisionAsociadas...nroGuiaRemision-->" + nroGuiaRemision.val());
 	var codigoOrdenCompra = numeroDocumento.text();
 	var guias = guiasReferencia.text();
 	console.log("codigoOrdenCompra-->" + codigoOrdenCompra);
@@ -343,7 +362,7 @@ function cargarPantallaHTMLFacturaConDatosGuiaRemisionAsociadas(data) {
 	personaContacto.val(data.personaContacto);
 	tipoMoneda.val(data.codigoTipoMoneda);
 	condPago.val(data.codigoCondPago);
-	dias.val(data.codigoDias);
+	dias.val((data.codigoDias==null || data.codigoDias == CADENA_VACIA) ? Dias._30 : data.codigoDias);
 	serie.val(data.serie);
 	correlativo.val(data.correlativo);
 	// se obtiene el tc del día
@@ -418,7 +437,7 @@ function habilitarPantallaConDatosGuiaRemisionAsociadas() {
 }
 
 function cargarPantallaConDatosFactura() {
-	
+	console.log("nroGuiaRemision-->" + nroGuiaRemision.val())
 	var nroDocReferenciaVal; 
 	//var desdeDocRef = desdeDocRefParam.text();
 	
@@ -531,15 +550,15 @@ function verPantallaFactura(data) {
 	fecDocumento.datetimepicker('date', moment(data.fechaDocumento));
 	fecVencimiento.datetimepicker('date', moment(data.fechaEntrega));
 	deshabilitarControl(dateTimePickerInput);
-	deshabilitarControl(observaciones);
-	controlNoRequerido(observaciones);
+	//deshabilitarControl(observaciones);
+	//controlNoRequerido(observaciones);
 	
 	if(data.codigoEstado == EstadoFactura.GENERADO){
 		if(estadoPago.val() == EstadoPago.PAGADO) {
 			deshabilitarControl(estadoPago);
 			ocultarControl(btnAnular);
 		} else {
-			deshabilitarControl(observaciones);
+			//deshabilitarControl(observaciones);
 			habilitarControl(estadoPago);
 			mostrarControl(btnAnular);
 			btnAnular.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
@@ -837,10 +856,13 @@ function validarDetalleFactura(){
 						exitEach = true;
 						console.log("cantidad es cadena vacia");
 						return false;
-					}else if(convertirMonedaANumero(cantidad) == 0){
-						mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $(this).find("input"));
-						exitEach = true;
-						return false;
+					}else {
+						var c = convertirMonedaANumero(cantidad);
+						if (c == 0 || c < 0) {
+							mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $(this).find("input"));
+							exitEach = true;
+							return false;
+						}
 					}
 				}
 			}
@@ -880,7 +902,7 @@ function registrarFacturaCompra(){
 	var detalle 				= tableToJSON(tableDetalle);
 	var diasVal					= null;
 
-	if(condPagoVal == '02') {
+	if(condPagoVal == CondicionPago.CREDITO) {
 		diasVal					= dias.val();
 	}
 
@@ -1271,11 +1293,17 @@ function limpiarFactura() {
 	estadoPago.val(EstadoPago.PENDIENTE);
 	condPago.val(CondicionPago.CONTADO);
 	dias.val(Dias._30);
+	ocultarControl(divDias);
 		
-	fecConta.datetimepicker('destroy');
+	fecVencimiento.datetimepicker('destroy');
 	fecDocumento.datetimepicker('destroy');
-	fecVencimiento.datetimepicker('destroy');	
+	fecConta.datetimepicker('destroy');
+	
+	//fecVencimiento.datetimepicker('minDate', false);	
+	//fecDocumento.datetimepicker('maxDate', false);
+	
 	construirFechasPicker();
+	inicializarFechas();
 	
 	formObservaciones.removeClass('was-validated');
 	

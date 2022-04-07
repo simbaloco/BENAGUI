@@ -163,6 +163,7 @@ function inicializarComponentes() {
 	
 	construirFechasPicker();
 	restringirSeleccionFechas();
+	inicializarFechas();
 	
 	inicializarEventos();
 }
@@ -186,8 +187,8 @@ function construirFechasPicker() {
 		locale: 'es',
 		format: 'L',
 		ignoreReadonly: true,
-		date:		moment(),
-		minDate:	moment()
+		//date:		moment(),
+		//minDate:	moment()
 	});
 	
 	// La fecha Válido hasta no puede ser menor que la fecha de contabilización
@@ -196,8 +197,8 @@ function construirFechasPicker() {
 		format: 'L',
 		ignoreReadonly: true,
 		date:		moment().add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'),
-		maxDate:	moment().add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'),
-		minDate:	moment()
+		//maxDate:	moment().add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'),
+		//minDate:	moment()
 	});
 	
 	// La fecha de contabilización no puede ser mayor a la fecha actual	
@@ -205,8 +206,8 @@ function construirFechasPicker() {
 		locale: 'es',
 		format: 'L',
 		ignoreReadonly: true,
-		date:		moment(),
-		maxDate:	moment()
+		//date:		moment(),
+		//maxDate:	moment()
 	});
 	
 	
@@ -216,6 +217,7 @@ function restringirSeleccionFechas() {
 
 	fecConta.on("change.datetimepicker", function(e) {
 		//reiniciarFechaHasta();
+		console.log("xxx")
 
 		fecHasta.datetimepicker('maxDate', moment(e.date).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'));
 		fecHasta.datetimepicker('minDate', e.date);
@@ -223,6 +225,21 @@ function restringirSeleccionFechas() {
 
 		fecEntrega.datetimepicker('minDate', e.date);
 	});
+}
+
+function inicializarFechas(){
+	console.log("inicializarFechas...")
+	fecConta.datetimepicker('date', moment());
+	fecEntrega.datetimepicker('date', moment());
+	
+	fecEntrega.datetimepicker('minDate', moment());
+	fecHasta.datetimepicker('minDate', moment());
+	
+	fecConta.datetimepicker('maxDate', moment());
+	fecHasta.datetimepicker('maxDate', moment().add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'));
+	
+	fecHasta.datetimepicker('date', moment().add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'));
+	
 }
 
 function habilitarAutocompletarBuscarCampos() {
@@ -551,6 +568,9 @@ function verPantallaOrdenCompra(data) {
 		ocultarControl(lblDias);
 	}
 
+	mostrarControl(lblPedido);
+	mostrarControl(nroPedido);
+		
 	if (opcion.text() == Opcion.VER) {
 		titulo.text("VER");
 		deshabilitarControl(direccionDespacho);
@@ -563,8 +583,6 @@ function verPantallaOrdenCompra(data) {
 		deshabilitarControl(estado);
 		deshabilitarControl(tipoCambio);
 		//mostrarControl(divNroPedido);
-		mostrarControl(lblPedido);
-		mostrarControl(nroPedido);
 		deshabilitarControl(nroPedido);
 		deshabilitarControl(cotizacionSap);
 		deshabilitarControl(observaciones);
@@ -594,6 +612,13 @@ function verPantallaOrdenCompra(data) {
 			ocultarControl(btnGenerarGuiaRemision);
 			mostrarControl(btnIrGuiaRemision);
 		}
+		
+		if (data.codigoEstado == EstadoDocumentoInicial.RECHAZADO) {
+			ocultarControl(btnGenerarGuiaRemision);
+			ocultarControl(btnIrGuiaRemision);
+			mostrarControl(lblAnulado);
+		}
+		
 		//habilitarControl(estado);
 		/*
 		if (data.codigoEstado == EstadoDocumentoInicial.RECHAZADO) {
@@ -622,14 +647,7 @@ function verPantallaOrdenCompra(data) {
 		*/
 	}else if (opcion.text() == Opcion.MODIFICAR) {
 		titulo.text("MODIFICAR");
-		if (flagEnvio.val() == 1){
-			mostrarControl(lblPedido);
-			mostrarControl(nroPedido);
-		}else{
-			ocultarControl(lblPedido);
-			ocultarControl(nroPedido);
-		}// ? mostrarControl(divNroPedido) : ocultarControl(divNroPedido);
-		
+				
 		if (data.codigoEstado == EstadoDocumentoInicial.POR_APROBAR) {
 			
 			fecConta.datetimepicker('maxDate', moment());			
@@ -641,11 +659,8 @@ function verPantallaOrdenCompra(data) {
 			habilitarControl(dias);
 			habilitarControl(tipoCambio);
 			habilitarControl(estado);
-			habilitarControl(nroPedido);
 			habilitarControl(cotizacionSap);
-			//habilitarControl(divNroPedido);
-			habilitarControl(lblPedido);
-			habilitarControl(nroPedido);
+			
 			estado.focus();
 			mostrarControl(btnGrabar);
 			mostrarControl(btnDuplicar);
@@ -662,11 +677,7 @@ function verPantallaOrdenCompra(data) {
 			deshabilitarControl(dias);
 			deshabilitarControl(tipoCambio);
 			deshabilitarControl(estado);
-			deshabilitarControl(nroPedido);
 			deshabilitarControl(cotizacionSap);
-			//deshabilitarControl(divNroPedido);
-			deshabilitarControl(lblPedido);
-			deshabilitarControl(nroPedido);			
 			deshabilitarControl(observaciones);
 			mostrarControl(btnDuplicar);
 			mostrarControl(btnGenerarGuiaRemision);
@@ -749,6 +760,7 @@ function duplicarPantallaOrdenCompra(nroDocRef) {
 	//ocultarControl(divNroPedido);
 	ocultarControl(lblPedido);
 	ocultarControl(nroPedido);
+	nroPedido.val(CADENA_VACIA);
 	estado.val(EstadoDocumentoInicial.POR_APROBAR);
 
 	//observaciones.val(CADENA_VACIA);
@@ -909,7 +921,7 @@ function agregarHTMLColumnasDataTable() {
 
 			// PRECIO
 			case 7: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
-				"<input class='form-control alineacion-derecha precio-det' type='number' maxlength='13' " +
+				"<input class='form-control alineacion-derecha precio-det' type='text' maxlength='13' " +
 				"onkeyup='precioKeyUp(this, " + indiceFilaDataTableDetalle + ")' " +
 				"onchange='precioKeyUp(this, " + indiceFilaDataTableDetalle + ");' " +
 				"onkeydown='precioKeyDown(event)' " +
@@ -1028,7 +1040,7 @@ function buscarArticuloKeyUp(e, control, fila) {
 				} else {
 					precio = ui.item.precioVentaUnitario;
 				}
-
+				
 				$('#precio_' + fila).val(convertirNumeroAMoneda(precio));
 				//$('#precio_' + fila).prop('min', precio);
 				
@@ -1040,6 +1052,7 @@ function buscarArticuloKeyUp(e, control, fila) {
 				var key = window.Event ? event.which : event.keyCode;
 
 				if (key != 13) {
+					console.log("<> 13")
 					if ($('#cantidad_' + fila).val() > 0) {
 						cantidadKeyUp($('#cantidad_' + fila)[0], fila);
 					}
@@ -1050,12 +1063,12 @@ function buscarArticuloKeyUp(e, control, fila) {
 }
 
 function cantidadKeyUp(control, fila) {
-
+	console.log("cantidadKeyUp...")
 	var cantidad = Number(control.value);
-	var precio = Number($('#precio_' + fila).val());
+	var precio = convertirMonedaANumero($('#precio_' + fila).val());
 	var subTotal = cantidad * precio;
 	var subTotalIgv = subTotal + (subTotal * (ParametrosGenerales.IGV / 100));
-
+	
 	$('#subTotal_' + fila).val(convertirNumeroAMoneda(subTotal));
 	$('#subTotalIgv_' + fila).val(convertirNumeroAMoneda(subTotalIgv));
 	$('#cantidadPend_' + fila).val(cantidad);
@@ -1152,6 +1165,9 @@ function evaluarCambioEstado() {
 		habilitarControl(observaciones);
 		habilitarControl(estado);
 		controlNoRequerido(observaciones);
+		habilitarControl(cotizacionSap);
+		habilitarControl(nroPedido);
+				
 		
 	} else if (estado.val() == EstadoDocumentoInicial.RECHAZADO) {
 		//ocultarControl(btnDuplicar);
@@ -1159,6 +1175,9 @@ function evaluarCambioEstado() {
 		controlRequerido(observaciones);
 		habilitarControl(observaciones);
 		habilitarControl(estado);
+		habilitarControl(cotizacionSap);
+		habilitarControl(nroPedido);
+		
 		mostrarMensajeValidacion("Debe ingresar observaciones antes de grabar.", observaciones);
 		
 	} else {
@@ -1172,18 +1191,23 @@ function evaluarCambioEstado() {
 			btnDuplicar.removeClass('btn-flotante-grabar').addClass('btn-flotante-duplicar');
 		}
 		*/
-		
 		if (opcion.text() == Opcion.VER || opcion.text() == CADENA_VACIA){
 			ocultarControl(btnGrabar);
+			deshabilitarControl(cotizacionSap);
+			deshabilitarControl(nroPedido);
+			deshabilitarControl(observaciones);
+		
 			btnDuplicar.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
+		}else{
+			habilitarControl(cotizacionSap);
+			habilitarControl(nroPedido);
+			habilitarControl(observaciones);
 		}
-		
-		
 		
 		ocultarControl(btnGenerarGuiaRemision);
 		mostrarControl(btnDuplicar);
 		controlNoRequerido(observaciones);
-		deshabilitarControl(observaciones);
+		
 	}
 }
 
@@ -1301,10 +1325,13 @@ function validarDetalleOrden() {
 						exitEach = true;
 						console.log("cantidad es cadena vacia");
 						return false;
-					} else if (convertirMonedaANumero(cantidad) == 0) {
-						mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $(this).find("input"));
-						exitEach = true;
-						return false;
+					} else {
+						var c = convertirMonedaANumero(cantidad);
+						if (c == 0 || c < 0) {
+							mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $(this).find("input"));
+							exitEach = true;
+							return false;
+						}
 					}
 				}
 			}
@@ -1435,6 +1462,10 @@ function registrarOrdenCompra() {
 				deshabilitarControl(tipoCambio);
 				deshabilitarControl(observaciones);
 				deshabilitarDetalleOrdenCompra();
+				
+				mostrarControl(lblPedido);
+				mostrarControl(nroPedido);
+				deshabilitarControl(nroPedido);
 				
 				codigo.html(resultado);
 				flgNuevo=0;
@@ -1828,7 +1859,8 @@ function limpiarOrdenCompra() {
 	fecConta.datetimepicker('destroy');
 	
 	construirFechasPicker();
-		
+	inicializarFechas();
+	
 	ocultarControl(dias);
 	ocultarControl(lblDias);
 	
@@ -1849,6 +1881,8 @@ function limpiarOrdenCompra() {
 		tipoMoneda.val(Moneda.DOLARES);
 		evaluarCambioTipoMoneda();
 		tipoCambio.val(tipoCambioSave.val());
+	}else{
+		obtenerTipoCambio(tipoCambio, tipoCambioSave);
 	}
 		
 	direccionDespacho.focus();
@@ -2187,7 +2221,8 @@ function generarPdf(event){
 		$('.formEmailReal #emailPDF').focus();
 		//$('#emailPDF').focus();
 		console.log("correo del cliente-->" + correo + "/ NRO DOC-->" + nroDocumento);
-		$('.formEmailReal #emailPDF').val(correo + ";" + ParametrosGenerales.CC_CORREO_OC);
+		// correos separados por comas
+		$('.formEmailReal #emailPDF').val(correo + ", " + ParametrosGenerales.CC_CORREO_OC);
 	});
 }
 
