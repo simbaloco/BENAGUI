@@ -41,7 +41,7 @@
         <result property="DESCRIPCION" 			column="DESCRIPCION" />
         <result property="MARCA_ARTICULO" 		column="MARCA_ARTICULO" />
         <result property="CANTIDAD" 			column="CANTIDAD" />
-        <result property="PRECIO_UNITARIO"		column="PRECIO_UNITARIO" />
+        <result property="PRECIO_UNITARIO"		column="PRECIO_UNITARIO" />             
         <result property="PORC_DCTO"			column="PORC_DCTO" />
         <result property="PRECIO_CON_DCTO"		column="PRECIO_CON_DCTO" />
         <result property="SUB_TOTAL" 			column="SUB_TOTAL" />
@@ -72,6 +72,7 @@
         <result property="MARCA_ARTICULO" 		column="MARCA_PRODUCTO" />
         <result property="CANTIDAD" 			column="CANTIDAD" />
         <result property="PRECIO_UNITARIO"		column="PRECIO_UNITARIO" />
+        <result property="PRECIO_UNITARIO_IGV"	column="PRECIO_UNITARIO_IGV" />   
         <result property="SUB_TOTAL" 			column="SUB_TOTAL" />
         <result property="SUBTOTAL_IGV"			column="SUB_TOTAL_IGV" />
     </resultMap>

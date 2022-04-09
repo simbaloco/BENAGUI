@@ -196,15 +196,23 @@ public class ReporteRestController {
         
         // GENERANDO EL REPORTE
         String nombreJrxml = "/reportes/compras/orden_compra.jrxml"; 
+        String obs="";
         
-        String asunto = "ORDEN DE COMPRA - SOLICITUD DE CONFIRMACION DE CORREO";
+        if (ordenCompraCab.getObservaciones().equals("")) {
+        	obs = "<br/>";
+        }else {
+        	obs = "" + ordenCompraCab.getObservaciones() + "<br/><br/>";
+        }
+                
+        String asunto = "ORDEN DE COMPRA " + numeroDocumento + " / SOLICITUD DE CONFIRMACION DE CORREO";
 	    String nombreUsuario = ordenCompraCab.getNombreProv();
 	    String mensaje = "<html><head><meta http-equiv=Content-Type content=text/html; charset=utf-8/></head><body><table align=center width=610 cellspacing=0 cellpadding=0 border=0 style='position:relative; font-size:12px; font-family:Arial, Helvetica, sans-serif; color: #404040; background: #ffffff; border: solid 1px #bdcbcd; -moz-border-radius: 20px 20px 20px 20px; -ms-border-radius: 20px 20px 20px 20px; -webkit-border-radius: 20px 20px 20px 20px; border-radius: 20px 20px 20px 20px; padding:5px;''>"
                 + "<tbody><tr>"
                 + "<td align=center bgcolor=#ffffff style='text-align: left; font-size:18px; padding-left:20px; color:#404040;''><br>KAHAXI EIRL</td>"
                 + "</tr><tr><td valign=middle align=center colspan=2>"
-                + "<br><br><p style='text-align: left; font-size:14px; padding-left:20px; color:#404040;'>Estimado(a) "+ nombreUsuario +", <br/><br/>"
+                + "<br><br><p style='text-align: left; font-size:14px; padding-left:20px; color:#404040;'>Estimado(a) "+ nombreUsuario +", <br/>"
                 + "Se envía adjunto la orden de compra para su atención. En caso de tener alguna consulta favor de comunicarse con su contacto directo.<br/><br/>"
+                + obs
                 + "</p>"
                 + "<p style='text-align: left; font-size:14px; padding-left:20px; color:#404040;''>Atentamente,<br>"+"KAHAXI"
                 + "<br></p><p style='text-align: left; font-size:10px; padding-left:20px; color:#DF0101;''>"

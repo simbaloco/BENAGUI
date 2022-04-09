@@ -136,7 +136,12 @@ function inicializarEventos(){
             e.stopPropagation();
         }else {
             console.log('else registra lista--->');
-        	registrarListaPrecio();
+			if (fileAdjunto == CADENA_VACIA || fileAdjunto == UNDEFINED) {
+				mostrarDialogoGrabarLista();
+			}
+			else{
+				registrarListaPrecio();
+			}			
         }
         form_validado_listaPrecio.addClass('was-validated');
 	});
@@ -312,6 +317,28 @@ function buscar(){
 	}
 }
 
+function mostrarDialogoGrabarLista() {
+
+	bootbox.confirm({
+		message: "No existe ningún archivo adjunto. ¿Está seguro de grabar?",
+
+		buttons: {
+			confirm: {
+				label: 'Sí',
+				className: 'btn-success'
+			},
+			cancel: {
+				label: 'No',
+				className: 'btn-danger'
+			}
+		},
+		callback: function(result) {
+			if (result == true) {
+				registrarListaPrecio();
+			}
+		}
+	});
+}
 
 function registrarListaPrecio() {
 	var chkActivo = null;
@@ -320,7 +347,7 @@ function registrarListaPrecio() {
 	
 	(activoModal.is(':checked')) ? chkActivo = 1 : chkActivo = 0;
 	(idListaPre.text().trim() == CADENA_VACIA) ? idLP = 0 : idLP = idListaPre.text();
-		
+	
 	var objetoJson = {
 		idListaPrecio	: idLP,
 		descripcion		: descripcionModal.val(),
@@ -337,7 +364,7 @@ function registrarListaPrecio() {
 	
 	console.log("fileAdjunto:"+fileAdjunto);
 	
-	if (fileAdjunto != CADENA_VACIA && fileAdjunto != UNDEFINED) {		
+	if (fileAdjunto != CADENA_VACIA && fileAdjunto != UNDEFINED) {
 		if (fileAdjunto instanceof Uint8Array) {
 			fileAdjunto = new File(fileAdjunto, fileAdjunto.name, { type: "application/octet-stream" })
 		}
@@ -349,7 +376,7 @@ function registrarListaPrecio() {
 	
 	console.log("metodo:" + metodo);
 	console.log("registrarListaPrecio:" + entityJsonStr);
-
+	
 	$.ajax({
 		type: "POST",
 		contentType: false,
@@ -366,17 +393,17 @@ function registrarListaPrecio() {
 				limpiarModal();
 				buscar();
 			} else if (xhr.status == HttpStatus.Accepted) {
+				fileAdjunto = CADENA_VACIA;
+				nombreArchivo.text(CADENA_VACIA);
 				mostrarMensajeValidacion(resultado);
 			}
 			loadding(false);
 		},
-		error: function(xhr, error, code) {
-
+		error: function(xhr, error, code) {			
 			mostrarMensajeError(xhr.responseText);
 			loadding(false);
 		}
 	});
-
 }
 
 function editarListaPrecio(data){
