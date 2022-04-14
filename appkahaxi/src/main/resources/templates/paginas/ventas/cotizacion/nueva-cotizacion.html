@@ -29,6 +29,12 @@
 		<label id="estadoParam" th:text=${estadoParam} hidden="hidden"></label>
 		<label id="volverParam" th:text=${volver} hidden="hidden"></label>
 	
+		<button type="button" id="btnGrabar" class="btn-flotante-grabar">
+			<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
+	    </button>			
+		<button type="button" id="btnDuplicar" class="btn-flotante-duplicar" style="display: none">
+			<span class="mr-2"><i class="fas fa-copy"></i></span>Duplicar
+	    </button>
 		
 		<div class="kahaxi_titulo">
 	        <div class="kahaxi_titulo_container">
@@ -44,12 +50,39 @@
 	    	<div class="box-body">
 	    		<div class="card">
 	                <div class="card-header quitar-contornos" id="headingOne">
-				        <h2 class="mb-0">
-					        <button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseOne"  aria-expanded="true" aria-controls="collapseOne">
-			                    <i class="fas fa-angle-up"></i><span>Datos de la Cotización </span><span style="font-size: 20; font-weight: bold;" id="codigo"></span>
-			                    <div class="subrayado"></div>
-			                </button>
-		                </h2>
+				        
+		                <div class="row">
+							<div class="col-md-4">
+								<h2 class="mb-0">
+							        <button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseOne"  aria-expanded="true" aria-controls="collapseOne">
+					                    <i class="fas fa-angle-up"></i><span>Datos de la Cotización </span><span class="font-weight-bold" id="codigo"></span>
+					                    <div class="subrayado"></div>
+					                </button>
+				                </h2>
+							</div>
+							
+							<div class="col-md-8 alineacion-derecha">
+					     		<button  type="button" id="btnPdf" class="btn btn-danger" style="display: none">
+					                <span class="mr-2"><i class="far fa-file-pdf"></i></span>PDF 
+					            </button>
+				            
+					 			<button  type="button" id="btnNuevo" class="btn btn-primary" style="display: none">
+		                        	<span class="mr-2"><i class="fas fa-plus-square"></i></span>Nuevo
+		                    	</button >
+					            
+					            <button type="button" id="btnIrOV" class="btn btn-primary" style="display: none">
+		                  			<span class="mr-2"><i class="fas fa-share"></i></span>Ir a Orden de Venta
+					            </button>
+					            
+					            <button type="button" id="btnGenerarOV" class="btn btn-primary" style="display: none">
+		                  			<span class="mr-2"><i class="fas fa-coins"></i></span>Generar Orden de Venta
+					            </button>
+					            
+					            <button type="button" id="btnVolver" class="btn btn-primary" style="display: none">
+		                  			<span class="mr-2"><i class="fas fa-backspace"></i></span>Volver
+					            </button>
+							</div>
+						</div>
 		            </div>
                 
 	                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionOne">
@@ -121,6 +154,11 @@
 						 		</div>
 						 		
 						 		<div class="col-md-2">
+						 			<label class="label" for="tipoCambio">Tipo de Cambio:</label>
+						 			<input class="form-control" maxlength="250" size="50" type="text" id="tipoCambio" readonly="readonly" tabindex="-1"/>
+						 		</div>		
+						 		
+						 		<div class="col-md-2">
 						 			<label class="label" for="condPago">Condición Pago:</label>
 						 			<select id="condPago" class="form-control">
 										<option th:each="item : ${listaCondPago}"
@@ -142,12 +180,6 @@
 										Debe seleccionar los días de crédito
 									</div>
 						 		</div>
-						 		
-						 		<div class="col-md-2">
-						 			<label class="label" for="tipoCambio">Tipo de Cambio:</label>
-						 			<input class="form-control" maxlength="250" size="50" type="text" id="tipoCambio" readonly="readonly" tabindex="-1"/>
-						 		</div>			 		
-						 		
 						    </div>
 						    
 						    <div class="form-group row">
@@ -174,41 +206,13 @@
 						 		<div class="col-md-6 alineacion-derecha">
 						 			<label class="label"></label>
 						 			<div>
-						 				<button  type="button" id="btnPdf" class="btn btn-danger" style="display: none">
-							                <span class="mr-2"><i class="far fa-file-pdf"></i></span>PDF 
-							            </button>
-						            
-							 			<button type="button" id="btnLimpiar" class="btn btn-primary">
+						 				<button type="button" id="btnLimpiar" class="btn btn-primary">
 				                  			<span class="mr-2"><i class="fas fa-eraser"></i></span>Limpiar
 							            </button>
-							            
-							            <button type="button" id="btnVolver" class="btn btn-primary" style="display: none">
-				                  			<span class="mr-2"><i class="fas fa-backspace"></i></span>Volver
-							            </button>
-							            
-							            <button  type="button" id="btnNuevo" class="btn btn-primary" style="display: none">
-				                        	<span class="mr-2"><i class="fas fa-plus-square"></i></span>Nuevo
-				                    	</button >
 							        </div>
 						 		</div>
 						    </div>
 						    
-						    <div class="row">
-						 		<div class="col-md-4">						 			
-						 		</div>
-						 		
-						 		<div class="col-md-8 alineacion-derecha">
-						 			<div>
-							 			<button type="button" id="btnGenerarOV" class="btn btn-primary" style="display: none">
-				                  			<span class="mr-2"><i class="fas fa-coins"></i></span>Generar Orden de Venta
-							            </button>
-							            
-							            <button type="button" id="btnIrOV" class="btn btn-primary" style="display: none">
-				                  			<span class="mr-2"><i class="fas fa-share"></i></span>Ir a Orden de Venta
-							            </button>
-							        </div>
-						 		</div>
-						    </div>
 						</form>
 						</div>
                 	</div>
@@ -240,6 +244,7 @@
 					     	<div class="col-md-12">
 				             	<div class="table-responsive">
 					    			<table id="tableDetalle" class="table table-hover table-striped table-bordered dt-responsive" >
+					    			
 								        <thead align="center">
 								            <tr>
 								                <th width="1%">Item</th>
@@ -381,22 +386,6 @@
 					       	</div>
 					    </div>
 					    </form>
-					    
-					    <div class="row">
-					     	<div class="col-md-6">						     		
-					     	</div>
-					     	<div class="col-md-6 alineacion-derecha">
-					     		<div>
-						     		<button type="button" id="btnGrabar" class="btn btn-primary">
-			                  			<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
-						            </button>
-						            
-					              	<button type="button" id="btnDuplicar" class="btn btn-primary" style="display: none">
-			                  			<span class="mr-2"><i class="far fa-copy"></i></span>Duplicar
-						            </button>
-						        </div>
-					     	</div>
-						</div>
                 	</div>
             	</div>
           	</div>

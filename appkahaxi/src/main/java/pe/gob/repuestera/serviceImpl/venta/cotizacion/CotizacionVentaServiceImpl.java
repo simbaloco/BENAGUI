@@ -9,8 +9,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import pe.gob.repuestera.exception.ErrorControladoException;
-import pe.gob.repuestera.model.CompraDetModel;
 import pe.gob.repuestera.model.VentaCabModel;
 import pe.gob.repuestera.model.VentaDetModel;
 import pe.gob.repuestera.repository.venta.cotizacion.CotizacionVentaMapper;
@@ -202,12 +202,18 @@ public class CotizacionVentaServiceImpl implements CotizacionVentaService{
     	logger.info("usuario--->" + usuario);
         logger.info("codigoEstado--->" + registro.getCodigoEstado());
         logger.info("observaciones--->" + registro.getObservaciones());
+        logger.info("nro req--->" + registro.getNroRequerimiento());
+        logger.info("asunto--->" + registro.getAsunto());        
+        
         // seteando parámetros
         Map<String, Object> params = new HashMap();
         params.put(Constante.PARAM_SP_NRO_DOCUMENTO, registro.getNumeroDocumento());
         params.put(Constante.PARAM_SP_USUARIO, usuario);
         params.put(Constante.PARAM_SP_COD_ESTADO, registro.getCodigoEstado());
         params.put(Constante.PARAM_SP_OBSERVACIONES, registro.getObservaciones());
+        params.put(Constante.PARAM_SP_NRO_REQUERIMIENTO, registro.getNroRequerimiento());
+        params.put(Constante.PARAM_SP_ASUNTO, registro.getAsunto());
+        
         // REGISTRANDO COTIZACION DE VENTA
         cotizacionVentaMapper.actualizarCotizacionVenta(params);
         // evaluando el retorno

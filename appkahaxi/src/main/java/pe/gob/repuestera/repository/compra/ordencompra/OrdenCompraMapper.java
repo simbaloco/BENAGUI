@@ -22,9 +22,5 @@ public interface OrdenCompraMapper {
 	List<CompraDetModel> buscarOrdenCompraDet(Map params);
 
 	void actualizarOrdenCompra(Map params);
-	
-	void actualizarEnvioOrdenCompra(Map params);
-
-	void eliminarOrdenCompra(Map params);
 
 }

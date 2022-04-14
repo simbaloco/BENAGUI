@@ -490,14 +490,14 @@ function registrarUsuario(){
 	listaPerfiles = obtenerListaPerfiles();
 	
 	if (contrasenaModal.val() != confirmacontrasenaModal.val()){
-		mostrarDialogoInformacion('La contraseña y la confirmación deben ser iguales.', Boton.WARNING, contrasenaModal, null);
+		mostrarMensajeValidacion('La contraseña y la confirmación deben ser iguales.', contrasenaModal);
 		contrasenaModal.val(CADENA_VACIA);
 		confirmacontrasenaModal.val(CADENA_VACIA);
 		return false;
 	}
 	
 	if (listaPerfiles == CADENA_VACIA){
-		mostrarDialogoInformacion('Debe seleccionar al menos un perfil.', Boton.WARNING, treePerfiles, null);
+		mostrarMensajeValidacion('Debe seleccionar al menos un perfil.', treePerfiles);
 		return false;
 	}
 	

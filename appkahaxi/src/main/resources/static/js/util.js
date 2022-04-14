@@ -475,32 +475,6 @@ function mostrarNotificacion(mensaje, tipo){
     });
 }
 
-function mostrarDialogoInformacion(mensaje, boton, controlFoco1, controlFoco2){
-	var box = bootbox.dialog({
-				message: "<p>" + mensaje + "</p>",
-			    size: 'medium',
-			    centerVertical: true,
-			    buttons: {
-			        cancel: {
-			            label: "Aceptar",
-			            className: boton
-			        }
-			    }
-			  });
-	
-	box.on('hidden.bs.modal',function(){
-        if(controlFoco1 == null){
-			$(controlFoco2).focus();
-			$(controlFoco2).select();
-		}else{
-			controlFoco1.focus();
-			controlFoco1.select();	
-		}		
-    });
-}
-
-
-
 function cargarCombo(control, borrarTodoMenosPrimero, codigoMaestro, callback){
 	console.log("entrando a cargarCombo (sólo maestros)---> control:" + control + '/codigoMaestro:' + codigoMaestro);
 	if(borrarTodoMenosPrimero){
@@ -747,6 +721,30 @@ function mostrarMensajeValidacion(mensaje){
 
 function mostrarMensajeValidacion(mensaje, componente1, componente2){
 	mostrarDialogoInformacion("<strong>Mensaje de validación</strong> <br><br>" + mensaje, Boton.WARNING, componente1, componente2);
+}
+
+function mostrarDialogoInformacion(mensaje, boton, controlFoco1, controlFoco2){
+	var box = bootbox.dialog({
+				message: "<p>" + mensaje + "</p>",
+			    size: 'medium',
+			    centerVertical: true,
+			    buttons: {
+			        cancel: {
+			            label: "Aceptar",
+			            className: boton
+			        }
+			    }
+			  });
+	
+	box.on('hidden.bs.modal',function(){
+        if(controlFoco1 == null){
+			$(controlFoco2).focus();
+			$(controlFoco2).select();
+		}else{
+			controlFoco1.focus();
+			controlFoco1.select();	
+		}		
+    });
 }
 
 function habilitarMarquee(){

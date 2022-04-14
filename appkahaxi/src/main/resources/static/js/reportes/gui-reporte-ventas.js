@@ -70,7 +70,7 @@ function retringirSeleccionFechas() {
 			fecFin.datetimepicker('minDate', e.date);
 			buscar(e);
 		} else {
-			mostrarDialogoInformacion("El rango de fechas es máximo de 6 meses.", Boton.WARNING);
+			mostrarMensajeValidacion("El rango de fechas es máximo de 6 meses.");
 			fecInicio.datetimepicker('date', e.oldDate);			
 		}
 	});
@@ -81,7 +81,7 @@ function retringirSeleccionFechas() {
 			fecInicio.datetimepicker('maxDate', e.date);
 			buscar(e);
 		} else {
-			mostrarDialogoInformacion("El rango de fechas es máximo de 6 meses.", Boton.WARNING);
+			mostrarMensajeValidacion("El rango de fechas es máximo de 6 meses.");
 			fecFin.datetimepicker('date', e.oldDate);
 		}
 	});

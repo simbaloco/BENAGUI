@@ -132,7 +132,7 @@
 
 				<div class="card-header quitar-contornos" id="headingCabeceraOrden">
 					<div class="row">
-						<div class="cabe col-md-4">
+						<div class="col-md-4">
 							<h2 class="mb-0">
 								<button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseCabeceraOrden" aria-expanded="true" aria-controls="collapseCabeceraOrden">
 									<i class="fas fa-angle-up"></i><span>Datos de la Orden de Venta </span><span class="font-weight-bold" id="codigo"></span>
@@ -194,7 +194,8 @@
 
 								<div class="col-md-2">
 									<label class="label" for="campoBuscar">Ingrese criterios para buscar:</label>
-									<input class="form-control sinCaracteresEspeciales" maxlength="20" size="50" type="text" id="campoBuscar" placeholder="Ingrese DNI/RUC o Nombre/Razón Social para buscar..."/>
+									<input class="form-control sinCaracteresEspeciales" maxlength="20" size="50" type="text" id="campoBuscar" 
+										   placeholder="Ingrese DNI/RUC o Nombre/Razón Social para buscar..." readonly="readonly" tabindex="-1" />
 								</div>
 
 								<div class="col-md-2">
@@ -214,22 +215,16 @@
 								
 								<div class="col-md-2">
 									<label class="label" for="direccionDespacho">Direcci&oacute;n Despacho:</label>
-									<select id="direccionDespacho" class="form-control" required="required">
+									<select id="direccionDespacho" class="form-control" >
 										<option value="" selected>-- SELECCIONAR --</option>										
 									</select>
-									<div class="invalid-feedback">
-										Debe seleccionar la dirección de despacho
-									</div>
 								</div>
 
 								<div class="col-md-2">
 									<label class="label" for="personaContacto">Persona Contacto:</label>
-									<select id="personaContacto" class="form-control" required="required">
+									<select id="personaContacto" class="form-control" >
 										<option value="" selected>-- SELECCIONAR --</option>										
 									</select>
-									<div class="invalid-feedback">
-										Debe seleccionar la persona de contacto
-									</div>
 								</div>
 
 							</div>
@@ -362,18 +357,10 @@
 
 						<div class="row">
 
-							<div class="col-md-10">
-							</div>
-
-							<div class="col-md-2 alineacion-derecha">
-								<button type="button" id="btnEliminarTodosArticulos" class="btn btn-danger btn-md" title="Eliminar todos los artículos" style="display: none">
-									<span class="mr-2"><i class="far fa-trash-alt"></i></span>
-								</button>
-								
+							<div class="col-md-12">
 								<button type="button" id="btnAgregarArticulo" class="btn btn-primary btn-md" title="Agregar artículo" style="display: none">
 									<span class="mr-2"><i class="fas fa-plus-square"></i></span>
 								</button>
-								
 							</div>
 						</div>
 
@@ -388,7 +375,6 @@
 										<thead class="text-center">
 											<tr>
 												<th width="1%">Item</th>
-								                <th id="buscarArticulo" width="2%">Buscar</th>
 								                <th id="codArticulo" style="display: none"></th>
 								                <th id="descCodArticulo" width="11%">C&oacute;d. Art.</th>
 								                <th id="descripcionArticulo" width="15%">Descripci&oacute;n</th>
@@ -400,8 +386,7 @@
 								                <th id="porcentajeDcto" width="3%">% Dcto.</th>
 								                <th id="precioConDcto" width="10%">Pre. c/Dcto.</th>
 								                <th id="subTotal" width="10%">SubTotal</th>
-								                <th id="subTotalIgv" style="display: none">SubTotal c/IGV</th>									                
-								                <th class="eliminar" width="3%">Eliminar</th>
+								                <th id="subTotalIgv" style="display: none">SubTotal c/IGV</th>
 											</tr>
 										</thead>
 
@@ -414,7 +399,6 @@
 										<tbody>
 										<tr>
 									        	<td></td>							        
-									        	<td></td>
 									        	<td style="display: none"></th>
 									        	<td></td>
 									        	<td></td>
@@ -426,18 +410,7 @@
 									        	<td></td>
 									        	<td></td>
 									        	<td></td>
-									        	<td style="display: none"></td>
-									        	<td>
-									        		<div style="display:flex;justify-content:space-around; ">
-									        			<button class="btn-edit btn btn-success btn-xs" style="display: none">
-									        				<span><i class="fas fa-edit"></i></span>
-									        			</button>
-									        			
-									        			<button class="btn-delete btn btn-danger btn-xs">
-									        				<span><i class="fas fa-trash-alt"></i></span>
-									        			</button>
-									        		</div>
-										        </td>
+									        	<td style="display: none"></td>									        	
 									        </tr>
 										</tbody>
 									</table>
@@ -462,7 +435,7 @@
 					            	</div>
 					            	<div class="col-md-3">	
 					            		<div class="form-check">
-							 		  		<input class="form-check-input" type="checkbox" id="chkDctoTotal"/>
+							 		  		<input class="form-check-input" type="checkbox" id="chkDctoTotal" disabled="disabled"/>
 							 		  		<input class="form-control" maxlength="3" type="text" id="dctoTotal" disabled="disabled" onkeypress="return soloDecimales(event, this);"/>
 									    </div>
 								    </div>

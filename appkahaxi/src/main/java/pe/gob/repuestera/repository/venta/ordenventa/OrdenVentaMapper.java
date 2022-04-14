@@ -14,16 +14,13 @@ import pe.gob.repuestera.model.VentaDetModel;
 public interface OrdenVentaMapper {
 	
 	void registrarOrdenVenta(Map params);
-
-	List<VentaCabModel> listarOrdenesVenta(Map params);
+	
+	List<VentaCabModel> listarOrdenVenta(Map params);
 	
 	VentaCabModel buscarOrdenVentaCab(Map params);
 
 	List<VentaDetModel> buscarOrdenVentaDet(Map params);
-
+		
 	void actualizarOrdenVenta(Map params);
-
-	void eliminarOrdenVenta(Map params);
-	
 	
 }

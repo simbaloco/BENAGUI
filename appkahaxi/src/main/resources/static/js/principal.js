@@ -1,15 +1,58 @@
 var tipoCambioModal;
+var tipoCambio;
+var grabarModal;
+var fecha;
+
+$(document).ready(function() {
+	inicializarVariables();
+	inicializarComponentes();
+	inicializarPantalla();
+});
+
+function inicializarVariables(){
+	tipoCambioModal = $('#tipoCambioModal');
+	tipoCambio = $('#tipoCambio');
+	grabarModal = $('#grabarModal');
+	fecha = $('#fecha');
+}
+
+function inicializarComponentes(){
+	// este bloque permite que no se cierre la pantalla modal
+    tipoCambioModal.modal({
+        show: false,
+        backdrop: 'static',
+        keyboard: false
+    });
+
+	tipoCambioModal.on('shown.bs.modal', function() {
+	  tipoCambio.focus();
+	})
+
+	grabarModal.on("click", function(event) {
+		grabar(event);
+	});	
+	
+	tipoCambio.on("keydown", function(e) {
+		tcKeyDown(e);
+	});
+}
+
+function inicializarPantalla(){
+	obtenerTC();
+}
+
 
 function obtenerTC(){
 	console.log("obtenerTC...entrando");
 	// obteniendo dia, mes y año
 	var f = new Date();
+	var nombreDia = f.getDay();
 	var dia = f.getDate();
 	var mes = f.getMonth() + 1;
 	var anio = f.getFullYear();
 	console.log("dia-->" + dia + "/mes-->" + mes + "/año-->" + anio);
-	var fecha = diasSemana[f.getDay()] + ", " + f.getDate() + " de " + meses[f.getMonth()] + " del " + f.getFullYear()
-	console.log("fecha full--->" + fecha);
+	var fechaMostrar = diasSemana[nombreDia] + ", " + dia + " de " + meses[mes] + " del " + anio
+	console.log("fecha full--->" + fechaMostrar);
 	$.ajax({
         type:"Get",
         contentType: false,
@@ -29,8 +72,8 @@ function obtenerTC(){
 					console.log("no hay valores para TC para el día de hoy...");
 					// abrir modal para ingresar TC
 					mostrarModal(tipoCambioModal);
-					$('#fecha').val(fecha);
-					$('#tipoCambio').focus();
+					fecha.val(fechaMostrar);
+					//tipoCambio.focus();
 				}
             }else if(xhr.status == HttpStatus.Accepted){
             	console.log("obtenerTC, Accepted....");
@@ -48,6 +91,22 @@ function obtenerTC(){
     });
 }
 
+function grabar(event){
+	var form = $("#form-tc")
+	event.preventDefault();
+    if (form[0].checkValidity() === false) {
+		console.log("validado FALSE!!!....")
+        
+        event.stopPropagation();
+    }else{
+		event.stopPropagation();
+		console.log("entrando validado....")
+		registrarTc();
+		
+	}
+	form.addClass('was-validated');
+}
+
 function registrarTc(){
 	console.log("registrarTc...entrando");
 	// obteniendo dia, mes y año
@@ -55,7 +114,7 @@ function registrarTc(){
 	var dia = f.getDate();
 	var mes = f.getMonth() + 1;
 	var anio = f.getFullYear();
-	var tc = $('#tipoCambio').val();
+	var tc = tipoCambio.val();
 	console.log("dia-->" + dia + "/mes-->" + mes + "/año-->" + anio);
 	console.log("tc--->" + tc);
 	var objetoJson = {
@@ -105,33 +164,13 @@ function registrarTc(){
     });
 }
 
+function tcKeyDown(e) {
+	var key = window.Event ? e.which : e.keyCode;
+	console.log("tcKeyDown, key-->" + key);
+	// si es ENTER
+	if (key == 13) {
+		console.log("es enter");
+		grabarModal.click();
+	}
+}
 
-
-$(document).ready(function() {
-	console.log("aqui ready principal.js!!!");
-	tipoCambioModal = $('#tipoCambioModal');
-	
-	// este bloque permite que no se cierre la pantalla modal
-    tipoCambioModal.modal({
-        show: false,
-        backdrop: 'static',
-        keyboard: false
-    });
-
-	$('#grabarModal').click(function(event) {
-		var form = $("#form-tc")
-		event.preventDefault();
-        if (form[0].checkValidity() === false) {
-			console.log("validado FALSE!!!....")
-            
-            event.stopPropagation();
-        }else{
-			event.stopPropagation();
-			console.log("entrando validado....")
-			registrarTc();
-		}
-		form.addClass('was-validated');
-	});
-	
-	obtenerTC();
-} );

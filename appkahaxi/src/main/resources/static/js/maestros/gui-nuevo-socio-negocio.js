@@ -666,13 +666,13 @@ function validarCamposInsertarCampos(i, tipo) {
 		if ($('#activo_' + i).val() == '1') {
 
 			if ($('#telContacto_' + i + "_" + indiceTel).val().trim() == '') {
-				mostrarDialogoInformacion('Debe ingresar el teléfono del contacto', Boton.WARNING, null, '#telContacto_' + i + "_" + indiceTel);
+				mostrarMensajeValidacion('Debe ingresar el teléfono del contacto', null, '#telContacto_' + i + "_" + indiceTel);
 				return false;
 			}
 
 			if ($('#telContacto_' + i + "_" + indiceTel).val().trim() != '') {
 				if (validaLongitudTelefono($('#telContacto_' + i + "_" + indiceTel).val().trim(), 0) == 0) {
-					mostrarDialogoInformacion('Debe ingresar al menos 7 caracteres en el teléfono del contacto', Boton.WARNING, null, '#telContacto_' + i + "_" + indiceTel);
+					mostrarMensajeValidacion('Debe ingresar al menos 7 caracteres en el teléfono del contacto', null, '#telContacto_' + i + "_" + indiceTel);
 					return false;
 				}
 				else {
@@ -688,14 +688,14 @@ function validarCamposInsertarCampos(i, tipo) {
 		if ($('#activo_' + i).val() == '1') {
 
 			if ($('#emailContacto_' + i + "_" + indiceEma).val().trim() == '') {
-				mostrarDialogoInformacion('Debe ingresar el email del contacto', Boton.WARNING, null, '#emailContacto_' + i + "_" + indiceEma);
+				mostrarMensajeValidacion('Debe ingresar el email del contacto', null, '#emailContacto_' + i + "_" + indiceEma);
 				return false;
 			}
 			
 			dinamicaAgregarEmailContacto(i);
 			/*if ($('#emailContacto_' + i + "_" + indiceEma).val().trim() != '') {
 				if (validaEmail($('#emailContacto_' + i + "_" + indiceEma).val().trim()) == 0) {
-					mostrarDialogoInformacion('Debe ingresar un email válido para el contacto', Boton.WARNING, null, '#emailContacto_' + i + "_" + indiceEma);
+					mostrarMensajeValidacion('Debe ingresar un email válido para el contacto', null, '#emailContacto_' + i + "_" + indiceEma);
 					return false;
 				}
 				else {
@@ -980,7 +980,7 @@ function dinamicaAgregarTelefonoContacto(i) {
 	cantEmail = obtenerCantidad('email', i);
 
 	if (cantTel == 4) {
-		mostrarDialogoInformacion("Sólo puede agregar 5 teléfonos de contacto", Boton.WARNING, $('#btnAgregarTelefono_' + i), null);
+		mostrarMensajeValidacion("Sólo puede agregar 5 teléfonos de contacto", $('#btnAgregarTelefono_' + i));
 		return;
 	}
 	else {
@@ -1053,7 +1053,7 @@ function dinamicaEliminarContacto(i) {
 		});
 	}
 	else {
-		mostrarDialogoInformacion("Debe ingresar como mínimo un contacto", Boton.WARNING, $('#btnEliminarContacto_' + i), null);
+		mostrarMensajeValidacion("Debe ingresar como mínimo un contacto", $('#btnEliminarContacto_' + i));
 	}
 }
 
@@ -1077,7 +1077,7 @@ function dinamicaAgregarEmailContacto(i) {
 	cantEmail = obtenerCantidad('email', i);
 
 	if (cantEmail == 4) {
-		mostrarDialogoInformacion("Sólo puede agregar 5 email de contacto", Boton.WARNING, $('#btnAgregarEmail_' + i), null);
+		mostrarMensajeValidacion("Sólo puede agregar 5 email de contacto", $('#btnAgregarEmail_' + i));
 		return;
 	}
 	else {
@@ -1285,27 +1285,27 @@ function validarCabecera() {
 
 	// verificando el tamaño del número de documento
 	if ((tipoDocu.val() == TipoDocumento.DNI) && (nroDocumento.val().length != 8)) {
-		mostrarDialogoInformacion("Debe ingresar hasta 8 dígitos para el tipo de documento DNI", Boton.WARNING, nroDocumento, null);
+		mostrarMensajeValidacion("Debe ingresar hasta 8 dígitos para el tipo de documento DNI", nroDocumento);
 		return false;
 	}
 
 	if ((tipoDocu.val() == TipoDocumento.RUC) && (nroDocumento.val().length != 11)) {
-		mostrarDialogoInformacion("Debe ingresar hasta 11 dígitos para el tipo de documento RUC", Boton.WARNING, nroDocumento, null);
+		mostrarMensajeValidacion("Debe ingresar hasta 11 dígitos para el tipo de documento RUC", nroDocumento);
 		return false;
 	}
 
 	if (tipoDocu.val() == TipoDocumento.DOC_TRIB_NODOM_SIN_RUC && pais.val() != Pais.PERU) {
-		mostrarDialogoInformacion('No puede registrar un cliente con tipo de documento DOC. TRIB. NO DOM. SIN RUC y país diferente de Perú', Boton.WARNING, pais, null);
+		mostrarMensajeValidacion('No puede registrar un cliente con tipo de documento DOC. TRIB. NO DOM. SIN RUC y país diferente de Perú', pais);
 		return false;
 	}
 
 	if (tipoDocu.val() == TipoDocumento.DNI && pais.val() != Pais.PERU) {
-		mostrarDialogoInformacion('No puede registrar un cliente con tipo de documento DNI y país diferente de Perú', Boton.WARNING, pais, null);
+		mostrarMensajeValidacion('No puede registrar un cliente con tipo de documento DNI y país diferente de Perú', pais);
 		return false;
 	}
 
 	if (tipoDocu.val() == TipoDocumento.RUC && pais.val() != Pais.PERU) {
-		mostrarDialogoInformacion('No puede registrar un cliente con tipo de documento RUC y país diferente de Perú', Boton.WARNING, pais, null);
+		mostrarMensajeValidacion('No puede registrar un cliente con tipo de documento RUC y país diferente de Perú', pais);
 		return false;
 	}
 
@@ -1313,23 +1313,23 @@ function validarCabecera() {
 	// verificando el tipo de persona
 	if (tipoPersona.val() == TipoPersona.JURIDICA) {
 		if (razonSocial.val() == '') {
-			mostrarDialogoInformacion("Debe ingresar la razón social", Boton.WARNING, razonSocial, null);
+			mostrarMensajeValidacion("Debe ingresar la razón social", razonSocial);
 			return false;
 		}
 	}
 	else {
 		if (nombre.val() == '') {
-			mostrarDialogoInformacion("Debe ingresar el nombre", Boton.WARNING, nombre, null);
+			mostrarMensajeValidacion("Debe ingresar el nombre", nombre);
 			return false;
 		}
 
 		if (apePaterno.val() == '') {
-			mostrarDialogoInformacion("Debe ingresar el apellido paterno", Boton.WARNING, apePaterno, null);
+			mostrarMensajeValidacion("Debe ingresar el apellido paterno", apePaterno);
 			return false;
 		}
 
 		if (apeMaterno.val() == '') {
-			mostrarDialogoInformacion("Debe ingresar el apellido materno", Boton.WARNING, apeMaterno, null);
+			mostrarMensajeValidacion("Debe ingresar el apellido materno", apeMaterno);
 			return false;
 		}
 	}
@@ -1338,28 +1338,28 @@ function validarCabecera() {
 	if (pais.val() == Pais.PERU) { // Si el país es Perú
 
 		if (departamento.val() == '') {
-			mostrarDialogoInformacion("Debe seleccionar el departamento", Boton.WARNING, departamento, null);
+			mostrarMensajeValidacion("Debe seleccionar el departamento", departamento);
 			return false;
 		}
 
 		if (provincia.val() == '') {
-			mostrarDialogoInformacion("Debe seleccionar la provincia", Boton.WARNING, provincia, null);
+			mostrarMensajeValidacion("Debe seleccionar la provincia", provincia);
 			return false;
 		}
 
 		if (distrito.val() == '') {
-			mostrarDialogoInformacion("Debe seleccionar el distrito", Boton.WARNING, distrito, null);
+			mostrarMensajeValidacion("Debe seleccionar el distrito", distrito);
 			return false;
 		}
 	}
 
 	if (validaLongitudTelefono(telefonoFijo.val().trim(), 0) == 0) {
-		mostrarDialogoInformacion('Debe ingresar al menos 7 caracteres para el teléfono fijo', Boton.WARNING, telefonoFijo, null);
+		mostrarMensajeValidacion('Debe ingresar al menos 7 caracteres para el teléfono fijo', telefonoFijo);
 		return false;
 	}
 
 	if (validaLongitudTelefono(celular.val().trim(), 1) == 0) {
-		mostrarDialogoInformacion('Debe ingresar al menos 9 caracteres para el celular', Boton.WARNING, celular, null);
+		mostrarMensajeValidacion('Debe ingresar al menos 9 caracteres para el celular', celular);
 		return false;
 	}
 
@@ -1386,30 +1386,30 @@ function validarContactos(tipo) {
 				cant = cant + 1;
 			}
 			/*if (nombreCon == '') {
-				mostrarDialogoInformacion('Debe ingresar el nombre del contacto', Boton.WARNING, null, '#contacto_' + i);
+				mostrarMensajeValidacion('Debe ingresar el nombre del contacto', null, '#contacto_' + i);
 				return false;
 			}
 			if (cargo == '') {
-				mostrarDialogoInformacion('Debe ingresar el cargo del contacto', Boton.WARNING, null, '#cargo_' + i);
+				mostrarMensajeValidacion('Debe ingresar el cargo del contacto', null, '#cargo_' + i);
 				return false;
 			}*/
 			if (telefonodet == '') {
-				mostrarDialogoInformacion('Debe ingresar al menos un teléfono para el contacto', Boton.WARNING, null, '#telContacto_' + i + "_0");
+				mostrarMensajeValidacion('Debe ingresar al menos un teléfono para el contacto', null, '#telContacto_' + i + "_0");
 				return false;
 			}
 			
 			if (validaLongitudTelefono(telefonodet.trim(), 0) == 0) {
-				mostrarDialogoInformacion('Debe ingresar al menos 7 caracteres en el teléfono del contacto', Boton.WARNING, null, '#telContacto_' + i + "_0");
+				mostrarMensajeValidacion('Debe ingresar al menos 7 caracteres en el teléfono del contacto', null, '#telContacto_' + i + "_0");
 				return false;
 			}
 			
 			if (emaildet == '') {
-				mostrarDialogoInformacion('Debe ingresar al menos un email para el contacto', Boton.WARNING, null, '#emailContacto_' + i + "_0");
+				mostrarMensajeValidacion('Debe ingresar al menos un email para el contacto', null, '#emailContacto_' + i + "_0");
 				return false;
 			}
 			
 			/*if (validaEmail(emaildet.trim()) == 0) {
-				mostrarDialogoInformacion('Debe ingresar un email válido para el contacto', Boton.WARNING, null, '#emailContacto_' + i + "_0");
+				mostrarMensajeValidacion('Debe ingresar un email válido para el contacto', null, '#emailContacto_' + i + "_0");
 				return false;
 			}*/
 
@@ -1418,11 +1418,11 @@ function validarContactos(tipo) {
 
 	if (tipo == TipoOperacion.GRABAR) {
 		if (cant == 0) {
-			mostrarDialogoInformacion('Debe seleccionar un contacto como predeterminado.', Boton.WARNING, null, null);
+			mostrarMensajeValidacion('Debe seleccionar un contacto como predeterminado.');
 			return false;
 		}
 		if (cant > 1) {
-			mostrarDialogoInformacion('Debe seleccionar sólo un contacto como predeterminado.', Boton.WARNING, null, null);
+			mostrarMensajeValidacion('Debe seleccionar sólo un contacto como predeterminado.');
 			return false;
 		}
 	}
@@ -1434,7 +1434,7 @@ function validarDireccionDespacho() {
 	var act;
 
 	if (direccionDespacho_0.val().trim() == CADENA_VACIA) {
-		mostrarDialogoInformacion('Debe ingresar la dirección de despacho', Boton.WARNING, null, '#direccionDespacho_0');
+		mostrarMensajeValidacion('Debe ingresar la dirección de despacho', null, '#direccionDespacho_0');
 		return false;
 	}
 
@@ -1445,7 +1445,7 @@ function validarDireccionDespacho() {
 			var dirDespacho = $('#direccionDespacho_' + i).val().trim();
 
 			if (dirDespacho == '') {
-				mostrarDialogoInformacion('Debe ingresar la dirección de despacho', Boton.WARNING, null, '#direccionDespacho_' + i);
+				mostrarMensajeValidacion('Debe ingresar la dirección de despacho', null, '#direccionDespacho_' + i);
 				return false;
 			}
 		}

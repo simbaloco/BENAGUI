@@ -373,7 +373,7 @@ function registrarPerfil(){
 	listaMenu = obtenerListaMenu();
 	
 	if (listaMenu == CADENA_VACIA){
-		mostrarDialogoInformacion('Debe seleccionar al menos una opción del menú.', Boton.WARNING, tree, null);
+		mostrarMensajeValidacion('Debe seleccionar al menos una opción del menú.', tree);
 		return false;
 	}
 	

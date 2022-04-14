@@ -92,7 +92,7 @@ function retringirSeleccionFechas() {
 				buscar(e);
 				
 			}else{
-				mostrarDialogoInformacion("El rango de fechas es máximo de 3 meses.", Boton.WARNING);
+				mostrarMensajeValidacion("El rango de fechas es máximo de 3 meses.");
 				fecContaDesde.datetimepicker('date', e.oldDate);
 			}	
 		}
@@ -105,7 +105,7 @@ function retringirSeleccionFechas() {
 				buscar(e);
 				
 			}else{
-				mostrarDialogoInformacion("El rango de fechas es máximo de 3 meses.", Boton.WARNING);
+				mostrarMensajeValidacion("El rango de fechas es máximo de 3 meses.");
 				fecContaHasta.datetimepicker('date', e.oldDate);
 			}
 		}

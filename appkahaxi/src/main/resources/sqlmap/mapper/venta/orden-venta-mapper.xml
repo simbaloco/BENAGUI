@@ -116,7 +116,7 @@
         
     <!-- ************************* QUERYS ******************************* -->
     <!-- este SP es invocado desde el buscador de cotizaciones de venta -->
-    <select id="listarOrdenesVenta" parameterMap="listarOrdenVentaParams" resultMap="ventaCab" statementType="CALLABLE">
+    <select id="listarOrdenVenta" parameterMap="listarOrdenVentaParams" resultMap="ventaCab" statementType="CALLABLE">
     	{CALL SP_LISTAR_ORDEN_VENTA(?,?,?,?,?,?,?,?) }
     </select>
     

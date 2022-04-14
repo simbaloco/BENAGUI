@@ -478,7 +478,7 @@ function validarDetalleListaPrecio(){
 							exitEach = true;
 							return false;
 						}else if(convertirMonedaANumero(precio) == 0){
-							mostrarDialogoInformacion('Debe ingresar un precio mayor a cero.', Boton.WARNING, $(this).find("input"));
+							mostrarMensajeValidacion('Debe ingresar un precio mayor a cero.', $(this).find("input"));
 							exitEach = true;
 							return false;
 						}

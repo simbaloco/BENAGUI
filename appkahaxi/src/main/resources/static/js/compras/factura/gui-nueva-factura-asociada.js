@@ -858,8 +858,8 @@ function validarDetalleFactura(){
 						return false;
 					}else {
 						var c = convertirMonedaANumero(cantidad);
-						if (c == 0 || c < 0) {
-							mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $(this).find("input"));
+						if (c <= 0) {
+							mostrarMensajeValidacion('Debe ingresar una cantidad mayor a cero.', $(this).find("input"));
 							exitEach = true;
 							return false;
 						}

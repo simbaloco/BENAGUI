@@ -18,7 +18,6 @@ var codigo;
 var nroDocReferencia;
 var numeroDocumento;
 var opcion;
-var flagEnvio;
 
 var formOrdenCompra;
 var formObservaciones;
@@ -100,7 +99,6 @@ function inicializarVariables() {
 	nroDocReferencia = $("#nroDocReferencia");
 	numeroDocumento = $('#numeroDocumento');
 	opcion = $("#opcion");
-	flagEnvio = $("#flagEnvio");
 
 	formOrdenCompra = $("#formOrdenCompra");
 	formObservaciones = $("#formObservaciones");
@@ -503,7 +501,6 @@ function cargarPantallaHTML(data) {
 	dias.val(data.codigoDias);
 	estado.val(data.codigoEstado);
 	email.val(data.email);
-	flagEnvio.val(data.flagEnvio);
 	
 	subTotalOC.val(convertirNumeroAMoneda(data.subTotal));
 	igvOC.val(convertirNumeroAMoneda(data.igv));
@@ -831,17 +828,24 @@ function deshabilitarDetalleOrdenCompra() {
 
 function habilitarDetalleOrdenCompra() {
 	// ******* DETALLE
+	var $headers = tableDetalle.find("th").not(':first').not(':last');
 	tableDetalle.DataTable().rows().iterator('row', function(context, index) {
 
 		var node = $(this.row(index).node());
 		$cells = node.find("td").not(':first');//.not(':last');
 
 		$cells.each(function(cellIndex) {
-			deshabilitarControlSoloLectura($(this).find(".buscar-det"));
-			deshabilitarControlSoloLectura($(this).find(".cantidad-det"));
-			deshabilitarControlSoloLectura($(this).find(".precio-det"));
-
-			habilitarControl($(this).find(".btn-delete"));
+			if ($($headers[cellIndex]).attr('id') == 'codArticulo' && $(this).find("input").val() == CADENA_VACIA) {
+				console.log("zzz-->" + $(this).find("input").val())
+				return false;
+			} else{
+				deshabilitarControlSoloLectura($(this).find(".buscar-det"));
+				deshabilitarControlSoloLectura($(this).find(".cantidad-det"));
+				deshabilitarControlSoloLectura($(this).find(".precio-det"));
+	
+				habilitarControl($(this).find(".btn-delete"));
+			}
+			
 		});
 	});
 }
@@ -1214,7 +1218,7 @@ function evaluarCambioEstado() {
 function grabarOrdenCompra(event) {
 
 	if (documentoProv.val() == CADENA_VACIA) {
-		mostrarDialogoInformacion("Debe buscar un proveedor", Boton.WARNING, $('#campoBuscar'));
+		mostrarMensajeValidacion("Debe buscar un proveedor", $('#campoBuscar'));
 		return false;
 	}
 
@@ -1327,8 +1331,8 @@ function validarDetalleOrden() {
 						return false;
 					} else {
 						var c = convertirMonedaANumero(cantidad);
-						if (c == 0 || c < 0) {
-							mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $(this).find("input"));
+						if (c <= 0) {
+							mostrarMensajeValidacion('Debe ingresar una cantidad mayor a cero.', $(this).find("input"));
 							exitEach = true;
 							return false;
 						}
@@ -1346,10 +1350,13 @@ function validarDetalleOrden() {
 						mostrarMensajeValidacion('Debe ingresar el precio.', $(this).find("input"));
 						exitEach = true;
 						return false;
-					} else if (convertirMonedaANumero(precio) == 0) {
-						mostrarDialogoInformacion('Debe ingresar un precio mayor a cero.', Boton.WARNING, $(this).find("input"));
-						exitEach = true;
-						return false;
+					} else {
+						var p = convertirMonedaANumero(precio);
+						if (p <= 0) {
+							mostrarMensajeValidacion('Debe ingresar un precio mayor a cero.', $(this).find("input"));
+							exitEach = true;
+							return false;
+						}
 					}
 				}
 			}
@@ -1441,11 +1448,9 @@ function registrarOrdenCompra() {
 				//mostrarControl(btnNuevo);
 				ocultarControl(btnGenerarGuiaRemision);
 				ocultarControl(btnLimpiar);
-				ocultarControl(btnGrabar);
 				
 				mostrarControl(btnDuplicar);
-				ocultarControl(btnGrabar);
-				btnDuplicar.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
+				mostrarControl(btnGrabar);
 								
 				ocultarControl(btnAgregarArticulo);
 				ocultarControl(btnEliminarTodosArticulos);
@@ -1458,14 +1463,14 @@ function registrarOrdenCompra() {
 				deshabilitarControl(condPago);
 				deshabilitarControl(dias);
 				habilitarControl(estado);
-				deshabilitarControl(cotizacionSap);
+				//deshabilitarControl(cotizacionSap);
 				deshabilitarControl(tipoCambio);
-				deshabilitarControl(observaciones);
+				//deshabilitarControl(observaciones);
 				deshabilitarDetalleOrdenCompra();
 				
 				mostrarControl(lblPedido);
 				mostrarControl(nroPedido);
-				deshabilitarControl(nroPedido);
+				//deshabilitarControl(nroPedido);
 				
 				codigo.html(resultado);
 				flgNuevo=0;
@@ -1486,12 +1491,6 @@ function registrarOrdenCompra() {
 }
 
 function actualizarOrdenCompra() {
-	/*
-	if(nroPedido.val().trim() == CADENA_VACIA && flagEnvio.val() == 1){
-		mostrarMensajeValidacion("Debe ingresar el número de pedido antes de grabar.", nroPedido);
-		return;
-	}
-	*/	
 	var nroDocumento = codigo.html();
 	var dirDespachoVal = direccionDespacho.val().trim();
 	var perContactoVal = personaContacto.val().trim();	
@@ -1664,7 +1663,7 @@ function tableToJSON(dataTable) {
 
 	return newData;
 }
-
+/*
 function actualizarEnvioOrdenCompra() {
 
 	var nroDocumento = codigo.html();
@@ -1680,9 +1679,9 @@ function actualizarEnvioOrdenCompra() {
 		},
 		success: function(resultado, textStatus, xhr) {
 			console.log("OC enviada");
-			/*mostrarControl(lblPedido);
+			mostrarControl(lblPedido);
 			mostrarControl(nroPedido);
-			nroPedido.focus();*/
+			nroPedido.focus();
 			loadding(false);
 		},
 		error: function(xhr, error, code) {
@@ -1691,7 +1690,7 @@ function actualizarEnvioOrdenCompra() {
 		}
 	});
 }
-
+*/
 function mostrarDialogoEliminarFila(table, row) {
 
 	bootbox.confirm({
@@ -2258,7 +2257,7 @@ function enviarMailReporte(numeroDocumento, email){
         success: function (result, status, xhr) {
             mostrarNotificacion("El correo se envió correctamente.", "success");
 			loadding(false);
-			actualizarEnvioOrdenCompra();
+			//actualizarEnvioOrdenCompra();
         }
     });
 }

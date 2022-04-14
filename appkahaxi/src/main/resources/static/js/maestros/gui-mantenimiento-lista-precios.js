@@ -115,17 +115,17 @@ function inicializarEventos(){
             if(ext == 'xls' || ext == 'xlsx'){
                 // máximo 100kb
                 if(bytes > 307200){
-					mostrarDialogoInformacion("Se solicita un archivo con un tamaño no mayor a 300KB . Por favor verificar.", Boton.WARNING);
+					mostrarMensajeValidacion("Se solicita un archivo con un tamaño no mayor a 300KB . Por favor verificar.");
                 }
 				else if(bytes == 0){
-					mostrarDialogoInformacion("El archivo no puede estar vacío. Por favor verificar.", Boton.WARNING);
+					mostrarMensajeValidacion("El archivo no puede estar vacío. Por favor verificar.");
                 }
 				else{
 					nombreArchivo.text(nombreFile);
 					fileAdjunto = file;
 				}
             }else{
-				mostrarDialogoInformacion("Sólo se permite un archivo Excel (extensión xls o xlsx). Extensión no permitida: " + ext, Boton.WARNING);
+				mostrarMensajeValidacion("Sólo se permite un archivo Excel (extensión xls o xlsx). Extensión no permitida: " + ext);
             }
         }
     });

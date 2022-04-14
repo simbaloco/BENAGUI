@@ -141,9 +141,11 @@ function inicializarVariables() {
 function inicializarComponentes() {
 	habilitarAnimacionAcordion();
 	habilitarMarquee();
-	construirFechasPicker();
-	restringirSeleccionFechas();
 	habilitarAutocompletarBuscarCampos();
+	
+	construirFechasPicker();
+	inicializarFechas();
+	restringirSeleccionFechas();
 	
 	inicializarEventos();
 }
@@ -159,28 +161,39 @@ function inicializarPantalla() {
 }
 
 function construirFechasPicker() {
-	fecConta.datetimepicker({
-		locale: 		'es',
-		format: 		'L',
-		ignoreReadonly:  true
-	});
-
 	fecHasta.datetimepicker({
 		locale: 		'es',
 		format: 		'L',
 		ignoreReadonly:  true
-	});    
+	});
+	
+	fecConta.datetimepicker({
+		locale: 		'es',
+		format: 		'L',
+		ignoreReadonly:  true
+	});	    
 }
 
 function restringirSeleccionFechas() {
 	
 	fecConta.on("change.datetimepicker", function (e) {
-		reiniciarFechaHasta();
+		//reiniciarFechaHasta();
 		
 		fecHasta.datetimepicker('maxDate', moment(e.date).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ , 'day'));
 		fecHasta.datetimepicker('minDate', moment(e.date));
 		fecHasta.datetimepicker('date', moment(e.date).add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ , 'day'));
 	});	
+}
+
+function inicializarFechas(){
+	console.log("inicializarFechas...")
+	fecConta.datetimepicker('date', moment());
+	fecHasta.datetimepicker('date', moment().add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ , 'day'));
+	
+	fecConta.datetimepicker('maxDate', moment());
+	
+	fecHasta.datetimepicker('minDate', moment());
+	fecHasta.datetimepicker('maxDate', moment().add(ParametrosGenerales.RANGO_DIAS_FECHA_VALIDEZ, 'day'));
 }
 
 function habilitarAutocompletarBuscarCampos() {
@@ -507,17 +520,16 @@ function verPantallaCotizacionVenta(data) {
 	
 	if(data.codigoEstado == EstadoDocumentoInicial.POR_APROBAR){
 		habilitarControl(estado);
-		mostrarControl(btnDuplicar);
+		
 		estado.focus();
 	}else if(data.codigoEstado == EstadoDocumentoInicial.RECHAZADO){
 		deshabilitarControl(estado);
-		mostrarControl(btnDuplicar);
+		
 		btnVolver.focus();
 	}else{
 		
 		// estado APROBADO
 		deshabilitarControl(estado);
-		mostrarControl(btnDuplicar);
 		// si estado proceso está abierto, mostrar botón "generar orden de venta" habilitado; caso contrario, deshabilitar
 		mostrarControl(btnGenerarOV);
 		
@@ -547,6 +559,9 @@ function verPantallaCotizacionVenta(data) {
 	ocultarControl(btnLimpiar);
 	mostrarControl(btnPdf);
 	
+	mostrarControl(btnDuplicar);
+	btnDuplicar.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
+		
 	deshabilitarDetalleCotizacion();
 }
 
@@ -1012,6 +1027,9 @@ function evaluarCambioTipoMoneda(){
 }
 
 function evaluarCambioEstado(){
+	habilitarControl(nroRequerimiento);
+	habilitarControl(asunto);
+
 	if(estado.val() == EstadoDocumentoInicial.APROBADO){
 		//mostrarControl(btnGenerarOV);
 		mostrarControl(btnGrabar);
@@ -1032,6 +1050,11 @@ function evaluarCambioEstado(){
 		ocultarControl(btnGenerarOV);
 		ocultarControl(btnGrabar);
 		mostrarControl(btnDuplicar);
+		btnDuplicar.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
+		
+		deshabilitarControl(nroRequerimiento);
+		deshabilitarControl(asunto);
+		
 		controlNoRequerido(observaciones);
 		deshabilitarControl(observaciones);
 	}
@@ -1157,8 +1180,8 @@ function validar(){
 						return false;
 					}else {
 						var c = convertirMonedaANumero(cantidad);
-						if (c == 0 || c < 0) {
-							mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $(this).find("input"));
+						if (c <= 0) {
+							mostrarMensajeValidacion('Debe ingresar una cantidad mayor a cero.', $(this).find("input"));
 							exitEach = true;
 							return false;
 						}
@@ -1176,10 +1199,13 @@ function validar(){
 						mostrarMensajeValidacion('Debe ingresar el precio.', $(this).find("input"));
 						exitEach = true;
 						return false;
-					}else if(convertirMonedaANumero(precio) == 0){
-						mostrarDialogoInformacion('Debe ingresar un precio mayor a cero.', Boton.WARNING, $(this).find("input"));
-						exitEach = true;
-						return false;
+					}else {
+						var p = convertirMonedaANumero(precio);
+						if (p <= 0) {
+							mostrarMensajeValidacion('Debe ingresar un precio mayor a cero.', $(this).find("input"));
+							exitEach = true;
+							return false;
+						}
 					}
 				}
 			}
@@ -1318,8 +1344,8 @@ function registrarCotizacionVenta(){
 		diasCred 				= dias.val();
 	}
 	var est 				= estado.val();
-	var numRequerimiento  	= nroRequerimiento.val().trim().toUpperCase();;
-	var asun  				= asunto.val().trim().toUpperCase();;
+	var numRequerimiento  	= nroRequerimiento.val().trim().toUpperCase();
+	var asun  				= asunto.val().trim().toUpperCase();
 	var tc					= tipoCambio.val(); 
 	var obs 				= observaciones.val().trim().toUpperCase();
 	var numeroDocumentoRef	= nroDocReferencia.val() == 0 ? CADENA_VACIA : nroDocReferencia.val();
@@ -1406,6 +1432,8 @@ function registrarCotizacionVenta(){
 				mostrarControl(btnPdf);
 				mostrarControl(btnNuevo);
 				mostrarControl(btnDuplicar);
+				btnDuplicar.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
+				
 				ocultarControl(btnGrabar);
 				ocultarControl(btnLimpiar);					
 				ocultarControl(btnAgregarArticulo);
@@ -1430,6 +1458,7 @@ function registrarCotizacionVenta(){
 				deshabilitarDetalleCotizacion();
 				
 				codigo.html(resultado);
+				numeroDocumento.text(resultado);
 	
 				window.scrollTo(0, 0);
             }else if(xhr.status == HttpStatus.Accepted){
@@ -1453,14 +1482,23 @@ function actualizarCotizacionVenta(){
 	var nroDocumento  		= codigo.html();
 	var estadoVal 			= estado.val();
 	var observacionesVal 	= observaciones.val().trim();
+	var numRequerimiento  	= nroRequerimiento.val().trim().toUpperCase();
+	var asun  				= asunto.val().trim().toUpperCase();
+	
 	console.log("nroDocumento--------->" + nroDocumento);
 	console.log("estado--------------->" + estadoVal);
     console.log("observaciones-------->" + observacionesVal);
-    var objetoJson = {
+	console.log("numRequerimiento----->" + numRequerimiento);
+    console.log("asun----------------->" + asun);
+    
+	var objetoJson = {
     		numeroDocumento:		nroDocumento,
     		codigoEstado:       	estadoVal,
-			observaciones:  		observacionesVal
+			observaciones:  		observacionesVal,
+			nroRequerimiento:  		numRequerimiento,
+			asunto:  				asun,
     };
+
     var entityJsonStr = JSON.stringify(objetoJson);
     console.log("entityJsonStr-->" + entityJsonStr);
     var formData = new FormData();
@@ -1494,8 +1532,13 @@ function actualizarCotizacionVenta(){
 					mostrarControl(btnPdf);
 					mostrarControl(btnDuplicar);
         			ocultarControl(btnGrabar);
+					btnDuplicar.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
+				
 					ocultarControl(btnLimpiar);
 					deshabilitarControl(estado);
+					deshabilitarControl(nroRequerimiento);
+					deshabilitarControl(asunto);
+					
 					controlNoRequerido(observaciones);
 					deshabilitarControl(observaciones);
 					
@@ -1795,7 +1838,7 @@ function generarOrdenVenta(){
 		"&nroOrdenVenta=&codRepuesto=" + codRpto +
 		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + 
 		"&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI + "&origenMnto=" + Respuesta.NO;
-	
+	console.log("xxx-->" + params);
 	window.location.href = "/appkahaxi/nueva-orden-venta?" + params;
 }
 
@@ -1820,56 +1863,60 @@ function volver(){
 			 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam;
 	window.location.href = "/appkahaxi/mantenimiento-cotizacion?" + params;
 }
-
+/*
 function reiniciarFechaHasta(){
 	console.log("reiniciarFechaHasta...inicio");
-	/*
+	
 	fecHasta.datetimepicker('maxDate', moment());
 	fecHasta.datetimepicker('minDate', moment());
-	*/
+	
 	fecHasta.datetimepicker('maxDate', false);
 	fecHasta.datetimepicker('minDate', false);
 	
 	console.log("fin...");
 }
-
+*/
 function limpiarCotizacion(){
-	inicializarFechaContaHasta();
+	//inicializarFechaContaHasta();
 	
-	campoBuscar.val(CADENA_VACIA);
-	documentoCliente.val(CADENA_VACIA);
-	nombreCliente.val(CADENA_VACIA);
-	direccion.val(CADENA_VACIA);
 	tipoMoneda.val(Moneda.DOLARES);
 	evaluarCambioTipoMoneda();
 	condPago.val(CondicionPago.CONTADO);
 	dias.val(Dias._30);
 	ocultarControl(divDias);
 	estado.val(EstadoDocumentoInicial.POR_APROBAR);
-	uncheckControl(chkDctoTotal);
-	dctoTotal.val(CADENA_VACIA);
-	deshabilitarControl(dctoTotal);
+	//uncheckControl(chkDctoTotal);
+	//dctoTotal.val(CADENA_VACIA);
+	//deshabilitarControl(dctoTotal);
 	
+	/*
 	dctoTotal.val(CADENA_VACIA);
 	subTotalCoti.val(CADENA_VACIA);
 	dctoCoti.val(CADENA_VACIA);
 	igvCoti.val(CADENA_VACIA);
 	totalCoti.val(CADENA_VACIA);
-	
+	*/
 	nroRequerimiento.val(CADENA_VACIA);
 	asunto.val(CADENA_VACIA);
 	observaciones.val(CADENA_VACIA);
+	/*
 	dataTableDetalle.clear().draw();
 	indiceFilaDataTableDetalle = -1;
-	
 	ocultarControl(dctoCotiDiv);	
 	ocultarControl(btnAgregarArticulo);
 	ocultarControl(btnEliminarTodosArticulos);
+	*/
 	
+	fecHasta.datetimepicker('destroy');
+	fecConta.datetimepicker('destroy');
+	
+	construirFechasPicker();
+	inicializarFechas();
+		
 	formCotizacion.removeClass('was-validated');
 	formObservaciones.removeClass('was-validated');
 	
-	campoBuscar.focus();
+	nroRequerimiento.focus();
 }
 
 

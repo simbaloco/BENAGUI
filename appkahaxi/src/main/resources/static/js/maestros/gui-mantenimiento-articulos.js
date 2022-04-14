@@ -212,14 +212,14 @@ function inicializarEventos(){
             if(ext == 'jpg' || ext == 'jpeg' || ext == 'png'){
                 // máximo 50kb
                 if($(this)[0].files[0].size > 51200){
-                	mostrarDialogoInformacion("Se solicita un archivo con un tamaño no mayor a 50KB . Por favor verifique.", Boton.WARNING, null, selectorImagen);
+                	mostrarMensajeValidacion("Se solicita un archivo con un tamaño no mayor a 50KB . Por favor verifique.", null, selectorImagen);
                 }else{
                 	cargarPreview(this);
                 	nombreArchivoModal.text(nomArchivo);
 					mostrarControl(btnBorrarImagen);
                 }
             }else{
-            	mostrarDialogoInformacion("Sólo se permite un archivo de imagen (extensión jpg/jpeg/png). <br>Extensión no permitida: " + ext, Boton.WARNING, null, selectorImagen);
+            	mostrarMensajeValidacion("Sólo se permite un archivo de imagen (extensión jpg/jpeg/png). <br>Extensión no permitida: " + ext, null, selectorImagen);
             }
         }
     });

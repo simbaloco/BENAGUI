@@ -924,7 +924,7 @@ function evaluarCambioEstadoPago() {
 
 function grabarFactura() {
 	if(documentoProv.val() == ''){
-		mostrarDialogoInformacion("Debe buscar un proveedor", Boton.WARNING, $('#campoBuscar'));
+		mostrarMensajeValidacion("Debe buscar un proveedor", $('#campoBuscar'));
 		return false;
 	}
 
@@ -1018,8 +1018,8 @@ function validarDetalleFactura(){
 						return false;
 					}else {
 						var c = convertirMonedaANumero(cantidad);
-						if (c == 0 || c < 0) {
-							mostrarDialogoInformacion('Debe ingresar una cantidad mayor a cero.', Boton.WARNING, $(this).find("input"));
+						if (c <= 0) {
+							mostrarMensajeValidacion('Debe ingresar una cantidad mayor a cero.', $(this).find("input"));
 							exitEach = true;
 							return false;
 						}
@@ -1037,10 +1037,13 @@ function validarDetalleFactura(){
 						mostrarMensajeValidacion('Debe ingresar el precio.', $(this).find("input"));
 						exitEach = true;
 						return false;
-					}else if(convertirMonedaANumero(precio) == 0){
-						mostrarDialogoInformacion('Debe ingresar un precio mayor a cero.', Boton.WARNING, $(this).find("input"));
-						exitEach = true;
-						return false;
+					}else {
+						var p = convertirMonedaANumero(precio);
+						if (p <= 0) {
+							mostrarMensajeValidacion('Debe ingresar un precio mayor a cero.', $(this).find("input"));
+							exitEach = true;
+							return false;
+						}
 					}
 				}
 			}

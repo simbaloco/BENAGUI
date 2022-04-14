@@ -39,7 +39,6 @@
         <result property="total" 					column="TOTAL" />
         <result property="codigoEstadoProceso"		column="COD_ESTADO_PROCESO" />
         <result property="activo"					column="ACTIVO" />
-        <result property="flagEnvio"				column="FLAG_ENVIO" />
         <result property="fechaRegistro"			column="FEC_REGISTRO" />
         <result property="nroPedido"				column="NRO_PEDIDO" />     
         <result property="cotizacionSap"			column="COTIZACION_SAP" />
@@ -130,20 +129,7 @@
         <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
         <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
     </parameterMap>
-    
-    <parameterMap id="actualizarEnvioOrdenCompraParams" type="hashmap">
-        <parameter property="NRO_DOCUMENTO"       	jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
-        <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
-    </parameterMap>
-    
-    <parameterMap id="eliminarOrdenCompraParams" type="hashmap">
-        <parameter property="NRO_DOCUMENTO"			jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="USUARIO"				jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
-        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
-    </parameterMap>
-     
+          
         
     <!-- ************************* QUERYS ******************************* -->
     <select id="listarOrdenCompra" parameterMap="listarOrdenCompraParams" resultMap="compraCab" statementType="CALLABLE">
@@ -165,12 +151,6 @@
     <update id="actualizarOrdenCompra" parameterMap="actualizarOrdenCompraParams" statementType="CALLABLE">
     	{CALL SP_ACTUALIZAR_ORDEN_COMPRA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
     </update>
+       
     
-    <update id="actualizarEnvioOrdenCompra" parameterMap="actualizarEnvioOrdenCompraParams" statementType="CALLABLE">
-    	{CALL SP_ACTUALIZAR_ENVIO_ORDEN_COMPRA(?,?,?) }
-    </update> 
-   	   	
-    <update id="eliminarOrdenCompra" parameterMap="eliminarOrdenCompraParams" statementType="CALLABLE">
-    	{CALL SP_ELIMINAR_ORDEN_COMPRA(?,?,?,?) }
-    </update>
 </mapper>

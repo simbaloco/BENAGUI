@@ -90,7 +90,7 @@ function retringirSeleccionFechas() {
 				buscar(e);
 				
 			}else{
-				mostrarDialogoInformacion("El rango de fechas es máximo de 3 meses.", Boton.WARNING);
+				mostrarMensajeValidacion("El rango de fechas es máximo de 3 meses.");
 				fecContaDesde.datetimepicker('date', e.oldDate);
 			}	
 		}
@@ -103,7 +103,7 @@ function retringirSeleccionFechas() {
 				buscar(e);
 				
 			}else{
-				mostrarDialogoInformacion("El rango de fechas es máximo de 3 meses.", Boton.WARNING);
+				mostrarMensajeValidacion("El rango de fechas es máximo de 3 meses.");
 				fecContaHasta.datetimepicker('date', e.oldDate);
 			}
 		}
@@ -395,10 +395,11 @@ function nuevaOrdenVenta(numeroDocumento, opcion){
 	var fecContHasta 		= fecContaHasta.datetimepicker('date').format('L');
 	var est 				= estado.val();
 	// armando los parámetros
-	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar +  
-			 "&nroOrdenVenta=" + nroOVVal + "&codRepuesto=" + codRpto + "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + 
-		     "&estadoParam=" + est + "&volver=" + Respuesta.SI;
-	
+	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar +
+		"&nroOrdenVenta=" + nroOVVal + "&codRepuesto=" + codRpto +
+		"&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + 
+		"&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.NO + "&origenMnto=" + Respuesta.SI;
+	console.log("xxx-->" + params);
 	window.location.href = "/appkahaxi/nueva-orden-venta?" + params;
 }
 

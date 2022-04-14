@@ -46,7 +46,7 @@ public class OrdenVentaServiceImpl implements OrdenVentaService{
 
 		logger.info("params ===> " + params);
 
-		List<VentaCabModel> listaCompraCabModel = ordenVentaMapper.listarOrdenesVenta(params);
+		List<VentaCabModel> listaCompraCabModel = ordenVentaMapper.listarOrdenVenta(params);
 		
 		String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
 		String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
@@ -93,7 +93,7 @@ public class OrdenVentaServiceImpl implements OrdenVentaService{
 		params.put(Constante.PARAM_SP_TIPO_CAMBIO, registro.getTipoCambio());
 		params.put(Constante.PARAM_SP_OBSERVACIONES, registro.getObservaciones());
 		params.put(Constante.PARAM_SP_NRO_DOCUMENTO_REF, registro.getNumeroDocumentoRef());
-		 params.put(Constante.PARAM_SP_PORC_DCTO_TOTAL, registro.getPorcDctoTotal());
+		params.put(Constante.PARAM_SP_PORC_DCTO_TOTAL, registro.getPorcDctoTotal());
 		params.put(Constante.PARAM_SP_SUB_TOTAL, registro.getSubTotal());
 		params.put(Constante.PARAM_SP_DCTO, registro.getDescuento());
 		params.put(Constante.PARAM_SP_IGV, registro.getIgv());
@@ -122,6 +122,30 @@ public class OrdenVentaServiceImpl implements OrdenVentaService{
 			throw new Exception(mensajeResultado);
 
 		}
+	}
+
+	@Override
+	public VentaCabModel buscarOrdenVentaCab(String numeroDocumento) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VentaDetModel> buscarOrdenVentaDet(String numeroDocumento) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VentaDetModel> buscarOrdenVentaDetalleParaGuiaRemision(String numeroDocumento) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void actualizarOrdenVenta(VentaCabModel registro, String usuario) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

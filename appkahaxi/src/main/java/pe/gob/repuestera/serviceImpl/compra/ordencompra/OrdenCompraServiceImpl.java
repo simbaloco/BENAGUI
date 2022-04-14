@@ -274,64 +274,6 @@ public class OrdenCompraServiceImpl implements OrdenCompraService {
 
 		}
 		
-	}
-	
-	public void actualizarEnvioOrdenCompra(String numeroDocumento, String usuario) throws Exception {
-
-		logger.info("usuario ===> " + usuario);
-
-		Map<String, Object> params = new HashMap();
-		params.put(Constante.PARAM_SP_NRO_DOCUMENTO, numeroDocumento);
-
-		logger.info("params ===> " + params);
-
-		ordenCompraMapper.actualizarEnvioOrdenCompra(params);
-
-		String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
-		String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
-
-		logger.info("flagResultado ===> " + flagResultado);
-		logger.info("mensajeResultado ===> " + mensajeResultado);
-
-		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
-			logger.info(mensajeResultado);
-
-		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
-			throw new ErrorControladoException(mensajeResultado);
-
-		} else {
-			throw new Exception(mensajeResultado);
-
-		}
-		
-	}
-
-	public void eliminarOrdenCompra(String numeroDocumento, String usuario) throws Exception {
-
-		Map<String, Object> params = new HashMap();
-		params.put(Constante.PARAM_SP_NRO_DOCUMENTO, numeroDocumento);
-		params.put(Constante.PARAM_SP_USUARIO, usuario);
-
-		logger.info("params ===> " + params);
-
-		ordenCompraMapper.eliminarOrdenCompra(params);
-
-		String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
-		String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
-
-		logger.info("flagResultado ===> " + flagResultado);
-		logger.info("mensajeResultado ===> " + mensajeResultado);
-
-		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
-			logger.info(mensajeResultado);
-
-		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
-			throw new ErrorControladoException(mensajeResultado);
-
-		} else {
-			throw new Exception(mensajeResultado);
-
-		}
-	}
+	}	
 
 }

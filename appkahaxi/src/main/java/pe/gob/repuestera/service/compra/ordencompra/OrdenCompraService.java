@@ -18,8 +18,4 @@ public interface OrdenCompraService {
 	List<CompraDetModel> buscarOrdenCompraDetalleParaGuiaRemision(String numeroDocumento) throws Exception;
 
 	void actualizarOrdenCompra(CompraCabModel compraCabModel, String usuario) throws Exception;
-	
-	void actualizarEnvioOrdenCompra(String numeroDocumento, String usuario) throws Exception;
-	
-	void eliminarOrdenCompra(String numeroDocumento, String usuario) throws Exception;
 }
