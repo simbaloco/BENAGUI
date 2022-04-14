@@ -708,7 +708,6 @@ function cargarPantallaHTML(data) {
 		$('#descripcion_' + i).val(detalle.descripcionArticulo);
 		$('#marca_' + i).val(detalle.marca);
 		$('#cantidad_' + i).val(detalle.cantidad);
-		$('#cantidadPend_' + i).val(detalle.cantidadPendiente);
 
 		var precio = convertirNumeroAMoneda(detalle.precioUnitario);
 		var precioIgv = convertirNumeroAMoneda(detalle.precioUnitarioIgv);
@@ -1078,7 +1077,7 @@ function agregarHTMLColumnasDataTable() {
 			/*// CANTIDAD PENDIENTE
 			case 6: $(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha' type='text' id='cantidadPend_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
 				break;
-
+			
 			// PRECIO
 			case 7: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
 				"<input class='form-control alineacion-derecha precio-det' type='number' maxlength='13' " +

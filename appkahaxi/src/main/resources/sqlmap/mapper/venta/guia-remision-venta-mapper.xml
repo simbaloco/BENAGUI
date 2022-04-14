@@ -50,9 +50,12 @@
         <result property="linea" 			    column="LINEA" />
         <result property="lineaReferencia" 		column="LINEA_REFERENCIA" />
         <result property="cantidad" 			column="CANTIDAD" />
-        <result property="cantidadPendiente" 	column="CANTIDAD_PENDIENTE" />
+        <result property="cantidadPendiente" 	column="CANTIDAD_PENDIENTE" />        
         <result property="precioUnitario"		column="PRECIO_UNITARIO" />
-        <result property="precioUnitarioIgv"	column="PRECIO_UNITARIO_IGV" />
+        <result property="precioUnitarioIgv"	column="PRECIO_UNITARIO_IGV" />        
+        <result property="precioReferencia"		column="PRECIO_REFERENCIA" />        
+        <result property="porcentajeDcto"		column="PORC_DCTO" />
+        <result property="precioConDcto"		column="PRECIO_CON_DCTO" />                      
         <result property="subTotal" 			column="SUB_TOTAL" />
         <result property="subTotalIgv"		    column="SUB_TOTAL_IGV" />
     </resultMap>
@@ -96,7 +99,7 @@
     <parameterMap id="registrarGuiaRemisionVentaParams" type="hashmap">
         <parameter property="SERIE"       	        jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="CORRELATIVO"       	jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="COD_CLILENTE"	       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="COD_CLIENTE"	       	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="USUARIO"				jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="DIRECCION_DESPACHO"   	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="PERSONA_CONTACTO"   	jdbcType="VARCHAR"  mode="IN"/>

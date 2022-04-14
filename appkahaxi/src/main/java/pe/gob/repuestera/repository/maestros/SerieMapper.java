@@ -14,5 +14,5 @@ public interface SerieMapper {
 	List<SerieModel> listarSerie(Map params);
 	void registrarSerie(Map params);
 	SerieModel buscarSerie(Map params);
-	
+	List<SerieModel> cargarComboSerie(Map params);
 }

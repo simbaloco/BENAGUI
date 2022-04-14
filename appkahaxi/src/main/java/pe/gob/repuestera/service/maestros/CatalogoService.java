@@ -14,5 +14,5 @@ public interface CatalogoService {
 	Integer buscarFlagSunat(String codMaestro) throws Exception;
 	void registrarDataCatalogo(CatalogoModel registro, String usuario) throws Exception;
 	void modificarDataCatalogo(CatalogoModel registro, String usuario) throws Exception;
-	
+	String obtenerCorrelativo(String codSerie) throws Exception;
 }

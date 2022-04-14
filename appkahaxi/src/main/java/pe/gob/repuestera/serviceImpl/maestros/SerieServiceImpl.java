@@ -126,6 +126,35 @@ public class SerieServiceImpl implements SerieService {
 		return serieModel;
 		
 	}
+
+	@Override
+	public List<SerieModel> cargarComboSerie(String codTipoDocumento) throws Exception {
+		Map<String, Object> params = new HashMap();
+		params.put(Constante.PARAM_SP_COD_TIPO_DOCUMENTO, codTipoDocumento);
+		
+		logger.info("params ===> " + params);
+
+		List<SerieModel> serieList = serieMapper.cargarComboSerie(params);
+		
+		String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+		String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+
+		logger.info("flagResultado ===> " + flagResultado);
+		logger.info("mensajeResultado ===> " + mensajeResultado);
+
+		if (flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+			logger.info("cargarComboSerie ===> " + serieList.toString());
+
+		} else if (flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+
+		return serieList;
+	}
 	
 
 }

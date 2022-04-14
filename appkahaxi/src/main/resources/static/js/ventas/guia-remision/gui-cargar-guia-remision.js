@@ -1,6 +1,6 @@
 var titulo;
 var codigo;
-var codigoProv;
+var codigoCliente;
 var nroDocReferencia;
 var numeroDocumento;
 var origenMnto;
@@ -17,9 +17,9 @@ var desdeDocRefParam;
 
 var formGuiaRemision;
 var formObservaciones;
-var OCReferencia;
-var documentoProv;
-var nombreProv;
+var OVReferencia;
+var documentoCli;
+var nombreCli;
 var direccion;
 var direccionDespacho;
 var personaContacto;
@@ -83,7 +83,7 @@ $(document).ready(function(){
 function inicializarVariables() {
 	titulo =  $("#titulo");
 	codigo = $("#codigo");
-	codigoProv = $("#codigoProv");
+	codigoCliente = $("#codigoCliente");
 	nroDocReferencia = $("#nroDocReferencia");
 	numeroDocumento = $('#numeroDocumento');
 	origenMnto = $('#origenMnto');
@@ -100,9 +100,9 @@ function inicializarVariables() {
 	
 	formGuiaRemision = $("#formGuiaRemision");
 	formObservaciones = $("#formObservaciones");
-	OCReferencia = $("#OCReferencia");
-	documentoProv = $("#documentoProv");
-	nombreProv = $("#nombreProv");
+	OVReferencia = $("#OVReferencia");
+	documentoCli = $("#documentoCli");
+	nombreCli = $("#nombreCli");
 	direccion = $("#direccion");
 	direccionDespacho = $("#direccionDespacho");
 	personaContacto = $("#personaContacto");
@@ -298,14 +298,14 @@ function inicializarEventos() {
 		volver();
 	});
 	
-	serie.on('keypress', function(event){
-		return soloAlfaNumericos(event);
+	serie.on('click', function(event){
+		if (serie.val() > 0){
+			obtenerCorrelativo();
+		}else{
+			correlativo.val(CADENA_VACIA);
+		}		
 	});
-
-	correlativo.on('keypress', function(event){
-		return soloEnteros(event);
-	});
-
+	
 	btnAceptarModal.on("click", function() {
 		generarFacturaAsociada();
 	});
@@ -353,8 +353,38 @@ function inicializarFechas(){
 	fecConta.datetimepicker('maxDate', moment());
 }
 */
+
+function obtenerCorrelativo() {
+	console.log("obtenerCorrelativo...");
+	
+	var codSerie = serie.val();
+	
+	$.ajax({
+		type:"Get",
+		contentType : "application/json",
+		accept: 'text/plain',
+		url : '/appkahaxi/obtenerCorrelativo/' + codSerie,
+		data : null,
+		dataType: 'text',
+		beforeSend: function(xhr) {
+			loadding(true);
+		},
+		success:function(result, textStatus, xhr){
+			if(xhr.status == HttpStatus.OK) {				
+				correlativo.val(result);
+			}
+			loadding(false);
+		},
+		error: function (xhr, error, code){
+
+			mostrarMensajeError(xhr.responseText);
+			loadding(false);
+		}
+	});
+}
+
 function cargarPantallaConDatosOrdenVenta() {
-	console.log("cargarPantallaConDatosOrdenVenta...");
+	console.log("cargarPantallaConDatosOrdenVenta..." + numeroDocumento.text());
 	var nroDocReferenciaVal = numeroDocumento.text();
 
 	$.ajax({
@@ -388,9 +418,9 @@ function cargarPantallaConDatosOrdenVenta() {
 }
 
 function cargarPantallaHTMLOrdenVenta(data) {
-	codigoProv.val(data.codigoProv);
-	documentoProv.val(data.nroDocProv);
-	nombreProv.val(data.nombreProv);
+	codigoCliente.val(data.codigoCliente);
+	documentoCli.val(data.nroDocCliente);
+	nombreCli.val(data.nombreCliente);
 	direccion.val(data.direccionFiscal);
 	direccionDespacho.val(data.direccionDespacho);
 	personaContacto.val(data.personaContacto);	
@@ -410,21 +440,27 @@ function cargarPantallaHTMLOrdenVenta(data) {
 	
 	cantidadDetalleDuplicado = data.detalle.length;
 	console.log("cantidadDetalleDuplicado--->" + cantidadDetalleDuplicado);
+	
 	for(i=0; i < cantidadDetalleDuplicado; i++) {
-
 		var detalle = data.detalle[i];
-
+		
+		
+		console.log("detalle.cantidad--->" + detalle.cantidad);
+		console.log("detalle.cantidadPendiente--->" + detalle.cantidadPendiente);
 		agregarFilaEnTablaDetalle(data);
 		$('#codigo_' + i).val(detalle.codArticulo);
 		$('#descCodigo_' + i).val(detalle.codEstandar);
 		$('#descripcion_' + i).val(detalle.descripcionArticulo);
 		$('#marca_' + i).val(detalle.marca);
 		$('#cantidad_' + i).val(detalle.cantidadPendiente);
-		$('#cantidadPend_' + i).val(detalle.cantidadPendiente);
-		$('#precio_' + i).val(convertirNumeroAMoneda(detalle.precioUnitario));
-		$('#precioIgv_' + i).val(convertirNumeroAMoneda(detalle.precioUnitarioIgv));
-		$('#subTotalIgv_' + i).val(convertirNumeroAMoneda(detalle.subTotalIgv));
-		$('#subTotal_' + i).val(convertirNumeroAMoneda(detalle.subTotal));
+		$('#cantidadPendiente_' + i).val(detalle.cantidadPendiente);		
+		$('#precioUnitario_' + i).val(convertirNumeroAMoneda(detalle.precioUnitario));
+		$('#precioUnitarioIgv_' + i).val(convertirNumeroAMoneda(detalle.precioUnitarioIgv));		
+		$('#precioReferencia_' + i).val(convertirNumeroAMoneda(detalle.precioReferencia));
+		$('#porcentajeDcto_' + i).val(detalle.porcentajeDcto);
+		$('#precioConDcto_' + i).val(convertirNumeroAMoneda(detalle.precioConDcto));
+		$('#subTotal_' + i).val(convertirNumeroAMoneda(detalle.subTotal));		
+		$('#subTotalIgv_' + i).val(convertirNumeroAMoneda(detalle.subTotalIgv));		
 		$('#lineaReferencia_' + i).val(detalle.linea);
 
 		calcularCantidadNuevaGuia(null, $('#cantidad_' + i), i);
@@ -438,7 +474,7 @@ function nuevaPantallaGuiaRemision() {
 	titulo.text("NUEVA");
 	
 	controlNoRequerido(observaciones);
-	deshabilitarControl(OCReferencia);
+	deshabilitarControl(OVReferencia);
 	deshabilitarControl(tipoMoneda);
 	deshabilitarControl(condPago);
 	deshabilitarControl(dias);
@@ -503,9 +539,9 @@ function cargarPantallaConDatosGuiaRemision() {
 
 function cargarPantallaHTMLGuiaRemision(data) {
 	
-	codigoProv.val(data.codigoProv);
-	documentoProv.val(data.nroDocProv);
-	nombreProv.val(data.nombreProv);
+	codigoCliente.val(data.codigoCliente);
+	documentoCli.val(data.nroDocCliente);
+	nombreCli.val(data.nombreCliente);
 	direccion.val(data.direccionFiscal);
 	direccionDespacho.val(data.direccionDespacho);
 	personaContacto.val(data.personaContacto);
@@ -519,7 +555,7 @@ function cargarPantallaHTMLGuiaRemision(data) {
 	subTotalGR.val(data.subTotal);
 	igvGR.val(data.igv);
 	totalGR.val(data.total);
-	OCReferencia.val(data.ordenVenta);
+	OVReferencia.val(data.ordenVenta);
 	observaciones.val(data.observaciones);
 	
 	cantidadDetalleDuplicado = data.detalle.length;
@@ -534,12 +570,15 @@ function cargarPantallaHTMLGuiaRemision(data) {
 		$('#descripcion_' + i).val(detalle.descripcionArticulo);
 		$('#marca_' + i).val(detalle.marca);
 		$('#cantidad_' + i).val(detalle.cantidad);
-		$('#cantidadPend_' + i).val(detalle.cantidadPendiente);
-		$('#precio_' + i).val(convertirNumeroAMoneda(detalle.precioUnitario));
-		$('#precioIgv_' + i).val(convertirNumeroAMoneda(detalle.precioUnitarioIgv));
+		$('#cantidadPendiente_' + i).val(detalle.cantidadPendiente);
+		$('#precioUnitario_' + i).val(convertirNumeroAMoneda(detalle.precioUnitario));
+		$('#precioUnitarioIgv_' + i).val(convertirNumeroAMoneda(detalle.precioUnitarioIgv));		
+		$('#precioReferencia_' + i).val(convertirNumeroAMoneda(detalle.precioReferencia));
+		$('#porcentajeDcto_' + i).val(detalle.porcentajeDcto);
+		$('#precioConDcto_' + i).val(convertirNumeroAMoneda(detalle.precioConDcto));
+		$('#subTotal_' + i).val(convertirNumeroAMoneda(detalle.subTotal));		
 		$('#subTotalIgv_' + i).val(convertirNumeroAMoneda(detalle.subTotalIgv));
-		$('#subTotal_' + i).val(convertirNumeroAMoneda(detalle.subTotal));
-
+		
 	}
 }
 
@@ -694,34 +733,50 @@ function agregarHTMLColumnasDataTable(data) {
 					break;
 
 			// CANTIDAD PENDIENTE
-			case 6:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha' type='text' id='cantidadPend_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
+			case 6:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha' type='text' id='cantidadPendiente_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
 					break;
 
-			// PU
+			// PVU
 			case 7:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
-					"<input class='form-control alineacion-derecha' type='text' id='precio_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
+					"<input class='form-control alineacion-derecha' type='text' id='precioUnitario_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
 					"</span></div>");
 					break;
 			
-			// PRECIO C/IGV
+			// PVU C/IGV
 			case 8: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
-				"<input class='form-control alineacion-derecha' type='text' id='precioIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
+				"<input class='form-control alineacion-derecha' type='text' id='precioUnitarioIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
 				"</span></div>");
 				break;
+				
+			// PRECIO REFERENCIA
+			case 9:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+					"<input class='form-control alineacion-derecha' type='text' id='precioReferencia_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
+					"</span></div>");
+					break;
+			
+			// PORC DCTO (OCULTO)
+			case 10:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha' type='text' id='porcentajeDcto_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
+					break;
+			
+			// PRECIO C/DCTO
+			case 11:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+					"<input class='form-control alineacion-derecha' type='text' id='precioConDcto_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
+					"</span></div>");
+					break;			
 			
 			// SUBTOTAL
-			case 9:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+			case 12:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
 					"<input class='form-control alineacion-derecha' type='text' id='subTotal_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
 					"</span></div>");
 					break;
 			
 			// SUBTOTAL C/IGV (OCULTO)
-			case 10:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha' type='text' id='subTotalIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
+			case 13:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha' type='text' id='subTotalIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
 					break;
 
 			// LINEA REFERENCIA
-			case 11:	$(this).html(CADENA_VACIA).append("<input class='alineacion-derecha' type='text' id='lineaReferencia_" + indiceFilaDataTableDetalle + "'>");
-						break;
+			case 14:	$(this).html(CADENA_VACIA).append("<input class='alineacion-derecha' type='text' id='lineaReferencia_" + indiceFilaDataTableDetalle + "'>");
+					break;
 		}
 	});
 	habilitarMarquee();
@@ -731,7 +786,7 @@ function agregarHTMLColumnasDataTable(data) {
 
 function dispararEventosCambioCantidad(control, fila) {
 	var cantidad = Number(control.value);
-	var cantidadPendiente = Number($('#cantidadPend_' + fila).val());
+	var cantidadPendiente = Number($('#cantidadPendiente_' + fila).val());
 	console.log("cantidad-->" + cantidad);
 	console.log("cantidadPendiente-->" + cantidadPendiente);
 	
@@ -763,13 +818,13 @@ function calcularCantidadNuevaGuia(control1, control2, fila) {
 		cantidad = Number(control1.value);
 	}
 	
-	var precio = Number($('#precio_' + fila).val());
+	var precio = Number($('#precioUnitario_' + fila).val());
 	var subTotal = cantidad * precio;	
 	var subTotalIgv = subTotal + (subTotal * (ParametrosGenerales.IGV/100));
 
 	$('#subTotal_' + fila).val(convertirNumeroAMoneda(subTotal));	
 	$('#subTotalIgv_' + fila).val(convertirNumeroAMoneda(subTotalIgv));
-	$('#cantidadPend_' + fila).val(cantidad);
+	$('#cantidadPendiente_' + fila).val(cantidad);
 
 	calcularResumenGuiaRemision();
 }
@@ -904,7 +959,7 @@ function registrarGuiaRemisionVenta(){
 	var nroDocumento  			= codigo.html();
 	var serieVal 				= serie.val();
 	var correlativoVal 			= correlativo.val();
-	var codigoProvVal  			= codigoProv.val().trim();
+	var codigoClienteVal  		= codigoCliente.val().trim();
 	var dirDespachoVal 			= direccionDespacho.val().trim();
 	var perContactoVal			= personaContacto.val().trim();	
 	var ordenVenta	  			= OVReferencia.val().trim();
@@ -915,12 +970,10 @@ function registrarGuiaRemisionVenta(){
 	var condPagoVal 			= condPago.val();
 	var tipoCambioVal			= tipoCambio.val();
 	var codigoMotivoTraslado	= motivoTraslado.val().trim();
-	var observacionesVal 		= observaciones.val().trim();
-	
+	var observacionesVal 		= observaciones.val().trim();	
 	var subTotalVal 			= convertirMonedaANumero(subTotalGR.val().trim());
 	var igvVal 					= convertirMonedaANumero(igvGR.val());
-	var totalVal 				= convertirMonedaANumero(totalGR.val().trim());
-	
+	var totalVal 				= convertirMonedaANumero(totalGR.val().trim());	
 	var detalle 				= tableToJSON(tableDetalle);
 	var diasVal					= null;
 
@@ -931,11 +984,10 @@ function registrarGuiaRemisionVenta(){
 	console.log("detalle-------------->" + detalle);
 	
 	var objetoJson = {
-
 		numeroDocumento:		nroDocumento,
 		serie:					serieVal,
 		correlativo:			correlativoVal,
-		codigoProv:  			codigoProvVal,
+		codigoCliente: 			codigoClienteVal,
 		direccionDespacho: 		dirDespachoVal,
 		personaContacto: 		perContactoVal,
 		ordenVenta: 			ordenVenta,
@@ -980,7 +1032,6 @@ function registrarGuiaRemisionVenta(){
 
 				codigo.html(resultado);
 				deshabilitarControl(serie);
-				deshabilitarControl(correlativo);
 				deshabilitarControl(motivoTraslado);
 				deshabilitarControl(observaciones);
 				deshabilitarControl(dateTimePickerInput);
@@ -991,7 +1042,6 @@ function registrarGuiaRemisionVenta(){
 				btnAnular.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
 				ocultarControl(btnGrabar);
 				ocultarControl(btnLimpiar);
-
 				deshabilitarDetalleGuiaRemision();
 
 			} else if(xhr.status == HttpStatus.Accepted){
@@ -1050,7 +1100,6 @@ function anularGuiaRemisionVenta(){
 				ocultarControl(btnAnular);				
 				deshabilitarControl(observaciones);				
 			} else if(xhr.status == HttpStatus.Accepted){
-
 				mostrarMensajeValidacion(resultado);
 			}
 
@@ -1081,7 +1130,8 @@ function tableToJSON(dataTable) {
 			if($($headers[cellIndex]).attr('id') == 'codArticulo' && $(this).find("input").val() == CADENA_VACIA){
 				return false;
 			}else{
-				if($($headers[cellIndex]).attr('id') == 'precioUnitario' || $($headers[cellIndex]).attr('id') == 'precioUnitarioIgv'|| 
+				if($($headers[cellIndex]).attr('id') == 'cantidad' || $($headers[cellIndex]).attr('id') == 'cantidadPendiente'|| 
+				   $($headers[cellIndex]).attr('id') == 'precioUnitario' || $($headers[cellIndex]).attr('id') == 'precioUnitarioIgv'|| 
 				   $($headers[cellIndex]).attr('id') == 'subTotalIgv' || $($headers[cellIndex]).attr('id') == 'subTotal'){
 					data[index][$($headers[cellIndex]).attr('id')] = convertirMonedaANumero($(this).find("input").val());
 				}else{
@@ -1198,7 +1248,7 @@ function mostrarDialogoCantidadMayorAlPendiente(control, fila) {
 
 			} else {
 
-				var cantidadPendiente = Number($('#cantidadPend_' + fila).val());
+				var cantidadPendiente = Number($('#cantidadPendiente_' + fila).val());
 				$('#cantidad_' + fila).val(cantidadPendiente);
 				$('#cantidad_' + fila).focus();
 			}
@@ -1234,7 +1284,7 @@ function obtenerDetalleGuiaPorOrdenCompra(event){
 
 			"ajax": {
 				data: function ( d ) {
-					d.codigoOrdenCompra 	= OCReferencia.val().trim();
+					d.codigoOrdenCompra 	= OVReferencia.val().trim();
 				},
 				url: '/appkahaxi/listarGuiaRemisionCompraPorOrdenCompra/',
 				dataSrc: function (json) {
@@ -1518,7 +1568,7 @@ function generarFacturaAsociada() {
 	
 	var nroGr = codigo.html();
 	var nroGrParam = nroGuiaRemision.text();
-	var OcRef = OCReferencia.val();
+	var OvRef = OVReferencia.val();
 	var dato = datoBuscar.text();
 	var fecDesde = fechaDesde.text();
 	var fecHasta = fechaHasta.text();
@@ -1526,7 +1576,7 @@ function generarFacturaAsociada() {
 	var opcion = Opcion.NUEVO;
 	
 	//var params = "numeroDocumento=" + OCReferencia.val() + "&opcion=" + opcion + "&datoBuscar=&fechaDesde=&fechaHasta=&estadoParam=&volver=0&desdeDocRef=&guias=" + guiasRemision;
-	var params = "numeroDocumento=" + OcRef + "&opcion=" + opcion + "&datoBuscar=" + dato + "&fechaDesde=" + fecDesde + 
+	var params = "numeroDocumento=" + OvRef + "&opcion=" + opcion + "&datoBuscar=" + dato + "&fechaDesde=" + fecDesde + 
 				 "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI + 
 				 "&nroGuiaRemision=" + nroGrParam + "&nroGr=" + nroGr + "&guias=" + guiasRemision + "&origenMnto=" + origenMnto.text();
 	window.location.href = "/appkahaxi/nueva-factura-compra-asociada?" + params;
@@ -1537,44 +1587,34 @@ function volver(){
 	var params;
 	var dato 			= datoBuscar.text();
 	var nroGR 			= nroGuiaRemision.text();
-	var nroOC 			= nroOrdenCompra.text();// este debe ser el valor del campo a buscar en el filtro de oc en el mantenimiento de oc 
+	var nroOV 			= nroOrdenVenta.text();// este debe ser el valor del campo a buscar en el filtro de oc en el mantenimiento de oc 
 	var codRpto 		= codRepuesto.text();
 	var fecDesde 		= fechaDesde.text();
 	var fecHasta 		= fechaHasta.text();
 	var estParam		= estadoParam.text();
-	var nroDoc			= OCReferencia.val(); //numeroDocumento.text(); // este debe ser la OC
+	var nroDoc			= OVReferencia.val(); //numeroDocumento.text(); // este debe ser la OC
 	var desdeDocRef 	= desdeDocRefParam.text();
 	
 	if(desdeDocRef == Respuesta.SI){		
-		params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
+		params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato + "&nroOrdenVenta=" + nroOV + "&codRepuesto=" + codRpto + 
 			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI;
-		window.location.href = "/appkahaxi/nueva-orden-compra?" + params;
+		window.location.href = "/appkahaxi/nueva-orden-venta?" + params;
 	}else{
 		console.log("else nroDoc:"+nroDoc);
 		console.log("origenMnto:"+origenMnto);
 		if(origenMnto.text() == Respuesta.NO){
-			params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
+			params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato + "&nroOrdenVenta=" + nroOC + "&codRepuesto=" + codRpto + 
 			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI;
-			window.location.href = "/appkahaxi/nueva-orden-compra?" + params;
+			window.location.href = "/appkahaxi/nueva-orden-venta?" + params;
 		}else{
-			params = "datoBuscar=" + dato + "&nroGuiaRemision=" + nroGR + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
+			params = "datoBuscar=" + dato + "&nroGuiaRemision=" + nroGR + "&nroOrdenVenta=" + nroOV + "&codRepuesto=" + codRpto + 
 			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam;
-			window.location.href = "/appkahaxi/mantenimiento-guia-remision-compra?" + params;	
+			window.location.href = "/appkahaxi/mantenimiento-guia-remision-venta?" + params;	
 		}		
 	}
 }
-/*
-function reiniciarMinFechaEntrega() {
-	console.log("reiniciarMinFechaEntrega...inicio");
-	fecRecepcion.datetimepicker('minDate', false);
-}
 
-function reiniciarMaxFechas() {
-	console.log("reiniciarMaxFechas...inicio");
-	fecDocumento.datetimepicker('maxDate', false);
-	fecRecepcion.datetimepicker('maxDate', false);
-}
-*/
+
 function cargarFacturaAsociada(numeroDocumento, opcion) {
 
 	/*
@@ -1586,7 +1626,7 @@ function cargarFacturaAsociada(numeroDocumento, opcion) {
 	var params;
 	var dato 		= datoBuscar.val();
 	var nroGuiaRem	= nroGuiaRemision.text();
-	var nroOC 		= nroOrdenCompra.text();
+	var nroOV 		= nroOrdenVenta.text();
 	var codRpto 	= codRepuesto.val();
 	var fecDesde 	= fechaDesde.text();
 	var fecHasta 	= fechaHasta.text();
@@ -1594,7 +1634,7 @@ function cargarFacturaAsociada(numeroDocumento, opcion) {
 	// armando los parámetros
 	//params = "numeroDocumento=" + codigo.html() + "&opcion=" + opcion + "&datoBuscar=" + dato +
 	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + dato +
-			 "&nroComprobantePago=" + numeroDocumento + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +
+			 "&nroComprobantePago=" + numeroDocumento + "&nroOrdenVenta=" + nroOV + "&codRepuesto=" + codRpto +
 			 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + 
 			 "&desdeDocRef=" + Respuesta.SI + "&nroGuiaRemision=" + nroGuiaRem + "&nroGr=" + codigo.html() + "&guias=" +
 		 	 "&origenMnto=" + origenMnto.text();

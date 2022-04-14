@@ -25,8 +25,8 @@ public class GuiaRemisionVentaServiceImpl implements GuiaRemisionVentaService {
     @Autowired
     private GuiaRemisionVentaMapper guiaRemisionVentaMapper;
    /* @Autowired
-    FacturaService facturaService;
-    @Autowired*/
+    FacturaService facturaService;*/
+    @Autowired
     private JsonUtils jsonUtils;
 
 
@@ -42,7 +42,7 @@ public class GuiaRemisionVentaServiceImpl implements GuiaRemisionVentaService {
         Map<String, Object> params = new HashMap();
         params.put(Constante.PARAM_SP_SERIE, guiaRemisionCabModel.getSerie().toUpperCase());
         params.put(Constante.PARAM_SP_CORRELATIVO, guiaRemisionCabModel.getCorrelativo());
-        params.put(Constante.PARAM_SP_COD_PROV, guiaRemisionCabModel.getCodigoProv());
+        params.put(Constante.PARAM_SP_COD_CLIENTE, guiaRemisionCabModel.getCodigoCliente());
         params.put(Constante.PARAM_SP_USUARIO, usuario);
         params.put(Constante.PARAM_SP_DIR_DESPACHO, guiaRemisionCabModel.getDireccionDespacho());
 		params.put(Constante.PARAM_SP_PER_CONTACTO, guiaRemisionCabModel.getPersonaContacto());
@@ -183,7 +183,7 @@ public class GuiaRemisionVentaServiceImpl implements GuiaRemisionVentaService {
         return listaGuiaRemisionCabModel;
     }
 
-    /*public GuiaRemisionCabModel buscarGuiaRemisionVentaCab(String numeroDocumento) throws Exception {
+    public GuiaRemisionCabModel buscarGuiaRemisionVentaCab(String numeroDocumento) throws Exception {
 
         Map<String, Object> params = new HashMap();
         params.put(Constante.PARAM_SP_NRO_DOCUMENTO, numeroDocumento);
@@ -201,7 +201,7 @@ public class GuiaRemisionVentaServiceImpl implements GuiaRemisionVentaService {
         if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
             logger.info("guiaRemisionCabModel ===> " + guiaRemisionCabModel.toString());
 
-            try {
+            /*try {
 
                 List<ComprobantePagoCabModel> listFacturaCabModel = facturaService.listarFacturaVentaPorGuiaRemision(numeroDocumento);
                 guiaRemisionCabModel.setCantidadFacturasAsociadas(listFacturaCabModel.size());
@@ -211,7 +211,7 @@ public class GuiaRemisionVentaServiceImpl implements GuiaRemisionVentaService {
                 e.printStackTrace(new PrintWriter(printStackTrace));
                 logger.info("No se tienen facturas asociadas ===> " + printStackTrace.toString());
                 guiaRemisionCabModel.setCantidadFacturasAsociadas(0);
-            }
+            }*/
 
         } else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
             throw new ErrorControladoException(mensajeResultado);
@@ -222,7 +222,7 @@ public class GuiaRemisionVentaServiceImpl implements GuiaRemisionVentaService {
         }
 
         return guiaRemisionCabModel;
-    }*/
+    }
 
     public List<GuiaRemisionDetModel> buscarGuiaRemisionVentaDet(String numeroDocumento) throws Exception {
 

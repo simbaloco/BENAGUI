@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -51,8 +52,7 @@ public class CatalogoRestController {
 		String usuario = ((UsuarioModel)session.getAttribute("usuarioLogueado")).getUsername();
         catalogoService.modificarIgv(igv, usuario);
         
-        logger.info("Fin modificarIgv.......");
-                	
+        logger.info("Fin modificarIgv.......");                	
     }
 	
 	
@@ -68,8 +68,7 @@ public class CatalogoRestController {
         
         logger.info("Fin buscarDataCatalogoLike.......");
         
-        return new ResponseEntity<List<CatalogoModel>>(listDataCatalogo, HttpStatus.OK);  
-    
+        return new ResponseEntity<List<CatalogoModel>>(listDataCatalogo, HttpStatus.OK);
     }
 	
 	@GetMapping ("/buscarDataCatalogo")
@@ -82,8 +81,7 @@ public class CatalogoRestController {
         
         logger.info("Fin buscarDataCatalogo.......");
         
-        return new ResponseEntity<CatalogoModel>(dataCatalogo, HttpStatus.OK);  
-        
+        return new ResponseEntity<CatalogoModel>(dataCatalogo, HttpStatus.OK);
     }
 
 	@PostMapping ("/registrarDataCatalogo")
@@ -100,8 +98,7 @@ public class CatalogoRestController {
 			catalogoService.modificarDataCatalogo(registro, usuario);
 		}			
         
-        logger.info("Fin buscarDataCatalogo......."); 
-		
+        logger.info("Fin buscarDataCatalogo.......");
     }
 	
 	@GetMapping ("/buscarFlagSunat")
@@ -113,8 +110,19 @@ public class CatalogoRestController {
         
         logger.info("Fin buscarFlagSunat.......");
         
-        return new ResponseEntity<Integer>(flagSunat, HttpStatus.OK);  
+        return new ResponseEntity<Integer>(flagSunat, HttpStatus.OK);
+    }
+	
+	@GetMapping ("/obtenerCorrelativo/{codSerie}")
+	public ResponseEntity<String> obtenerCorrelativo(@PathVariable(Constante.PARAM_COD_SERIE) String codSerie) throws Exception {
+		
+		logger.info("Inicio obtenerCorrelativo ......");
+		
+        String correlativo = catalogoService.obtenerCorrelativo(codSerie);
         
+        logger.info("Fin obtenerCorrelativo.......");
+        
+        return new ResponseEntity<String>(correlativo, HttpStatus.OK);        
     }
 		
 

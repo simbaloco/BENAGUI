@@ -22,6 +22,9 @@ public class GuiaRemisionDetModel {
     private Integer cantidadPendiente;
     private BigDecimal precioUnitario;
     private BigDecimal precioUnitarioIgv;
+    private BigDecimal precioReferencia;
+    private Integer porcentajeDcto;
+    private BigDecimal precioConDcto;
     private BigDecimal subTotal;
     private BigDecimal subTotalIgv;
     private Integer activo;

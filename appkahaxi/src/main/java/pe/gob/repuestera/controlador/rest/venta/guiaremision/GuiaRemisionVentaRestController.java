@@ -10,10 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import pe.gob.repuestera.model.GuiaRemisionCabModel;
+import pe.gob.repuestera.model.GuiaRemisionDetModel;
+import pe.gob.repuestera.model.UsuarioModel;
 import pe.gob.repuestera.service.venta.guiaremision.GuiaRemisionVentaService;
 import pe.gob.repuestera.util.Constante;
 
@@ -38,38 +43,38 @@ public class GuiaRemisionVentaRestController {
 
         return new ResponseEntity<>(listaAlmacenModel, HttpStatus.OK);
 
-    }
+    }*/
 
-    @PostMapping("/registrarGuiaRemisionCompra")
-    public ResponseEntity<String> registrarGuiaRemisionCompra(@RequestPart("registro") GuiaRemisionCabModel guiaRemisionCabModel) throws Exception {
+    @PostMapping("/registrarGuiaRemisionVenta")
+    public ResponseEntity<String> registrarGuiaRemisionVenta(@RequestPart("registro") GuiaRemisionCabModel guiaRemisionCabModel) throws Exception {
 
-        logger.info("Inicio registrarGuiaRemisionCompra.......");
+        logger.info("Inicio registrarGuiaRemisionVenta.......");
 
         String usuario = ((UsuarioModel)session.getAttribute("usuarioLogueado")).getUsername();
 
-        String nroDocumento = guiaRemisionCompraService.registrarGuiaRemisionCompra(guiaRemisionCabModel, usuario);
+        String nroDocumento = guiaRemisionVentaService.registrarGuiaRemisionVenta(guiaRemisionCabModel, usuario);
 
-        logger.info("Fin registrarGuiaRemisionCompra.......");
+        logger.info("Fin registrarGuiaRemisionVenta.......");
 
         return new ResponseEntity<>(nroDocumento, HttpStatus.OK);
 
     }
 
-    @PostMapping("/anularGuiaRemisionCompra")
-    public ResponseEntity<String> anularGuiaRemisionCompra(@RequestPart("registro") GuiaRemisionCabModel guiaRemisionCabModel) throws Exception {
+    @PostMapping("/anularGuiaRemisionVenta")
+    public ResponseEntity<String> anularGuiaRemisionVenta(@RequestPart("registro") GuiaRemisionCabModel guiaRemisionCabModel) throws Exception {
 
-        logger.info("Inicio anularGuiaRemisionCompra.......");
+        logger.info("Inicio anularGuiaRemisionVenta.......");
 
 
         String usuario = ((UsuarioModel)session.getAttribute("usuarioLogueado")).getUsername();
 
-        guiaRemisionCompraService.anularGuiaRemisionCompra(guiaRemisionCabModel, usuario);
-
-        logger.info("Fin anularGuiaRemisionCompra.......");
+        guiaRemisionVentaService.anularGuiaRemisionVenta(guiaRemisionCabModel, usuario);
+        
+        logger.info("Fin anularGuiaRemisionVenta.......");
 
         return new ResponseEntity<>(HttpStatus.OK);
 
-    }*/
+    }
 
     @GetMapping("/listarGuiaRemisionVenta")
     public ResponseEntity<List<GuiaRemisionCabModel>> listarGuiaRemisionVenta(@RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar, 
@@ -101,22 +106,22 @@ public class GuiaRemisionVentaRestController {
 
         return new ResponseEntity<>(listGuiaRemisionCabModel, HttpStatus.OK);
 
-    }
+    }*/
 
-    @GetMapping ("/buscarGuiaRemisionCompra/{numeroDocumento}")
-    public ResponseEntity<GuiaRemisionCabModel> buscarGuiaRemisionCompra(@PathVariable(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento) throws Exception {
+    @GetMapping ("/buscarGuiaRemisionVenta/{numeroDocumento}")
+    public ResponseEntity<GuiaRemisionCabModel> buscarGuiaRemisionVenta(@PathVariable(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento) throws Exception {
 
-        logger.info("Inicio buscarGuiaRemisionCompra.......");
+        logger.info("Inicio buscarGuiaRemisionVenta.......");
 
-        GuiaRemisionCabModel guiaRemisionCabModel = guiaRemisionCompraService.buscarGuiaRemisionCompraCab(numeroDocumento);
+        GuiaRemisionCabModel guiaRemisionCabModel = guiaRemisionVentaService.buscarGuiaRemisionVentaCab(numeroDocumento);
 
-        List<GuiaRemisionDetModel> listGuiaRemisionDetModel = guiaRemisionCompraService.buscarGuiaRemisionCompraDet(numeroDocumento);
+        List<GuiaRemisionDetModel> listGuiaRemisionDetModel = guiaRemisionVentaService.buscarGuiaRemisionVentaDet(numeroDocumento);
 
         guiaRemisionCabModel.setDetalle(listGuiaRemisionDetModel);
 
-        logger.info("Fin buscarGuiaRemisionCompra.......");
+        logger.info("Fin buscarGuiaRemisionVenta.......");
 
         return new ResponseEntity<>(guiaRemisionCabModel, HttpStatus.OK);
-    }*/
+    }
 
 }

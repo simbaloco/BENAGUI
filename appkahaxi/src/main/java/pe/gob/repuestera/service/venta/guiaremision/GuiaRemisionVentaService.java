@@ -17,7 +17,7 @@ public interface GuiaRemisionVentaService {
     
     List<GuiaRemisionCabModel> listarGuiaRemisionVentaPorOrdenVenta(String codigoOrdenCompra) throws Exception;
     
-    //GuiaRemisionCabModel buscarGuiaRemisionVentaCab(String numeroDocumento) throws Exception;
+    GuiaRemisionCabModel buscarGuiaRemisionVentaCab(String numeroDocumento) throws Exception;
     
     List<GuiaRemisionDetModel> buscarGuiaRemisionVentaDet(String numeroDocumento) throws Exception;
 }

@@ -45,6 +45,7 @@
         <result property="descripcionArticulo" 	column="DESCRIPCION" />
         <result property="marca" 				column="MARCA_PRODUCTO" />
         <result property="cantidad" 			column="CANTIDAD" />
+        <result property="cantidadPendiente" 	column="CANTIDAD_PENDIENTE" />
         <result property="precioUnitario"		column="PRECIO_UNITARIO" />
         <result property="porcentajeDcto"		column="PORC_DCTO" />
         <result property="precioConDcto"		column="PRECIO_CON_DCTO" />

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import pe.gob.repuestera.model.UsuarioModel;
 import pe.gob.repuestera.model.VentaCabModel;
+import pe.gob.repuestera.model.VentaDetModel;
 import pe.gob.repuestera.service.venta.ordenventa.OrdenVentaService;
 import pe.gob.repuestera.util.Constante;
 
@@ -61,6 +63,22 @@ public class OrdenVentaRestController {
 
         return new ResponseEntity<>(listaVentaCabModel, HttpStatus.OK);
     }
+    
+    @GetMapping ("/buscarOrdenVentaParaGuiaRemision/{numeroDocumento}")
+    public ResponseEntity<VentaCabModel> buscarOrdenVentaParaGuiaRemision(@PathVariable(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento) throws Exception {
+    	
+        logger.info("Inicio buscarOrdenVentaParaGuiaRemision.......");
+
+        VentaCabModel compraCabModel = ordenVentaService.buscarOrdenVentaCab(numeroDocumento);
+
+        List<VentaDetModel> listCompraDetModel = ordenVentaService.buscarOrdenVentaDetalleParaGuiaRemision(numeroDocumento);
+
+        compraCabModel.setDetalle(listCompraDetModel);
+
+        logger.info("Fin buscarOrdenVentaParaGuiaRemision.......");
+
+        return new ResponseEntity<>(compraCabModel, HttpStatus.OK);
+    }
 
     /*@GetMapping ("/buscarOrdenCompra/{numeroDocumento}")
     public ResponseEntity<CompraCabModel> buscarOrdenCompra(@PathVariable(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento) throws Exception {
@@ -70,22 +88,6 @@ public class OrdenVentaRestController {
         CompraCabModel compraCabModel = ordenVentaService.buscarOrdenCompraCab(numeroDocumento);
 
         List<CompraDetModel> listCompraDetModel = ordenCompraService.buscarOrdenCompraDet(numeroDocumento);
-
-        compraCabModel.setDetalle(listCompraDetModel);
-
-        logger.info("Fin buscarOrdenCompra.......");
-
-        return new ResponseEntity<>(compraCabModel, HttpStatus.OK);
-    }
-
-    @GetMapping ("/buscarOrdenCompraParaGuiaRemision/{numeroDocumento}")
-    public ResponseEntity<CompraCabModel> buscarOrdenCompraParaGuiaRemision(@PathVariable(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento) throws Exception {
-
-        logger.info("Inicio buscarOrdenCompra.......");
-
-        CompraCabModel compraCabModel = ordenVentaService.buscarOrdenCompraCab(numeroDocumento);
-
-        List<CompraDetModel> listCompraDetModel = ordenVentaService.buscarOrdenCompraDetalleParaGuiaRemision(numeroDocumento);
 
         compraCabModel.setDetalle(listCompraDetModel);
 

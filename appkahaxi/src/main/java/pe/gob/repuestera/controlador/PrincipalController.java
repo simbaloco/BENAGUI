@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import pe.gob.repuestera.model.AlmacenModel;
 import pe.gob.repuestera.model.ComboModel;
 import pe.gob.repuestera.model.ParametrosGeneralesModel;
+import pe.gob.repuestera.model.SerieModel;
 import pe.gob.repuestera.service.GenericService;
 import pe.gob.repuestera.service.compra.guiaremision.GuiaRemisionCompraService;
+import pe.gob.repuestera.service.maestros.SerieService;
 import pe.gob.repuestera.util.Constante;
 
 @Controller
@@ -27,6 +29,8 @@ public class PrincipalController {
 		
 	@Autowired
 	private GenericService genericService;
+	@Autowired
+	private SerieService serieService;
 	@Autowired
     GuiaRemisionCompraService guiaRemisionCompraService;
 	@Autowired
@@ -1456,13 +1460,17 @@ public class PrincipalController {
 				List<ComboModel> listaCondPago = genericService.cargarCombo(Constante.CATALOGO_CONDICION_PAGO);
 				List<ComboModel> listaDias = genericService.cargarCombo(Constante.CATALOGO_DIAS_PC);
 				List<ComboModel> listaMotivosTraslado = genericService.cargarCombo(Constante.CATALOGO_MOTIVO_TRASLADO);
+				List<SerieModel> listaSerie = serieService.cargarComboSerie(Constante.COD_TIPO_DOCU_GRT);
 				List<AlmacenModel> listaAlmacenModel = guiaRemisionCompraService.buscarAlmacen();
+				
+				logger.info("listaSerie: " +listaSerie);
 				
 				model.addAttribute("listaMoneda", listaMoneda);
 				model.addAttribute("listaCondPago", listaCondPago);
 				model.addAttribute("listaDias", listaDias);
 				model.addAttribute("listaMotivosTraslado", listaMotivosTraslado);
 				model.addAttribute("listaAlmacenModel", listaAlmacenModel);
+				model.addAttribute("listaSerie", listaSerie);
 				
 				retorno = Constante.PAGINA_CARGAR_GUIA_REMISION_VENTA;
 				logger.info("saliendo del método cargarGuiaRemisionVenta");
