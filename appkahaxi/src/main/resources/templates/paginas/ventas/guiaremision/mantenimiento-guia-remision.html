@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  layout:decorate="~{fragments/layout}" lang="en">
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<script th:src="@{/js/ventas/guia-remision/gui-mantenimiento-guia-remision.js}" ></script>
+</head>
+
+<body>
+
+<div layout:fragment="content" th:remove="tag">
+    <label id="fechaDesde" th:text=${fechaDesde} hidden="hidden"></label>
+	<label id="fechaHasta" th:text=${fechaHasta} hidden="hidden"></label>
+	
+	<div class="kahaxi_titulo">
+		<div class="kahaxi_titulo_container">
+			<div class="kahaxi_titulo_logo"><i class="fas fa-search"></i></div>
+			<div class="kahaxi_titulo_text">BUSCAR GUÍAS DE REMISIÓN - VENTAS</div>
+		</div>
+		<div class="subrayado"></div>
+		<br>
+	</div>
+
+	<div class="box bg-box" id="accordionCriteriosBusqueda">
+
+		<div class="box-body">
+
+			<div class="card">
+
+				<div class="card-header quitar-contornos" id="headingCriteriosBusqueda">
+					<h2 class="mb-0">
+						<button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseCriteriosBusqueda"  aria-expanded="true" aria-controls="collapseCriteriosBusqueda">
+							<i class="fas fa-angle-up"></i><span>Criterios de búsqueda</span>
+							<div class="subrayado"></div>
+						</button>
+					</h2>
+				</div>
+
+				<div id="collapseCriteriosBusqueda" class="collapse show" aria-labelledby="headingCriteriosBusqueda" data-parent="#accordionCriteriosBusqueda">
+
+					<div class="card-body">
+
+						<form id="formGuiaRemision" class="needs-validation" novalidate>
+
+							<div class="row">
+
+								<div class="col-md-2">
+									<label class="label" for="campoBuscar">Ingrese datos del cliente:</label>
+									<input class="form-control" maxlength="20" type="text" id="campoBuscar" th:value=${datoBuscar} placeholder="Ingrese DNI/RUC o Nombre/Razón Social para buscar..."/>
+								</div>
+
+								<div class="col-md-1">
+						 			<label class="label" for="nroGuia">Nro. Guía:</label>
+						          	<input class="form-control" maxlength="15" type="text" id="nroGuia" th:value=${nroGuiaRemision} />
+						 		</div>
+						 								        
+								<div class="col-md-1">
+						 			<label class="label" for="nroOV">Nro. OV Ref:</label>
+						          	<input class="form-control" maxlength="15" type="text" id="nroOV" th:value=${nroOrdenVenta} />
+						 		</div>
+						 		
+						        <div class="col-md-1">
+						 			<label class="label" for="codRepuesto">Cod. Repuesto:</label>
+						          	<input class="form-control" maxlength="10" type="text" id="codRepuesto" th:value=${codRepuesto} />
+						 		</div>
+							 		
+								<div class="col-md-2">
+						 			<label class="label" for="fecContaDesde">Fecha Cont. desde:</label>
+						 			<div class="input-group date" id="fecContaDesde" data-target-input="nearest">
+						          		<input type="text" class="form-control datetimepicker-input" data-target="#fecContaDesde" style="background-color: white;" id="fContaDesde" readonly="readonly"/>
+						          		<div class="input-group-append" data-target="#fecContaDesde" data-toggle="datetimepicker">
+					                  		<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+					                  	</div>
+					              	</div>
+						 		</div> 
+							    
+						 		<div class="col-md-2">
+						 			<label class="label" for="fecContaHasta">Fecha Cont. hasta:</label>
+						 			<div class="input-group date" id="fecContaHasta" data-target-input="nearest">
+						          		<input type="text" class="form-control datetimepicker-input" data-target="#fecContaHasta" style="background-color: white;" id="fContaHasta" readonly="readonly"/>
+					                  	<div class="input-group-append" data-target="#fecContaHasta" data-toggle="datetimepicker">
+					                  		<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+					                  	</div>
+					              	</div>
+						 		</div>
+
+								<div class="col-md-1">
+									<label class="label" for="estado">Estado:</label>
+									<select id="estado" class="form-control">
+										<option value="" >-- TODOS --</option>
+										<option th:each="item : ${listaEstado}"
+									            th:value="${item.codigo}" 
+									            th:text="${item.descripcion}"
+									            th:selected="${item.codigo} == ${estadoParam} ? true : false">
+									    </option>
+									</select>
+								</div>
+
+								<div class="col-md-2 alineacion-derecha">
+									<label></label>
+					 				<div>
+										<button  type="button" id="btnLimpiar" class="btn btn-primary btn-sm">
+											<span class="mr-2"><i class="fas fa-eraser"></i></span>Limpiar
+										</button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="box bg-box">
+
+		<div class="box-body">
+
+			<div class="card ">
+				<div class="card-body">
+
+					<div class="table-responsive">
+						<table id="tablaGuiaRemision" class="table table-bordered dt-responsive order-column">
+
+							<thead class="text-center">
+								<tr>
+									<th>Item</th>
+									<th>Nro. Guía</th>
+									<th>Nro. OV Ref.</th>
+									<th>Fec. Creación</th>
+									<th class="d-none">Cod. Cliente</th>
+									<th>Nro. Doc.</th>
+					                <th>Cliente</th>
+					                <th>Fec. Cont.</th>
+									<th>Moneda</th>
+									<th>Cond. Pago</th>
+									<th>Estado</th>
+									<th>Total</th>
+									<th>Ver</th>
+								</tr>
+							</thead>
+
+							<tbody>
+							</tbody>
+
+						</table>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+</div>
+
+</body>
+</html>

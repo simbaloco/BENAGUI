@@ -1,6 +1,7 @@
 // campos de formulario
-var formOrdenVenta;
+var formGuiaRemision;
 var campoBuscar;
+var nroGuia;
 var nroOV;
 var codRepuesto;
 var fecContaDesde;
@@ -12,10 +13,9 @@ var fechaDesde;
 var fechaHasta;
 // botones
 var btnLimpiar;
-var btnNuevo;
 // tablas
-var tablaOrdenVenta;
-var dataTableOrdenVenta;
+var tablaGuiaRemision;
+var dataTableGuiaRemision;
 
 var esLimpiar = false;
 /**************** CARGA INICIAL DE FORMULARIO ****************************************************
@@ -28,10 +28,12 @@ $(document).ready(function(){
 });
 
 function inicializarVariables() {
-	formOrdenVenta = $('#formOrdenVenta');
+	formGuiaRemision = $('#formGuiaRemision');
 	campoBuscar = $('#campoBuscar');
+	nroGuia = $('#nroGuia');
 	nroOV = $('#nroOV');
 	codRepuesto = $('#codRepuesto');
+	
 	fecContaDesde = $('#fecContaDesde');
 	fecContaHasta = $('#fecContaHasta');
 	
@@ -41,12 +43,11 @@ function inicializarVariables() {
 	estado = $('#estado');
 	fechaDesde = $('#fechaDesde');
 	fechaHasta = $('#fechaHasta');
-		
+	
 	btnBuscar = $('#btnBuscar');
 	btnLimpiar = $('#btnLimpiar');
-	btnNuevo = $('#btnNuevo');
 
-	tablaOrdenVenta  = $('#tablaOrdenVenta');
+	tablaGuiaRemision  = $('#tablaGuiaRemision');
 }
 
 function inicializarComponentes() {
@@ -90,7 +91,7 @@ function retringirSeleccionFechas() {
 				buscar(e);
 				
 			}else{
-				mostrarMensajeValidacion("El rango de fechas es máximo de 3 meses.");
+				mostrarDialogoInformacion("El rango de fechas es máximo de 3 meses.", Boton.WARNING);
 				fecContaDesde.datetimepicker('date', e.oldDate);
 			}	
 		}
@@ -103,7 +104,7 @@ function retringirSeleccionFechas() {
 				buscar(e);
 				
 			}else{
-				mostrarMensajeValidacion("El rango de fechas es máximo de 3 meses.");
+				mostrarDialogoInformacion("El rango de fechas es máximo de 3 meses.", Boton.WARNING);
 				fecContaHasta.datetimepicker('date', e.oldDate);
 			}
 		}
@@ -142,6 +143,10 @@ function inicializarEventos(){
 		campoBuscarKeyUp(e);
 	});
 	
+	nroGuia.on('keyup', function (e) {
+		nroGuiaKeyUp(e);
+	});
+	
 	nroOV.on('keyup', function (e) {
 		nroOVKeyUp(e);
 	});
@@ -149,17 +154,13 @@ function inicializarEventos(){
 	codRepuesto.on('keyup', function (e) {
 		codRepuestoKeyUp(e);
 	});
-	
+		
 	estado.on('change', function (e) {
 		buscar(e);
 	});
 		
     btnLimpiar.click(function(e){
 		limpiar(e);
-	});
-    
-    btnNuevo.click(function(){
-    	nuevaOrdenVenta(null, Opcion.NUEVO);
 	});
 	
 	fContaDesde.on('keydown', function(e){
@@ -178,32 +179,31 @@ function inicializarEventos(){
 		}
 	});
 }
-	
+
 function inicializarTabla(){
-	var habilita;
 	
-	console.log("estado-->" + estado.val());
-	dataTableOrdenVenta = tablaOrdenVenta.DataTable({
+	dataTableGuiaRemision = tablaGuiaRemision.DataTable({
         "ajax": {
             // se pasa la data de esta forma para poder reinicializar luego sólo la llamada ajax sin tener que dibujar de nuevo toda la tabla
 			data: function ( d ) {
 				d.datoBuscar 		= campoBuscar.val().trim();
-            	d.nroOrdenVenta		= nroOV.val();
+				d.nroGuiaRemision	= nroGuia.val().trim();
+            	d.nroOrdenVenta		= nroOV.val().trim();
             	d.codRepuesto		= codRepuesto.val().trim();
             	d.codEstado 		= estado.val();
             	d.fechaDesde 		= fecContaDesde.datetimepicker('date').format('YYYY-MM-DD');
             	d.fechaHasta 		= fecContaHasta.datetimepicker('date').format('YYYY-MM-DD');
 		    },
-            url: '/appkahaxi/listarOrdenVenta/',
+            url: '/appkahaxi/listarGuiaRemisionVenta/',
             dataSrc: function (json) {
-            	console.log("listarOrdenVenta...success");
+            	console.log("listarGuiaRemisionVenta...success");
             	return json;
             },
             error: function (xhr, error, code){
             	
             }
         },
-		
+
 		/*
 		"dom"           :   "<'row'<'col-sm-8'i><'col-sm-4'>>" +
 			                "<'row'<'col-sm-12'rt>>" +
@@ -226,56 +226,61 @@ function inicializarTabla(){
                 "data": "id"
             },
             {
-                "width": "30px",
+                "width": "50px",
                 "targets": [1],
                 "data": "numeroDocumento"
             },
+			{
+				"width": "50px",
+				"targets": [2],
+				"data": "ordenVenta"
+			},
+			{
+				"width": "30px",
+				"targets": [3],
+				"data": "fechaRegistroFormato"
+			},
             {
                 "width": "5px",
-                "targets": [2],
-                "data": "codigoCliente",
-                "visible": false
-            },
-            {
-                "width": "40px",
-                "targets": [3],
-                "data": "fechaRegistro"
-            },
-            {
-                "width": "40px",
                 "targets": [4],
+                "data": "codigoCliente",
+				"visible": false
+            },
+            {
+                "width": "40px",
+                "targets": [5],
                 "data": "nroDocCliente"
             },
             {
-                "width": "250px",
-                "targets": [5],
+                "width": "300px",
+                "targets": [6],
                 "data": "nombreCliente"
             },
             {
                 "width": "30px",
-                "targets": [6],
+                "targets": [7],
                 "data": "fechaContabilizacion"
             },
             {
                 "width": "100px",
-                "targets": [7],
+                "targets": [8],
                 "data": "descripcionTipoMoneda"
                 
             },
             {
                 "width": "30px",
-                "targets": [8],
+                "targets": [9],
                 "data": "descripcionCondPago"
                 
             },
             {
-                "width": "40px",
-                "targets": [9],
+                "width": "50px",
+                "targets": [10],
                 "data": "descripcionEstado"
             },
             {
-                "width": "40px",
-                "targets": [10],
+                "width": "60px",
+                "targets": [11],
                 "data": "total",
 				"render":
                     function (data, type, row ) {
@@ -283,25 +288,17 @@ function inicializarTabla(){
                     }
             },
             {
-                "width": "100px",
-                "targets": [11],
-                "data": null,
+                "width": "5px",
+                "targets": [12],
+                "data": "activo",
                 "className": "dt-body-center",
                 "orderable": false,
                 "render":
-                    function (data, type, row ) {		
-						(data.codigoEstado == EstadoDocumentoInicial.POR_APROBAR) ? 
-							habilita = "<button title='Modificar Orden' class='btn-edit btn btn-primary btn-xs'><span><i class=\"fas fa-edit\"></i></span>" : 
-							habilita = "<button title='Ver Orden' class='btn-view btn btn-info btn-xs'><span><i class=\"fas fa-eye\"></i></span>";
-						
+                    function (data, type, row ) {
                     	return  "<div>" +
-                        			"<button title='Descargar Orden' class='btn-download btn btn-warning btn-xs'>" +
-                        				"<span><i class=\"fas fa-download\"></i></span>" +
+                        			"<button title='Ver guía' class='btn-view btn btn-info btn-xs'>" +
+                        				"<span><i class=\"fas fa-eye\"></i></span>" +
 					                "</button>" +
-									habilita + "</button>"+
-					                "<button title='Duplicar' class='btn-copy btn btn-success btn-xs'>" +
-			                            "<span><i class=\"far fa-copy\"></i></span>" +
-			                        "</button>" +
 				                "</div>";
                     }
             }
@@ -311,18 +308,16 @@ function inicializarTabla(){
                 var index = iDisplayIndexFull + 1;
                 // colocando el estilo de la moneda
 				if(data.codigoTipoMoneda == Moneda.SOLES){
-					$('td:eq(9)', row).addClass('dt-body-right listado-symbol-sol');
+					$('td:eq(10)', row).addClass('dt-body-right listado-symbol-sol');
 				}else{
-					$('td:eq(9)', row).addClass('dt-body-right listado-symbol-dolar');
+					$('td:eq(10)', row).addClass('dt-body-right listado-symbol-dolar');
 				}
 				
 				// pintando las filas según estado
-                if(data.codigoEstado == EstadoDocumentoInicial.RECHAZADO){
+                if(data.codigoEstado == EstadoGuiaRemision.ANULADO){
             		$(row).addClass("estadoRechazado");
-            	}else if(data.codigoEstado == EstadoDocumentoInicial.APROBADO){
-					if(data.codigoEstadoProceso == EstadoProceso.ABIERTO){
-						$(row).addClass("estadoAprobadoAbierto");	
-					}else{
+            	}else if(data.codigoEstado == EstadoGuiaRemision.GENERADO){
+					if(data.codigoEstadoProceso == EstadoProceso.CERRADO){
 						$(row).addClass("estadoAprobadoCerrado");
 					}
             	}
@@ -338,56 +333,25 @@ function inicializarTabla(){
          }
     });
 	
-	$('#tablaOrdenVenta tbody').on('click','.btn-download', function () {
-	    var data = dataTableOrdenVenta.row( $(this).closest('tr')).data();
-	    console.log("data.numeroDocument-->" + data.numeroDocumento)
-		descargarReporte(data.numeroDocumento);
-	});
-	
-	$('#tablaOrdenVenta tbody').on('click','.btn-edit', function () {
-	    var data = dataTableOrdenVenta.row( $(this).closest('tr')).data();
-	   // nuevaOrdenVenta(data.numeroDocumento, Opcion.MODIFICAR);
-		generarGuiaRemisionPorOrden(data.numeroDocumento);
-	});
-	
-	$('#tablaOrdenVenta tbody').on('click','.btn-view', function () {
-	    var data = dataTableOrdenVenta.row( $(this).closest('tr')).data();
-	    nuevaOrdenVenta(data.numeroDocumento, Opcion.VER);
+	$('#tablaGuiaRemision tbody').on('click','.btn-view', function () {
+	    var data = dataTableGuiaRemision.row( $(this).closest('tr')).data();
+	    cargarGuiaRemision(data.numeroDocumento, Opcion.VER);
 	});
 	 
-	$('#tablaOrdenVenta tbody').on('click','.btn-copy', function () {
-	    var data = dataTableOrdenVenta.row( $(this).closest('tr')).data();
-	    nuevaOrdenVenta(data.numeroDocumento, Opcion.DUPLICAR);
-	});
-	
-	
-
 }
-
-// POR ELIMINARRRRRRRRRRRRRRRRRRRRRRRRRRRRR
-function generarGuiaRemisionPorOrden(nroDocu) {
-	var params;	
-	var dato = campoBuscar.val();
-	var nroOVenta = nroOV.val();
-	var codRpto = codRepuesto.val();
-	var fecDesde = fecContaDesde.val();
-	var fecHasta = fecContaHasta.val();
-	var estParam = estado.val();
-
-	params = "numeroDocumento=" + nroDocu + "&opcion=" + Opcion.NUEVO + "&datoBuscar=" + dato +
-		"&nroGuiaRemision=&nroOrdenVenta=" + nroOVenta + "&codRepuesto=" + codRpto +
-		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam +
-		"&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI + "&origenMnto=" + Respuesta.NO;
-
-	window.location.href = "/appkahaxi/cargar-guia-remision-venta?" + params;
-}
-
 
 
 /**************** FUNCIONES DE SOPORTE ***********************************************************
  *************************************************************************************************/
 
 function campoBuscarKeyUp(e){
+	var key = window.Event ? e.which : e.keyCode;
+	if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
+		buscar(e);
+	}
+}
+
+function nroGuiaKeyUp(e){
 	var key = window.Event ? e.which : e.keyCode;
 	if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
 		buscar(e);
@@ -408,34 +372,36 @@ function codRepuestoKeyUp(e){
 	}
 }
 
-function nuevaOrdenVenta(numeroDocumento, opcion){
+function cargarGuiaRemision(numeroDocumento, opcion) {
 	var params;
 	var datoBuscar 			= campoBuscar.val();
+	var nroGuiaVal 			= nroGuia.val();
 	var nroOVVal 			= nroOV.val();
 	var codRpto 			= codRepuesto.val();
 	var fecContDesde 		= fecContaDesde.datetimepicker('date').format('L');
 	var fecContHasta 		= fecContaHasta.datetimepicker('date').format('L');
 	var est 				= estado.val();
 	// armando los parámetros
-	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar +
-		"&nroOrdenVenta=" + nroOVVal + "&codRepuesto=" + codRpto +
-		"&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + 
-		"&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.NO + "&origenMnto=" + Respuesta.SI;
-	console.log("xxx-->" + params);
-	window.location.href = "/appkahaxi/nueva-orden-venta?" + params;
+	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar +  
+			 "&nroGuiaRemision=" + nroGuiaVal + "&nroOrdenVenta=" + nroOVVal + "&codRepuesto=" + codRpto + 
+		     "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + 
+			 "&desdeDocRef=" + Respuesta.NO + "&origenMnto=" + Respuesta.SI;
+	
+	window.location.href = "/appkahaxi/cargar-guia-remision-venta?" + params;
 }
 
 function buscar(event){
-	var form1 = formOrdenVenta;
+	var form1 = formGuiaRemision;
 	event.preventDefault();
 
 	if (form1[0].checkValidity() == false) {
 		event.stopPropagation();
     }else{
 		event.stopPropagation();
-		if ( $.fn.dataTable.isDataTable('#tablaOrdenVenta')) {
-			dataTableOrdenVenta.clear(); // usamos esta instrucción para limpiar la tabla sin que haya parpadeo
-			dataTableOrdenVenta.ajax.reload(null, true);
+		if ( $.fn.dataTable.isDataTable('#tablaGuiaRemision')) {
+		    //dataTableGuiaRemision.clear().draw(); <--- al usar esta rutina se produce un parpadeo de la tabla
+			dataTableGuiaRemision.clear(); // usamos esta instrucción para limpiar la tabla sin que haya parpadeo
+			dataTableGuiaRemision.ajax.reload(null, true);
 		}
 	}
 	form1.addClass('was-validated');
@@ -445,6 +411,7 @@ function limpiar(e){
 	esLimpiar = true;
 	
 	campoBuscar.val(CADENA_VACIA);
+	nroGuia.val(CADENA_VACIA);
 	nroOV.val(CADENA_VACIA);
 	codRepuesto.val(CADENA_VACIA);
 	estado.val(CADENA_VACIA);
@@ -456,73 +423,3 @@ function limpiar(e){
 	buscar(e);
 	campoBuscar.focus();
 }
-
-function descargarReporte(numeroDocumento){
-    $.ajax({
-        type:"Post",
-        url : '/appkahaxi/reporteOrdenVenta/' + numeroDocumento,
-        xhrFields: {
-            responseType: 'blob'
-        },
-        data : null,
-        beforeSend: function(xhr) {
-        	loadding(true);
-        },
-        error: function (xhr, error, code){
-        	mostrarMensajeError(xhr.responseText);
-        	loadding(false);
-        },
-        success: function (result, status, xhr) {
-            if(result.size > 0){
-                var filename = "nombre.pdf";
-                var disposition = xhr.getResponseHeader('Content-Disposition');
-
-                if (disposition) {
-                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-                    var matches = filenameRegex.exec(disposition);
-                    if (matches !== null && matches[1]) filename = matches[1].replace(/['"]/g, CADENA_VACIA);
-                }
-                var linkelem = document.createElement('a');
-                try {
-                    var blob = new Blob([result], { type: 'application/octet-stream' });
-                    
-                    if (typeof window.navigator.msSaveBlob !== 'undefined') {
-                        //   IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
-                        window.navigator.msSaveBlob(blob, null);
-                    } else {
-                        var URL = window.URL || window.webkitURL;
-                        var downloadUrl = URL.createObjectURL(blob);
-
-                        if (filename) {
-                            // use HTML5 a[download] attribute to specify filename
-                            var a = document.createElement("a");
-
-                            // safari doesn't support this yet
-                            if (typeof a.download === 'undefined') {
-                                window.location = downloadUrl;
-                            } else {
-                                a.href = downloadUrl;
-                                a.download = filename;
-                                document.body.appendChild(a);
-                                a.target = "_blank";
-                                a.click();
-
-                                window.onfocus = function () {
-                                   // document.body.removeChild(a);
-                                    window.URL.revokeObjectURL(downloadUrl);
-                                }
-                            }
-                        } else {
-                            window.location = downloadUrl;
-                        }
-                    }
-                    loadding(false);
-
-                } catch (ex) {
-                    
-                }
-            }
-        }
-    });
-}
-

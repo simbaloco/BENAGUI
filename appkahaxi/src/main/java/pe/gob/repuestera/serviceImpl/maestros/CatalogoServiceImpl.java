@@ -243,6 +243,34 @@ public class CatalogoServiceImpl implements CatalogoService {
 		
 	}
 
+	@Override
+	public String obtenerCorrelativo(String codSerie) throws Exception {
+		Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_COD_SERIE, codSerie);
+        
+        logger.info("params ===> " + params);
+        
+        String correlativo = catalogoMapper.obtenerCorrelativo(params);
+        
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        
+        logger.info("flagResultado ===> " + flagResultado);
+		logger.info("mensajeResultado ===> " + mensajeResultado);
+		
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+			logger.info("obtenerCorrelativo ----> correlativo: "+ correlativo);
+			
+		}else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+		}
+        
+		return correlativo;
+	}
+
 		
 
 }

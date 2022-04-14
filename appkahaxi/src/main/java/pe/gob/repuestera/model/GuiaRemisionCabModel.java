@@ -16,8 +16,10 @@ public class GuiaRemisionCabModel {
     private String correlativo;
 	// FK
 	private String codigoProv;
+	private String codigoCliente;
 	private String username;
     private String ordenCompra;
+    private String ordenVenta;
 	// columnas
     private String direccionDespacho;
 	private String personaContacto;	
@@ -45,6 +47,8 @@ public class GuiaRemisionCabModel {
 	private String nombreUsuario;
 	private String nroDocProv; 
 	private String nombreProv;
+	private String nroDocCliente; 
+	private String nombreCliente;
 	private String direccionFiscal;
 	private String descripcionTipoMoneda;
 	private String descripcionCondPago;

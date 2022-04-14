@@ -20,5 +20,6 @@ public interface CatalogoMapper {
 	Integer buscarFlagSunat(Map params);
 	void registrarDataCatalogo(Map params);
 	void modificarDataCatalogo(Map params);
+	String obtenerCorrelativo(Map params);
 	
 }

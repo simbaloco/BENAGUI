@@ -15,6 +15,7 @@ public class VentaDetModel {
 	private String codArticulo;
 	// columnas
 	private Integer cantidad;
+	private Integer cantidadPendiente;
     private BigDecimal precioUnitario;
     private BigDecimal precioUnitarioIgv;
     private BigDecimal precioReferencia;

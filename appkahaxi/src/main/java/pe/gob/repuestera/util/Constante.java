@@ -29,6 +29,8 @@ public class Constante {
 	public static final String CATALOGO_IGV 				= "31";
 	public static final String CATALOGO_MOTIVO_TRASLADO		= "32";
 	
+	public static final String COD_TIPO_DOCU_GRT			= "31";
+	
 	/* VALORES PARA LA TABLA SOCIOS DE NEGOCIO */
 	public static final String COD_TIPO_SOCIO_CLIENTE  	= "01";
 	public static final String COD_TIPO_SOCIO_PROVEEDOR = "02";
@@ -68,10 +70,15 @@ public class Constante {
 	/* GUIA REMISION */
 	public static final String PAGINA_CARGAR_GUIA_REMISION_COMPRA = "paginas/compras/guiaremision/cargar-guia-remision";
 	public static final String PAGINA_MANTENIMIENTO_GUIA_REMISION_COMPRA = "paginas/compras/guiaremision/mantenimiento-guia-remision";
+	public static final String PAGINA_CARGAR_GUIA_REMISION_VENTA = "paginas/ventas/guiaremision/cargar-guia-remision";
+	public static final String PAGINA_MANTENIMIENTO_GUIA_REMISION_VENTA = "paginas/ventas/guiaremision/mantenimiento-guia-remision";
 	/* COMPROBANTE PAGO */
 	public static final String PAGINA_NUEVA_FACTURA_COMPRA_DIRECTA = "paginas/compras/factura/nueva-factura-directa";
 	public static final String PAGINA_NUEVA_FACTURA_COMPRA_ASOCIADA = "paginas/compras/factura/nueva-factura-asociada";
 	public static final String PAGINA_MANTENIMIENTO_FACTURA_COMPRA = "paginas/compras/factura/mantenimiento-factura";
+	public static final String PAGINA_NUEVA_FACTURA_VENTA_DIRECTA = "paginas/ventas/factura/nueva-factura-directa";
+	public static final String PAGINA_NUEVA_FACTURA_VENTA_ASOCIADA = "paginas/ventas/factura/nueva-factura-asociada";
+	public static final String PAGINA_MANTENIMIENTO_VENTA_COMPRA = "paginas/ventas/factura/mantenimiento-factura";
 	/* REPORTES */
 	public static final String PAGINA_REPORTE_COMPRAS = "paginas/reportes/reporte-compras";
 	public static final String PAGINA_REPORTE_VENTAS = "paginas/reportes/reporte-ventas";
@@ -154,6 +161,8 @@ public class Constante {
     public static final String PARAM_SP_NRO_PEDIDO				= "NRO_PEDIDO";
     public static final String PARAM_SP_COTIZACION_SAP			= "COTIZACION_SAP";
     public static final String PARAM_SP_NRO_COTIZ_VENTA			= "NRO_COTIZ_VENTA";
+    public static final String PARAM_SP_NRO_ORDEN_VENTA			= "NRO_ORDEN_VENTA";
+    
     
     public static final String PARAM_SP_COD_ESTANDAR		= "COD_ESTANDAR";
     public static final String PARAM_SP_COD_ANTIGUO			= "COD_ANTIGUO";

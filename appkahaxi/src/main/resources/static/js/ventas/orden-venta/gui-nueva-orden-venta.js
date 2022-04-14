@@ -283,7 +283,7 @@ function inicializarEventos() {
 	});
 
 	btnGenerarGuiaRemision.on("click", function() {
-		//mostrarDialogoGenerarGuiaRemision();
+		mostrarDialogoGenerarGuiaRemision();
 	});
 
 	btnNuevo.click(function() {
@@ -547,7 +547,6 @@ function cargarPantallaHTML(data) {
 		$('#descripcion_' + i).val(detalle.descripcionArticulo);
 		$('#marca_' + i).val(detalle.marca);
 		$('#cantidad_' + i).val(detalle.cantidad);
-		$('#cantidadPend_' + i).val(detalle.cantidadPendiente);
 
 		$('#precio_' + i).val(convertirNumeroAMoneda(detalle.precioUnitario));
 		$('#precioIgv_' + i).val(convertirNumeroAMoneda(detalle.precioUnitarioIgv));
@@ -894,7 +893,7 @@ function agregarHTMLColumnasDataTable() {
 			/*// CANTIDAD PENDIENTE
 			case 6: $(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha' type='text' id='cantidadPend_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
 				break;
-
+			
 			// PRECIO
 			case 7: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
 				"<input class='form-control alineacion-derecha precio-det' type='number' maxlength='13' " +
@@ -1344,7 +1343,6 @@ function registrarOrdenVenta() {
 	var objetoJson = {
 
 		numeroDocumento: nroDocumento,
-
 		codigoCliente: codigoCliVal,
 		nroCotizVenta: nroCotizVentaVal,
 		direccionDespacho: dirDespachoVal,
@@ -1391,7 +1389,7 @@ function registrarOrdenVenta() {
 
 				mostrarNotificacion("El registro fue grabado correctamente.", "success");
 				//mostrarControl(btnNuevo);
-				ocultarControl(btnGenerarGuiaRemision);
+				mostrarControl(btnGenerarGuiaRemision);
 				ocultarControl(btnLimpiar);
 				ocultarControl(btnGrabar);
 
@@ -1657,18 +1655,18 @@ function generarGuiaRemisionPorOrden() {
 	var params;
 	var nroDoc = numeroDocumento.text();
 	var dato = datoBuscar.text();
-	var nroOC = nroOrdenCompra.text();
+	var nroOV = nroOrdenVenta.text();
 	var codRpto = codRepuesto.text();
 	var fecDesde = fechaDesde.text();
 	var fecHasta = fechaHasta.text();
 	var estParam = estadoParam.text();
 
 	params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.NUEVO + "&datoBuscar=" + dato +
-		"&nroGuiaRemision=&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +
+		"&nroGuiaRemision=&nroOrdenVenta=" + nroOV + "&codRepuesto=" + codRpto +
 		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam +
 		"&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI + "&origenMnto=" + Respuesta.NO;
 
-	window.location.href = "/appkahaxi/cargar-guia-remision-compra?" + params;
+	window.location.href = "/appkahaxi/cargar-guia-remision-venta?" + params;
 }
 
 function cargarGuiaRemisionAsociada(numDocumento) {

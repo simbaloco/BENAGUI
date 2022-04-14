@@ -83,6 +83,12 @@
         <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
     </parameterMap>
     
+    <parameterMap id="obtenerCorrelativoParams" type="hashmap">
+    	<parameter property="COD_SERIE"         	jdbcType="VARCHAR"  mode="IN"/>
+    	<parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
     
     <select id="buscarIgv" parameterMap="buscarIgvParams" resultType="String" statementType="CALLABLE">
         {CALL SP_BUSCAR_IGV(?,?,?) }
@@ -111,6 +117,10 @@
     
     <select id="buscarFlagSunat" parameterMap="buscarFlagSunatParams" resultType="Integer" statementType="CALLABLE">
     	{CALL SP_CARGAR_FLAG_SUNAT_MAESTRO(?,?,?) }
+    </select>
+    
+    <select id="obtenerCorrelativo" parameterMap="obtenerCorrelativoParams" resultType="String" statementType="CALLABLE">
+        {CALL SP_OBTENER_CORRELATIVO(?,?,?) }
     </select>
     
     
