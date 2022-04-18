@@ -79,6 +79,23 @@ public class OrdenVentaRestController {
 
         return new ResponseEntity<>(ventaCabModel, HttpStatus.OK);
     }
+    
+    @GetMapping ("/buscarOrdenVentaParaGuiaRemision/{numeroDocumento}")
+    public ResponseEntity<VentaCabModel> buscarOrdenVentaParaGuiaRemision(@PathVariable(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento) throws Exception {
+    	
+        logger.info("Inicio buscarOrdenVentaParaGuiaRemision.......");
+
+        VentaCabModel compraCabModel = ordenVentaService.buscarOrdenVentaCab(numeroDocumento);
+
+        List<VentaDetModel> listCompraDetModel = ordenVentaService.buscarOrdenVentaDetalleParaGuiaRemision(numeroDocumento);
+
+        compraCabModel.setDetalle(listCompraDetModel);
+
+        logger.info("Fin buscarOrdenVentaParaGuiaRemision.......");
+
+        return new ResponseEntity<>(compraCabModel, HttpStatus.OK);
+    }
+    
     /*
     @GetMapping ("/buscarOrdenCompraParaGuiaRemision/{numeroDocumento}")
     public ResponseEntity<CompraCabModel> buscarOrdenCompraParaGuiaRemision(@PathVariable(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento) throws Exception {
