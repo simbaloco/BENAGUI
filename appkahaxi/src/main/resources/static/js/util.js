@@ -1,5 +1,6 @@
 const CADENA_VACIA = "";
 const UNDEFINED = undefined;
+const CANT_CERO_CORRELATIVO = 7;
 
 var d       = new Date();
 var n       = d.getFullYear();

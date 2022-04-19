@@ -68,6 +68,9 @@ var facturasPorGuiaRemisionModal;
 var modalCodigoGuiaRemision;
 var tableSeleccionDocumento;
 var dataTableSeleccionDocumento;
+var chkDctoTotal;
+var dctoTotal;
+var dcto;
 
 var dateTimePickerInput;
 var valorIGV;
@@ -150,6 +153,9 @@ function inicializarVariables() {
 	dateTimePickerInput = $(".datetimepicker-input");
 	listaAlmacenModel = $("#listaAlmacenModel");
 	lblAnulado = $("#lblAnulado");
+	chkDctoTotal = $("#chkDctoTotal");
+	dctoTotal = $("#dctoTotal");
+	dcto = $("#dcto");
 }
 
 function inicializarComponentes() {
@@ -253,8 +259,6 @@ function inicializarFechas(){
 	
 	//fecRecepcion.datetimepicker('minDate', moment());
 	//fecRecepcion.datetimepicker('maxDate', moment());
-	
-	
 }
 
 function inicializarEventos() {
@@ -430,9 +434,16 @@ function cargarPantallaHTMLOrdenVenta(data) {
 	obtenerTipoCambio(tipoCambio);
 	condPago.val(data.codigoCondPago);
 	dias.val(data.codigoDias);
+	dcto.val(convertirNumeroAMoneda(data.descuento));
 	subTotalGR.val(data.subTotal);
 	igvGR.val(data.igv);
 	totalGR.val(data.total);
+	
+	if(data.porcDctoTotal != null){
+    	dctoTotal.val(data.porcDctoTotal);
+    	checkControl(chkDctoTotal);
+    	mostrarControl(dctoCotiDiv);
+    }
 	
 	if(data.codigoCondPago == CondicionPago.CREDITO) {
 		mostrarControl(divDias);
@@ -548,8 +559,8 @@ function cargarPantallaHTMLGuiaRemision(data) {
 	tipoMoneda.val(data.codigoTipoMoneda);
 	condPago.val(data.codigoCondPago);
 	dias.val(data.codigoDias);
-	serie.val(data.serie);
-	correlativo.val(data.correlativo);
+	serie.val(data.serie);	
+	correlativo.val(data.correlativo.padStart(CANT_CERO_CORRELATIVO, '0'));	
 	motivoTraslado.val(data.codigoMotivoTraslado);
 	tipoCambio.val(data.tipoCambio);
 	subTotalGR.val(data.subTotal);
@@ -955,10 +966,11 @@ function validarDetalleGuiaRemision(){
 }
 
 function registrarGuiaRemisionVenta(){
-
+	
+	var correlativoInt 			= parseInt(correlativo.val(), 10);	
 	var nroDocumento  			= codigo.html();
 	var serieVal 				= serie.val();
-	var correlativoVal 			= correlativo.val();
+	var correlativoVal 			= correlativoInt;
 	var codigoClienteVal  		= codigoCliente.val().trim();
 	var dirDespachoVal 			= direccionDespacho.val().trim();
 	var perContactoVal			= personaContacto.val().trim();	
@@ -972,11 +984,17 @@ function registrarGuiaRemisionVenta(){
 	var codigoMotivoTraslado	= motivoTraslado.val().trim();
 	var observacionesVal 		= observaciones.val().trim();	
 	var subTotalVal 			= convertirMonedaANumero(subTotalGR.val().trim());
+	var descuento 				= convertirMonedaANumero(dcto.val().trim() == '' ? '0' : dcto.val().trim());
 	var igvVal 					= convertirMonedaANumero(igvGR.val());
 	var totalVal 				= convertirMonedaANumero(totalGR.val().trim());	
 	var detalle 				= tableToJSON(tableDetalle);
 	var diasVal					= null;
-
+	
+	var porcDctoTotal = null;
+	if (chkDctoTotal.is(':checked')) {
+		porcDctoTotal = dctoTotal.val().trim();
+	}
+	
 	if(condPagoVal == CondicionPago.CREDITO) {
 		diasVal					= dias.val();
 	}
@@ -999,7 +1017,9 @@ function registrarGuiaRemisionVenta(){
 		codigoDias:     		diasVal,
 		codigoMotivoTraslado:   codigoMotivoTraslado,
 		tipoCambio:				tipoCambioVal,
+		porcDctoTotal: 			porcDctoTotal,
 		subTotal:  				subTotalVal,
+		descuento: 				descuento,
 		igv:  					igvVal,
 		total:  				totalVal,
 		observaciones:  		observacionesVal,
@@ -1043,9 +1063,7 @@ function registrarGuiaRemisionVenta(){
 				ocultarControl(btnGrabar);
 				ocultarControl(btnLimpiar);
 				deshabilitarDetalleGuiaRemision();
-
 			} else if(xhr.status == HttpStatus.Accepted){
-				console.log("aaaa")
 				mostrarMensajeValidacion(resultado);
 			}
 
@@ -1268,27 +1286,23 @@ function mostrarModalFacturasPorGuia(event) {
 	obtenerDetalleFacturasPorGuiaRemision(event);
 }
 
-function obtenerDetalleGuiaPorOrdenCompra(event){
-
+function obtenerDetalleGuiaPorOrdenVenta(event){
 	event.preventDefault();
 	event.stopPropagation();
 
 	if ( $.fn.dataTable.isDataTable('#tableSeleccionGR')) {
-
 		dataTableSeleccionGR.clear();
 		dataTableSeleccionGR.ajax.reload(null, true);
-
 	} else {
-
 		dataTableSeleccionGR = tableSeleccionGR.DataTable({
 
 			"ajax": {
 				data: function ( d ) {
-					d.codigoOrdenCompra 	= OVReferencia.val().trim();
+					d.codigoOrdenVenta = OVReferencia.val().trim();
 				},
-				url: '/appkahaxi/listarGuiaRemisionCompraPorOrdenCompra/',
+				url: '/appkahaxi/listarGuiaRemisionVentaPorOrdenVenta/',
 				dataSrc: function (json) {
-					console.log("listarGuiaRemisionCompraPorOrdenCompra...success");
+					console.log("listarGuiaRemisionVentaPorOrdenVenta...success");
 					return json;
 				},
 				error: function (xhr, error, code){
@@ -1378,19 +1392,11 @@ function obtenerDetalleGuiaPorOrdenCompra(event){
 				"url": "/appkahaxi/language/Spanish.json"
 			}
 		});
-		/*
-		$('#tableSeleccionGR tbody').on('click', 'tr', function () {
-			var nTds = $('td', this);
-			var numeroDocumento = $(nTds[0]).text();
-			
-			cargarGuiaRemisionAsociada(numeroDocumento);			
-		});
-		*/
+		
 	}
 }
 
 function obtenerDetalleFacturasPorGuiaRemision(event){
-
 	event.preventDefault();
 	event.stopPropagation();
 
@@ -1407,9 +1413,9 @@ function obtenerDetalleFacturasPorGuiaRemision(event){
 				data: function ( d ) {
 					d.codigoGuiaRemision 	= codigo.html().trim();
 				},
-				url: '/appkahaxi/listarFacturaCompraPorGuiaRemision/',
+				url: '/appkahaxi/listarFacturaVentaPorGuiaRemision/',
 				dataSrc: function (json) {
-					console.log("listarFacturaCompraPorGuiaRemision...success");
+					console.log("listarFacturaVentaPorGuiaRemision...success");
 					mostrarModal(facturasPorGuiaRemisionModal);
 					return json;
 				},
@@ -1514,13 +1520,7 @@ function obtenerDetalleFacturasPorGuiaRemision(event){
 				"url": "/appkahaxi/language/Spanish.json"
 			}
 		});
-		/*
-		$('#tableSeleccionDocumento tbody').on('click','.link-ver-factura', function () {
-
-			var data = dataTableSeleccionDocumento.row( $(this).closest('tr')).data();
-			cargarFacturaAsociada(data.numeroDocumento, Opcion.VER);
-		});
-		*/
+		
 		$('#tableSeleccionDocumento tbody').on('click', 'tr', function () {
 			var nTds = $('td', this);
 			var numeroDocumento = $(nTds[0]).text();
@@ -1531,7 +1531,6 @@ function obtenerDetalleFacturasPorGuiaRemision(event){
 }
 
 function generarFacturaAsociada() {
-
 	var data = [];
 	var indice = 0;
 
@@ -1579,7 +1578,7 @@ function generarFacturaAsociada() {
 	var params = "numeroDocumento=" + OvRef + "&opcion=" + opcion + "&datoBuscar=" + dato + "&fechaDesde=" + fecDesde + 
 				 "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI + 
 				 "&nroGuiaRemision=" + nroGrParam + "&nroGr=" + nroGr + "&guias=" + guiasRemision + "&origenMnto=" + origenMnto.text();
-	window.location.href = "/appkahaxi/nueva-factura-compra-asociada?" + params;
+	window.location.href = "/appkahaxi/nueva-factura-venta-asociada?" + params;
 
 }
 
@@ -1639,7 +1638,7 @@ function cargarFacturaAsociada(numeroDocumento, opcion) {
 			 "&desdeDocRef=" + Respuesta.SI + "&nroGuiaRemision=" + nroGuiaRem + "&nroGr=" + codigo.html() + "&guias=" +
 		 	 "&origenMnto=" + origenMnto.text();
 	
-	window.location.href = "/appkahaxi/nueva-factura-compra-asociada?" + params;
+	window.location.href = "/appkahaxi/nueva-factura-venta-asociada?" + params;
 	
 }
 
@@ -1649,7 +1648,7 @@ function limpiarGuiaRemision() {
 	serie.val(CADENA_VACIA);
 	correlativo.val(CADENA_VACIA);
 	observaciones.val(CADENA_VACIA);
-	motivoTraslado.val(MotivoTraslado.COMPRA_NACIONAL);
+	motivoTraslado.val(MotivoTraslado.VENTA_NACIONAL);
 	
 	
 	//fecRecepcion.datetimepicker('minDate', false);

@@ -513,6 +513,17 @@
 				     	<div class="col-md-8">
 				     		
 				     		<div class="form-group row">
+			            		<div class="col-md-3">
+					            	<label class="label" for="chkDctoTotal">Dcto. Total (%)</label>
+					            </div>
+					            <div class="col-md-3">	
+					            	<div class="form-check">
+							 		  	<input class="form-control" maxlength="3" type="text" id="dctoTotal" disabled="disabled" onkeypress="return soloDecimales(event, this);"/>
+									</div>
+								</div>
+			            	</div>
+				     		
+				     		<div class="form-group row">
 		            			<div class="col-md-3">
 				            		<label class="label" for="observaciones">Observaciones</label>
 				            	</div>
@@ -524,43 +535,57 @@
 							    </div>
 		            		</div>
 				     	</div>
-				     	
-				     	<div class="col-md-1"></div>
-				     	<div class="col-md-3">
-			            	<div class="form-group row">
-		            			<div class="col-md-4">
-				            		<label class="label" for="subTotalGR">SubTotal</label>
-				            	</div>
-				            	<div class="col-md-8">	
-				            		<span class="simbolo-moneda input-symbol-dolar">
-							        	<input class="form-control alineacion-derecha" maxlength="10" type="text" id="subTotalGR" readonly="readonly"/>
-							        </span>
-							    </div>
-		            		</div>
-			            	
-		            		<div class="form-group row">
-		            			<div class="col-md-4">
-				            		<label class="label" for="igvGR">IGV</label>
-				            	</div>
-				            	<div class="col-md-8">	
-				            		<span class="simbolo-moneda input-symbol-dolar">
-				            			<input class="form-control alineacion-derecha" maxlength="10" type="text" id="igvGR" readonly="readonly"/>
-				            		</span>
-							    </div>	
-		            		</div>
-		            		
-		            		<div class="form-group row">
-		            			<div class="col-md-4">
-				            		<label class="label" for="totalGR">Total</label>
-				            	</div>
-				            	<div class="col-md-8">	
-				            		<span class="simbolo-moneda input-symbol-dolar">
-				            			<input class="form-control alineacion-derecha" maxlength="10" type="text" id="totalGR" readonly="readonly"/>
-						        	</span>
-							    </div>	
-		            		</div>
-				       	</div>
-				    </div>	
+
+								<div class="col-md-1"></div>
+								<div class="col-md-3">
+									<div class="form-group row">
+										<div class="col-md-4">
+											<label class="label" for="subTotalGR">SubTotal</label>
+										</div>
+										<div class="col-md-8">
+											<span class="simbolo-moneda input-symbol-dolar"> <input
+												class="form-control alineacion-derecha" maxlength="10"
+												type="text" id="subTotalGR" readonly="readonly" />
+											</span>
+										</div>
+									</div>
+
+									<div class="form-group row">
+										<div class="col-md-4">
+											<label class="label" for="dcto">Descuento</label>
+										</div>
+										<div class="col-md-8">
+											<span class="simbolo-moneda input-symbol-dolar"> 
+												<input class="form-control alineacion-derecha" maxlength="10" type="text" id="dcto" readonly="readonly" />
+											</span>
+										</div>
+									</div>
+
+									<div class="form-group row">
+										<div class="col-md-4">
+											<label class="label" for="igvGR">IGV</label>
+										</div>
+										<div class="col-md-8">
+											<span class="simbolo-moneda input-symbol-dolar"> <input
+												class="form-control alineacion-derecha" maxlength="10"
+												type="text" id="igvGR" readonly="readonly" />
+											</span>
+										</div>
+									</div>
+
+									<div class="form-group row">
+										<div class="col-md-4">
+											<label class="label" for="totalGR">Total</label>
+										</div>
+										<div class="col-md-8">
+											<span class="simbolo-moneda input-symbol-dolar"> <input
+												class="form-control alineacion-derecha" maxlength="10"
+												type="text" id="totalGR" readonly="readonly" />
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>	
 				    </form>
 				    				
 				</div>

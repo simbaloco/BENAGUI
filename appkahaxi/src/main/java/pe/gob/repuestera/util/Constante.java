@@ -306,6 +306,7 @@ public class Constante {
 	public static final String PARAM_NRO_REQUERIMIENTO = "nroRequerimiento";
 	public static final String PARAM_COD_REPUESTO = "codRepuesto";
 	public static final String PARAM_DATO_ORDEN_COMPRA = "codigoOrdenCompra";
+	public static final String PARAM_DATO_ORDEN_VENTA = "codigoOrdenVenta";	
 	public static final String PARAM_DATO_GUIA_REMISION = "codigoGuiaRemision";
 	public static final String PARAM_PREFIJO = "prefijo";
 	public static final String PARAM_OPCION = "opcion";

@@ -31,8 +31,10 @@
         <result property="codigoEstado" 			column="COD_ESTADO" />
         <result property="descripcionEstado"		column="DESC_ESTADO" />
         <result property="tipoCambio"				column="TIPO_CAMBIO" />
-        <result property="codigoMotivoTraslado"		column="COD_MOTIVO_TRASLADO" />
+        <result property="codigoMotivoTraslado"		column="COD_MOTIVO_TRASLADO" />        
+        <result property="porcDctoTotal"			column="PORC_DCTO_TOTAL" />
         <result property="subTotal"					column="SUBTOTAL" />
+        <result property="descuento"				column="DESCUENTO" />
         <result property="igv"						column="IGV" />
         <result property="total" 					column="TOTAL" />
         <result property="observaciones"			column="OBSERVACIONES" />
@@ -113,7 +115,9 @@
         <parameter property="COD_ESTADO"        	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="COD_MOTIVO_TRASLADO"   jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="TIPO_CAMBIO"          	jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="PORC_DCTO_TOTAL"       jdbcType="DECIMAL"  mode="IN"/>
         <parameter property="SUB_TOTAL"          	jdbcType="DECIMAL"  mode="IN"/>
+        <parameter property="DCTO"          		jdbcType="DECIMAL"  mode="IN"/>
         <parameter property="IGV"          			jdbcType="DECIMAL"  mode="IN"/>
         <parameter property="TOTAL"          		jdbcType="DECIMAL"  mode="IN"/>
         <parameter property="OBSERVACIONES"     	jdbcType="VARCHAR"  mode="IN"/>
@@ -153,7 +157,7 @@
     </select>
 
     <insert id="registrarGuiaRemisionVenta" parameterMap="registrarGuiaRemisionVentaParams" statementType="CALLABLE">
-        {CALL SP_REGISTRAR_GUIA_REMISION_VENTA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
+        {CALL SP_REGISTRAR_GUIA_REMISION_VENTA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
     </insert>
 
     <insert id="anularGuiaRemisionVenta" parameterMap="anularGuiaRemisionVentaParams" statementType="CALLABLE">

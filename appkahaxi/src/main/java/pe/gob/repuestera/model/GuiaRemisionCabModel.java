@@ -33,7 +33,9 @@ public class GuiaRemisionCabModel {
     private String codigoEstado;
     private String codigoMotivoTraslado;
     private BigDecimal tipoCambio;
+    private BigDecimal porcDctoTotal;
     private BigDecimal subTotal;
+    private BigDecimal descuento;
     private BigDecimal igv;
     private BigDecimal total;
     private String observaciones;
