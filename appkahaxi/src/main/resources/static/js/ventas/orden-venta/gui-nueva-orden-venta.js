@@ -1423,8 +1423,6 @@ function cargarGuiaRemisionAsociada(numDocumento) {
 		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + 
 		"&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI + "&origenMnto=" + Respuesta.NO;;
 
-	alert("xxx params-->" + params)
-	
 	window.location.href = "/appkahaxi/cargar-guia-remision-venta?" + params;
 }
 
@@ -1508,7 +1506,6 @@ function obtenerDetalleGuiaPorOrdenVenta(event) {
 		dataTableDetalleGuias.ajax.reload(null, true);
 
 	} else {
-		alert(codigo.html());
 		dataTableDetalleGuias = tableSeleccionDocumento.DataTable({
 
 			"ajax": {

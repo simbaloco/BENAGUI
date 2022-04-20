@@ -1628,7 +1628,6 @@ function volver() {
 			"&volver=" + Respuesta.SI + 
 			"&desdeDocRef=" + Respuesta.SI + 
 			"&origenMnto=" + Respuesta.NO;
-		alert("primer if, params-->" + params)	
 		window.location.href = "/appkahaxi/nueva-orden-venta?" + params;
 	} else {
 		console.log("else nroDoc:" + nroDoc);
@@ -1640,13 +1639,11 @@ function volver() {
 				"&volver=" + Respuesta.SI + 
 				"&desdeDocRef=" + Respuesta.NO + 
 				"&origenMnto=" + Respuesta.SI;
-			alert("2, params-->" + params)
 			window.location.href = "/appkahaxi/nueva-orden-venta?" + params;
 		} else {
 			params = "datoBuscar=" + dato + "&nroGuiaRemision=" + nroGR + "&nroOrdenVenta=" + nroOV + "&codRepuesto=" + codRpto +
 				"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam;
 			
-			alert("3, params-->" + params)
 			window.location.href = "/appkahaxi/mantenimiento-guia-remision-venta?" + params;
 		}
 	}
