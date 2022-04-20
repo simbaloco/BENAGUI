@@ -1786,7 +1786,6 @@ function generarGuiaRemisionPorOrden() {
 
 function cargarGuiaRemisionAsociada(numDocumento) {
 	var params;
-	var nroDoc = numeroDocumento.text();
 	var dato = datoBuscar.text();
 	var nroOC = nroOrdenCompra.text();
 	var codRpto = codRepuesto.text();

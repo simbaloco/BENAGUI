@@ -1,7 +1,5 @@
 package pe.gob.repuestera.serviceImpl.venta.ordenventa;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,14 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pe.gob.repuestera.exception.ErrorControladoException;
-import pe.gob.repuestera.model.CompraCabModel;
-import pe.gob.repuestera.model.CompraDetModel;
-import pe.gob.repuestera.model.GuiaRemisionCabModel;
 import pe.gob.repuestera.model.VentaCabModel;
 import pe.gob.repuestera.model.VentaDetModel;
-import pe.gob.repuestera.repository.compra.ordencompra.OrdenCompraMapper;
 import pe.gob.repuestera.repository.venta.ordenventa.OrdenVentaMapper;
-import pe.gob.repuestera.service.compra.guiaremision.GuiaRemisionCompraService;
 import pe.gob.repuestera.service.venta.ordenventa.OrdenVentaService;
 import pe.gob.repuestera.serviceImpl.compra.ordencompra.OrdenCompraServiceImpl;
 import pe.gob.repuestera.util.Constante;

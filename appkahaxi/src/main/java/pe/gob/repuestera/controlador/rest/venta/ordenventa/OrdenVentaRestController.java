@@ -71,7 +71,7 @@ public class OrdenVentaRestController {
 
         VentaCabModel ventaCabModel = ordenVentaService.buscarOrdenVentaCab(numeroDocumento);
 
-        List<VentaDetModel> listVentaDetModel = ordenVentaService.buscarOrdenVentaDet(numeroDocumento);
+        List<VentaDetModel> listVentaDetModel = ordenVentaService.buscarOrdenVentaDet(ventaCabModel.getNumeroDocumento());
 
         ventaCabModel.setDetalle(listVentaDetModel);
 

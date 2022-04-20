@@ -346,3 +346,11 @@ input.form-control.input-validation-error {
 	color: blue;
 	text-decoration: underline;
 }
+
+.simularLink {
+	cursor: pointer;
+	color: blue;
+	text-decoration: underline;
+	background: none;
+    border: none;
+}

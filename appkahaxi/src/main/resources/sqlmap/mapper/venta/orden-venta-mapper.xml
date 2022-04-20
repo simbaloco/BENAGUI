@@ -86,7 +86,6 @@
         <parameter property="COD_ESTADO"        	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="TIPO_CAMBIO"          	jdbcType="DECIMAL"  mode="IN"/>
         <parameter property="OBSERVACIONES"     	jdbcType="VARCHAR"  mode="IN"/>
-        <parameter property="NRO_DOCUMENTO_REF"     jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="PORC_DCTO_TOTAL"       jdbcType="DECIMAL"  mode="IN"/>
         <parameter property="SUB_TOTAL"          	jdbcType="DECIMAL"  mode="IN"/>
         <parameter property="DCTO"          		jdbcType="DECIMAL"  mode="IN"/>
@@ -133,7 +132,7 @@
          
     <!-- este SP es invocado al grabar una cotización. Graba la cabecera -->
     <insert id="registrarOrdenVenta" parameterMap="registrarOrdenVentaParams" statementType="CALLABLE">
-    	{CALL SP_REGISTRAR_ORDEN_VENTA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
+    	{CALL SP_REGISTRAR_ORDEN_VENTA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
     </insert> 
     
     

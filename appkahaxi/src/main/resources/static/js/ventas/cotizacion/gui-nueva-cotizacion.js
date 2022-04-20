@@ -284,6 +284,10 @@ function inicializarEventos(){
 		generarOrdenVenta();
 	});
 	
+	btnIrOV.click(function(){
+		irOrdenVenta();
+	});
+	
 	btnVolver.click(function() {
 		volver();
 	});
@@ -530,18 +534,17 @@ function verPantallaCotizacionVenta(data) {
 		
 		// estado APROBADO
 		deshabilitarControl(estado);
-		// si estado proceso está abierto, mostrar botón "generar orden de venta" habilitado; caso contrario, deshabilitar
-		mostrarControl(btnGenerarOV);
 		
 		if(data.codigoEstadoProceso == EstadoProceso.ABIERTO){
 			// estado proceso ABIERTO
-			habilitarControl(btnGenerarOV);
-			btnGenerarOV.removeClass('btn btn-secondary').addClass('btn btn-primary');
+			// si estado proceso está abierto, mostrar botón "generar orden de venta", ocultar "ir a la OV"
+			mostrarControl(btnGenerarOV);
+			ocultarControl(btnIrOV);
 		}else{
 			// estado proceso CERRADO
-			deshabilitarControl(btnGenerarOV);
+			// si estado proceso está cerrado, mostrar botón "ir a la OV", ocultar "generar orden de venta" 
+			ocultarControl(btnGenerarOV);
 			mostrarControl(btnIrOV);
-			btnGenerarOV.removeClass('btn btn-primary').addClass('btn btn-secondary');
 		}
 		
 		btnGenerarOV.focus();
@@ -1430,7 +1433,7 @@ function registrarCotizacionVenta(){
         		
 				// despues de grabar, sólo mostramos el botón para enviar/descargar pdf
 				mostrarControl(btnPdf);
-				mostrarControl(btnNuevo);
+				//mostrarControl(btnNuevo);
 				mostrarControl(btnDuplicar);
 				btnDuplicar.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
 				
@@ -1828,17 +1831,56 @@ function mostrarDialogoEliminarTodo(table){
 function generarOrdenVenta(){
 	var params;
 	var nroDoc = numeroDocumento.text();
-	var dato = datoBuscar.text();
+	var dato 	= datoBuscar.text();
+	var nroCotiz = nroCotizacion.text();
+	var nroRequerimiento = nroReq.text();
 	var codRpto = codRepuesto.text();
 	var fecDesde = fechaDesde.text();
 	var fecHasta = fechaHasta.text();
 	var estParam = estadoParam.text();
-
-	params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.NUEVO + "&datoBuscar=" + dato +
-		"&nroOrdenVenta=&codRepuesto=" + codRpto +
+	alert("nroDoc-->" + nroDoc);
+	alert("nroCotiz-->" + nroCotiz);
+	
+	// aquí viaja el nro de la cotización del documento actual
+	params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.NUEVO + 
+		// a partir de aquí son los filtros que se arrastran de la pantalla de búsqueda de cotizaciones
+		"&datoBuscar=" + dato +
+		"&nroCotizacion=" + nroCotiz + "&nroRequerimiento=" + nroRequerimiento + "&codRepuesto=" + codRpto +
 		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + 
-		"&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI + "&origenMnto=" + Respuesta.NO;
-	console.log("xxx-->" + params);
+		// indica que se debe VOLVER a la cotización desde la OV
+		"&volver=" + Respuesta.SI + 
+		// indica que se está yendo a la página de OV desde una cotización
+		"&desdeDocRef=" + Respuesta.SI + 
+		// indica que no se va desde la pantalla de mantenimiento de cotizaciones
+		"&origenMnto=" + Respuesta.NO;
+	window.location.href = "/appkahaxi/nueva-orden-venta?" + params;
+}
+
+function irOrdenVenta(){
+	var params;
+	var nroDoc = numeroDocumento.text();
+	var dato 	= datoBuscar.text();
+	var nroCotiz = nroCotizacion.text();
+	var nroRequerimiento = nroReq.text();
+	var codRpto = codRepuesto.text();
+	var fecDesde = fechaDesde.text();
+	var fecHasta = fechaHasta.text();
+	var estParam = estadoParam.text();
+	alert("nroDoc-->" + nroDoc);
+	alert("nroCotiz-->" + nroCotiz);
+	
+	// aquí viaja el nro de la cotización del documento actual
+	params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + 
+		// a partir de aquí son los filtros que se arrastran de la pantalla de búsqueda de cotizaciones
+		"&datoBuscar=" + dato +
+		"&nroCotizacion=" + nroCotiz + "&nroRequerimiento=" + nroRequerimiento + "&codRepuesto=" + codRpto +
+		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + 
+		// indica que se debe VOLVER a la cotización desde la OV
+		"&volver=" + Respuesta.SI + 
+		// indica que se está yendo a la página de OV desde una cotización
+		"&desdeDocRef=" + Respuesta.SI + 
+		// indica que no se va desde la pantalla de mantenimiento de cotizaciones
+		"&origenMnto=" + Respuesta.NO;
 	window.location.href = "/appkahaxi/nueva-orden-venta?" + params;
 }
 

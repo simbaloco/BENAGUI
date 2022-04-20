@@ -388,7 +388,11 @@ function cargarPantallaHTMLFacturaConDatosGuiaRemisionAsociadas(data) {
 
 			$('#codigoGuiaRemision_' + indice).val(detalle.codGuiaRemision);
 			$('#lineaReferencia_' + indice).val(detalle.lineaReferencia);
+			console.log("detalle.codArticulo-->" + detalle.codArticulo);
+			console.log("detalle.codEstandar-->" + detalle.codEstandar);
+			
 			$('#codigo_' + indice).val(detalle.codArticulo);
+			$('#descCodigo_' + indice).val(detalle.codEstandar);
 			$('#descripcion_' + indice).val(detalle.descripcionArticulo);
 			$('#marca_' + indice).val(detalle.marca);
 			$('#cantidad_' + indice).val(detalle.cantidadPendienteGuiaRemision);
@@ -425,7 +429,7 @@ function habilitarPantallaConDatosGuiaRemisionAsociadas() {
 
 	for(i=0; i< cantidadDetalleDuplicado ; i++) {
 
-		deshabilitarControl(null, '#codigo_' + i);
+		deshabilitarControl(null, '#descCodigo_' + i);
 		deshabilitarControl(null, '#almacen_' + i);
 		habilitarControl(null, '#cantidad_' + i);
 		deshabilitarControl(null, '#precio_' + i);
@@ -519,6 +523,7 @@ function cargarPantallaHTMLFactura(data) {
 		$('#codigoGuiaRemision_' + indice).val(detalle.codGuiaRemision);
 		$('#lineaReferencia_' + indice).val(detalle.lineaReferencia);
 		$('#codigo_' + indice).val(detalle.codArticulo);
+		$('#descCodigo_' + indice).val(detalle.codEstandar);
 		$('#descripcion_' + indice).val(detalle.descripcionArticulo);
 		$('#marca_' + indice).val(detalle.marca);
 		$('#cantidad_' + indice).val(detalle.cantidad);
@@ -647,22 +652,24 @@ function agregarHTMLColumnasDataTable(data) {
 			case 1:	$(this).html(CADENA_VACIA).append("<input class='form-control' type='text' id='lineaReferencia_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
 				break;
 
-			// COD ARTICULO
-			case 2:	$(this).html(CADENA_VACIA).append("<div>" +
-				"<input class='marquee form-control codigo_table' type='text' maxlength='20'  id='codigo_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
-				"</div>");
-				break;
-
+			// CODIGO ART (OCULTO)
+			case 2:	$(this).html(CADENA_VACIA).append("<input class='form-control' type='text' id='codigo_" + indiceFilaDataTableDetalle + "' readonly='readonly' tabindex='-1' >");
+					break;
+						
+			// DESCRIPCION CODIGO ART
+			case 3:	$(this).html(CADENA_VACIA).append("<input class='marquee form-control codigo-det' type='text' id='descCodigo_" + indiceFilaDataTableDetalle + "' readonly='readonly' tabindex='-1' >");
+					break;						
+    		
 			// DESCRIPCION ARTICULO
-			case 3:	$(this).html(CADENA_VACIA).append("<input class='marquee form-control' type='text' id='descripcion_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
+			case 4:	$(this).html(CADENA_VACIA).append("<input class='marquee form-control' type='text' id='descripcion_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
 				break;
 
 			// MARCA
-			case 4:	$(this).html(CADENA_VACIA).append("<input class='marquee form-control' type='text' id='marca_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
+			case 5:	$(this).html(CADENA_VACIA).append("<input class='marquee form-control' type='text' id='marca_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
 				break;
 
 			// ALMACEN
-			case 5:	$(this).html(CADENA_VACIA).append(
+			case 6:	$(this).html(CADENA_VACIA).append(
 					"<div>" + 
 						$(".almacen-hidden").html().replace('reemplazar', 'almacen_' + indiceFilaDataTableDetalle) + 
 					"</div>");
@@ -670,13 +677,13 @@ function agregarHTMLColumnasDataTable(data) {
 					break;
 
 			// CANTIDAD
-			case 6:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha cantidad_table' type='text' onchange='dispararEventosCambioCantidad(this, " + indiceFilaDataTableDetalle + ");' " +
+			case 7:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha cantidad_table' type='text' onchange='dispararEventosCambioCantidad(this, " + indiceFilaDataTableDetalle + ");' " +
 				"onkeypress='return soloEnteros(event);'" +
 				"id='cantidad_" + indiceFilaDataTableDetalle + "'>");
 				break;
 
 			// PRECIO UNITARIO
-			case 7:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+			case 8:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
 				"<input class='form-control alineacion-derecha precio_table' type='text' " +
 				"onkeypress='return soloDecimales(event, this);' " +
 				"id='precio_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
@@ -684,19 +691,19 @@ function agregarHTMLColumnasDataTable(data) {
 				break;
 			
 			// PRECIO C/IGV
-			case 8: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+			case 9: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
 				"<input class='form-control alineacion-derecha' type='text' id='precioIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
 				"</span></div>");
 				break;
 			
 			// SUBTOTAL
-			case 9:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+			case 10:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
 				"<input class='form-control alineacion-derecha' type='text' id='subTotal_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
 				"</span></div>");
 				break;
 				
 			// SUBTOTAL C/IGV	 (OCULTO)
-			case 10:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha' type='text' id='subTotalIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
+			case 11:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha' type='text' id='subTotalIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
 				break;
 
 		}

@@ -395,9 +395,13 @@ function nuevaCotizacionVenta(numeroDocumento, opcion){
 	
 	var est 				= estado.val();
 	// armando los parámetros
-	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar + 
+	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + 
+			 // a partir de aquí son los valores de los filtros de la pantalla de búsqueda
+			 "&datoBuscar=" + datoBuscar + 
 			 "&nroCotizacion=" + nroCotiz + "&nroRequerimiento=" + nroReq + "&codRepuesto=" + codRpto + 
-			 "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI;
+			 "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + 
+			 // indica que se debe VOLVER, ya que se invoca desde la pantalla de búsqueda
+		     "&volver=" + Respuesta.SI;
 	
 	window.location.href = "/appkahaxi/nueva-cotizacion?" + params;
 }

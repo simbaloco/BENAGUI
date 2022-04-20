@@ -22,9 +22,9 @@
 	<label id="numeroDocumento" th:text=${numeroDocumento} hidden="hidden"></label>
 	<label id="opcion" th:text=${opcion} hidden="hidden"></label>
 	<label id="datoBuscar" th:text=${datoBuscar} hidden="hidden"></label>
-	<label id="nroOrdenVenta" th:text=${nroOrdenVenta} hidden="hidden"></label>
+	<label id="nroCotizacion" th:text=${nroCotizacion} hidden="hidden"></label>
+	<label id="nroRequerimiento" th:text=${nroRequerimiento} hidden="hidden"></label>
 	<label id="codRepuesto" th:text=${codRepuesto} hidden="hidden"></label>
-	
 	<label id="fechaDesde" th:text=${fechaDesde} hidden="hidden"></label>
 	<label id="fechaHasta" th:text=${fechaHasta} hidden="hidden"></label>
 	<label id="estadoParam" th:text=${estadoParam} hidden="hidden"></label>
@@ -36,10 +36,7 @@
 	<button type="button" id="btnGrabar" class="btn-flotante-grabar">
 		<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
     </button>			
-	<button type="button" id="btnDuplicar" class="btn-flotante-duplicar" style="display: none">
-		<span class="mr-2"><i class="fas fa-copy"></i></span>Duplicar
-    </button>
-    	
+	
     	<!-- 		            
 	<div class="modal fade" id="guiasPorOrdenCompraModal" role="dialog" aria-labelledby="guiasPorOrdenCompraModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-personalizado-medium modal-lg" role="document" >
@@ -173,29 +170,10 @@
 						<form id="formOrdenVenta" class="needs-validation" novalidate>
 
 							<div class="row">
-								<div class="col-md-2">
-						 			<div id="cotizacionDiv" style="display: none ">
-						 				<label class="label" for="nroCotiReferencia">Nro. Cotización:</label>
-						          		<input class="form-control" type="text" id="nroCotiReferencia" readonly="readonly" />
-						          	</div>
-						 		</div>
-					 	 		<div class="col-md-2">
-						 			<div id="referenciaDiv" style="display: none ">
-						 				<label class="label" for="nroDocReferencia">Nro. Doc. Referencia:</label>
-						          		<input class="form-control" type="text" id="nroDocReferencia" readonly="readonly" />
-						          	</div>
-						 		</div>
-						 		
-						 		<div class="col-md-8">
-						 		</div>
-						 	</div>
-						 	
-							<div class="row">
 
 								<div class="col-md-2">
-									<label class="label" for="campoBuscar">Ingrese criterios para buscar:</label>
-									<input class="form-control sinCaracteresEspeciales" maxlength="20" size="50" type="text" id="campoBuscar" 
-										   placeholder="Ingrese DNI/RUC o Nombre/Razón Social para buscar..." readonly="readonly" tabindex="-1" />
+									<label class="label" for="CotiReferencia">Cotización Referencia</label>
+									<input class="form-control" maxlength="20" size="50" type="text" id="nroCotiReferencia" th:value="${numeroDocumento}" readonly="readonly" tabindex="-1" />
 								</div>
 
 								<div class="col-md-2">
@@ -358,15 +336,6 @@
 						<div class="row">
 
 							<div class="col-md-12">
-								<button type="button" id="btnAgregarArticulo" class="btn btn-primary btn-md" title="Agregar artículo" style="display: none">
-									<span class="mr-2"><i class="fas fa-plus-square"></i></span>
-								</button>
-							</div>
-						</div>
-
-						<div class="row">
-
-							<div class="col-md-12">
 
 								<div class="table-responsive">
 
@@ -380,7 +349,8 @@
 								                <th id="descripcionArticulo" width="15%">Descripci&oacute;n</th>
 								                <th id="marca" width="10%">Marca</th>
 								                <th id="cantidad" width="5%" >Cantidad</th>								                
-								                <th id="precioUnitario" width="10%" >PVU</th>
+								                <th id="cantidadPendiente" width="5%" >Cantidad Pendiente</th>
+												<th id="precioUnitario" width="10%" >PVU</th>
 								                <th id="precioUnitarioIgv" width="10%">PVU c/IGV</th>
 								                <th id="precioReferencia" width="10%" >Precio Ref</th>
 								                <th id="porcentajeDcto" width="3%">% Dcto.</th>
@@ -400,6 +370,7 @@
 										<tr>
 									        	<td></td>							        
 									        	<td style="display: none"></th>
+									        	<td></td>
 									        	<td></td>
 									        	<td></td>
 									        	<td></td>
