@@ -5,6 +5,7 @@ var codigoCliente;
 var email;
 var opcion;
 var datoBuscar;
+var nroOrdenVenta;
 var nroCotizacion;
 var nroRequerimiento;
 var codRepuesto;
@@ -71,8 +72,8 @@ var btnPdf;
 var dataTableDetalle;
 var indiceFilaDataTableDetalle;
 
-//var guiasPorOrdenCompraModal;
-//var modalCodigoOrdenCompra;
+var guiasPorOrdenVentaModal;
+var modalCodigoOrdenVenta;
 var tableSeleccionDocumento;
 var dataTableDetalleGuias;
 
@@ -90,6 +91,7 @@ function inicializarVariables() {
 	opcion = $("#opcion");
 	datoBuscar = $("#datoBuscar");
 	email = $("#email");
+	nroOrdenVenta = $("#nroOrdenVenta");
 	nroCotizacion = $("#nroCotizacion");
 	nroRequerimiento = $("#nroRequerimiento");
 	codRepuesto = $("#codRepuesto");
@@ -152,8 +154,8 @@ function inicializarVariables() {
 	btnGrabar = $("#btnGrabar");
 	btnPdf = $("#btnPdf");
 
-	/*guiasPorOrdenCompraModal = $("#guiasPorOrdenCompraModal");
-	modalCodigoOrdenCompra = $("#modalCodigoOrdenCompra");*/
+	guiasPorOrdenVentaModal = $("#guiasPorOrdenVentaModal");
+	modalCodigoOrdenVenta = $("#modalCodigoOrdenVenta");
 	tableSeleccionDocumento = $("#tableSeleccionDocumento");
 	btnAceptarModal = $("#btnAceptarModal");
 
@@ -271,7 +273,7 @@ function inicializarEventos() {
 	});
 
 	btnIrGuiaRemision.on("click", function(event) {
-		//mostrarModalGuiasPorOrdenCompra(event);
+		mostrarModalGuiasPorOrdenVenta(event);
 	});
 
 	btnGenerarGuiaRemision.on("click", function() {
@@ -927,10 +929,16 @@ function evaluarCambioEstado() {
 
 	} else {
 		// POR APROBAR
-		ocultarControl(btnGrabar);
 		ocultarControl(btnGenerarGuiaRemision);
 		controlNoRequerido(observaciones);
-		deshabilitarControl(observaciones);
+				
+		if (opcion.text() == Opcion.MODIFICAR){
+			mostrarControl(btnGrabar);
+			habilitarControl(observaciones);
+		}else{
+			ocultarControl(btnGrabar);
+			deshabilitarControl(observaciones);	
+		}
 	}
 }
 
@@ -1241,7 +1249,9 @@ function actualizarOrdenVenta() {
 			if (xhr.status == HttpStatus.OK) {
 				mostrarNotificacion("El registro fué actualizado correctamente.", "success");
 
+				console.log("estado.val()-->" + estado.val())
 				if (estado.val() == EstadoDocumentoInicial.APROBADO) {
+					console.log("estado aprobado...")
 					deshabilitarControl(direccionDespacho);
 					deshabilitarControl(personaContacto);
 					deshabilitarControl(estado);
@@ -1399,9 +1409,8 @@ function generarGuiaRemisionPorOrden() {
 
 function cargarGuiaRemisionAsociada(numDocumento) {
 	var params;
-	var nroDoc = numeroDocumento.text();
 	var dato = datoBuscar.text();
-	var nroOC = nroOrdenCompra.text();
+	var nroOV = codigo.html();
 	var codRpto = codRepuesto.text();
 	var fecDesde = fechaDesde.text();
 	var fecHasta = fechaHasta.text();
@@ -1409,17 +1418,18 @@ function cargarGuiaRemisionAsociada(numDocumento) {
 
 	//params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato +
 	params = "numeroDocumento=" + numDocumento + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato +
-		"&nroGuiaRemision=" + numDocumento + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +
-		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI +
-		"&desdeDocRef=" + Respuesta.SI + "&origenMnto=" + Respuesta.NO;;
+		"&nroGuiaRemision=" + numDocumento + "&nroOrdenVenta=" + nroOV + "&codRepuesto=" + codRpto +
+		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + 
+		"&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI + "&origenMnto=" + Respuesta.NO;;
 
-	window.location.href = "/appkahaxi/cargar-guia-remision-compra?" + params;
+	window.location.href = "/appkahaxi/cargar-guia-remision-venta?" + params;
 }
 
 function volver(){
 	var params;
 	//var nroDoc = numeroDocumento.text();
 	var nroDoc = nroCotiReferencia.val(); // aqui necesitamos el nro de la cotización
+	var nroOV = nroOrdenVenta.text();
 	var dato = datoBuscar.text();
 	var nroCotiz = nroCotizacion.text();
 	var nroReq 	 = nroRequerimiento.text();
@@ -1443,16 +1453,11 @@ function volver(){
 		
 	}else{
 		console.log("else nroDoc:"+nroDoc);
-		console.log("origenMnto:"+origenMnto);
-		if(origenMnto.text() == Respuesta.NO){
-			params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
-			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI;
-			window.location.href = "/appkahaxi/nueva-orden-compra?" + params;
-		}else{
-			params = "datoBuscar=" + dato + "&nroGuiaRemision=" + nroGR + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
-			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam;
-			window.location.href = "/appkahaxi/mantenimiento-guia-remision-compra?" + params;	
-		}		
+		console.log("origenMnto:"+origenMnto.text());
+		
+		params = "datoBuscar=" + dato + "&nroOrdenVenta=" + nroOV + "&codRepuesto=" + codRpto +
+				"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam;
+		window.location.href = "/appkahaxi/mantenimiento-orden-venta?" + params;
 	}
 }
 
@@ -1482,14 +1487,14 @@ function limpiarOrdenVenta() {
 	direccionDespacho.focus();
 }
 
-function mostrarModalGuiasPorOrdenCompra(event) {
+function mostrarModalGuiasPorOrdenVenta(event) {
 
-	modalCodigoOrdenCompra.text(numeroDocumento.text());
-	obtenerDetalleGuiaPorOrdenCompra(event);
-	mostrarModal(guiasPorOrdenCompraModal);
+	modalCodigoOrdenVenta.text(numeroDocumento.text());
+	obtenerDetalleGuiaPorOrdenVenta(event);
+	mostrarModal(guiasPorOrdenVentaModal);
 }
 
-function obtenerDetalleGuiaPorOrdenCompra(event) {
+function obtenerDetalleGuiaPorOrdenVenta(event) {
 
 	event.preventDefault();
 	event.stopPropagation();
@@ -1505,11 +1510,11 @@ function obtenerDetalleGuiaPorOrdenCompra(event) {
 
 			"ajax": {
 				data: function(d) {
-					d.codigoOrdenCompra = numeroDocumento.text().trim();
+					d.codigoOrdenVenta = numeroDocumento.text().trim();
 				},
-				url: '/appkahaxi/listarGuiaRemisionCompraPorOrdenCompra/',
+				url: '/appkahaxi/listarGuiaRemisionVentaPorOrdenVenta/',
 				dataSrc: function(json) {
-					console.log("listarGuiaRemisionCompraPorOrdenCompra...success");
+					console.log("listarGuiaRemisionVentaPorOrdenVenta...success");
 					return json;
 				},
 				error: function(xhr, error, code) {

@@ -23,6 +23,7 @@
 	<label id="opcion" th:text=${opcion} hidden="hidden"></label>
 	<label id="datoBuscar" th:text=${datoBuscar} hidden="hidden"></label>
 	<label id="nroCotizacion" th:text=${nroCotizacion} hidden="hidden"></label>
+	<label id="nroOrdenVenta" th:text=${nroOrdenVenta} hidden="hidden"></label>
 	<label id="nroRequerimiento" th:text=${nroRequerimiento} hidden="hidden"></label>
 	<label id="codRepuesto" th:text=${codRepuesto} hidden="hidden"></label>
 	<label id="fechaDesde" th:text=${fechaDesde} hidden="hidden"></label>
@@ -37,13 +38,13 @@
 		<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
     </button>			
 	
-    	<!-- 		            
-	<div class="modal fade" id="guiasPorOrdenCompraModal" role="dialog" aria-labelledby="guiasPorOrdenCompraModalLabel" aria-hidden="true">
+     		            
+	<div class="modal fade" id="guiasPorOrdenVentaModal" role="dialog" aria-labelledby="guiasPorOrdenVentaModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-personalizado-medium modal-lg" role="document" >
 			<div class="modal-content">
 
 				<div class="modal-header">
-					<h6 class="modal-title" id="guiasPorOrdenCompraModalLabel">Orden de Compra: <span id="modalCodigoOrdenCompra"></span></h6>
+					<h6 class="modal-title" id="guiasPorOrdenVentaModalLabel">Orden de Venta: <span id="modalCodigoOrdenVenta"></span></h6>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true" style="color:#5990e0">&times;</span>
 					</button>
@@ -105,7 +106,7 @@
 				</div>
 			</div>
 		</div>
-	</div> -->
+	</div>
 
 
 	<div class="kahaxi_titulo">
@@ -402,7 +403,7 @@
 					     	<div class="col-md-8">
 					     		<div class="form-group row">
 			            			<div class="col-md-3">
-					            		<label class="label" for="chkDctoTotal">¿Aplicar Dcto. Total? (%)</label>
+					            		<label class="label" for="chkDctoTotal">Dcto. Total (%)</label>
 					            	</div>
 					            	<div class="col-md-3">	
 					            		<div class="form-check">

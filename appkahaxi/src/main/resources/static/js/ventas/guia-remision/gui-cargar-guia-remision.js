@@ -8,6 +8,8 @@ var opcion;
 var datoBuscar;
 var nroGuiaRemision;
 var nroOrdenVenta;
+var nroCotizacion;
+var nroRequerimiento;
 var codRepuesto;
 var fechaDesde;
 var fechaHasta;
@@ -68,7 +70,9 @@ var facturasPorGuiaRemisionModal;
 var modalCodigoGuiaRemision;
 var tableSeleccionDocumento;
 var dataTableSeleccionDocumento;
+var chkDctoTotal;
 var dctoTotal;
+var dctoGRDiv;
 var dcto;
 
 var dateTimePickerInput;
@@ -94,6 +98,8 @@ function inicializarVariables() {
 	datoBuscar = $("#datoBuscar");
 	nroGuiaRemision = $("#nroGuiaRemision");
 	nroOrdenVenta = $("#nroOrdenVenta");
+	nroCotizacion = $("#nroCotizacion");
+	nroRequerimiento = $("#nroRequerimiento");
 	codRepuesto = $("#codRepuesto");
 	fechaDesde = $("#fechaDesde");
 	fechaHasta = $("#fechaHasta");
@@ -153,7 +159,9 @@ function inicializarVariables() {
 	dateTimePickerInput = $(".datetimepicker-input");
 	listaAlmacenModel = $("#listaAlmacenModel");
 	lblAnulado = $("#lblAnulado");
+	chkDctoTotal = $("#chkDctoTotal");
 	dctoTotal = $("#dctoTotal");
+	dctoGRDiv = $("#dctoGRDiv");
 	dcto = $("#dcto");
 }
 
@@ -438,9 +446,14 @@ function cargarPantallaHTMLOrdenVenta(data) {
 	igvGR.val(data.igv);
 	totalGR.val(data.total);
 
-	if (data.porcDctoTotal != null) {
-		dctoTotal.val(data.porcDctoTotal);
-	}
+	if(data.porcDctoTotal != null){
+		console.log("dentro del if...");
+    	dctoTotal.val(data.porcDctoTotal);
+    	//habilitarControl(dctoTotal);
+    	checkControl(chkDctoTotal);
+    	mostrarControl(dctoGRDiv);
+    }
+
 
 	if (data.codigoCondPago == CondicionPago.CREDITO) {
 		mostrarControl(divDias);
@@ -565,10 +578,14 @@ function cargarPantallaHTMLGuiaRemision(data) {
 		totalGR.val(data.total);
 		dcto.val(convertirNumeroAMoneda(data.descuento));
 
-		if (data.porcDctoTotal != null) {
-			dctoTotal.val(data.porcDctoTotal);
-		}
-
+		if(data.porcDctoTotal != null){
+			console.log("dentro del if...");
+	    	dctoTotal.val(data.porcDctoTotal);
+	    	//habilitarControl(dctoTotal);
+	    	checkControl(chkDctoTotal);
+	    	mostrarControl(dctoGRDiv);
+	    }
+		
 		OVReferencia.val(data.ordenVenta);
 		observaciones.val(data.observaciones);
 
@@ -994,7 +1011,11 @@ function registrarGuiaRemisionVenta() {
 	var totalVal = convertirMonedaANumero(totalGR.val().trim());
 	var detalle = tableToJSON(tableDetalle);
 	var diasVal = null;
-	var porcDctoTotal = dctoTotal.val().trim();
+	var porcDctoTotal = null;
+	if (chkDctoTotal.is(':checked')) {
+		porcDctoTotal = dctoTotal.val().trim();
+	}
+	
 
 	if (condPagoVal == CondicionPago.CREDITO) {
 		diasVal = dias.val();
@@ -1592,6 +1613,8 @@ function volver() {
 	var dato = datoBuscar.text();
 	var nroGR = nroGuiaRemision.text();
 	var nroOV = nroOrdenVenta.text();// este debe ser el valor del campo a buscar en el filtro de oc en el mantenimiento de oc 
+	var nroCoti = nroCotizacion.text();
+	var nroReq = nroRequerimiento.text();
 	var codRpto = codRepuesto.text();
 	var fecDesde = fechaDesde.text();
 	var fecHasta = fechaHasta.text();
@@ -1600,15 +1623,24 @@ function volver() {
 	var desdeDocRef = desdeDocRefParam.text();
 
 	if (desdeDocRef == Respuesta.SI) {
-		params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato + "&nroOrdenVenta=" + nroOV + "&codRepuesto=" + codRpto +
-			"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI;
+		params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato + "&nroOrdenVenta=" + nroOV + 
+			"&nroCotizacion=" + nroCoti + "&nroRequerimiento=" + nroReq + "&codRepuesto=" + codRpto +
+			"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + 
+			"&volver=" + Respuesta.SI + 
+			"&desdeDocRef=" + Respuesta.SI + 
+			"&origenMnto=" + Respuesta.NO;
+			
 		window.location.href = "/appkahaxi/nueva-orden-venta?" + params;
 	} else {
 		console.log("else nroDoc:" + nroDoc);
-		console.log("origenMnto:" + origenMnto);
+		console.log("origenMnto:" + origenMnto.text());
 		if (origenMnto.text() == Respuesta.NO) {
-			params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato + "&nroOrdenVenta=" + nroOC + "&codRepuesto=" + codRpto +
-				"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI;
+			params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato + "&nroOrdenVenta=" + nroOC + 
+				"&nroCotizacion=" + nroCoti + "&nroRequerimiento=" + nroReq + "&codRepuesto=" + codRpto +
+				"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + 
+				"&volver=" + Respuesta.SI + 
+				"&desdeDocRef=" + Respuesta.NO + 
+				"&origenMnto=" + Respuesta.SI;
 			window.location.href = "/appkahaxi/nueva-orden-venta?" + params;
 		} else {
 			params = "datoBuscar=" + dato + "&nroGuiaRemision=" + nroGR + "&nroOrdenVenta=" + nroOV + "&codRepuesto=" + codRpto +
@@ -1617,7 +1649,6 @@ function volver() {
 		}
 	}
 }
-
 
 function cargarFacturaAsociada(numeroDocumento, opcion) {
 
