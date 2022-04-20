@@ -95,18 +95,18 @@ public class GuiaRemisionVentaRestController {
 
     }
 
-    /*@GetMapping("/listarGuiaRemisionCompraPorOrdenCompra")
-    public ResponseEntity<List<GuiaRemisionCabModel>> listarGuiaRemisionCompraPorOrdenCompra(@RequestParam(Constante.PARAM_DATO_ORDEN_COMPRA) String codigoOrdenCompra) throws Exception {
+    @GetMapping("/listarGuiaRemisionVentaPorOrdenVenta")
+    public ResponseEntity<List<GuiaRemisionCabModel>> listarGuiaRemisionVentaPorOrdenVenta(@RequestParam(Constante.PARAM_DATO_ORDEN_VENTA) String codigoOrdenVenta) throws Exception {
 
-        logger.info("Inicio listarGuiaRemisionCompraPorOrdenCompra.......");
+        logger.info("Inicio listarGuiaRemisionVentaPorOrdenVenta.......");
 
-        List<GuiaRemisionCabModel> listGuiaRemisionCabModel = guiaRemisionCompraService.listarGuiaRemisionCompraPorOrdenCompra(codigoOrdenCompra);
+        List<GuiaRemisionCabModel> listGuiaRemisionCabModel = guiaRemisionVentaService.listarGuiaRemisionVentaPorOrdenVenta(codigoOrdenVenta);
 
-        logger.info("Fin listarGuiaRemisionCompraPorOrdenCompra.......");
+        logger.info("Fin listarGuiaRemisionVentaPorOrdenVenta.......");
 
         return new ResponseEntity<>(listGuiaRemisionCabModel, HttpStatus.OK);
 
-    }*/
+    }
 
     @GetMapping ("/buscarGuiaRemisionVenta/{numeroDocumento}")
     public ResponseEntity<GuiaRemisionCabModel> buscarGuiaRemisionVenta(@PathVariable(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento) throws Exception {

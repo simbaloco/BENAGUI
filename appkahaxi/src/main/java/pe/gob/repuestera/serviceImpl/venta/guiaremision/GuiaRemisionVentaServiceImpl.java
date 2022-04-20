@@ -56,6 +56,9 @@ public class GuiaRemisionVentaServiceImpl implements GuiaRemisionVentaService {
         params.put(Constante.PARAM_SP_COD_ESTADO, Constante.COD_ESTADO_GENERADO_GUIA_REMISION);
         params.put(Constante.PARAM_SP_COD_MOTIVO_TRASLADO, guiaRemisionCabModel.getCodigoMotivoTraslado());
         params.put(Constante.PARAM_SP_TIPO_CAMBIO, guiaRemisionCabModel.getTipoCambio());
+        params.put(Constante.PARAM_SP_DCTO, guiaRemisionCabModel.getDescuento());
+        params.put(Constante.PARAM_SP_PORC_DCTO_TOTAL, guiaRemisionCabModel.getPorcDctoTotal());
+        params.put(Constante.PARAM_SP_IGV, guiaRemisionCabModel.getIgv());
         params.put(Constante.PARAM_SP_SUB_TOTAL, guiaRemisionCabModel.getSubTotal());
         params.put(Constante.PARAM_SP_IGV, guiaRemisionCabModel.getIgv());
         params.put(Constante.PARAM_SP_TOTAL, guiaRemisionCabModel.getTotal());

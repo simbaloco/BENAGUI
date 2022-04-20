@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  layout:decorate="~{fragments/layout}" lang="en">
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<script th:src="@{/js/ventas/factura/gui-nueva-factura-asociada.js}" ></script>
+</head>
+
+<body>
+
+<div layout:fragment="content" th:remove="tag">
+
+	<input type="text" id="codigoCliente" hidden="hidden"/>
+
+	<label id="numeroDocumento" th:text=${numeroDocumento} hidden="hidden"></label>
+	<label id="opcion" th:text=${opcion} hidden="hidden"></label>
+	<label id="datoBuscar" th:text=${datoBuscar} hidden="hidden"></label>
+	
+	<label id="nroComprobantePago" th:text=${nroComprobantePago} hidden="hidden"></label>
+	<label id="nroGuiaRemision" th:text=${nroGuiaRemision} hidden="hidden"></label>
+	<label id="nroOrdenVenta" th:text=${nroOrdenVenta} hidden="hidden"></label>
+	<label id="codRepuesto" th:text=${codRepuesto} hidden="hidden"></label>	
+	
+	<label id="fechaDesde" th:text=${fechaDesde} hidden="hidden"></label>
+	<label id="fechaHasta" th:text=${fechaHasta} hidden="hidden"></label>
+	<label id="estadoParam" th:text=${estadoParam} hidden="hidden"></label>
+	<label id="volverParam" th:text=${volver} hidden="hidden"></label>
+	<label id="guiasParam" th:text=${guias} hidden="hidden"></label>
+	<label id="desdeDocRefParam" th:text=${desdeDocRef} hidden="hidden"></label>
+	<label id="nroGr" th:text=${nroGr} hidden="hidden"></label>
+	<label id="origenMnto" th:text=${origenMnto} hidden="hidden"></label>	
+	
+	
+	
+	<button type="button" id="btnGrabar" class="btn-flotante-grabar">
+		<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
+    </button>			
+	<button type="button" id="btnAnular" class="btn-flotante-duplicar" style="display: none">
+		<span class="mr-2"><i class="fas fa-trash"></i></span>Anular
+	</button>
+	
+	
+	<div class="kahaxi_titulo">
+
+		<div class="kahaxi_titulo_container">
+			<div class="kahaxi_titulo_logo"><i class="fas fa-cash-register"></i></div>
+			<div class="kahaxi_titulo_text"><span id="titulo"></span> FACTURA - VENTA</div>
+		</div>
+
+		<div class="subrayado">
+		</div>
+
+		<br>
+	</div>
+
+	<div class="box bg-box" id="accordionCabeceraFactura">
+
+		<div class="box-body">
+
+			<div class="card">
+
+				<div class="card-header quitar-contornos" id="headingCabeceraFactura">
+					<div class="row">
+						<div class="col-md-6">
+							<h2 class="mb-0">
+								<button class="subtitle btn btn-link" data-toggle="collapse" data-target="#collapseCabeceraFactura" aria-expanded="true" aria-controls="collapseCabeceraFactura">
+									<i class="fas fa-angle-up"></i><span>Datos de la Factura </span><span class="font-weight-bold" id="codigo"></span>
+									<div class="subrayado"></div>
+								</button>
+							</h2>
+						</div>
+						
+						<div class="col-md-6 alineacion-derecha">
+				     		<button type="button" id="btnVolver" class="btn btn-primary" style="display: none">
+	                  			<span class="mr-2"><i class="fas fa-backspace"></i></span>Volver
+				            </button>
+						</div>
+					</div>
+				</div>
+
+				<div id="collapseCabeceraFactura" class="collapse show" aria-labelledby="headingCabeceraFactura" data-parent="#accordionCabeceraFactura">
+
+					<div class="box-body">
+
+						<form id="formFactura" class="needs-validation" novalidate>
+
+							<div class="row">
+								<div class="col-md-2">
+									<div id="referenciaDiv" style="display: none ">
+										<label class="label" for="nroDocReferencia">Nro. Doc. Referencia:</label>
+										<input class="form-control" type="text" id="nroDocReferencia" readonly="readonly" />
+									</div>
+								</div>
+
+								<div class="col-md-10">
+								</div>
+							</div>
+
+							<div class="row">
+
+								<div class="col-md-2">
+									<label class="label" for="OVReferencia">OV Referencia</label>
+									<input class="form-control" maxlength="20" size="50" type="text" id="OVReferencia" th:value="${numeroDocumento}" readonly="readonly" tabindex="-1" />
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="documentoCliente">DNI/RUC:</label>
+									<input class="form-control" maxlength="20" size="15" type="text" id="documentoCliente" readonly="readonly" tabindex="-1" />
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="nombreCliente">Nombre/Raz&oacute;n Social:</label>
+									<input class="marquee form-control" maxlength="250" size="50" type="text" id="nombreCliente" readonly="readonly" tabindex="-1"/>
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="direccion">Direcci&oacute;n:</label>
+									<input class="marquee form-control" maxlength="250" size="50" type="text" id="direccion" readonly="readonly" tabindex="-1"/>
+								</div>
+								
+								<div class="col-md-2">
+									<label class="label" for="direccionDespacho">Direcci&oacute;n Despacho:</label>
+									<input class="marquee form-control" maxlength="200" size="50" type="text" id="direccionDespacho" readonly="readonly" tabindex="-1" />
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="personaContacto">Persona Contacto:</label>
+									<input class="marquee form-control" maxlength="100" size="50" type="text" id="personaContacto" readonly="readonly" tabindex="-1" />
+								</div>
+
+							</div>
+
+							<div class="row">
+
+								<div class="col-md-2">
+									<label class="label" for="fecConta">Fecha de contabilización:</label>
+									<div class="input-group date" id="fecConta" data-target-input="nearest">
+										<input type="text" class="form-control datetimepicker-input" data-target="#fecConta" required="required" readonly="readonly"/>
+										<div class="input-group-append" data-target="#fecConta" data-toggle="datetimepicker">
+											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+										</div>
+										<div class="invalid-feedback">
+											Ingrese Fecha de contabilización
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="fecDocumento">Fecha de documento:</label>
+									<div class="input-group date" id="fecDocumento" data-target-input="nearest">
+										<input type="text" class="form-control datetimepicker-input readonly" data-target="#fecDocumento" required="required"/>
+										<div class="input-group-append" data-target="#fecDocumento" data-toggle="datetimepicker">
+											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+										</div>
+										<div class="invalid-feedback">
+											Ingrese Fecha de documento
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="fecVencimiento">Fecha de vencimiento:</label>
+									<div class="input-group date" id="fecVencimiento" data-target-input="nearest">
+										<input type="text" class="form-control datetimepicker-input readonly" data-target="#fecVencimiento" required="required"/>
+										<div class="input-group-append" data-target="#fecVencimiento" data-toggle="datetimepicker">
+											<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+										</div>
+										<div class="invalid-feedback">
+											Ingrese Fecha de vencimiento
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="tipoMoneda">Moneda:</label>
+									<select id="tipoMoneda" class="form-control">
+										<option th:each="item : ${listaMoneda}"
+									            th:value="${item.codigo}" 
+									            th:text="${item.descripcion}">
+									    </option>
+									</select>
+								</div>
+
+								<div class="col-md-1">
+									<label class="label" for="tipoCambio">Tipo Cambio:</label>
+									<input class="form-control" maxlength="250" size="50" type="text" id="tipoCambio" readonly="readonly" tabindex="-1"/>
+								</div>
+
+								<div class="col-md-1">
+									<label class="label" for="condPago">Cond. Pago:</label>
+									<select id="condPago" class="form-control">
+										<option th:each="item : ${listaCondPago}"
+									            th:value="${item.codigo}" 
+									            th:text="${item.descripcion}">
+									    </option>
+									</select>
+								</div>
+
+								<div class="col-md-2" id="divDias" style="display: none">
+									<label class="label" for="dias">Días de crédito:</label>
+									<select id="dias" class="form-control">
+										<option th:each="item : ${listaDias}"
+									            th:value="${item.codigo}" 
+									            th:text="${item.descripcion}">
+									    </option>
+									</select>
+									<div class="invalid-feedback">
+										Seleccione días de crédito
+									</div>
+								</div>
+								
+								<div class="almacen-hidden" style="display: none">
+									<select class="form-control almacen_table" id="reemplazar" >
+										<option th:each="item : ${listaAlmacenModel}"
+									            th:value="${item.codigoAlmacen}" 
+									            th:text="${item.descripcion}">
+									    </option>
+									</select>
+								</div>
+
+							</div>
+
+							<div class="row">
+
+								<div class="col-md-1">
+									<label class="label" for="serie">Serie:</label>
+									<input class="form-control" maxlength="250" size="50" type="text" id="serie" required="required"/>
+									<div class="invalid-feedback">
+										Ingrese Serie
+									</div>
+								</div>
+								<div class="col-md-1">
+									<label class="label" for="correlativo">Correlativo:</label>
+									<input class="form-control" maxlength="250" size="50" type="text" id="correlativo" required="required"/>
+									<div class="invalid-feedback">
+										Ingrese Correlativo
+									</div>
+								</div>
+
+								<div class="col-md-2">
+									<label class="label" for="estadoPago">Estado Pago:</label>
+									<select id="estadoPago" class="form-control" required="required">
+										<option th:each="item : ${listaEstadoPago}"
+									            th:value="${item.codigo}" 
+									            th:text="${item.descripcion}"
+												th:selected="${item.codigo} == '01' ? true : false">
+									    </option>
+									</select>
+									<div class="invalid-feedback">
+										Seleccione Estado Pago
+									</div>
+								</div>
+								
+								<div class="col-md-2">
+									<label class="label" for="lblAnulado">&nbsp;</label>
+									<input class="form-control etiquetaAnulado" type="text" id="lblAnulado" style="display: none" value="ANULADO"/>
+								</div>
+								
+								<div class="col-md-6 alineacion-derecha">
+						 			<label class="label"></label>
+						 			<div>
+
+						 				<button type="button" id="btnLimpiar" class="btn btn-primary">
+				                  			<span class="mr-2"><i class="fas fa-eraser"></i></span>Limpiar
+							            </button>
+							            
+							            
+							        </div>
+						 		</div>	
+							</div>
+
+							<div class="row">
+						 		<div class="col-md-12">
+						 			<label class="label"></label>
+						 		</div>
+						    </div>
+
+						</form>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="box bg-box" id="accordionDetalleFactura">
+
+		<div class="box-body">
+
+			<div class="card">
+
+				<div id="collapseDetalleFactura" class="collapse show" aria-labelledby="headingDetalleFactura" data-parent="#accordionDetalleFactura">
+
+					<div class="card-body quitar-contornos-tabla">
+
+						<div class="row">
+
+							<div class="col-md-12">
+
+								<div class="table-responsive">
+
+									<table id="tableDetalle" class="table table-hover table-striped table-bordered dt-responsive">
+
+										<thead class="text-center">
+											<tr>
+												<th width="2%">Item</th>
+												<th id="codGuiaRemision" width="20%">Guía Ref</th>
+												<th id="lineaReferencia" width="5%">Num. Línea</th>
+												<th id="codArticulo" width="5%">C&oacute;digo Artículo</th>
+												<th id="descripcionArticulo" width="20%">Descripci&oacute;n</th>
+												<th id="marca" width="10%">Marca</th>
+												<th id="codAlmacen" width="5%">Almacén</th>
+												<th id="cantidad" width="5%" >Cantidad</th>
+												<th id="precioUnitario" width="10%" >PU</th>
+												<th id="precioUnitarioIgv" width="10%">PU c/IGV</th>
+												<th id="subTotal" width="10%">SubTotal</th>
+												<th id="subTotalIgv" style="display: none"></th>
+												<th class="eliminar" width="5%">Eliminar</th>
+											</tr>
+										</thead>
+
+										<tbody>
+										</tbody>
+
+									</table>
+
+									<table id="tableNuevoDetalle" style="display:none;">
+										<tbody>
+										<tr>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td class="d-none"></td>
+											<td>
+												<div class="text-center">
+													<button class="btn-delete btn btn-danger btn-xs">
+														<span><i class="fas fa-trash-alt"></i></span>
+													</button>
+												</div>
+											</td>
+										</tr>
+										</tbody>
+									</table>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card">
+
+				<div class="card-body">
+				
+					<form id="formObservaciones" class="needs-validation" novalidate>
+					<div class="form-group row">
+				     	<div class="col-md-8">
+				     		
+				     		<div class="form-group row">
+			            		<div class="col-md-3">
+					            	<label class="label">Dcto. Total (%)</label>
+					            </div>
+					            <div class="col-md-3">	
+					            	<div class="form-check">
+							 		  	<input class="form-control" maxlength="3" type="text" id="dctoTotal" disabled="disabled" onkeypress="return soloDecimales(event, this);"/>
+									</div>
+								</div>
+			            	</div>
+			            	
+				     		<div class="form-group row">
+		            			<div class="col-md-3">
+				            		<label class="label" for="observaciones">Observaciones</label>
+				            	</div>
+				            	<div class="col-md-9">	
+				            		<textarea class="form-control" rows="3" maxlength="250" id="observaciones" ></textarea>
+				            		<div class="invalid-feedback">
+			                        	Debe ingresar observaciones
+			                        </div>
+							    </div>
+		            		</div>
+				     	</div>
+				     	
+				     	<div class="col-md-1"></div>
+				     	<div class="col-md-3">
+			            	<div class="form-group row">
+		            			<div class="col-md-4">
+				            		<label class="label" for="subTotalFactura">SubTotal</label>
+				            	</div>
+				            	<div class="col-md-8">	
+				            		<span class="simbolo-moneda input-symbol-dolar">
+							        	<input class="form-control alineacion-derecha" maxlength="10" type="text" id="subTotalFactura" readonly="readonly"/>
+							        </span>
+							    </div>
+		            		</div>
+		            		
+		            		<div class="form-group row">
+								<div class="col-md-4">
+									<label class="label" for="dcto">Descuento</label>
+								</div>
+								<div class="col-md-8">
+									<span class="simbolo-moneda input-symbol-dolar"> 
+										<input class="form-control alineacion-derecha" maxlength="10" type="text" id="dcto" readonly="readonly" />
+									</span>
+								</div>
+							</div>
+			            	
+		            		<div class="form-group row">
+		            			<div class="col-md-4">
+				            		<label class="label" for="igvFactura">IGV</label>
+				            	</div>
+				            	<div class="col-md-8">	
+				            		<span class="simbolo-moneda input-symbol-dolar">
+				            			<input class="form-control alineacion-derecha" maxlength="10" type="text" id="igvFactura" readonly="readonly"/>
+				            		</span>
+							    </div>	
+		            		</div>
+		            		
+		            		<div class="form-group row">
+		            			<div class="col-md-4">
+				            		<label class="label" for="totalFactura">Total</label>
+				            	</div>
+				            	<div class="col-md-8">	
+				            		<span class="simbolo-moneda input-symbol-dolar">
+				            			<input class="form-control alineacion-derecha" maxlength="10" type="text" id="totalFactura" readonly="readonly"/>
+						        	</span>
+							    </div>	
+		            		</div>
+				       	</div>
+				    </div>	
+				    </form>
+				    				
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+</div>
+
+</body>
+</html>
