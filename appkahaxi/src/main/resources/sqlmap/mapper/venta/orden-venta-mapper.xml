@@ -30,6 +30,7 @@
         <result property="tipoCambio"				column="TIPO_CAMBIO" />
         <result property="observaciones"			column="OBSERVACIONES" />
         <result property="numeroDocumentoRef"		column="NRO_DOC_REFERENCIA" />
+        <result property="porcDctoTotal"			column="PORC_DCTO_TOTAL" />        
         <result property="subTotal"					column="SUBTOTAL" />
         <result property="descuento"				column="DESCUENTO" />
         <result property="igv"						column="IGV" />

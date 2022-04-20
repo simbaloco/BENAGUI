@@ -1515,6 +1515,150 @@ public class PrincipalController {
 			}
 			return retorno;
 		}
+		
+		@GetMapping("/mantenimiento-factura-venta")
+		public String cargarMantenimientoFacturaVenta(Model model, @RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar,
+															  @RequestParam(Constante.PARAM_NRO_COMPROBANTE_PAGO) String nroComprobantePago,
+															  @RequestParam(Constante.PARAM_NRO_ORDEN_VENTA) String nroOrdenVenta,
+															  @RequestParam(Constante.PARAM_COD_REPUESTO) String codRepuesto,
+															  @RequestParam(Constante.PARAM_FECHA_DESDE) String fechaDesde,
+															  @RequestParam(Constante.PARAM_FECHA_HASTA) String fechaHasta,
+															  @RequestParam(Constante.PARAM_ESTADO) String estadoParam) {
+			String retorno;
+			try {
+				logger.info("entrando al método cargarMantenimientoFacturaVenta, datoBuscar-->" + datoBuscar
+						+ "/nroComprobantePago-->" + nroComprobantePago + "/nroOrdenVenta-->" + nroOrdenVenta + "/codRepuesto-->" + codRepuesto 
+						+ "/fechaDesde-->" + fechaDesde + "/fechaHasta-->" + fechaHasta
+						+ "/estadoParam-->" + estadoParam);
+				model.addAttribute("datoBuscar", datoBuscar);
+				model.addAttribute("nroComprobantePago", nroComprobantePago);
+				model.addAttribute("nroOrdenVenta", nroOrdenVenta);
+				model.addAttribute("codRepuesto", codRepuesto);
+				model.addAttribute("fechaDesde", fechaDesde);
+				model.addAttribute("fechaHasta", fechaHasta);
+				model.addAttribute("estadoParam", estadoParam);
+				List<ComboModel> listaEstado = genericService.cargarCombo(Constante.CATALOGO_ESTADO_DOC);
+				model.addAttribute("listaEstado", listaEstado);
+
+				retorno = Constante.PAGINA_MANTENIMIENTO_FACTURA_VENTA;
+				logger.info("saliendo del método cargarMantenimientoFacturaVenta");
+			}catch (Exception e) {
+				// TODO: handle exception
+				retorno = Constante.PAGINA_ERROR;
+				model.addAttribute("mensajeError", e.toString());
+			}
+			return retorno;
+		}
+
+		@GetMapping("/nueva-factura-venta-directa")
+		public String cargarFacturaVentaDirecta(Model model, @RequestParam(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento,
+										 @RequestParam(Constante.PARAM_OPCION) String opcion,
+										 @RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar,
+										 @RequestParam(Constante.PARAM_NRO_COMPROBANTE_PAGO) String nroComprobantePago,
+										 @RequestParam(Constante.PARAM_NRO_ORDEN_VENTA) String nroOrdenVenta,
+										 @RequestParam(Constante.PARAM_COD_REPUESTO) String codRepuesto,
+										 @RequestParam(Constante.PARAM_FECHA_DESDE) String fechaDesde,
+										 @RequestParam(Constante.PARAM_FECHA_HASTA) String fechaHasta,
+										 @RequestParam(Constante.PARAM_ESTADO) String estadoParam,
+										 @RequestParam(Constante.PARAM_VOLVER) String volver,
+										 @RequestParam(Constante.PARAM_DESDE_DOC_REF) String desdeDocRef) {
+			String retorno;
+			try {
+				logger.info("entrando al método cargarFacturaVentaDirecta, OPCION--->" + opcion + "/numeroDocumento-->" + numeroDocumento 
+						+ "/datoBuscar-->" + datoBuscar + "/nroComprobantePago-->" + nroComprobantePago + "/nroOrdenVenta-->" + nroOrdenVenta
+						+ "/codRepuesto-->" + codRepuesto + "/fechaDesde-->" + fechaDesde + "/fechaHasta-->" + fechaHasta
+						+ "/estadoParam-->" + estadoParam + "/volver-->" + volver + "/desdeDocRef-->" + desdeDocRef);
+				
+				model.addAttribute("numeroDocumento", numeroDocumento);
+				model.addAttribute("opcion", opcion);
+				model.addAttribute("datoBuscar", datoBuscar);
+				model.addAttribute("nroComprobantePago", nroComprobantePago);
+				model.addAttribute("nroOrdenVenta", nroOrdenVenta);
+				model.addAttribute("codRepuesto", codRepuesto);
+				model.addAttribute("fechaDesde", fechaDesde);
+				model.addAttribute("fechaHasta", fechaHasta);
+				model.addAttribute("estadoParam", estadoParam);
+				model.addAttribute("volver", volver);
+				model.addAttribute("desdeDocRef", desdeDocRef);
+				// llenando los combos
+				List<ComboModel> listaMoneda = genericService.cargarCombo(Constante.CATALOGO_MONEDA);
+				List<ComboModel> listaCondPago = genericService.cargarCombo(Constante.CATALOGO_CONDICION_PAGO);
+				List<ComboModel> listaDias = genericService.cargarCombo(Constante.CATALOGO_DIAS_PC);
+				List<ComboModel> listaEstadoPago = genericService.cargarCombo(Constante.CATALOGO_ESTADO_PAGO);
+				List<AlmacenModel> listaAlmacenModel = guiaRemisionCompraService.buscarAlmacen();
+				
+				model.addAttribute("listaMoneda", listaMoneda);
+				model.addAttribute("listaCondPago", listaCondPago);
+				model.addAttribute("listaDias", listaDias);
+				model.addAttribute("listaEstadoPago", listaEstadoPago);
+				model.addAttribute("listaAlmacenModel", listaAlmacenModel);
+				
+				retorno = Constante.PAGINA_NUEVA_FACTURA_VENTA_DIRECTA;
+				logger.info("saliendo del método cargarFacturaVentaDirecta");
+			}catch (Exception e) {
+				// TODO: handle exception
+				retorno = Constante.PAGINA_ERROR;
+				model.addAttribute("mensajeError", e.toString());
+			}
+			return retorno;
+		}
+
+		@GetMapping("/nueva-factura-venta-asociada")
+		public String cargarFacturaVentaAsociada(Model model,
+											@RequestParam(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento,
+										    @RequestParam(Constante.PARAM_OPCION) String opcion,
+										    @RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar,
+										    @RequestParam(Constante.PARAM_FECHA_DESDE) String fechaDesde,
+										    @RequestParam(Constante.PARAM_FECHA_HASTA) String fechaHasta,
+										    @RequestParam(Constante.PARAM_ESTADO) String estadoParam,
+										    @RequestParam(Constante.PARAM_VOLVER) String volver,
+											@RequestParam(Constante.PARAM_DESDE_DOC_REF) String desdeDocRef,
+											@RequestParam(Constante.PARAM_NRO_GUIA_REMISION) String nroGuiaRemision,
+											@RequestParam(Constante.PARAM_NRO_GR_REF) String nroGr,
+											@RequestParam(Constante.PARAM_GUIAS) String guias,
+											@RequestParam(Constante.PARAM_ORIGEN_MNTO) int origenMnto) {
+			String retorno;
+
+			try {
+
+				logger.info("entrando al método cargarFacturaVentaAsociada, OPCION--->" + opcion + "/numeroDocumento-->" + numeroDocumento 
+						+ "/datoBuscar-->" + datoBuscar + "/fechaDesde-->" + fechaDesde + "/fechaHasta-->" + fechaHasta
+						+ "/estadoParam-->" + estadoParam + "/volver-->" + volver + "/desdeDocRef-->" + desdeDocRef + "/guias-->" + guias);
+
+				model.addAttribute("numeroDocumento", numeroDocumento);
+				model.addAttribute("opcion", opcion);
+				model.addAttribute("datoBuscar", datoBuscar);
+				model.addAttribute("fechaDesde", fechaDesde);
+				model.addAttribute("fechaHasta", fechaHasta);
+				model.addAttribute("estadoParam", estadoParam);
+				model.addAttribute("volver", volver);
+				model.addAttribute("desdeDocRef", desdeDocRef);
+				model.addAttribute("nroGuiaRemision", nroGuiaRemision);
+				model.addAttribute("nroGr", nroGr);
+				model.addAttribute("guias", guias);
+				model.addAttribute("origenMnto", origenMnto);
+				// llenando los combos
+				List<ComboModel> listaMoneda = genericService.cargarCombo(Constante.CATALOGO_MONEDA);
+				List<ComboModel> listaCondPago = genericService.cargarCombo(Constante.CATALOGO_CONDICION_PAGO);
+				List<ComboModel> listaDias = genericService.cargarCombo(Constante.CATALOGO_DIAS_PC);
+				List<ComboModel> listaEstadoPago = genericService.cargarCombo(Constante.CATALOGO_ESTADO_PAGO);
+				List<AlmacenModel> listaAlmacenModel = guiaRemisionCompraService.buscarAlmacen();
+				
+				model.addAttribute("listaMoneda", listaMoneda);
+				model.addAttribute("listaCondPago", listaCondPago);
+				model.addAttribute("listaDias", listaDias);
+				model.addAttribute("listaEstadoPago", listaEstadoPago);
+				model.addAttribute("listaAlmacenModel", listaAlmacenModel);
+				
+				retorno = Constante.PAGINA_NUEVA_FACTURA_VENTA_ASOCIADA;
+				logger.info("saliendo del método cargarFacturaVentaAsociada");
+			}catch (Exception e) {
+				// TODO: handle exception
+				retorno = Constante.PAGINA_ERROR;
+				model.addAttribute("mensajeError", e.toString());
+			}
+			return retorno;
+		}
 	
 
 }

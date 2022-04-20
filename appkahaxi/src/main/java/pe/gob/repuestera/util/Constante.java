@@ -78,7 +78,7 @@ public class Constante {
 	public static final String PAGINA_MANTENIMIENTO_FACTURA_COMPRA = "paginas/compras/factura/mantenimiento-factura";
 	public static final String PAGINA_NUEVA_FACTURA_VENTA_DIRECTA = "paginas/ventas/factura/nueva-factura-directa";
 	public static final String PAGINA_NUEVA_FACTURA_VENTA_ASOCIADA = "paginas/ventas/factura/nueva-factura-asociada";
-	public static final String PAGINA_MANTENIMIENTO_VENTA_COMPRA = "paginas/ventas/factura/mantenimiento-factura";
+	public static final String PAGINA_MANTENIMIENTO_FACTURA_VENTA = "paginas/ventas/factura/mantenimiento-factura";
 	/* REPORTES */
 	public static final String PAGINA_REPORTE_COMPRAS = "paginas/reportes/reporte-compras";
 	public static final String PAGINA_REPORTE_VENTAS = "paginas/reportes/reporte-ventas";
