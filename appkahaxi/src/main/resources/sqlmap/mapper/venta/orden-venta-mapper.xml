@@ -26,10 +26,10 @@
         <result property="codigoDias" 				column="COD_DIAS" />
         <result property="descripcionDias" 			column="DESC_COD_DIAS" />
         <result property="codigoEstado" 			column="COD_ESTADO" />
+        <result property="codigoEstadoProceso" 		column="COD_ESTADO_PROCESO" />
         <result property="descripcionEstado"		column="DESC_ESTADO" />
         <result property="tipoCambio"				column="TIPO_CAMBIO" />
         <result property="observaciones"			column="OBSERVACIONES" />
-        <result property="numeroDocumentoRef"		column="NRO_DOC_REFERENCIA" />
         <result property="porcDctoTotal"			column="PORC_DCTO_TOTAL" />        
         <result property="subTotal"					column="SUBTOTAL" />
         <result property="descuento"				column="DESCUENTO" />
@@ -101,6 +101,11 @@
     <parameterMap id="actualizarOrdenVentaParams" type="hashmap">
         <parameter property="NRO_DOCUMENTO"       	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="USUARIO"				jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="DIRECCION_DESPACHO"   	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="PERSONA_CONTACTO"   	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_CONTABILIZACION"   jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_VALIDO_HASTA"      jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FEC_ENTREGA"      		jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="COD_ESTADO"        	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="OBSERVACIONES"     	jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
@@ -142,7 +147,7 @@
    	
    	<!-- este SP es invocado al grabar una cotización. Graba la cabecera -->
     <update id="actualizarOrdenVenta" parameterMap="actualizarOrdenVentaParams" statementType="CALLABLE">
-    	{CALL SP_ACTUALIZAR_ORDEN_VENTA(?,?,?,?,?,?) }
+    	{CALL SP_ACTUALIZAR_ORDEN_VENTA(?,?,?,?,?,?,?,?,?,?,?) }
     </update> 
    	   	
    	<!-- este SP es invocado al grabar una cotización (al editar el estado) -->

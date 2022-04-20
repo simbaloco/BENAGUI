@@ -298,10 +298,7 @@ function inicializarTabla(){
                         			"<button title='Descargar Orden' class='btn-download btn btn-warning btn-xs'>" +
                         				"<span><i class=\"fas fa-download\"></i></span>" +
 					                "</button>" +
-									habilita + "</button>"+
-					                "<button title='Duplicar' class='btn-copy btn btn-success btn-xs'>" +
-			                            "<span><i class=\"far fa-copy\"></i></span>" +
-			                        "</button>" +
+									habilita + "</button>" +
 				                "</div>";
                     }
             }
@@ -346,21 +343,14 @@ function inicializarTabla(){
 	
 	$('#tablaOrdenVenta tbody').on('click','.btn-edit', function () {
 	    var data = dataTableOrdenVenta.row( $(this).closest('tr')).data();
-	   // nuevaOrdenVenta(data.numeroDocumento, Opcion.MODIFICAR);
-		generarGuiaRemisionPorOrden(data.numeroDocumento);
+	    nuevaOrdenVenta(data.numeroDocumento, Opcion.MODIFICAR);
+		//generarGuiaRemisionPorOrden(data.numeroDocumento);
 	});
 	
 	$('#tablaOrdenVenta tbody').on('click','.btn-view', function () {
 	    var data = dataTableOrdenVenta.row( $(this).closest('tr')).data();
 	    nuevaOrdenVenta(data.numeroDocumento, Opcion.VER);
 	});
-	 
-	$('#tablaOrdenVenta tbody').on('click','.btn-copy', function () {
-	    var data = dataTableOrdenVenta.row( $(this).closest('tr')).data();
-	    nuevaOrdenVenta(data.numeroDocumento, Opcion.DUPLICAR);
-	});
-	
-	
 
 }
 
@@ -410,18 +400,26 @@ function codRepuestoKeyUp(e){
 
 function nuevaOrdenVenta(numeroDocumento, opcion){
 	var params;
-	var datoBuscar 			= campoBuscar.val();
-	var nroOVVal 			= nroOV.val();
-	var codRpto 			= codRepuesto.val();
-	var fecContDesde 		= fecContaDesde.datetimepicker('date').format('L');
-	var fecContHasta 		= fecContaHasta.datetimepicker('date').format('L');
-	var est 				= estado.val();
-	// armando los parámetros
-	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar +
-		"&nroOrdenVenta=" + nroOVVal + "&codRepuesto=" + codRpto +
-		"&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + 
-		"&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.NO + "&origenMnto=" + Respuesta.SI;
-	console.log("xxx-->" + params);
+	var dato 		= campoBuscar.val();
+	var nroOrdVta 	= nroOV.val();
+	var codRpto 	= codRepuesto.val();
+	var fecDesde 	= fecContaDesde.datetimepicker('date').format('L');
+	var fecHasta 	= fecContaHasta.datetimepicker('date').format('L');
+	var estParam 	= estado.val();
+	
+	// aquí viaja el nro de la cotización del documento actual
+	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + 
+		// a partir de aquí son los filtros que se arrastran de la pantalla de búsqueda de cotizaciones
+		"&datoBuscar=" + dato +
+		"&nroOrdenVenta=" + nroOrdVta +
+		"&nroCotizacion=&nroRequerimiento=&codRepuesto=" + codRpto +
+		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + 
+		// indica que se debe VOLVER a la cotización desde la OV
+		"&volver=" + Respuesta.SI + 
+		// indica que se está yendo a la página de OV desde una cotización
+		"&desdeDocRef=" + Respuesta.NO + 
+		// indica que no se va desde la pantalla de mantenimiento de cotizaciones
+		"&origenMnto=" + Respuesta.SI;
 	window.location.href = "/appkahaxi/nueva-orden-venta?" + params;
 }
 

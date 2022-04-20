@@ -299,6 +299,7 @@ public class Constante {
 	public static final String PARAM_EMAIL = "email";
 	public static final String PARAM_DATO_BUSCAR = "datoBuscar";
 	public static final String PARAM_NRO_COTIZACION = "nroCotizacion";
+	public static final String PARAM_NRO_ORDEN_VENTA = "nroOrdenVenta";
 	public static final String PARAM_NRO_ORDEN_COMPRA = "nroOrdenCompra";
 	public static final String PARAM_NRO_GUIA_REMISION = "nroGuiaRemision";
 	public static final String PARAM_NRO_GR_REF = "nroGr";
@@ -317,7 +318,6 @@ public class Constante {
 	public static final String PARAM_TIPO_PERSONA = "tipoPersona";
 	public static final String PARAM_TIPO_DOCUMENTO = "tipoDoc";
 	public static final String PARAM_TIPO_REPORTE = "tipoReporte";
-	public static final String PARAM_NRO_ORDEN_VENTA = "nroOrdenVenta";
 	public static final String PARAM_ARCHIVO_EXCEL= "archivoExcel";
 
 	

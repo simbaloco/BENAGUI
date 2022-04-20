@@ -1,5 +1,7 @@
 package pe.gob.repuestera.serviceImpl.venta.ordenventa;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,9 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pe.gob.repuestera.exception.ErrorControladoException;
+import pe.gob.repuestera.model.GuiaRemisionCabModel;
 import pe.gob.repuestera.model.VentaCabModel;
 import pe.gob.repuestera.model.VentaDetModel;
 import pe.gob.repuestera.repository.venta.ordenventa.OrdenVentaMapper;
+import pe.gob.repuestera.service.venta.guiaremision.GuiaRemisionVentaService;
 import pe.gob.repuestera.service.venta.ordenventa.OrdenVentaService;
 import pe.gob.repuestera.serviceImpl.compra.ordencompra.OrdenCompraServiceImpl;
 import pe.gob.repuestera.util.Constante;
@@ -27,6 +31,9 @@ public class OrdenVentaServiceImpl implements OrdenVentaService{
 
 	@Autowired
 	private OrdenVentaMapper ordenVentaMapper;
+	@Autowired
+	private GuiaRemisionVentaService guiaRemisionVentaService;
+	
 	@Autowired
 	private JsonUtils jsonUtils;
 	
@@ -67,35 +74,35 @@ public class OrdenVentaServiceImpl implements OrdenVentaService{
 	}
 
 	@Override
-	public String registrarOrdenVenta(VentaCabModel registro, String usuario) throws Exception {
-		logger.info("compraCabModel ===> " + registro.toString());
+	public String registrarOrdenVenta(VentaCabModel ventaCabModel, String usuario) throws Exception {
+		logger.info("compraCabModel ===> " + ventaCabModel.toString());
 		logger.info("usuario ===> " + usuario);
 
-		String dataJSON = jsonUtils.obtenerJson(registro.getDetalle());
+		String dataJSON = jsonUtils.obtenerJson(ventaCabModel.getDetalle());
 
 		logger.info("List<CompraDetModel> ===> " + dataJSON);
 
 		Map<String, Object> params = new HashMap();
-		params.put(Constante.PARAM_SP_COD_CLIENTE, registro.getCodigoCliente());
-		params.put(Constante.PARAM_SP_NRO_COTIZ_VENTA, registro.getNroCotizVenta());
+		params.put(Constante.PARAM_SP_COD_CLIENTE, ventaCabModel.getCodigoCliente());
+		params.put(Constante.PARAM_SP_NRO_COTIZ_VENTA, ventaCabModel.getNroCotizVenta());
 		params.put(Constante.PARAM_SP_USUARIO, usuario);
-		params.put(Constante.PARAM_SP_DIR_DESPACHO, registro.getDireccionDespacho());
-		params.put(Constante.PARAM_SP_PER_CONTACTO, registro.getPersonaContacto());
-		params.put(Constante.PARAM_SP_FEC_CONTABILIZACION, registro.getFechaContabilizacion());
-		params.put(Constante.PARAM_SP_FEC_VALIDO_HASTA, registro.getFechaValidoHasta());
-		params.put(Constante.PARAM_SP_FEC_ENTREGA, registro.getFechaEntrega());
-		params.put(Constante.PARAM_SP_COD_TIPO_MONEDA, registro.getCodigoTipoMoneda());
-		params.put(Constante.PARAM_SP_COD_COND_PAGO, registro.getCodigoCondPago());
-		params.put(Constante.PARAM_SP_COD_DIAS, registro.getCodigoDias());
-		params.put(Constante.PARAM_SP_COD_ESTADO, registro.getCodigoEstado());
-		params.put(Constante.PARAM_SP_TIPO_CAMBIO, registro.getTipoCambio());
-		params.put(Constante.PARAM_SP_OBSERVACIONES, registro.getObservaciones());
-		params.put(Constante.PARAM_SP_NRO_DOCUMENTO_REF, registro.getNumeroDocumentoRef());
-		params.put(Constante.PARAM_SP_PORC_DCTO_TOTAL, registro.getPorcDctoTotal());
-		params.put(Constante.PARAM_SP_SUB_TOTAL, registro.getSubTotal());
-		params.put(Constante.PARAM_SP_DCTO, registro.getDescuento());
-		params.put(Constante.PARAM_SP_IGV, registro.getIgv());
-		params.put(Constante.PARAM_SP_TOTAL, registro.getTotal());		
+		params.put(Constante.PARAM_SP_DIR_DESPACHO, ventaCabModel.getDireccionDespacho());
+		params.put(Constante.PARAM_SP_PER_CONTACTO, ventaCabModel.getPersonaContacto());
+		params.put(Constante.PARAM_SP_FEC_CONTABILIZACION, ventaCabModel.getFechaContabilizacion());
+		params.put(Constante.PARAM_SP_FEC_VALIDO_HASTA, ventaCabModel.getFechaValidoHasta());
+		params.put(Constante.PARAM_SP_FEC_ENTREGA, ventaCabModel.getFechaEntrega());
+		params.put(Constante.PARAM_SP_COD_TIPO_MONEDA, ventaCabModel.getCodigoTipoMoneda());
+		params.put(Constante.PARAM_SP_COD_COND_PAGO, ventaCabModel.getCodigoCondPago());
+		params.put(Constante.PARAM_SP_COD_DIAS, ventaCabModel.getCodigoDias());
+		params.put(Constante.PARAM_SP_COD_ESTADO, ventaCabModel.getCodigoEstado());
+		params.put(Constante.PARAM_SP_TIPO_CAMBIO, ventaCabModel.getTipoCambio());
+		params.put(Constante.PARAM_SP_OBSERVACIONES, ventaCabModel.getObservaciones());
+		params.put(Constante.PARAM_SP_NRO_DOCUMENTO_REF, ventaCabModel.getNumeroDocumentoRef());
+		params.put(Constante.PARAM_SP_PORC_DCTO_TOTAL, ventaCabModel.getPorcDctoTotal());
+		params.put(Constante.PARAM_SP_SUB_TOTAL, ventaCabModel.getSubTotal());
+		params.put(Constante.PARAM_SP_DCTO, ventaCabModel.getDescuento());
+		params.put(Constante.PARAM_SP_IGV, ventaCabModel.getIgv());
+		params.put(Constante.PARAM_SP_TOTAL, ventaCabModel.getTotal());		
 		params.put(Constante.PARAM_SP_DATA_JSON, dataJSON);
 
 		logger.info("params ===> " + params);
@@ -140,8 +147,8 @@ public class OrdenVentaServiceImpl implements OrdenVentaService{
 		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
 			logger.info("compraCabModel ===> " + ventaCabModel.toString());
 			
-			/*try {
-                List<GuiaRemisionCabModel> listGuiaRemisionCabModel = guiaRemisionCompraService.listarGuiaRemisionCompraPorOrdenCompra(numeroDocumento);
+			try {
+                List<GuiaRemisionCabModel> listGuiaRemisionCabModel = guiaRemisionVentaService.listarGuiaRemisionVentaPorOrdenVenta(numeroDocumento);
                 ventaCabModel.setCantidadGrAsociadas(listGuiaRemisionCabModel.size());
 
             } catch (Exception e) {
@@ -149,7 +156,7 @@ public class OrdenVentaServiceImpl implements OrdenVentaService{
                 e.printStackTrace(new PrintWriter(printStackTrace));
                 logger.info("No se tienen GR asociadas ===> " + printStackTrace.toString());
                 ventaCabModel.setCantidadGrAsociadas(0);
-            }*/
+            }
 
 		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
 			throw new ErrorControladoException(mensajeResultado);
@@ -223,9 +230,42 @@ public class OrdenVentaServiceImpl implements OrdenVentaService{
 	}
 
 	@Override
-	public void actualizarOrdenVenta(VentaCabModel registro, String usuario) throws Exception {
+	public void actualizarOrdenVenta(VentaCabModel ventaCabModel, String usuario) throws Exception {
 		// TODO Auto-generated method stub
+		logger.info("ventaCabModel ===> " + ventaCabModel.toString());
+		logger.info("usuario ===> " + usuario);
 		
+		Map<String, Object> params = new HashMap();
+		params.put(Constante.PARAM_SP_NRO_DOCUMENTO, ventaCabModel.getNumeroDocumento());
+		params.put(Constante.PARAM_SP_USUARIO, usuario);
+		params.put(Constante.PARAM_SP_DIR_DESPACHO, ventaCabModel.getDireccionDespacho());
+		params.put(Constante.PARAM_SP_PER_CONTACTO, ventaCabModel.getPersonaContacto());
+		params.put(Constante.PARAM_SP_COD_ESTADO, ventaCabModel.getCodigoEstado());
+		params.put(Constante.PARAM_SP_OBSERVACIONES, ventaCabModel.getObservaciones());
+		params.put(Constante.PARAM_SP_FEC_CONTABILIZACION, ventaCabModel.getFechaContabilizacion());
+		params.put(Constante.PARAM_SP_FEC_VALIDO_HASTA, ventaCabModel.getFechaValidoHasta());
+		params.put(Constante.PARAM_SP_FEC_ENTREGA, ventaCabModel.getFechaEntrega());
+		
+		logger.info("params ===> " + params);
+
+		ordenVentaMapper.actualizarOrdenVenta(params);
+
+		String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+		String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+
+		logger.info("flagResultado ===> " + flagResultado);
+		logger.info("mensajeResultado ===> " + mensajeResultado);
+
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+			logger.info(mensajeResultado);
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
 	}
 
 	

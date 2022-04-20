@@ -275,7 +275,8 @@ function inicializarEventos() {
 	});
 
 	btnGenerarGuiaRemision.on("click", function() {
-		mostrarDialogoGenerarGuiaRemision();
+		//mostrarDialogoGenerarGuiaRemision();
+		generarGuiaRemisionPorOrden();
 	});
 
 	btnNuevo.click(function() {
@@ -454,7 +455,7 @@ function nuevaPantallaOrdenVenta() {
 function cargarPantallaConDatosOrdenVenta() {
 	flgNuevo=0;
 	var nroDocReferenciaVal = numeroDocumento.text();
-	alert("nroDocReferenciaVal--->" + nroDocReferenciaVal);
+	console.log("nroDocReferenciaVal-->" + nroDocReferenciaVal)
 	$.ajax({
 		type: "Get",
 		contentType: "application/json",
@@ -471,7 +472,7 @@ function cargarPantallaConDatosOrdenVenta() {
 			if (xhr.status == HttpStatus.OK) {
 
 				var data = JSON.parse(result);
-
+				console.log("data-->" + result)
 				cargarPantallaHTML(data);
 
 				if (opcion.text() == Opcion.VER || opcion.text() == Opcion.MODIFICAR) {
@@ -565,7 +566,8 @@ function cargarPantallaHTML(data) {
 function verPantallaOrdenVenta(data) {
 	console.log("verPantallaOrdenVenta-->");
 	// ****** CABECERA
-	codigo.html(numeroDocumento.text());
+	codigo.html(data.numeroDocumento);
+	nroCotiReferencia.val(data.nroCotizVenta);
 	fecConta.datetimepicker('date', moment(data.fechaContabilizacion));
 	fecHasta.datetimepicker('date', moment(data.fechaValidoHasta));
 	fecEntrega.datetimepicker('date', data.fechaEntrega != null ? moment(data.fechaEntrega) : data.fechaEntrega);
@@ -592,7 +594,6 @@ function verPantallaOrdenVenta(data) {
 		deshabilitarControl(condPago);
 		deshabilitarControl(dias);
 		
-		deshabilitarControl(estado);
 		deshabilitarControl(tipoCambio);
 		//mostrarControl(divNroPedido);
 		deshabilitarControl(observaciones);
@@ -605,40 +606,21 @@ function verPantallaOrdenVenta(data) {
 		mostrarControl(btnGenerarGuiaRemision);
 		mostrarControl(btnIrGuiaRemision);
 
-		if (data.codigoEstadoProceso == EstadoProceso.ABIERTO) {
-			// estado proceso ABIERTO
-			habilitarControl(btnGenerarGuiaRemision);
-			if (data.cantidadGrAsociadas > 0) {
-				mostrarControl(btnIrGuiaRemision);
-			} else {
-				ocultarControl(btnIrGuiaRemision);
-			}
-		} else {
-			// estado proceso CERRADO
+		if (data.codigoEstado == EstadoDocumentoInicial.POR_APROBAR) {
+			habilitarControl(estado);
 			ocultarControl(btnGenerarGuiaRemision);
-			mostrarControl(btnIrGuiaRemision);
-		}
-		
-		if (data.codigoEstado == EstadoDocumentoInicial.RECHAZADO) {
+			ocultarControl(btnIrGuiaRemision);
+		}else if (data.codigoEstado == EstadoDocumentoInicial.RECHAZADO) {
 			ocultarControl(btnGenerarGuiaRemision);
 			ocultarControl(btnIrGuiaRemision);
 			mostrarControl(lblAnulado);
-		}
-		
-		//habilitarControl(estado);
-		/*
-		if (data.codigoEstado == EstadoDocumentoInicial.RECHAZADO) {
-			//deshabilitarControl(estado);
-			controlRequerido(observaciones);
-			mostrarControl(lblAnulado);
-		} else if (data.codigoEstado == EstadoDocumentoInicial.APROBADO) {
-			//habilitarControl(estado);
-			mostrarControl(btnGenerarGuiaRemision);
-			mostrarControl(btnIrGuiaRemision);
-
+		}else{
+			// APROBADO
+			console.log("data.codigoEstadoProceso--->" + data.codigoEstadoProceso)
 			if (data.codigoEstadoProceso == EstadoProceso.ABIERTO) {
 				// estado proceso ABIERTO
 				habilitarControl(btnGenerarGuiaRemision);
+				console.log("data.cantidadGrAsociadas-->" + data.cantidadGrAsociadas)
 				if (data.cantidadGrAsociadas > 0) {
 					mostrarControl(btnIrGuiaRemision);
 				} else {
@@ -650,7 +632,8 @@ function verPantallaOrdenVenta(data) {
 				mostrarControl(btnIrGuiaRemision);
 			}
 		}
-		*/
+			
+		
 	}else if (opcion.text() == Opcion.MODIFICAR) {
 		titulo.text("MODIFICAR");
 				
@@ -660,12 +643,11 @@ function verPantallaOrdenVenta(data) {
 			habilitarControl(direccionDespacho);
 			habilitarControl(personaContacto);			
 			habilitarControl(dateTimePickerInput);
-			habilitarControl(tipoMoneda);
-			habilitarControl(condPago);
-			habilitarControl(dias);
-			habilitarControl(tipoCambio);
+			deshabilitarControl(tipoMoneda);
+			deshabilitarControl(condPago);
+			deshabilitarControl(dias);
+			deshabilitarControl(tipoCambio);
 			habilitarControl(estado);
-			habilitarControl(cotizacionSap);
 			
 			estado.focus();
 			mostrarControl(btnGrabar);
@@ -681,10 +663,9 @@ function verPantallaOrdenVenta(data) {
 			deshabilitarControl(dias);
 			deshabilitarControl(tipoCambio);
 			deshabilitarControl(estado);
-			deshabilitarControl(cotizacionSap);
 			deshabilitarControl(observaciones);
-			mostrarControl(btnGenerarGuiaRemision);
-			mostrarControl(btnIrGuiaRemision);
+			//mostrarControl(btnGenerarGuiaRemision);
+			//mostrarControl(btnIrGuiaRemision);
 			deshabilitarDetalleOrdenVenta();
 			ocultarControl(btnGrabar);
 			//ocultarControl(btnEliminarTodosArticulos);
@@ -946,22 +927,7 @@ function evaluarCambioEstado() {
 
 	} else {
 		// POR APROBAR
-		/*if (flgNuevo == 1){
-			ocultarControl(btnGrabar);
-			btnDuplicar.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
-		}
-		else{
-			mostrarControl(btnGrabar);
-			btnDuplicar.removeClass('btn-flotante-grabar').addClass('btn-flotante-duplicar');
-		}
-		*/
-		console.log("opcion.text()-->" + opcion.text());
-		if (opcion.text() == Opcion.NUEVO || opcion.text() == CADENA_VACIA) {
-			ocultarControl(btnGrabar);
-		}
-
-
-
+		ocultarControl(btnGrabar);
 		ocultarControl(btnGenerarGuiaRemision);
 		controlNoRequerido(observaciones);
 		deshabilitarControl(observaciones);
@@ -1238,48 +1204,23 @@ function actualizarOrdenVenta() {
 	var perContactoVal = personaContacto.val().trim();
 	var estadoVal = estado.val();
 	var observacionesVal = observaciones.val().trim();
-	var numeroPedido = nroPedido.val().trim();
-	var nroCotizacionSap = cotizacionSap.val().trim();
 	var fecContaVal = fecConta.datetimepicker('date').format('YYYY-MM-DD');
 	var fecHastaVal = fecHasta.datetimepicker('date').format('YYYY-MM-DD');
 	var fecEntregaVal = fecEntrega.datetimepicker('date') != null ? fecEntrega.datetimepicker('date').format('YYYY-MM-DD') : fecEntrega.datetimepicker('date');
 	
-	var tipoMonedaVal = tipoMoneda.val();
-	var condPagoVal = condPago.val();
-	var tipoCambioVal = tipoCambio.val();
-	var subTotalVal = convertirMonedaANumero(subTotalOC.val().trim());
-	var igvVal = convertirMonedaANumero(igvOC.val());
-	var totalVal = convertirMonedaANumero(totalOC.val().trim());
-	var detalle = tableToJSON(tableDetalle);
-	var diasVal = null;
-
-	if (condPagoVal == CondicionPago.CREDITO) {
-		diasVal = dias.val();
-	}
-
 	var objetoJson = {
 		numeroDocumento: nroDocumento,
 		direccionDespacho: dirDespachoVal,
 		personaContacto: perContactoVal,
 		codigoEstado: estadoVal,
 		observaciones: observacionesVal,
-		nroPedido: numeroPedido,
-		cotizacionSap: nroCotizacionSap,
 		fechaContabilizacion: fecContaVal,
 		fechaValidoHasta: fecHastaVal,
-		fechaEntrega: fecEntregaVal,
-		codigoTipoMoneda: tipoMonedaVal,
-		codigoCondPago: condPagoVal,
-		codigoDias: diasVal,
-		tipoCambio: tipoCambioVal,
-		subTotal: subTotalVal,
-		igv: igvVal,
-		total: totalVal,
-		detalle: detalle
+		fechaEntrega: fecEntregaVal
 	};
 
 	var entityJsonStr = JSON.stringify(objetoJson);
-
+	console.log("entityJsonStr-->" + entityJsonStr)
 	var formData = new FormData();
 	formData.append('registro', new Blob([entityJsonStr], {
 		type: "application/json"
@@ -1290,7 +1231,7 @@ function actualizarOrdenVenta() {
 		type: "POST",
 		contentType: false,
 		processData: false,
-		url: '/appkahaxi/actualizarOrdenCompra/',
+		url: '/appkahaxi/actualizarOrdenVenta/',
 		data: formData,
 		beforeSend: function(xhr) {
 			loadding(true);
@@ -1304,23 +1245,15 @@ function actualizarOrdenVenta() {
 					deshabilitarControl(direccionDespacho);
 					deshabilitarControl(personaContacto);
 					deshabilitarControl(estado);
-					deshabilitarControl(tipoCambio);
-					deshabilitarControl(nroPedido);
-					deshabilitarControl(cotizacionSap);
 					mostrarControl(btnGenerarGuiaRemision);
 
 					ocultarControl(btnGrabar);
 					
 					ocultarControl(btnLimpiar);
-					deshabilitarControl(estado);
 					controlNoRequerido(observaciones);
 					deshabilitarControl(observaciones);
 					deshabilitarDetalleOrdenVenta();
 					deshabilitarControl(dateTimePickerInput);
-					deshabilitarControl(tipoMoneda);
-					deshabilitarControl(condPago);
-					deshabilitarControl(dias);
-					deshabilitarControl(tipoCambio);
 					mostrarControl(btnPdf);
 					window.scrollTo(0, 0);
 				} else if (estado.val() == EstadoDocumentoInicial.POR_APROBAR) {
@@ -1450,7 +1383,7 @@ function generarGuiaRemisionPorOrden() {
 	var params;
 	var nroDoc = numeroDocumento.text();
 	var dato = datoBuscar.text();
-	var nroOV = nroOrdenVenta.text();
+	var nroOV = codigo.html();
 	var codRpto = codRepuesto.text();
 	var fecDesde = fechaDesde.text();
 	var fecHasta = fechaHasta.text();
@@ -1485,7 +1418,8 @@ function cargarGuiaRemisionAsociada(numDocumento) {
 
 function volver(){
 	var params;
-	var nroDoc = numeroDocumento.text();
+	//var nroDoc = numeroDocumento.text();
+	var nroDoc = nroCotiReferencia.val(); // aqui necesitamos el nro de la cotización
 	var dato = datoBuscar.text();
 	var nroCotiz = nroCotizacion.text();
 	var nroReq 	 = nroRequerimiento.text();
@@ -1494,9 +1428,6 @@ function volver(){
 	var fecHasta = fechaHasta.text();
 	var estParam = estadoParam.text();
 	var desdeDocRef 	= desdeDocRefParam.text();
-	alert("nroDoc-->" + nroDoc);
-	alert("nroCotiz-->" + nroCotiz);
-	alert("desdeDocRef-->" + desdeDocRef);
 	
 	if(desdeDocRef == Respuesta.SI){		
 		// armando los parámetros

@@ -58,6 +58,7 @@ public class VentaCabModel {
 	
     // para los objetos que necesiten referenciare el documento base
     private String numeroDocumentoBase;
+    private Integer cantidadGrAsociadas;
     // DETALLE
     private List<VentaDetModel> detalle;
 }

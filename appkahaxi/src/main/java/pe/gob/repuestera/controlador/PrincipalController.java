@@ -1342,6 +1342,7 @@ public class PrincipalController {
 		public String cargarOrdenVenta(Model model, @RequestParam(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento, 
 													 @RequestParam(Constante.PARAM_OPCION) String opcion,
 													 @RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar,
+													 @RequestParam(Constante.PARAM_NRO_ORDEN_VENTA) String nroOrdenVenta,
 													 @RequestParam(Constante.PARAM_NRO_COTIZACION) String nroCotizacion,
 													 @RequestParam(Constante.PARAM_NRO_REQUERIMIENTO) String nroRequerimiento,
 													 @RequestParam(Constante.PARAM_COD_REPUESTO) String codRepuesto,
@@ -1354,13 +1355,15 @@ public class PrincipalController {
 			String retorno;
 			try {
 				logger.info("entrando al método cargarOrdenVenta, OPCION--->" + opcion + "/numeroDocumento-->" + numeroDocumento 
-						 + "/datoBuscar-->" + datoBuscar + "/nroCotizacion-->" + nroCotizacion + "/nroRequerimiento-->" + nroRequerimiento 
+						 + "/datoBuscar-->" + datoBuscar + "/nroOrdenVenta-->" + nroOrdenVenta + "/nroCotizacion-->" + nroCotizacion
+						 + "/nroRequerimiento-->" + nroRequerimiento 
 						 + "/codRepuesto-->" + codRepuesto
 						 + "/fechaDesde-->" + fechaDesde + "/fechaHasta-->" + fechaHasta
 						 + "/estadoParam-->" + estadoParam + "/volver-->" + volver);
 				model.addAttribute("numeroDocumento", numeroDocumento);
 				model.addAttribute("opcion", opcion);
 				model.addAttribute("datoBuscar", datoBuscar);
+				model.addAttribute("nroOrdenVenta", nroOrdenVenta);
 				model.addAttribute("nroCotizacion", nroCotizacion);
 				model.addAttribute("nroRequerimiento", nroRequerimiento);
 				model.addAttribute("codRepuesto", codRepuesto);

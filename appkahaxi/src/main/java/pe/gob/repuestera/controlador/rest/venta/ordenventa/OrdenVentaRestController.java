@@ -96,6 +96,20 @@ public class OrdenVentaRestController {
         return new ResponseEntity<>(compraCabModel, HttpStatus.OK);
     }
     
+    @PostMapping ("/actualizarOrdenVenta")
+    public ResponseEntity<String> actualizarOrdenVenta(@RequestPart("registro") VentaCabModel ventaCabModel) throws Exception {
+
+        logger.info("Inicio actualizarOrdenVenta.......");
+
+        String usuario = ((UsuarioModel)session.getAttribute("usuarioLogueado")).getUsername();
+
+        ordenVentaService.actualizarOrdenVenta(ventaCabModel, usuario);
+
+        logger.info("Fin actualizarOrdenVenta.......");
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
     /*
     @GetMapping ("/buscarOrdenCompraParaGuiaRemision/{numeroDocumento}")
     public ResponseEntity<CompraCabModel> buscarOrdenCompraParaGuiaRemision(@PathVariable(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento) throws Exception {
@@ -112,20 +126,7 @@ public class OrdenVentaRestController {
 
         return new ResponseEntity<>(ventaCabModel, HttpStatus.OK);
     }
-
-    @PostMapping ("/actualizarOrdenCompra")
-    public ResponseEntity<String> actualizarOrdenCompra(@RequestPart("registro") CompraCabModel ventaCabModel) throws Exception {
-
-        logger.info("Inicio actualizarOrdenCompra.......");
-
-        String usuario = ((UsuarioModel)session.getAttribute("usuarioLogueado")).getUsername();
-
-        ordenVentaService.actualizarOrdenCompra(ventaCabModel, usuario);
-
-        logger.info("Fin actualizarOrdenCompra.......");
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+    
     
     @GetMapping ("/eliminarOrdenCompra/{numeroDocumento}")
     public ResponseEntity<String> eliminarOrdenCompra(@PathVariable(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento) throws Exception {

@@ -8,6 +8,7 @@
     <!-- *************** RESULTMAPS ******************* -->
     <resultMap id="ventaCab" type="VentaCabModel">
         <result property="numeroDocumento" 			column="NRO_DOCUMENTO" />
+        <result property="nroCotizVenta" 			column="NRO_COTIZ_VENTA" />
         <result property="username" 				column="USERNAME" />
         <result property="nombreUsuario" 			column="NOMBRE_USUARIO" />
         <result property="codigoCliente" 			column="COD_CLIENTE" />

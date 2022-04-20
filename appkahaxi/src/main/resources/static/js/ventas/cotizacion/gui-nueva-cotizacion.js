@@ -529,7 +529,7 @@ function verPantallaCotizacionVenta(data) {
 	}else if(data.codigoEstado == EstadoDocumentoInicial.RECHAZADO){
 		deshabilitarControl(estado);
 		
-		btnVolver.focus();
+		//btnVolver.focus();
 	}else{
 		
 		// estado APROBADO
@@ -547,7 +547,7 @@ function verPantallaCotizacionVenta(data) {
 			mostrarControl(btnIrOV);
 		}
 		
-		btnGenerarOV.focus();
+		//btnGenerarOV.focus();
 	}
 	
 	deshabilitarControl(dctoTotal);
@@ -1838,14 +1838,12 @@ function generarOrdenVenta(){
 	var fecDesde = fechaDesde.text();
 	var fecHasta = fechaHasta.text();
 	var estParam = estadoParam.text();
-	alert("nroDoc-->" + nroDoc);
-	alert("nroCotiz-->" + nroCotiz);
 	
 	// aquí viaja el nro de la cotización del documento actual
 	params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.NUEVO + 
 		// a partir de aquí son los filtros que se arrastran de la pantalla de búsqueda de cotizaciones
 		"&datoBuscar=" + dato +
-		"&nroCotizacion=" + nroCotiz + "&nroRequerimiento=" + nroRequerimiento + "&codRepuesto=" + codRpto +
+		"&nroOrdenVenta=&nroCotizacion=" + nroCotiz + "&nroRequerimiento=" + nroRequerimiento + "&codRepuesto=" + codRpto +
 		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + 
 		// indica que se debe VOLVER a la cotización desde la OV
 		"&volver=" + Respuesta.SI + 
@@ -1866,14 +1864,12 @@ function irOrdenVenta(){
 	var fecDesde = fechaDesde.text();
 	var fecHasta = fechaHasta.text();
 	var estParam = estadoParam.text();
-	alert("nroDoc-->" + nroDoc);
-	alert("nroCotiz-->" + nroCotiz);
 	
 	// aquí viaja el nro de la cotización del documento actual
 	params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + 
 		// a partir de aquí son los filtros que se arrastran de la pantalla de búsqueda de cotizaciones
 		"&datoBuscar=" + dato +
-		"&nroCotizacion=" + nroCotiz + "&nroRequerimiento=" + nroRequerimiento + "&codRepuesto=" + codRpto +
+		"&nroOrdenVenta=&nroCotizacion=" + nroCotiz + "&nroRequerimiento=" + nroRequerimiento + "&codRepuesto=" + codRpto +
 		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + 
 		// indica que se debe VOLVER a la cotización desde la OV
 		"&volver=" + Respuesta.SI + 
