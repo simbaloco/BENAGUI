@@ -570,6 +570,7 @@ function cargarPantallaNueva() {
 	//obtenerTipoCambio(tipoCambio);
 	obtenerTipoCambio(tipoCambio, tipoCambioSave);	
 	deshabilitarControl(tipoCambio);
+	deshabilitarControl(correlativo);
 	controlNoRequerido(observaciones);
 	habilitarControl(chkDctoTotal);
 	titulo.text("NUEVA");

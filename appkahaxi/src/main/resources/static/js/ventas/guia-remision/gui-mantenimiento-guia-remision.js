@@ -296,7 +296,7 @@ function inicializarTabla(){
                 "render":
                     function (data, type, row ) {
                     	return  "<div>" +
-									"<button title='Descargar Orden' class='btn-download btn btn-warning btn-xs'>" +
+									"<button title='Descargar GR' class='btn-download btn btn-warning btn-xs'>" +
                         				"<span><i class=\"fas fa-download\"></i></span>" +
 					                "</button>" +
                         			"<button title='Ver guía' class='btn-view btn btn-info btn-xs'>" +

@@ -307,7 +307,7 @@ function inicializarTabla(){
                     function (data, type, row ) {
 						
 						return  "<div>" +
-									"<button title='Descargar Orden' class='btn-download btn btn-warning btn-xs'>" +
+									"<button title='Descargar Comprobante' class='btn-download btn btn-warning btn-xs'>" +
                         				"<span><i class=\"fas fa-download\"></i></span>" +
 					                "</button>" +
                         			"<button title='Ver Factura' class='btn-view btn btn-info btn-xs'>" +
