@@ -192,7 +192,7 @@ public class ReporteRestController {
 	                    + "</td><td align=center bgcolor=#ffffff style='text-align: left; font-size:18px; padding-left:20px; color:#121D89;''><br>KAHAXI EIRL</td>"
 	                    + "</tr><tr><td valign=middle align=center colspan=2>"
 	                    + "<br><br><p style='text-align: left; font-size:14px; padding-left:20px; color:#121D89;'>Estimado(a) <b> "+ nombreUsuario +" </b>, <br/><br/>"
-	                    + "Si has recibido un mensaje de este tipo, significa que te hemos enviado una cotización.<br/><br/>"
+	                    + "Si has recibido un mensaje de este tipo, significa que te hemos enviado una Guía de remisión.<br/><br/>"
 	                    + "</p>"
 	                    + "<p style='text-align: left; font-size:14px; padding-left:20px; color:#0A0203;''>Atentamente,<br>"+"KAHAXI"
 	                    + "<br></p><p style='text-align: left; font-size:10px; padding-left:20px; color:#DF0101;''>"
@@ -265,14 +265,14 @@ public class ReporteRestController {
         // GENERANDO EL REPORTE
         String nombreJrxml= "/reportes/ventas/factura_venta.jrxml";
  		
- 		String asunto = "GUIA DE REMISION - SOLICITUD DE CONFIRMACION DE CORREO";
+ 		String asunto = "COMRPOBANTE DE PAGO - SOLICITUD DE CONFIRMACION DE CORREO";
 	    String nombreUsuario = "XXX";
 	    String mensaje = "<html><head><meta http-equiv=Content-Type content=text/html; charset=utf-8/></head><body><table align=center width=610 cellspacing=0 cellpadding=0 border=0 style='position:relative; font-size:12px; font-family:Arial, Helvetica, sans-serif; color: #00486A; background: #ffffff; border: solid 1px #bdcbcd; -moz-border-radius: 20px 20px 20px 20px; -ms-border-radius: 20px 20px 20px 20px; -webkit-border-radius: 20px 20px 20px 20px; border-radius: 20px 20px 20px 20px; padding:5px;''>"
 	                    + "<tbody><tr><td align=center bgcolor=#ffffff><img width=220 height=60 src='cid:logo_kahaxi.png'/> "
 	                    + "</td><td align=center bgcolor=#ffffff style='text-align: left; font-size:18px; padding-left:20px; color:#121D89;''><br>KAHAXI EIRL</td>"
 	                    + "</tr><tr><td valign=middle align=center colspan=2>"
 	                    + "<br><br><p style='text-align: left; font-size:14px; padding-left:20px; color:#121D89;'>Estimado(a) <b> "+ nombreUsuario +" </b>, <br/><br/>"
-	                    + "Si has recibido un mensaje de este tipo, significa que te hemos enviado una cotización.<br/><br/>"
+	                    + "Si has recibido un mensaje de este tipo, significa que te hemos enviado un comprobante de pago.<br/><br/>"
 	                    + "</p>"
 	                    + "<p style='text-align: left; font-size:14px; padding-left:20px; color:#0A0203;''>Atentamente,<br>"+"KAHAXI"
 	                    + "<br></p><p style='text-align: left; font-size:10px; padding-left:20px; color:#DF0101;''>"

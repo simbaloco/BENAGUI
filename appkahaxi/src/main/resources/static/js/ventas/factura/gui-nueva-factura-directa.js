@@ -725,7 +725,7 @@ function verPantallaFactura(data) {
 	deshabilitarControl(dctoTotal);
 	deshabilitarControl(chkDctoTotal);
 	//deshabilitarControl(observaciones);
-
+	mostrarControl(btnPdf);
 	ocultarControl(btnGrabar);
 	ocultarControl(btnLimpiar);
 	ocultarControl(btnAgregarArticulo);
@@ -1398,6 +1398,7 @@ function registrarFacturaVenta(){
 				deshabilitarControl(dateTimePickerInput);
 
 				mostrarControl(btnNuevo);
+				mostrarControl(btnPdf);
 				
 				ocultarControl(btnGrabar);
 				ocultarControl(btnLimpiar);
@@ -2004,7 +2005,7 @@ function enviarMailReporte(numeroDocumento, email, enviarCodigo){
 function descargarReporte(numeroDocumento, enviarCodigo){
     $.ajax({
         type:"Post",
-        url : '/appkahaxi/reporteGuiaRemisionVenta/' + numeroDocumento + '/' + enviarCodigo,
+        url : '/appkahaxi/reporteFacturaVenta/' + numeroDocumento,
         xhrFields: {
             responseType: 'blob'
         },

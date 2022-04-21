@@ -5,6 +5,7 @@ var nroDocReferencia;
 var numeroDocumento;
 var origenMnto;
 var opcion;
+var email;
 var datoBuscar;
 var nroGuiaRemision;
 var nroOrdenVenta;
@@ -91,6 +92,7 @@ $(document).ready(function() {
 function inicializarVariables() {
 	titulo = $("#titulo");
 	codigo = $("#codigo");
+	email =  $("#email");
 	codigoCliente = $("#codigoCliente");
 	nroDocReferencia = $("#nroDocReferencia");
 	numeroDocumento = $('#numeroDocumento');
@@ -438,6 +440,7 @@ function cargarPantallaHTMLOrdenVenta(data) {
 	documentoCli.val(data.nroDocCliente);
 	nombreCli.val(data.nombreCliente);
 	direccion.val(data.direccionFiscal);
+	email.val(data.email);
 	direccionDespacho.val(data.direccionDespacho);
 	personaContacto.val(data.personaContacto);
 	tipoMoneda.val(data.codigoTipoMoneda);
@@ -570,6 +573,7 @@ function cargarPantallaHTMLGuiaRemision(data) {
 		documentoCli.val(data.nroDocCliente);
 		nombreCli.val(data.nombreCliente);
 		direccion.val(data.direccionFiscal);
+		email.val(data.email);
 		direccionDespacho.val(data.direccionDespacho);
 		personaContacto.val(data.personaContacto);
 		tipoMoneda.val(data.codigoTipoMoneda);
@@ -683,7 +687,7 @@ function verPantallaGuiaRemision(data) {
 	btnAnular.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
 
 	ocultarControl(btnLimpiar);
-
+	mostrarControl(btnPdf);
 	deshabilitarDetalleGuiaRemision();
 }
 
@@ -1086,6 +1090,7 @@ function registrarGuiaRemisionVenta() {
 				deshabilitarControl(personaContacto);
 				mostrarControl(btnGenerarFactura);
 				mostrarControl(btnAnular);
+				mostrarControl(btnPdf);
 				btnAnular.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
 				ocultarControl(btnGrabar);
 				ocultarControl(btnLimpiar);
@@ -1860,7 +1865,7 @@ function enviarMailReporte(numeroDocumento, email, enviarCodigo){
 function descargarReporte(numeroDocumento, enviarCodigo){
     $.ajax({
         type:"Post",
-        url : '/appkahaxi/reporteGuiaRemisionVenta/' + numeroDocumento + '/' + enviarCodigo,
+        url : '/appkahaxi/reporteGuiaRemisionVenta/' + numeroDocumento,
         xhrFields: {
             responseType: 'blob'
         },

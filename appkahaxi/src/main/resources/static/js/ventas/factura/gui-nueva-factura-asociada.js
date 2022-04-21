@@ -4,6 +4,7 @@ var codigoCliente;
 var nroDocReferencia;
 var numeroDocumento;
 var opcion;
+var email;
 var datoBuscar;
 var nroComprobantePago;
 var nroGuiaRemision;
@@ -78,6 +79,7 @@ $(document).ready(function(){
 function inicializarVariables() {
 	titulo =  $("#titulo");
 	codigo = $("#codigo");
+	email =  $("#email");
 	codigoCliente = $("#codigoCliente");
 	nroDocReferencia = $("#nroDocReferencia");
 	numeroDocumento = $('#numeroDocumento');
@@ -397,6 +399,7 @@ function cargarPantallaHTMLFacturaConDatosGuiaRemisionAsociadas(data) {
 	documentoCliente.val(data.nroDocCliente);
 	nombreCliente.val(data.nombreCliente);
 	direccion.val(data.direccionFiscal);
+	email.val(data.email);
 	direccionDespacho.val(data.direccionDespacho);
 	personaContacto.val(data.personaContacto);
 	tipoMoneda.val(data.codigoTipoMoneda);
@@ -542,6 +545,7 @@ function cargarPantallaHTMLFactura(data) {
 	documentoCliente.val(data.nroDocCliente);
 	nombreCliente.val(data.nombreCliente);
 	direccion.val(data.direccionFiscal);
+	email.val(data.email);
 	direccionDespacho.val(data.direccionDespacho);
 	personaContacto.val(data.personaContacto);
 	tipoMoneda.val(data.codigoTipoMoneda);
@@ -639,7 +643,7 @@ function verPantallaFactura(data) {
 	} else {
 		mostrarControl(btnVolver);
 	}
-	
+	mostrarControl(btnPdf);
 	ocultarControl(btnGrabar);
 	ocultarControl(btnLimpiar);
 	deshabilitarDetalleFactura();
@@ -1054,7 +1058,7 @@ function registrarFacturaVenta(){
 					mostrarControl(btnVolver);
 					ocultarControl(btnGrabar);
 					ocultarControl(btnLimpiar);
-
+					mostrarControl(btnPdf);
 					// si se grabó con estado PENDIENTE, cambiar a opción = VER
 					opcion.text(Opcion.VER);					
 					deshabilitarDetalleFactura();
@@ -1532,7 +1536,7 @@ function enviarMailReporte(numeroDocumento, email, enviarCodigo){
 function descargarReporte(numeroDocumento, enviarCodigo){
     $.ajax({
         type:"Post",
-        url : '/appkahaxi/reporteGuiaRemisionVenta/' + numeroDocumento + '/' + enviarCodigo,
+        url : '/appkahaxi/reporteFacturaVenta/' + numeroDocumento,
         xhrFields: {
             responseType: 'blob'
         },
