@@ -344,7 +344,6 @@ function inicializarTabla(){
 	$('#tablaOrdenVenta tbody').on('click','.btn-edit', function () {
 	    var data = dataTableOrdenVenta.row( $(this).closest('tr')).data();
 	    nuevaOrdenVenta(data.numeroDocumento, Opcion.MODIFICAR);
-		//generarGuiaRemisionPorOrden(data.numeroDocumento);
 	});
 	
 	$('#tablaOrdenVenta tbody').on('click','.btn-view', function () {
@@ -353,26 +352,6 @@ function inicializarTabla(){
 	});
 
 }
-
-// POR ELIMINARRRRRRRRRRRRRRRRRRRRRRRRRRRRR
-function generarGuiaRemisionPorOrden(nroDocu) {
-	var params;	
-	var dato = campoBuscar.val();
-	var nroOVenta = nroOV.val();
-	var codRpto = codRepuesto.val();
-	var fecDesde = fecContaDesde.val();
-	var fecHasta = fecContaHasta.val();
-	var estParam = estado.val();
-
-	params = "numeroDocumento=" + nroDocu + "&opcion=" + Opcion.NUEVO + "&datoBuscar=" + dato +
-		"&nroGuiaRemision=&nroOrdenVenta=" + nroOVenta + "&codRepuesto=" + codRpto +
-		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam +
-		"&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI + "&origenMnto=" + Respuesta.NO;
-
-	window.location.href = "/appkahaxi/cargar-guia-remision-venta?" + params;
-}
-
-
 
 /**************** FUNCIONES DE SOPORTE ***********************************************************
  *************************************************************************************************/

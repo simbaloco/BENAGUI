@@ -555,7 +555,7 @@ function cargarPantallaHTML(data) {
 		$('#descripcion_' + i).val(detalle.descripcionArticulo);
 		$('#marca_' + i).val(detalle.marca);
 		$('#cantidad_' + i).val(detalle.cantidad);
-		$('#cantidadPend_' + i).val(detalle.cantidad);
+		$('#cantidadPend_' + i).val(detalle.cantidadPendiente);
 
 		$('#precio_' + i).val(convertirNumeroAMoneda(detalle.precioUnitario));
 		$('#precioIgv_' + i).val(convertirNumeroAMoneda(detalle.precioUnitarioIgv));
@@ -1394,13 +1394,14 @@ function generarGuiaRemisionPorOrden() {
 	var nroDoc = numeroDocumento.text();
 	var dato = datoBuscar.text();
 	var nroOV = codigo.html();
+	var nroCoti = nroCotizacion.text();
 	var codRpto = codRepuesto.text();
 	var fecDesde = fechaDesde.text();
 	var fecHasta = fechaHasta.text();
 	var estParam = estadoParam.text();
 
 	params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.NUEVO + "&datoBuscar=" + dato +
-		"&nroGuiaRemision=&nroOrdenVenta=" + nroOV + "&codRepuesto=" + codRpto +
+		"&nroCotizacion=" + nroCoti + "&nroGuiaRemision=" + nroDoc + "&nroOrdenVenta=" + nroOV + "&codRepuesto=" + codRpto +
 		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam +
 		"&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI + "&origenMnto=" + Respuesta.NO;
 
@@ -1411,14 +1412,14 @@ function cargarGuiaRemisionAsociada(numDocumento) {
 	var params;
 	var dato = datoBuscar.text();
 	var nroOV = codigo.html();
+	var nroCoti = nroCotizacion.text();
 	var codRpto = codRepuesto.text();
 	var fecDesde = fechaDesde.text();
 	var fecHasta = fechaHasta.text();
 	var estParam = estadoParam.text();
-
 	//params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato +
 	params = "numeroDocumento=" + numDocumento + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato +
-		"&nroGuiaRemision=" + numDocumento + "&nroOrdenVenta=" + nroOV + "&codRepuesto=" + codRpto +
+		"&nroCotizacion=" + nroCoti + "&nroGuiaRemision=" + numDocumento + "&nroOrdenVenta=" + nroOV + "&codRepuesto=" + codRpto +
 		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + 
 		"&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI + "&origenMnto=" + Respuesta.NO;;
 
@@ -1505,12 +1506,11 @@ function obtenerDetalleGuiaPorOrdenVenta(event) {
 		dataTableDetalleGuias.ajax.reload(null, true);
 
 	} else {
-
 		dataTableDetalleGuias = tableSeleccionDocumento.DataTable({
 
 			"ajax": {
 				data: function(d) {
-					d.codigoOrdenVenta = numeroDocumento.text().trim();
+					d.codigoOrdenVenta = codigo.html().trim();
 				},
 				url: '/appkahaxi/listarGuiaRemisionVentaPorOrdenVenta/',
 				dataSrc: function(json) {

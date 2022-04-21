@@ -392,11 +392,11 @@ function cargarGuiaRemision(numeroDocumento, opcion) {
 	var est 				= estado.val();
 	// armando los parámetros
 	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar +  
-			 "&nroGuiaRemision=" + nroGuiaVal + "&nroOrdenVenta=" + nroOVVal + "&codRepuesto=" + codRpto + 
+			 "&nroCotizacion=&nroGuiaRemision=" + nroGuiaVal + "&nroOrdenVenta=" + nroOVVal + "&codRepuesto=" + codRpto + 
 		     "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + 
 			 "&desdeDocRef=" + Respuesta.NO + "&origenMnto=" + Respuesta.SI;
 	
-	window.location.href = "/appkahaxi/cargar-guia-remision-venta?" + params;
+	window.location.href = "/appkahaxi/cargar-guia-remision-venta?" + params;	
 }
 
 function buscar(event){

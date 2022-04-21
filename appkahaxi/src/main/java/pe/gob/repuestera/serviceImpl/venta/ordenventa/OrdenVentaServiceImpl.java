@@ -148,7 +148,7 @@ public class OrdenVentaServiceImpl implements OrdenVentaService{
 			logger.info("compraCabModel ===> " + ventaCabModel.toString());
 			
 			try {
-                List<GuiaRemisionCabModel> listGuiaRemisionCabModel = guiaRemisionVentaService.listarGuiaRemisionVentaPorOrdenVenta(numeroDocumento);
+                List<GuiaRemisionCabModel> listGuiaRemisionCabModel = guiaRemisionVentaService.listarGuiaRemisionVentaPorOrdenVenta(ventaCabModel.getNumeroDocumento());
                 ventaCabModel.setCantidadGrAsociadas(listGuiaRemisionCabModel.size());
 
             } catch (Exception e) {

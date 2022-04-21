@@ -401,9 +401,8 @@ function obtenerCorrelativo() {
 }
 
 function cargarPantallaConDatosOrdenVenta() {
-	console.log("cargarPantallaConDatosOrdenVenta..." + numeroDocumento.text());
-	var nroDocReferenciaVal = numeroDocumento.text();
-
+	console.log("cargarPantallaConDatosOrdenVenta..." + nroOrdenVenta.text());
+	var nroDocReferenciaVal = nroOrdenVenta.text();
 	$.ajax({
 		type: "Get",
 		contentType: "application/json",
@@ -1635,7 +1634,6 @@ function volver() {
 			"&volver=" + Respuesta.SI + 
 			"&desdeDocRef=" + Respuesta.SI + 
 			"&origenMnto=" + Respuesta.NO;
-			
 		window.location.href = "/appkahaxi/nueva-orden-venta?" + params;
 	} else {
 		console.log("else nroDoc:" + nroDoc);
@@ -1651,6 +1649,7 @@ function volver() {
 		} else {
 			params = "datoBuscar=" + dato + "&nroGuiaRemision=" + nroGR + "&nroOrdenVenta=" + nroOV + "&codRepuesto=" + codRpto +
 				"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam;
+			
 			window.location.href = "/appkahaxi/mantenimiento-guia-remision-venta?" + params;
 		}
 	}
