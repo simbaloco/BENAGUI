@@ -55,6 +55,7 @@ public class GuiaRemisionCabModel {
 	private String descripcionTipoMoneda;
 	private String descripcionCondPago;
 	private String descripcionEstado;
+	private String descripcionDias;
     private String fechaRegistroFormato;
     private Integer cantidadFacturasAsociadas;
 

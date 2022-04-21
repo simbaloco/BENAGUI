@@ -30,6 +30,7 @@ public class Constante {
 	public static final String CATALOGO_MOTIVO_TRASLADO		= "32";
 	
 	public static final String COD_TIPO_DOCU_GRT			= "31";
+	public static final String COD_TIPO_DOCU_FACT			= "01";
 	
 	/* VALORES PARA LA TABLA SOCIOS DE NEGOCIO */
 	public static final String COD_TIPO_SOCIO_CLIENTE  	= "01";

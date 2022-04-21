@@ -42,6 +42,8 @@ import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import pe.gob.repuestera.exception.ErrorControladoException;
 import pe.gob.repuestera.model.CompraCabModel;
+import pe.gob.repuestera.model.ComprobantePagoCabModel;
+import pe.gob.repuestera.model.GuiaRemisionCabModel;
 import pe.gob.repuestera.model.VentaCabModel;
 import pe.gob.repuestera.repository.compra.ordencompra.OrdenCompraMapper;
 import pe.gob.repuestera.repository.reportes.ReporteMapper;
@@ -118,6 +120,128 @@ public class ReporteServiceImpl implements ReporteService{
 		return listaDetalleCotizacionVenta;
 	}
 	
+	
+	@Override
+	public GuiaRemisionCabModel obtenerCabeceraGuiaRemisionVenta(String numeroDocumento) throws Exception {
+		logger.info("entrando obtenerCabeceraGuiaRemisionVenta.......");
+        GuiaRemisionCabModel grVentaCab = null;
+        logger.info("numeroDocumento--->" + numeroDocumento);            
+        // seteando parámetros
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_NRO_DOCUMENTO, numeroDocumento);
+        // ejecutando la query
+        grVentaCab = reporteMapper.obtenerCabeceraGuiaRemisionVenta(params);
+        logger.info("obtenerCabeceraGuiaRemisionVenta........obteniendo el retorno");		
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        logger.info("obtenerCabeceraGuiaRemisionVenta.......FLAG_RESULTADO------>" + flagResultado);
+		logger.info("obtenerCabeceraGuiaRemisionVenta.......MENSAJE_RESULTADO--->" + mensajeResultado);
+        
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+ 			logger.info("obtenerCabeceraGuiaRemisionVenta ----> success!!!");
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+		
+		return grVentaCab;
+	}
+
+	@Override
+	public List<HashMap> obtenerDetalleGuiaRemisionVenta(String numeroDocumento) throws Exception {
+		logger.info("entrando obtenerDetalleGuiaRemisionVenta.......");
+		List<HashMap> listaDetalleGrVenta = null;
+        logger.info("numeroDocumento--->" + numeroDocumento);            
+        // seteando parámetros
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_NRO_DOCUMENTO, numeroDocumento);
+        // ejecutando la query
+        listaDetalleGrVenta = reporteMapper.obtenerDetalleGuiaRemisionVenta(params);
+        logger.info("obtenerDetalleGuiaRemisionVenta........obteniendo el retorno");		
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        logger.info("obtenerDetalleGuiaRemisionVenta.......FLAG_RESULTADO------>" + flagResultado);
+		logger.info("obtenerDetalleGuiaRemisionVenta.......MENSAJE_RESULTADO--->" + mensajeResultado);
+        
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+ 			logger.info("obtenerDetalleGuiaRemisionVenta ----> success!!!");
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+		
+		return listaDetalleGrVenta;
+	}
+	
+	@Override
+	public ComprobantePagoCabModel obtenerCabeceraFacturaVenta(String numeroDocumento) throws Exception {
+		logger.info("entrando obtenerCabeceraFacturaVenta.......");
+		ComprobantePagoCabModel facturaVentaCab = null;
+        logger.info("numeroDocumento--->" + numeroDocumento);            
+        // seteando parámetros
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_NRO_DOCUMENTO, numeroDocumento);
+        // ejecutando la query
+        facturaVentaCab = reporteMapper.obtenerCabeceraFacturaVenta(params);
+        logger.info("obtenerCabeceraFacturaVenta........obteniendo el retorno");		
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        logger.info("obtenerCabeceraFacturaVenta.......FLAG_RESULTADO------>" + flagResultado);
+		logger.info("obtenerCabeceraFacturaVenta.......MENSAJE_RESULTADO--->" + mensajeResultado);
+        
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+ 			logger.info("obtenerCabeceraFacturaVenta ----> success!!!");
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+		
+		return facturaVentaCab;
+	}
+
+	@Override
+	public List<HashMap> obtenerDetalleFacturaVenta(String numeroDocumento) throws Exception {
+		logger.info("entrando obtenerDetalleFacturaVenta.......");
+		List<HashMap> listaDetalleFacturaVenta = null;
+        logger.info("numeroDocumento--->" + numeroDocumento);            
+        // seteando parámetros
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_NRO_DOCUMENTO, numeroDocumento);
+        // ejecutando la query
+        listaDetalleFacturaVenta = reporteMapper.obtenerDetalleGuiaRemisionVenta(params);
+        logger.info("obtenerDetalleFacturaVenta........obteniendo el retorno");		
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        logger.info("obtenerDetalleFacturaVenta.......FLAG_RESULTADO------>" + flagResultado);
+		logger.info("obtenerDetalleFacturaVenta.......MENSAJE_RESULTADO--->" + mensajeResultado);
+        
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+ 			logger.info("obtenerDetalleFacturaVenta ----> success!!!");
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+		
+		return listaDetalleFacturaVenta;
+	}
+	
+		
 	@Override
 	public CompraCabModel obtenerCabeceraOrdenCompra(String numeroDocumento) throws Exception {
 		logger.info("entrando obtenerCabeceraOrdenCompra.......");

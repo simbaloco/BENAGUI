@@ -30,9 +30,60 @@
         <result property="descuento"				column="DESCUENTO" />
         <result property="igv"						column="IGV" />
         <result property="total" 					column="TOTAL" />
-        <result property="activo"					column="ACTIVO" />        
-        <result property="asunto"					column="ASUNTO" />
+        <result property="activo"					column="ACTIVO" />  
         <result property="atencion"					column="ATENCION" />
+    </resultMap>
+    
+    <resultMap id="grCab" type="GuiaRemisionCabModel">
+        <result property="codigoCliente" 			column="COD_CLIENTE" />
+        <result property="nroDocCliente" 			column="NRO_DOC_CLIENTE" />
+        <result property="nombreCliente" 			column="NOMBRE_CLIENTE" />
+        <result property="direccionFiscal" 			column="DIRECCION_FISCAL" />
+        <result property="fechaContabilizacion" 	column="FEC_CONTABILIZACION" />
+        <result property="fechaEntrega" 			column="FEC_ENTREGA" />
+        <result property="codigoTipoMoneda" 		column="COD_TIPO_MONEDA" />
+        <result property="descripcionTipoMoneda"	column="DESC_TIPO_MONEDA" />
+        <result property="codigoCondPago" 			column="COD_COND_PAGO" />
+        <result property="descripcionCondPago"		column="DESC_COND_PAGO" />
+        <result property="codigoDias" 				column="COD_DIAS" />
+        <result property="descripcionDias" 			column="DESC_COD_DIAS" />
+        <result property="codigoEstado" 			column="COD_ESTADO" />
+        <result property="descripcionEstado"		column="DESC_ESTADO" />
+        <result property="asunto"					column="ASUNTO" />
+        <result property="observaciones"			column="OBSERVACIONES" />
+        <result property="ordenVenta"				column="NRO_DOC_REFERENCIA" />        
+        <result property="porcDctoTotal"			column="PORC_DCTO_TOTAL" />        
+        <result property="subTotal"					column="SUBTOTAL" />
+        <result property="descuento"				column="DESCUENTO" />
+        <result property="igv"						column="IGV" />
+        <result property="total" 					column="TOTAL" />
+        <result property="activo"					column="ACTIVO" />
+    </resultMap>
+    
+    <resultMap id="facturaCab" type="ComprobantePagoCabModel">
+        <result property="codigoCliente" 			column="COD_CLIENTE" />
+        <result property="nroDocCliente" 			column="NRO_DOC_CLIENTE" />
+        <result property="nombreCliente" 			column="NOMBRE_CLIENTE" />
+        <result property="direccionFiscal" 			column="DIRECCION_FISCAL" />
+        <result property="fechaContabilizacion" 	column="FEC_CONTABILIZACION" />
+        <result property="fechaVencimiento"			column="FEC_VENCIMIENTO" />
+        <result property="codigoTipoMoneda" 		column="COD_TIPO_MONEDA" />
+        <result property="descripcionTipoMoneda"	column="DESC_TIPO_MONEDA" />
+        <result property="codigoCondPago" 			column="COD_COND_PAGO" />
+        <result property="descripcionCondPago"		column="DESC_COND_PAGO" />
+        <result property="codigoDias" 				column="COD_DIAS" />
+        <result property="descripcionDias" 			column="DESC_COD_DIAS" />
+        <result property="codigoEstado" 			column="COD_ESTADO" />
+        <result property="descripcionEstado"		column="DESC_ESTADO" />
+        <result property="asunto"					column="ASUNTO" />
+        <result property="observaciones"			column="OBSERVACIONES" />
+        <result property="ordenVenta"				column="NRO_DOC_REFERENCIA" />        
+        <result property="porcDctoTotal"			column="PORC_DCTO_TOTAL" />        
+        <result property="subTotal"					column="SUBTOTAL" />
+        <result property="descuento"				column="DESCUENTO" />
+        <result property="igv"						column="IGV" />
+        <result property="total" 					column="TOTAL" />
+        <result property="activo"					column="ACTIVO" />
     </resultMap>
     
     <resultMap id="ventaDet" type="hashmap">
@@ -171,7 +222,7 @@
     </resultMap>
     
     <!-- ********************* PARAMETERMAPS ********************* -->
-    <parameterMap id="cotizacionVentaParams" type="hashmap">
+    <parameterMap id="ventaParams" type="hashmap">
         <parameter property="NRO_DOCUMENTO"			jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
         <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
@@ -245,14 +296,30 @@
     
     
     <!-- ************************* QUERYS ******************************* -->
-    <select id="obtenerCabeceraCotizacionVenta" parameterMap="cotizacionVentaParams" resultMap="ventaCab" statementType="CALLABLE">
+    <select id="obtenerCabeceraCotizacionVenta" parameterMap="ventaParams" resultMap="ventaCab" statementType="CALLABLE">
       {CALL SP_REP_CAB_COTIZACION_VENTA(?,?,?) }
     </select>
     
-    <select id="obtenerDetalleCotizacionVenta" parameterMap="cotizacionVentaParams" resultMap="ventaDet" statementType="CALLABLE">
+    <select id="obtenerDetalleCotizacionVenta" parameterMap="ventaParams" resultMap="ventaDet" statementType="CALLABLE">
       {CALL SP_REP_DET_COTIZACION_VENTA(?,?,?) }
     </select>
     
+    <select id="obtenerCabeceraGuiaRemisionVenta" parameterMap="ventaParams" resultMap="grCab" statementType="CALLABLE">
+      {CALL SP_REP_CAB_GUIA_REMISION_VENTA(?,?,?) }
+    </select>
+    
+    <select id="obtenerDetalleGuiaRemisionVenta" parameterMap="ventaParams" resultMap="ventaDet" statementType="CALLABLE">
+      {CALL SP_REP_DET_GUIA_REMISION_VENTA(?,?,?) }
+    </select>
+    
+    <select id="obtenerCabeceraFacturaVenta" parameterMap="ventaParams" resultMap="facturaCab" statementType="CALLABLE">
+      {CALL SP_REP_CAB_FACTURA_VENTA(?,?,?) }
+    </select>
+    
+    <select id="obtenerDetalleFacturaVenta" parameterMap="ventaParams" resultMap="ventaDet" statementType="CALLABLE">
+      {CALL SP_REP_DET_FACTURA_VENTA(?,?,?) }
+    </select>
+        
     <select id="obtenerDetalleOrdenCompra" parameterMap="ordenCompraParams" resultMap="ordenCompraDet" statementType="CALLABLE">
       {CALL SP_BUSCAR_ORDEN_COMPRA_DET(?,?,?) }
     </select>
