@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import pe.gob.repuestera.model.CompraCabModel;
+import pe.gob.repuestera.model.ComprobantePagoCabModel;
 import pe.gob.repuestera.model.GenericModel;
+import pe.gob.repuestera.model.GuiaRemisionCabModel;
 import pe.gob.repuestera.model.UsuarioModel;
 import pe.gob.repuestera.model.VentaCabModel;
 import pe.gob.repuestera.service.maestros.ListaPrecioService;
@@ -135,7 +137,168 @@ public class ReporteRestController {
  		reporteService.enviarReportePorCorreo(nombreJrxml, nombreArchivo.toString(), email, params, listaDetalleCotizacionVenta, asunto, mensaje, response);
      		
         logger.info("fin enviarEmailReporteCotizacionesVenta");
-    }	
+    }
+		
+	
+	@PostMapping ("/reporteGuiaRemisionVenta/{numeroDocumento}")
+    public void reporteGuiaRemisionVenta(@PathVariable(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento, 
+    									 HttpServletResponse response) throws Exception{
+        
+    	logger.info("entrando reporteGuiaRemisionVenta.......");
+    	logger.info("numeroDocumento--->" + numeroDocumento); 
+    	
+    	GuiaRemisionCabModel grVentaCab = reporteService.obtenerCabeceraGuiaRemisionVenta(numeroDocumento);
+        List<HashMap> listaDetalleGrVenta = reporteService.obtenerDetalleGuiaRemisionVenta(numeroDocumento);
+        
+        // GENERANDO EL REPORTE
+        String nombreJrxml= "/reportes/ventas/guiaRemision_venta.jrxml";
+        
+ 		StringBuilder nombreArchivo = new StringBuilder();
+ 		nombreArchivo.append("guiaRemisionVenta-").append(numeroDocumento).append(".pdf");
+ 		// seteando parámetros
+        Map<String, Object> params = new HashMap();
+ 		params.put("NRO_DOCUMENTO", numeroDocumento);
+ 		params.put("RAZON_SOCIAL", grVentaCab.getNombreCliente());
+ 		params.put("RUC", grVentaCab.getNroDocCliente() );
+ 		params.put("DIRECCION", grVentaCab.getDireccionFiscal());
+ 		params.put("FECHA", grVentaCab.getFechaContabilizacion());
+ 		params.put("TOTAL_LETRAS", ConvertNumberLetter.convertir(grVentaCab.getTotal().toString(), grVentaCab.getCodigoTipoMoneda()));
+ 		params.put("imagen", getClass().getResourceAsStream("/static/images/logo_kahaxi.png"));
+ 		
+ 		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalleGrVenta, "PDF", response);
+     		
+        logger.info("fin reporteGuiaRemisionVenta");
+    }
+	
+	@PostMapping ("/enviarEmailReporteGuiaRemisionVenta")
+    public void enviarEmailReporteGuiaRemisionVenta(@RequestPart("registro") GenericModel datos,
+    												HttpServletResponse response) throws Exception{
+		logger.info("entrando enviarEmailReporteGuiaRemisionVenta.......");
+		
+		String numeroDocumento = datos.getNumeroDocumento();
+    	String email = datos.getEmail();
+    	String enviarCodigo = datos.getEnviarCodigo();         
+    	
+    	GuiaRemisionCabModel grVentaCab = reporteService.obtenerCabeceraGuiaRemisionVenta(numeroDocumento);
+        List<HashMap> listaDetalleGrVenta = reporteService.obtenerDetalleGuiaRemisionVenta(numeroDocumento);
+        
+        // GENERANDO EL REPORTE
+        String nombreJrxml= "/reportes/ventas/guiaRemision_venta.jrxml";
+ 		
+ 		String asunto = "GUIA DE REMISION - SOLICITUD DE CONFIRMACION DE CORREO";
+	    String nombreUsuario = "XXX";
+	    String mensaje = "<html><head><meta http-equiv=Content-Type content=text/html; charset=utf-8/></head><body><table align=center width=610 cellspacing=0 cellpadding=0 border=0 style='position:relative; font-size:12px; font-family:Arial, Helvetica, sans-serif; color: #00486A; background: #ffffff; border: solid 1px #bdcbcd; -moz-border-radius: 20px 20px 20px 20px; -ms-border-radius: 20px 20px 20px 20px; -webkit-border-radius: 20px 20px 20px 20px; border-radius: 20px 20px 20px 20px; padding:5px;''>"
+	                    + "<tbody><tr><td align=center bgcolor=#ffffff><img width=220 height=60 src='cid:logo_kahaxi.png'/> "
+	                    + "</td><td align=center bgcolor=#ffffff style='text-align: left; font-size:18px; padding-left:20px; color:#121D89;''><br>KAHAXI EIRL</td>"
+	                    + "</tr><tr><td valign=middle align=center colspan=2>"
+	                    + "<br><br><p style='text-align: left; font-size:14px; padding-left:20px; color:#121D89;'>Estimado(a) <b> "+ nombreUsuario +" </b>, <br/><br/>"
+	                    + "Si has recibido un mensaje de este tipo, significa que te hemos enviado una Guía de remisión.<br/><br/>"
+	                    + "</p>"
+	                    + "<p style='text-align: left; font-size:14px; padding-left:20px; color:#0A0203;''>Atentamente,<br>"+"KAHAXI"
+	                    + "<br></p><p style='text-align: left; font-size:10px; padding-left:20px; color:#DF0101;''>"
+	                    + "'Esta notificación ha sido enviada automáticamente. Por favor, no responda este correo.'</b></p><br/>"
+	                    + "</td></tr><tr></tr><tr><td valign=middle height=50 bgcolor=#404040 align=center style='font-size:11px; -moz-border-radius: 0px 0px 20px 20px; -ms-border-radius: 0px 0px 20px 20px; -webkit-border-radius: 0px 0px 20px 20px; border-radius: 0px 0px 20px 20px; padding:5px;' colspan=2 >"
+	                    + "<table width=570 cellspacing=0 cellpadding=0 border=0 align=center><tbody><tr>"
+	                    + "<td width=100% valign=middle align=left style='padding:5px; font-size:10px;'><b>KAHAXI</b><br/>"
+	                    + "</td><td width=100% valign=top align=right ></td></tr></tbody></table></td></tr></tbody></table></body></html>";
+ 		
+ 		StringBuilder nombreArchivo = new StringBuilder();
+ 		nombreArchivo.append("guiaRemisionVenta-").append(numeroDocumento).append(".pdf");
+ 		
+ 		// seteando parámetros
+        Map<String, Object> params = new HashMap();
+ 		params.put("NRO_DOCUMENTO", numeroDocumento);
+ 		params.put("RAZON_SOCIAL", grVentaCab.getNombreCliente());
+ 		params.put("RUC", grVentaCab.getNroDocCliente() );
+ 		params.put("DIRECCION", grVentaCab.getDireccionFiscal());
+ 		params.put("FECHA", grVentaCab.getFechaContabilizacion());
+ 		params.put("ATENCION", "ATENCION DE PRUEBA");
+ 		params.put("TOTAL_LETRAS", ConvertNumberLetter.convertir(grVentaCab.getTotal().toString(), grVentaCab.getCodigoTipoMoneda()));
+ 		
+ 		reporteService.enviarReportePorCorreo(nombreJrxml, nombreArchivo.toString(), email, params, listaDetalleGrVenta, asunto, mensaje, response);
+     		
+        logger.info("fin enviarEmailReporteGuiaRemisionVenta");
+    }
+	
+	@PostMapping ("/reporteFacturaVenta/{numeroDocumento}")
+    public void reporteFacturaVenta(@PathVariable(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento, 
+    									 HttpServletResponse response) throws Exception{
+        
+    	logger.info("entrando reporteFacturaVenta.......");
+    	logger.info("numeroDocumento--->" + numeroDocumento); 
+    	
+    	ComprobantePagoCabModel facturaVentaCab = reporteService.obtenerCabeceraFacturaVenta(numeroDocumento);
+        List<HashMap> listaDetalleFacturaVenta = reporteService.obtenerDetalleFacturaVenta(numeroDocumento);
+        
+        // GENERANDO EL REPORTE
+        String nombreJrxml= "/reportes/ventas/factura_venta.jrxml";
+        
+ 		StringBuilder nombreArchivo = new StringBuilder();
+ 		nombreArchivo.append("facturaVenta-").append(numeroDocumento).append(".pdf");
+ 		// seteando parámetros
+        Map<String, Object> params = new HashMap();
+ 		params.put("NRO_DOCUMENTO", numeroDocumento);
+ 		params.put("RAZON_SOCIAL", facturaVentaCab.getNombreCliente());
+ 		params.put("RUC", facturaVentaCab.getNroDocCliente() );
+ 		params.put("DIRECCION", facturaVentaCab.getDireccionFiscal());
+ 		params.put("FECHA", facturaVentaCab.getFechaContabilizacion());
+ 		params.put("TOTAL_LETRAS", ConvertNumberLetter.convertir(facturaVentaCab.getTotal().toString(), facturaVentaCab.getCodigoTipoMoneda()));
+ 		params.put("imagen", getClass().getResourceAsStream("/static/images/logo_kahaxi.png"));
+ 		
+ 		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalleFacturaVenta, "PDF", response);
+     		
+        logger.info("fin reporteFacturaVenta");
+    }
+	
+	@PostMapping ("/enviarEmailReporteFacturaVenta")
+    public void enviarEmailReporteFacturaVenta(@RequestPart("registro") GenericModel datos,
+    												HttpServletResponse response) throws Exception{
+		logger.info("entrando enviarEmailReporteFacturaVenta.......");
+		
+		String numeroDocumento = datos.getNumeroDocumento();
+    	String email = datos.getEmail();
+    	String enviarCodigo = datos.getEnviarCodigo();         
+    	
+    	ComprobantePagoCabModel facturaVentaCab = reporteService.obtenerCabeceraFacturaVenta(numeroDocumento);
+        List<HashMap> listaDetalleFacturaVenta = reporteService.obtenerDetalleFacturaVenta(numeroDocumento);
+        
+        // GENERANDO EL REPORTE
+        String nombreJrxml= "/reportes/ventas/factura_venta.jrxml";
+ 		
+ 		String asunto = "COMRPOBANTE DE PAGO - SOLICITUD DE CONFIRMACION DE CORREO";
+	    String nombreUsuario = "XXX";
+	    String mensaje = "<html><head><meta http-equiv=Content-Type content=text/html; charset=utf-8/></head><body><table align=center width=610 cellspacing=0 cellpadding=0 border=0 style='position:relative; font-size:12px; font-family:Arial, Helvetica, sans-serif; color: #00486A; background: #ffffff; border: solid 1px #bdcbcd; -moz-border-radius: 20px 20px 20px 20px; -ms-border-radius: 20px 20px 20px 20px; -webkit-border-radius: 20px 20px 20px 20px; border-radius: 20px 20px 20px 20px; padding:5px;''>"
+	                    + "<tbody><tr><td align=center bgcolor=#ffffff><img width=220 height=60 src='cid:logo_kahaxi.png'/> "
+	                    + "</td><td align=center bgcolor=#ffffff style='text-align: left; font-size:18px; padding-left:20px; color:#121D89;''><br>KAHAXI EIRL</td>"
+	                    + "</tr><tr><td valign=middle align=center colspan=2>"
+	                    + "<br><br><p style='text-align: left; font-size:14px; padding-left:20px; color:#121D89;'>Estimado(a) <b> "+ nombreUsuario +" </b>, <br/><br/>"
+	                    + "Si has recibido un mensaje de este tipo, significa que te hemos enviado un comprobante de pago.<br/><br/>"
+	                    + "</p>"
+	                    + "<p style='text-align: left; font-size:14px; padding-left:20px; color:#0A0203;''>Atentamente,<br>"+"KAHAXI"
+	                    + "<br></p><p style='text-align: left; font-size:10px; padding-left:20px; color:#DF0101;''>"
+	                    + "'Esta notificación ha sido enviada automáticamente. Por favor, no responda este correo.'</b></p><br/>"
+	                    + "</td></tr><tr></tr><tr><td valign=middle height=50 bgcolor=#404040 align=center style='font-size:11px; -moz-border-radius: 0px 0px 20px 20px; -ms-border-radius: 0px 0px 20px 20px; -webkit-border-radius: 0px 0px 20px 20px; border-radius: 0px 0px 20px 20px; padding:5px;' colspan=2 >"
+	                    + "<table width=570 cellspacing=0 cellpadding=0 border=0 align=center><tbody><tr>"
+	                    + "<td width=100% valign=middle align=left style='padding:5px; font-size:10px;'><b>KAHAXI</b><br/>"
+	                    + "</td><td width=100% valign=top align=right ></td></tr></tbody></table></td></tr></tbody></table></body></html>";
+ 		
+ 		StringBuilder nombreArchivo = new StringBuilder();
+ 		nombreArchivo.append("facturaVenta-").append(numeroDocumento).append(".pdf");
+ 		
+ 		// seteando parámetros
+        Map<String, Object> params = new HashMap();
+ 		params.put("NRO_DOCUMENTO", numeroDocumento);
+ 		params.put("RAZON_SOCIAL", facturaVentaCab.getNombreCliente());
+ 		params.put("RUC", facturaVentaCab.getNroDocCliente() );
+ 		params.put("DIRECCION", facturaVentaCab.getDireccionFiscal());
+ 		params.put("FECHA", facturaVentaCab.getFechaContabilizacion());
+ 		params.put("ATENCION", "ATENCION DE PRUEBA");
+ 		params.put("TOTAL_LETRAS", ConvertNumberLetter.convertir(facturaVentaCab.getTotal().toString(), facturaVentaCab.getCodigoTipoMoneda()));
+ 		
+ 		reporteService.enviarReportePorCorreo(nombreJrxml, nombreArchivo.toString(), email, params, listaDetalleFacturaVenta, asunto, mensaje, response);
+     		
+        logger.info("fin enviarEmailReporteFacturaVenta");
+    }
 	
 	@PostMapping ("/reporteOrdenCompra/{numeroDocumento}")
     public void reporteOrdenCompra(@PathVariable(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento, 

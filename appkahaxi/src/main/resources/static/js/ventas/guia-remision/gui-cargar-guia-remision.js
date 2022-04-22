@@ -5,6 +5,7 @@ var nroDocReferencia;
 var numeroDocumento;
 var origenMnto;
 var opcion;
+var email;
 var datoBuscar;
 var nroGuiaRemision;
 var nroOrdenVenta;
@@ -44,6 +45,7 @@ var btnGenerarFactura;
 var btnAnular;
 var btnLimpiar;
 var btnVolver;
+var btnPdf;
 
 var tableDetalle;
 var tableNuevoDetalle;
@@ -90,6 +92,7 @@ $(document).ready(function() {
 function inicializarVariables() {
 	titulo = $("#titulo");
 	codigo = $("#codigo");
+	email =  $("#email");
 	codigoCliente = $("#codigoCliente");
 	nroDocReferencia = $("#nroDocReferencia");
 	numeroDocumento = $('#numeroDocumento');
@@ -134,6 +137,7 @@ function inicializarVariables() {
 	btnAnular = $("#btnAnular");
 	btnLimpiar = $("#btnLimpiar");
 	btnVolver = $("#btnVolver");
+	btnPdf =  $("#btnPdf");
 
 	tableDetalle = $("#tableDetalle");
 	tableNuevoDetalle = $("#tableNuevoDetalle");
@@ -308,7 +312,11 @@ function inicializarEventos() {
 	btnVolver.on("click", function() {
 		volver();
 	});
-
+	
+	btnPdf.click(function(e){
+		generarPdf(e);	
+    });
+	
 	serie.on('click', function(event) {
 		if (serie.val() > 0) {
 			obtenerCorrelativo();
@@ -432,6 +440,7 @@ function cargarPantallaHTMLOrdenVenta(data) {
 	documentoCli.val(data.nroDocCliente);
 	nombreCli.val(data.nombreCliente);
 	direccion.val(data.direccionFiscal);
+	email.val(data.email);
 	direccionDespacho.val(data.direccionDespacho);
 	personaContacto.val(data.personaContacto);
 	tipoMoneda.val(data.codigoTipoMoneda);
@@ -564,6 +573,7 @@ function cargarPantallaHTMLGuiaRemision(data) {
 		documentoCli.val(data.nroDocCliente);
 		nombreCli.val(data.nombreCliente);
 		direccion.val(data.direccionFiscal);
+		email.val(data.email);
 		direccionDespacho.val(data.direccionDespacho);
 		personaContacto.val(data.personaContacto);
 		tipoMoneda.val(data.codigoTipoMoneda);
@@ -677,7 +687,7 @@ function verPantallaGuiaRemision(data) {
 	btnAnular.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
 
 	ocultarControl(btnLimpiar);
-
+	mostrarControl(btnPdf);
 	deshabilitarDetalleGuiaRemision();
 }
 
@@ -1080,6 +1090,7 @@ function registrarGuiaRemisionVenta() {
 				deshabilitarControl(personaContacto);
 				mostrarControl(btnGenerarFactura);
 				mostrarControl(btnAnular);
+				mostrarControl(btnPdf);
 				btnAnular.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
 				ocultarControl(btnGrabar);
 				ocultarControl(btnLimpiar);
@@ -1756,3 +1767,168 @@ function calcularResumenGuiaRemision() {
 	igvGR.val(convertirNumeroAMoneda(igv));
 	totalGR.val(convertirNumeroAMoneda(total));
 }
+
+function generarPdf(event){
+	var nroDocumento = codigo.html();
+	var correo = email.val();
+	var box = bootbox.dialog({
+	    title: 'Enviar correo o descargar guía de remisión',
+		message: $(".form-content").html().replace('formEmail', 'formEmailReal'),
+		buttons: {
+	        correo: {
+	            label: '<i class="fas fa-at"></i> Enviar por correo',
+	            className: Boton.SUCCESS,
+	            callback: function(){
+									
+	                event.preventDefault();
+					var form = $(".formEmailReal")
+					
+			        if (form[0].checkValidity() == false) {
+						console.log("validado FALSE!!!....")
+			            event.stopPropagation();
+						
+						box.find('.formEmailReal #emailPDF').addClass('input-validation-error');
+						box.find('.formEmailReal #emailPDF').focus();
+						box.find('.mensaje-validado-falso').show();
+						return false;
+			        }else{
+						//event.stopPropagation();
+						console.log("todo bien....send email....")
+						var listaCorreos = $('.formEmailReal #emailPDF').val();
+						var enviarCodigo = $('.formEmailReal #chkEnviarCodigo').is(':checked');
+						console.log('listaCorreos-->' + listaCorreos);
+						console.log('enviarCodigo-->' + enviarCodigo);
+					
+						enviarMailReporte(nroDocumento, listaCorreos, enviarCodigo);
+					}
+					form.addClass('was-validated');
+	            }
+	        },
+	        descargar: {
+	            label: '<i class="fas fa-download"></i> Descargar',
+	            className: Boton.WARNING,
+	            callback: function(){
+	                console.log('boton descargar...');
+					var enviarCodigo = $('.formEmailReal #chkEnviarCodigo').is(':checked');
+					console.log('enviarCodigo-->' + enviarCodigo);
+					descargarReporte(nroDocumento, enviarCodigo);	
+	            }
+	        }
+	    }
+	});
+	
+	box.on('shown.bs.modal',function(){
+	  console.log("$$$on modal...")
+		$('.formEmailReal #emailPDF').focus();
+		//$('#emailPDF').focus();
+		console.log("correo del cliente-->" + correo + "/ NRO DOC-->" + nroDocumento);
+		$('.formEmailReal #emailPDF').val(correo);
+	});
+}
+
+function enviarMailReporte(numeroDocumento, email, enviarCodigo){
+    var objetoJson = {
+		numeroDocumento		: numeroDocumento,
+    	email				: email,
+		enviarCodigo		: enviarCodigo
+    };
+
+	var entityJsonStr = JSON.stringify(objetoJson);
+    console.log("entityJsonStr-->" + entityJsonStr);
+    var formData = new FormData();
+    formData.append('registro', new Blob([entityJsonStr], {
+        type: "application/json"
+    }));
+	
+	$.ajax({
+        type:"Post",
+        contentType: false,
+        processData: false,
+		url : '/appkahaxi/enviarEmailReporteGuiaRemisionVenta',
+        xhrFields: {
+            responseType: 'blob'
+        },
+        data : formData,
+        beforeSend: function(xhr) {
+        	loadding(true);
+        },
+        error: function (xhr, error, code){
+        	mostrarMensajeError(xhr.responseText);
+        	loadding(false);
+        },
+        success: function (result, status, xhr) {
+            mostrarNotificacion("El correo se envió correctamente.", "success");
+			loadding(false);                
+        }
+    });
+}
+
+function descargarReporte(numeroDocumento, enviarCodigo){
+    $.ajax({
+        type:"Post",
+        url : '/appkahaxi/reporteGuiaRemisionVenta/' + numeroDocumento,
+        xhrFields: {
+            responseType: 'blob'
+        },
+        data : null,
+        beforeSend: function(xhr) {
+        	loadding(true);
+        },
+        error: function (xhr, error, code){
+        	mostrarMensajeError(xhr.responseText);
+        	loadding(false);
+        },
+        success: function (result, status, xhr) {
+            if(result.size > 0){
+                var filename = "nombre.pdf";
+                var disposition = xhr.getResponseHeader('Content-Disposition');
+
+                if (disposition) {
+                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var matches = filenameRegex.exec(disposition);
+                    if (matches !== null && matches[1]) filename = matches[1].replace(/['"]/g, CADENA_VACIA);
+                }
+                var linkelem = document.createElement('a');
+                try {
+                    var blob = new Blob([result], { type: 'application/octet-stream' });
+                    
+                    if (typeof window.navigator.msSaveBlob !== 'undefined') {
+                        //   IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
+                        window.navigator.msSaveBlob(blob, null);
+                    } else {
+                        var URL = window.URL || window.webkitURL;
+                        var downloadUrl = URL.createObjectURL(blob);
+
+                        if (filename) {
+                            // use HTML5 a[download] attribute to specify filename
+                            var a = document.createElement("a");
+
+                            // safari doesn't support this yet
+                            if (typeof a.download === 'undefined') {
+                                window.location = downloadUrl;
+                            } else {
+                                a.href = downloadUrl;
+                                a.download = filename;
+                                document.body.appendChild(a);
+                                a.target = "_blank";
+                                a.click();
+
+                                window.onfocus = function () {
+                                    document.body.removeChild(a);
+                                    window.URL.revokeObjectURL(downloadUrl);
+                                }
+                            }
+                        } else {
+                            window.location = downloadUrl;
+                        }
+                    }
+                    loadding(false);
+
+                } catch (ex) {
+                    
+                }
+            }
+        }
+    });
+}
+

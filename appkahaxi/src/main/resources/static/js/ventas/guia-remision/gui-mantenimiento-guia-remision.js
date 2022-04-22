@@ -226,17 +226,17 @@ function inicializarTabla(){
                 "data": "id"
             },
             {
-                "width": "50px",
+                "width": "10px",
                 "targets": [1],
                 "data": "numeroDocumento"
             },
 			{
-				"width": "50px",
+				"width": "10px",
 				"targets": [2],
 				"data": "ordenVenta"
 			},
 			{
-				"width": "30px",
+				"width": "10px",
 				"targets": [3],
 				"data": "fechaRegistroFormato"
 			},
@@ -247,12 +247,12 @@ function inicializarTabla(){
 				"visible": false
             },
             {
-                "width": "40px",
+                "width": "20px",
                 "targets": [5],
                 "data": "nroDocCliente"
             },
             {
-                "width": "300px",
+                "width": "100px",
                 "targets": [6],
                 "data": "nombreCliente"
             },
@@ -268,18 +268,18 @@ function inicializarTabla(){
                 
             },
             {
-                "width": "30px",
+                "width": "10px",
                 "targets": [9],
                 "data": "descripcionCondPago"
                 
             },
             {
-                "width": "50px",
+                "width": "10px",
                 "targets": [10],
                 "data": "descripcionEstado"
             },
             {
-                "width": "60px",
+                "width": "10px",
                 "targets": [11],
                 "data": "total",
 				"render":
@@ -296,6 +296,9 @@ function inicializarTabla(){
                 "render":
                     function (data, type, row ) {
                     	return  "<div>" +
+									"<button title='Descargar GR' class='btn-download btn btn-warning btn-xs'>" +
+                        				"<span><i class=\"fas fa-download\"></i></span>" +
+					                "</button>" +
                         			"<button title='Ver guía' class='btn-view btn btn-info btn-xs'>" +
                         				"<span><i class=\"fas fa-eye\"></i></span>" +
 					                "</button>" +
@@ -332,6 +335,12 @@ function inicializarTabla(){
             "url": "/appkahaxi/language/Spanish.json"
          }
     });
+
+	$('#tablaGuiaRemision tbody').on('click','.btn-download', function () {
+	    var data = dataTableGuiaRemision.row( $(this).closest('tr')).data();
+	    console.log("data.numeroDocument-->" + data.numeroDocumento)
+		descargarReporte(data.numeroDocumento);
+	});
 	
 	$('#tablaGuiaRemision tbody').on('click','.btn-view', function () {
 	    var data = dataTableGuiaRemision.row( $(this).closest('tr')).data();
@@ -423,3 +432,73 @@ function limpiar(e){
 	buscar(e);
 	campoBuscar.focus();
 }
+
+function descargarReporte(numeroDocumento){
+    $.ajax({
+        type:"Post",
+        url : '/appkahaxi/reporteGuiaRemisionVenta/' + numeroDocumento,
+        xhrFields: {
+            responseType: 'blob'
+        },
+        data : null,
+        beforeSend: function(xhr) {
+        	loadding(true);
+        },
+        error: function (xhr, error, code){
+        	mostrarMensajeError(xhr.responseText);
+        	loadding(false);
+        },
+        success: function (result, status, xhr) {
+            if(result.size > 0){
+                var filename = "nombre.pdf";
+                var disposition = xhr.getResponseHeader('Content-Disposition');
+
+                if (disposition) {
+                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var matches = filenameRegex.exec(disposition);
+                    if (matches !== null && matches[1]) filename = matches[1].replace(/['"]/g, CADENA_VACIA);
+                }
+                var linkelem = document.createElement('a');
+                try {
+                    var blob = new Blob([result], { type: 'application/octet-stream' });
+                    
+                    if (typeof window.navigator.msSaveBlob !== 'undefined') {
+                        //   IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
+                        window.navigator.msSaveBlob(blob, null);
+                    } else {
+                        var URL = window.URL || window.webkitURL;
+                        var downloadUrl = URL.createObjectURL(blob);
+
+                        if (filename) {
+                            // use HTML5 a[download] attribute to specify filename
+                            var a = document.createElement("a");
+
+                            // safari doesn't support this yet
+                            if (typeof a.download === 'undefined') {
+                                window.location = downloadUrl;
+                            } else {
+                                a.href = downloadUrl;
+                                a.download = filename;
+                                document.body.appendChild(a);
+                                a.target = "_blank";
+                                a.click();
+
+                                window.onfocus = function () {
+                                   // document.body.removeChild(a);
+                                    window.URL.revokeObjectURL(downloadUrl);
+                                }
+                            }
+                        } else {
+                            window.location = downloadUrl;
+                        }
+                    }
+                    loadding(false);
+
+                } catch (ex) {
+                    
+                }
+            }
+        }
+    });
+}
+

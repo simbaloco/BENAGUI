@@ -60,6 +60,7 @@ public class ComprobantePagoCabModel {
 	private String descripcionCondPago;
 	private String descripcionEstado;
     private String descripcionEstadoPago;
+    private String descripcionDias;
     private String fechaRegistroFormato;
 
     // DETALLE

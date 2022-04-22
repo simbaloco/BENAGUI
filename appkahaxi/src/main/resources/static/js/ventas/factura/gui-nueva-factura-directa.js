@@ -49,6 +49,7 @@ var correlativo;
 var divMensajeEliminado;
 var btnAnular;
 var btnLimpiar;
+var btnPdf;
 
 var tableDetalle;
 var tableNuevoDetalle;
@@ -57,6 +58,10 @@ var observaciones;
 var subTotalFactura;
 var igvFactura;
 var totalFactura;
+var dctoTotal;
+var dcto;
+var chkDctoTotal;
+var dctoFacDiv;
 
 var btnGrabar;
 var btnNuevo;
@@ -132,6 +137,7 @@ function inicializarVariables() {
 	btnAnular = $("#btnAnular");
 	btnLimpiar = $("#btnLimpiar");
 	btnVolver =  $("#btnVolver");
+	btnPdf =  $("#btnPdf");
 	
 	btnAgregarArticulo = $("#btnAgregarArticulo");
 	btnEliminarTodosArticulos = $("#btnEliminarTodosArticulos");
@@ -151,6 +157,10 @@ function inicializarVariables() {
 	
 	dateTimePickerInput = $(".datetimepicker-input");
 	lblAnulado = $("#lblAnulado");
+	dctoTotal = $("#dctoTotal");
+	dcto = $("#dcto");
+	chkDctoTotal = $("#chkDctoTotal");
+	dctoFacDiv = $("#dctoFacDiv")
 }
 
 function inicializarComponentes() {
@@ -287,7 +297,10 @@ function habilitarAutocompletarBuscarCampos() {
 			
 			direccionDespacho.find('option').not(':first').remove();
 			personaContacto.find('option').not(':first').remove();
-
+			
+			console.log("dirDespachoArray--->" +  ui.item.direccionDespachoConcat);
+			console.log("perContactoArray--->" +  ui.item.personaContactoConcat);
+			
 			let dirDespachoArray = ui.item.direccionDespachoConcat.split('|');
 			let perContactoArray = ui.item.personaContactoConcat.split('|');
 
@@ -343,6 +356,10 @@ function inicializarEventos() {
 	btnVolver.click(function() {
 		volver(false);
 	});
+	
+	btnPdf.click(function(e){
+		generarPdf(e);	
+    });
 		
 	condPago.on('change', function(){
 		evaluarCambioCondicionPago();
@@ -356,12 +373,20 @@ function inicializarEventos() {
 		evaluarCambioTipoMoneda();
 	});
 
-	serie.on('keypress', function(event){
-		return soloAlfaNumericos(event);
+	serie.on('click', function(event) {
+		if (serie.val() > 0) {
+			obtenerCorrelativo();
+		} else {
+			correlativo.val(CADENA_VACIA);
+		}
 	});
-
-	correlativo.on('keypress', function(event){
-		return soloEnteros(event);
+	
+	chkDctoTotal.on('click', function(){
+    	clickCheckBoxDctoTotal($(this));
+    });
+		
+	dctoTotal.on('keyup', function(){
+		calcularResumenFactura();
 	});
 
 	btnAgregarArticulo.on("click", function() {
@@ -370,6 +395,35 @@ function inicializarEventos() {
 
 	btnEliminarTodosArticulos.on("click", function() {
 		mostrarDialogoEliminarTodo();
+	});
+}
+
+function obtenerCorrelativo() {
+	console.log("obtenerCorrelativo...");
+
+	var codSerie = serie.val();
+
+	$.ajax({
+		type: "Get",
+		contentType: "application/json",
+		accept: 'text/plain',
+		url: '/appkahaxi/obtenerCorrelativo/' + codSerie,
+		data: null,
+		dataType: 'text',
+		beforeSend: function(xhr) {
+			loadding(true);
+		},
+		success: function(result, textStatus, xhr) {
+			if (xhr.status == HttpStatus.OK) {
+				correlativo.val(result);
+			}
+			loadding(false);
+		},
+		error: function(xhr, error, code) {
+
+			mostrarMensajeError(xhr.responseText);
+			loadding(false);
+		}
 	});
 }
 
@@ -410,11 +464,115 @@ function inicializarFechas(){
 }
 */
 
+function clickCheckBoxDctoTotal(control){
+	if (control.is(':checked')) {
+		habilitarControl(dctoTotal);
+		mostrarControl(dctoFacDiv);
+		calcularActivarDctoTotal();
+		dctoTotal.focus();
+	}else{
+		calcularDesactivarDctoTotal();
+		ocultarControl(dctoFacDiv);
+		deshabilitarControl(dctoTotal);
+		dctoTotal.val(CADENA_VACIA);
+	}
+}
+
+
+function calcularActivarDctoTotal(){
+	// 1. calcular la suma totalCoti de cantidad*precio
+	var cantidad;
+	var precio;
+	var subTotal;
+	
+	var $headers = tableDetalle.find("th").not(':first').not(':last');
+	tableDetalle.DataTable().rows().iterator('row', function(context, index){
+
+		var node = $(this.row(index).node());
+		$cells = node.find("td").not(':first').not(':last');
+
+		$cells.each(function(cellIndex) {
+			// 1.1 recalculando el subtotal x cada fila
+			if($($headers[cellIndex]).attr('id') == 'cantidad') {
+				cantidad = Number($(this).find("input").val());
+			}
+			if($($headers[cellIndex]).attr('id') == 'precioUnitario') {
+				precio = Number($(this).find("input").val());
+			}
+			
+			if($($headers[cellIndex]).attr('id') == 'subTotal') {
+				subTotal = cantidad * precio;
+				$(this).find("input").val(convertirNumeroAMoneda(subTotal));
+			}
+			
+			// 1.2 deshabilitar el campo dcto x cada fila
+			if($($headers[cellIndex]).attr('id') == 'porcentajeDcto') {
+				habilitarControlSoloLectura(null, $(this).find("input"));
+				$(this).find("input").addClass("atenuar-input-disabled");
+			}
+			
+			if($($headers[cellIndex]).attr('id') == 'precioConDcto') {
+				$(this).find("input").addClass("atenuar-input-disabled");
+			}
+			
+		});
+	});
+	
+	calcularResumenFactura();
+}
+
+function calcularDesactivarDctoTotal(){
+	// 1. calcular la suma totalCoti de cantidad*precio
+	var cantidad;
+	var precio;
+	var subTotal;
+	var dcto;
+	
+	var $headers = tableDetalle.find("th").not(':first').not(':last');
+	tableDetalle.DataTable().rows().iterator('row', function(context, index){
+
+		var node = $(this.row(index).node());
+		$cells = node.find("td").not(':first').not(':last');
+
+		$cells.each(function(cellIndex) {
+			// 1.1 recalculando el subtotal x cada fila
+			if($($headers[cellIndex]).attr('id') == 'cantidad') {
+				cantidad = Number($(this).find("input").val());
+			}
+			if($($headers[cellIndex]).attr('id') == 'precioUnitario') {
+				precio = Number($(this).find("input").val());
+			}
+			
+			if($($headers[cellIndex]).attr('id') == 'subTotal') {
+				subTotal = cantidad * precio;
+				subTotal = subTotal - (subTotal * dcto/100);
+				$(this).find("input").val(convertirNumeroAMoneda(subTotal));
+			}
+			
+			// 1.2 deshabilitar el campo dcto x cada fila
+			if($($headers[cellIndex]).attr('id') == 'porcentajeDcto') {
+				dcto = Number($(this).find("input").val());
+				deshabilitarControlSoloLectura(null, $(this).find("input"));
+				$(this).find("input").removeClass("atenuar-input-disabled");
+			}
+			
+			if($($headers[cellIndex]).attr('id') == 'precioConDcto') {
+				$(this).find("input").removeClass("atenuar-input-disabled");
+			}
+			
+		});
+	});
+	
+	calcularResumenFactura();
+}
+
 function cargarPantallaNueva() {
 	//obtenerTipoCambio(tipoCambio);
 	obtenerTipoCambio(tipoCambio, tipoCambioSave);	
-	
+	deshabilitarControl(tipoCambio);
+	deshabilitarControl(correlativo);
 	controlNoRequerido(observaciones);
+	habilitarControl(chkDctoTotal);
 	titulo.text("NUEVA");
 	dias.val(Dias._30);
 	
@@ -495,10 +653,17 @@ function cargarPantallaHTMLFactura(data) {
 	tipoCambio.val(data.tipoCambio);
 	observaciones.val(data.observaciones);
 	
+	dcto.val(convertirNumeroAMoneda(data.descuento));
 	subTotalFactura.val(convertirNumeroAMoneda(data.subTotal));
     igvFactura.val(convertirNumeroAMoneda(data.igv));
     totalFactura.val(convertirNumeroAMoneda(data.total));
-
+	
+	if (data.porcDctoTotal != null) {
+		dctoTotal.val(data.porcDctoTotal);
+		checkControl(chkDctoTotal);
+    	mostrarControl(dctoFacDiv);
+	}
+	
 	cantidadDetalleDuplicado = data.detalle.length;
 
 	for(i=0; i < cantidadDetalleDuplicado; i++) {
@@ -513,8 +678,11 @@ function cargarPantallaHTMLFactura(data) {
     	$('#marca_' + i).val(detalle.marca);
     	$('#almacen_' + i).val(detalle.codAlmacen);
 		$('#cantidad_' + i).val(detalle.cantidad);
-		$('#precio_' + i).val(convertirNumeroAMoneda(detalle.precioUnitario));
-		$('#precioIgv_' + i).val(convertirNumeroAMoneda(detalle.precioUnitarioIgv));
+		$('#precioUnitario_' + i).val(convertirNumeroAMoneda(detalle.precioUnitario));
+		$('#precioUnitarioIgv_' + i).val(convertirNumeroAMoneda(detalle.precioUnitarioIgv));
+		$('#precioReferencia_' + i).val(convertirNumeroAMoneda(detalle.precioReferencia));
+		$('#porcentajeDcto_' + i).val(detalle.porcentajeDcto);
+		$('#precioConDcto_' + i).val(convertirNumeroAMoneda(detalle.precioConDcto));		
 		$('#subTotal_' + i).val(convertirNumeroAMoneda(detalle.subTotal));
 		$('#subTotalIgv_' + i).val(convertirNumeroAMoneda(detalle.subTotalIgv));
 	}
@@ -555,8 +723,10 @@ function verPantallaFactura(data) {
 	deshabilitarControl(dias);
 	deshabilitarControl(serie);
 	deshabilitarControl(correlativo);
+	deshabilitarControl(dctoTotal);
+	deshabilitarControl(chkDctoTotal);
 	//deshabilitarControl(observaciones);
-
+	mostrarControl(btnPdf);
 	ocultarControl(btnGrabar);
 	ocultarControl(btnLimpiar);
 	ocultarControl(btnAgregarArticulo);
@@ -576,11 +746,12 @@ function deshabilitarDetalleFactura(){
 		$cells.each(function(cellIndex) {
 			habilitarControlSoloLectura($(this).find(".buscar-det"));
 			habilitarControlSoloLectura($(this).find(".codigo-det"));
-			habilitarControlSoloLectura($(this).find(".desc-det"));
+			//habilitarControlSoloLectura($(this).find(".desc-det"));
 			habilitarControlSoloLectura($(this).find(".marca-det"));
 			deshabilitarControl($(this).find(".almacen_table"));
 			habilitarControlSoloLectura($(this).find(".cantidad-det"));
-			habilitarControlSoloLectura($(this).find(".precio-det"));
+			habilitarControlSoloLectura($(this).find(".pvu-det"));
+			habilitarControlSoloLectura($(this).find(".porc-dcto-det"));
 			
 			deshabilitarControl($(this).find(".btn-delete"));
 		});
@@ -668,31 +839,48 @@ function agregarHTMLColumnasDataTable(data) {
 						"id='cantidad_" + indiceFilaDataTableDetalle + "'>");
 					break;
 
-			// PRECIO UNITARIO
-			case 7:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
-						"<input class='form-control alineacion-derecha precio-det' type='text' maxlength='13' " +
-							"onkeyup='precioKeyUp(this, " + indiceFilaDataTableDetalle + ")' " +
-							"onkeypress='return soloDecimales(event, this);' " +
-							"onchange='precioKeyUp(this, " + indiceFilaDataTableDetalle + ");'  readonly='readonly' " + 
-							"onkeydown='precioKeyDown(event, " + indiceFilaDataTableDetalle + ")' " +
-							"id='precio_" + indiceFilaDataTableDetalle + "'>" +
-						"</span></div>");
-					break;
-						
-			// PRECIO C/IGV
+			// PVU
+			case 7: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+				"<input class='form-control alineacion-derecha pvu-det' type='text' id='precioUnitario_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
+				"</span></div>");
+				break;
+
+			// PVU C/IGV
 			case 8: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
-				"<input class='form-control alineacion-derecha' type='text' id='precioIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
+				"<input class='form-control alineacion-derecha' type='text' id='precioUnitarioIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
+				"</span></div>");
+				break;
+
+			// PRECIO REFERENCIA
+			case 9: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+				"<input class='form-control alineacion-derecha' type='text' id='precioReferencia_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
+				"</span></div>");
+				break;
+
+			// PORC DCTO
+			case 10:$(this).html(CADENA_VACIA).append(
+				"<input class='form-control alineacion-derecha porc-dcto-det' type='number' min='0' max='100' maxlength='3' " +
+				"onkeyup='porcDctoKeyUp(this, " + indiceFilaDataTableDetalle + ");' " + 
+				"onchange='porcDctoKeyUp(this, " + indiceFilaDataTableDetalle + ");' " +
+				"onkeydown='porcDctoKeyDown(event)' " +
+				"onkeypress='return soloEnteros(event);' readonly='readonly' " +
+				"id='porcentajeDcto_" + indiceFilaDataTableDetalle + "' >");
+				break;
+
+			// PRECIO C/DCTO
+			case 11: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+				"<input class='form-control alineacion-derecha' type='text' id='precioConDcto_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
 				"</span></div>");
 				break;
 			
 			// SUBTOTAL
-			case 9:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+			case 12:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
 						"<input class='form-control alineacion-derecha' type='text' id='subTotal_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
 						"</span></div>");
 					break;
 				
 			// SUBTOTAL C/IGV	 (OCULTO)
-			case 10:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha' type='text' id='subTotalIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
+			case 13:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha' type='text' id='subTotalIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
 					break;
 
 		}
@@ -779,26 +967,30 @@ function buscarArticuloKeyUp(e, control, fila){
 		    	$('#marca_' + fila).val(ui.item.descripcionMarcaArticulo);
 		    	// evaluamos si estamos cotizando en SOLES o DOLARES
 				//var precio;
+				var precioRef;
 				var tc = tipoCambio.val();
 				
 				deshabilitarControlSoloLectura(null, '#cantidad_' + fila);
-				deshabilitarControlSoloLectura(null, '#precio_' + fila);
+				deshabilitarControlSoloLectura(null, '#precioUnitario_' + fila);
+				deshabilitarControlSoloLectura(null, '#porcentajeDcto_' + fila);
 				
 				var tipMoneda = tipoMoneda.val();
 				if(tipMoneda == Moneda.SOLES){
 					precio 		= ui.item.precioVentaUnitario * tc;
+					precioRef 	= ui.item.precioReferencia * tc;
 					//$('.simbolo-moneda').removeClass("input-symbol-dolar").addClass("input-symbol-sol");
 				}else{
 					precio 		= ui.item.precioVentaUnitario;
+					precioRef 	= ui.item.precioReferencia;
 					//$('.simbolo-moneda').removeClass("input-symbol-sol").addClass("input-symbol-dolar");
 				}
 				
-				$('#precio_' + fila).val(convertirNumeroAMoneda(precio));
+				$('#precioUnitario_' + fila).val(convertirNumeroAMoneda(precio));
 				//$('#precio_' + fila).prop('min', precio);
 				
 				var precioIgv = precio + (precio * (ParametrosGenerales.IGV / 100));
-				$('#precioIgv_' + fila).val(convertirNumeroAMoneda(precioIgv));
-				
+				$('#precioUnitarioIgv_' + fila).val(convertirNumeroAMoneda(precioIgv));
+				$('#precioRef_' + fila).val(convertirNumeroAMoneda(precioRef));
 				$('#cantidad_' + fila).focus();
 				
 				var key = window.Event ? event.which : event.keyCode;
@@ -816,7 +1008,7 @@ function buscarArticuloKeyUp(e, control, fila){
 function cantidadKeyUp(control, fila) {
 
 	var cantidad = Number(control.value);
-	var precio = convertirMonedaANumero($('#precio_' + fila).val());
+	var precio = convertirMonedaANumero($('#precioUnitario_' + fila).val());
 	var subTotal = cantidad * precio;
 	var subTotalIgv = subTotal + (subTotal * (ParametrosGenerales.IGV/100));
 	
@@ -833,7 +1025,7 @@ function cantidadKeyDown(e, fila){
 	// si es ENTER
 	if(key == 13){
 		console.log("cantidadKeyDown, foco en PVU");
-		$('#precio_' + fila).select();
+		$('#precioUnitario_' + fila).select();
 	}
 }
 
@@ -845,7 +1037,7 @@ function precioKeyUp(control, fila) {
 	var subTotalIgv = subTotal + (subTotal * (ParametrosGenerales.IGV/100));
 	var precioIgv = precio + (precio * (ParametrosGenerales.IGV / 100));
 
-	$('#precioIgv_' + fila).val(convertirNumeroAMoneda(precioIgv));
+	$('#precioUnitarioIgv_' + fila).val(convertirNumeroAMoneda(precioIgv));
 	$('#subTotalIgv_' + fila).val(convertirNumeroAMoneda(subTotalIgv));
 	$('#subTotal_' + fila).val(convertirNumeroAMoneda(subTotal));
 	
@@ -857,10 +1049,58 @@ function precioKeyDown(e, fila){
 	console.log("precioKeyDown, key-->" + key);
 	// si es ENTER
 	if(key == 13){
-		btnAgregarArticulo.click();
+		// preguntamos si está activo el check de dcto totalCoti
+		// si está activo, al presionar ENTER entonces INSERTAMOS UNA NUEVA FILA
+		if (chkDctoTotal.is(':checked')) {
+			btnAgregarArticulo.click();
+		}else{
+			// caso contrario, le damos el foco al campo PORCENTAJE DCTO
+			$('#porcDcto_' + fila).select();
+		}
 	}
 }
 
+function porcDctoKeyUp(control, fila){
+	console.log("porcDctoKeyUp....");
+	var cantidad = Number($('#cantidad_' + fila).val());
+	var precio = convertirMonedaANumero($('#precioUnitario_' + fila).val());
+	var subTotal;
+	
+	var porcDcto = Number(control.value);
+	var max = Number(control.max);
+	
+	if (porcDcto > max){
+		if(control.value.length == 4){
+			control.value = control.value.substring(0, 3);	
+		}else{
+			control.value = control.value.substring(0, 2);
+		}
+		return;
+	}
+	
+	if (porcDcto != CADENA_VACIA && porcDcto != '0') {
+		var montoDcto = precio * (porcDcto / 100);
+		// precio con porcDcto
+		var nuevoPrecio = precio - montoDcto;
+		subTotal = cantidad * nuevoPrecio;
+		$('#precioConDcto_' + fila).val(convertirNumeroAMoneda(nuevoPrecio));
+	}else{
+		subTotal = cantidad * precio;
+		$('#precioConDcto_' + fila).val(CADENA_VACIA);
+	}
+	$('#subTotal_' + fila).val(convertirNumeroAMoneda(subTotal));
+	calcularResumenFactura();
+}
+
+function porcDctoKeyDown(e){
+	var key = window.Event ? e.which : e.keyCode;
+	console.log("porcDctoKeyDown, key-->" + key);
+	// si es ENTER
+	if(key == 13){
+		console.log("porcDctoKeyDown, nueva fila");
+		btnAgregarArticulo.click();		
+	}
+}
 
 /**************** EVENTOS FORMULARIO *******************/
 
@@ -1075,13 +1315,18 @@ function registrarFacturaVenta(){
 	var codigoEstadoPagoVal 	= estadoPago.val().trim();
 	var observacionesVal 		= observaciones.val().trim();
 	
+	var descuento 				= convertirMonedaANumero(dcto.val().trim() == '' ? '0' : dcto.val().trim());
 	var subTotalVal 			= convertirMonedaANumero(subTotalFactura.val().trim());
 	var igvVal 					= convertirMonedaANumero(igvFactura.val());
 	var totalVal 				= convertirMonedaANumero(totalFactura.val().trim());
 	
 	var detalle 				= tableToJSON(tableDetalle);
 	var diasVal					= null;
-
+	var porcDctoTotal = null;
+	if (chkDctoTotal.is(':checked')) {
+		porcDctoTotal = dctoTotal.val().trim();
+	}
+	
 	if(condPagoVal == CondicionPago.CREDITO) {
 		diasVal					= dias.val();
 	}
@@ -1104,7 +1349,9 @@ function registrarFacturaVenta(){
 		codigoDias:     		diasVal,
 		codigoEstadoPago:   	codigoEstadoPagoVal,
 		tipoCambio:				tipoCambioVal,
+		porcDctoTotal: 			porcDctoTotal,
 		subTotal:  				subTotalVal,
+		descuento: 				descuento,
 		igv:  					igvVal,
 		total:  				totalVal,
 		observaciones:  		observacionesVal,
@@ -1146,10 +1393,13 @@ function registrarFacturaVenta(){
 				deshabilitarControl(condPago);
 				deshabilitarControl(dias);
 				deshabilitarControl(tipoCambio);
+				deshabilitarControl(chkDctoTotal);
+				deshabilitarControl(dctoTotal);
 
 				deshabilitarControl(dateTimePickerInput);
 
 				mostrarControl(btnNuevo);
+				mostrarControl(btnPdf);
 				
 				ocultarControl(btnGrabar);
 				ocultarControl(btnLimpiar);
@@ -1535,7 +1785,8 @@ function limpiarFactura() {
 function calcularResumenFactura(){
 
 	var subTotal = 0;
-
+	var dscto = 0;
+	
 	// 1. sumamos el campo subTotal de cada fila
 	var $headers = tableDetalle.find("th").not(':first').not(':last');
 	tableDetalle.DataTable().rows().iterator('row', function(context, index){
@@ -1556,11 +1807,20 @@ function calcularResumenFactura(){
 		});
 	});
 	
-	// 2. hacemos los cáculos del IGV y TOTAL de la OC
-	var igv = subTotal * (ParametrosGenerales.IGV/100);
-	var total = subTotal + igv;
+	// 2. obtenemos el dcto total ingresado
+	var descTotal = Number(dctoTotal.val());
+	// 2.1. aplicamos el dcto al subTotal obtenido
+	if (descTotal != CADENA_VACIA && descTotal != 0) {
+		dscto = subTotal * (descTotal / 100);
+	}
+	
+	// 3. hacemos los cáculos del IGV y TOTAL de la OC
+	var subTotalConDcto = subTotal - dscto;
+	var igv = subTotalConDcto * (ParametrosGenerales.IGV/100);
+	var total = subTotalConDcto + igv;
 
 	subTotalFactura.val(convertirNumeroAMoneda(subTotal));
+	dcto.val(convertirNumeroAMoneda(dscto));
 	igvFactura.val(convertirNumeroAMoneda(igv));
 	totalFactura.val(convertirNumeroAMoneda(total));
 }
@@ -1647,3 +1907,170 @@ function convertirMontosADolares(){
 	igvFactura.val(convertirNumeroAMoneda(igv));
 	totalFactura.val(convertirNumeroAMoneda(total));
 }
+
+function generarPdf(event){
+	var nroDocumento = codigo.html();
+	var correo = email.val();
+	var box = bootbox.dialog({
+	    title: 'Enviar correo o descargar comrpobante de venta',
+		message: $(".form-content").html().replace('formEmail', 'formEmailReal'),
+		buttons: {
+	        correo: {
+	            label: '<i class="fas fa-at"></i> Enviar por correo',
+	            className: Boton.SUCCESS,
+	            callback: function(){
+									
+	                event.preventDefault();
+					var form = $(".formEmailReal")
+					
+			        if (form[0].checkValidity() == false) {
+						console.log("validado FALSE!!!....")
+			            event.stopPropagation();
+						
+						box.find('.formEmailReal #emailPDF').addClass('input-validation-error');
+						box.find('.formEmailReal #emailPDF').focus();
+						box.find('.mensaje-validado-falso').show();
+						return false;
+			        }else{
+						//event.stopPropagation();
+						console.log("todo bien....send email....")
+						var listaCorreos = $('.formEmailReal #emailPDF').val();
+						var enviarCodigo = $('.formEmailReal #chkEnviarCodigo').is(':checked');
+						console.log('listaCorreos-->' + listaCorreos);
+						console.log('enviarCodigo-->' + enviarCodigo);
+					
+						enviarMailReporte(nroDocumento, listaCorreos, enviarCodigo);
+					}
+					form.addClass('was-validated');
+	            }
+	        },
+	        descargar: {
+	            label: '<i class="fas fa-download"></i> Descargar',
+	            className: Boton.WARNING,
+	            callback: function(){
+	                console.log('boton descargar...');
+					var enviarCodigo = $('.formEmailReal #chkEnviarCodigo').is(':checked');
+					console.log('enviarCodigo-->' + enviarCodigo);
+					descargarReporte(nroDocumento, enviarCodigo);	
+	            }
+	        }
+	    }
+	});
+	
+	box.on('shown.bs.modal',function(){
+	  console.log("$$$on modal...")
+		$('.formEmailReal #emailPDF').focus();
+		//$('#emailPDF').focus();
+		console.log("correo del cliente-->" + correo + "/ NRO DOC-->" + nroDocumento);
+		$('.formEmailReal #emailPDF').val(correo);
+	});
+}
+
+function enviarMailReporte(numeroDocumento, email, enviarCodigo){
+    var objetoJson = {
+		numeroDocumento		: numeroDocumento,
+    	email				: email,
+		enviarCodigo		: enviarCodigo
+    };
+
+	var entityJsonStr = JSON.stringify(objetoJson);
+    console.log("entityJsonStr-->" + entityJsonStr);
+    var formData = new FormData();
+    formData.append('registro', new Blob([entityJsonStr], {
+        type: "application/json"
+    }));
+	
+	$.ajax({
+        type:"Post",
+        contentType: false,
+        processData: false,
+		url : '/appkahaxi/enviarEmailReporteFacturaVenta',
+        xhrFields: {
+            responseType: 'blob'
+        },
+        data : formData,
+        beforeSend: function(xhr) {
+        	loadding(true);
+        },
+        error: function (xhr, error, code){
+        	mostrarMensajeError(xhr.responseText);
+        	loadding(false);
+        },
+        success: function (result, status, xhr) {
+            mostrarNotificacion("El correo se envió correctamente.", "success");
+			loadding(false);                
+        }
+    });
+}
+
+function descargarReporte(numeroDocumento, enviarCodigo){
+    $.ajax({
+        type:"Post",
+        url : '/appkahaxi/reporteFacturaVenta/' + numeroDocumento,
+        xhrFields: {
+            responseType: 'blob'
+        },
+        data : null,
+        beforeSend: function(xhr) {
+        	loadding(true);
+        },
+        error: function (xhr, error, code){
+        	mostrarMensajeError(xhr.responseText);
+        	loadding(false);
+        },
+        success: function (result, status, xhr) {
+            if(result.size > 0){
+                var filename = "nombre.pdf";
+                var disposition = xhr.getResponseHeader('Content-Disposition');
+
+                if (disposition) {
+                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var matches = filenameRegex.exec(disposition);
+                    if (matches !== null && matches[1]) filename = matches[1].replace(/['"]/g, CADENA_VACIA);
+                }
+                var linkelem = document.createElement('a');
+                try {
+                    var blob = new Blob([result], { type: 'application/octet-stream' });
+                    
+                    if (typeof window.navigator.msSaveBlob !== 'undefined') {
+                        //   IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
+                        window.navigator.msSaveBlob(blob, null);
+                    } else {
+                        var URL = window.URL || window.webkitURL;
+                        var downloadUrl = URL.createObjectURL(blob);
+
+                        if (filename) {
+                            // use HTML5 a[download] attribute to specify filename
+                            var a = document.createElement("a");
+
+                            // safari doesn't support this yet
+                            if (typeof a.download === 'undefined') {
+                                window.location = downloadUrl;
+                            } else {
+                                a.href = downloadUrl;
+                                a.download = filename;
+                                document.body.appendChild(a);
+                                a.target = "_blank";
+                                a.click();
+
+                                window.onfocus = function () {
+                                    document.body.removeChild(a);
+                                    window.URL.revokeObjectURL(downloadUrl);
+                                }
+                            }
+                        } else {
+                            window.location = downloadUrl;
+                        }
+                    }
+                    loadding(false);
+
+                } catch (ex) {
+                    
+                }
+            }
+        }
+    });
+}
+
+
+

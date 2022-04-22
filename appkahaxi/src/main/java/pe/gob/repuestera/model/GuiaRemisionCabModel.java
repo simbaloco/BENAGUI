@@ -21,6 +21,7 @@ public class GuiaRemisionCabModel {
     private String ordenCompra;
     private String ordenVenta;
 	// columnas
+    private String email;
     private String direccionDespacho;
 	private String personaContacto;	
 	private String fechaContabilizacion;
@@ -55,6 +56,7 @@ public class GuiaRemisionCabModel {
 	private String descripcionTipoMoneda;
 	private String descripcionCondPago;
 	private String descripcionEstado;
+	private String descripcionDias;
     private String fechaRegistroFormato;
     private Integer cantidadFacturasAsociadas;
 

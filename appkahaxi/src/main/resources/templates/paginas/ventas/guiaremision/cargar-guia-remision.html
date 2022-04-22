@@ -16,6 +16,7 @@
 <div layout:fragment="content" th:remove="tag">
 
 	<input type="text" id="codigoCliente" hidden="hidden"/>
+	<input type="text" id="email" hidden="hidden"/>
 	
 	<label id="numeroDocumento" th:text=${numeroDocumento} hidden="hidden"></label>
 	<label id="opcion" th:text=${opcion} hidden="hidden"></label>
@@ -216,7 +217,11 @@
 							</h2>
 						</div>
 						
-						<div class="col-md-6 alineacion-derecha">
+						<div class="col-md-6 alineacion-derecha">							
+							<button  type="button" id="btnPdf" class="btn btn-danger" style="display: none">
+					            <span class="mr-2"><i class="far fa-file-pdf"></i></span>PDF 
+					        </button>
+					            
 				     		<button type="button" id="btnIrFactura" class="btn btn-primary my-1" style="display: none">
 								<span class="mr-2"><i class="fas fa-external-link-alt"></i></span>Ir a la Factura
 							</button>
@@ -597,6 +602,26 @@
 
 		</div>
 	</div>
+	
+	<div class="form-content" style="display:none;">
+		   	<div class="box-body">
+		   	<form class="formEmail needs-validation" novalidate>
+		   		<div class="form-group row">
+		       		<div class="col-md-2">
+		        		<label for="emailPDF">Correo electrónico:</label>
+		        	</div>
+		        	<div class="col-md-10">	
+		        		<input type="email" class="form-control" id="emailPDF" placeholder="Ingrese correo electrónico" required="required" multiple="multiple"
+		        			   title="Puede ingresar varios correos separados por punto y coma (;)"></input>
+		        		<div class="mensaje-validado-falso invalid-feedback">
+		        			Ingrese un email o una lista de emails separados por comas
+		              	</div>
+		   			</div>
+		     	</div>
+		                		
+		  	</form>
+		  	</div>
+		</div>
 
 </div>
 

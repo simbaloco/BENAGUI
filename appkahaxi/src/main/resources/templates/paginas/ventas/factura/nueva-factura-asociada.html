@@ -16,6 +16,7 @@
 <div layout:fragment="content" th:remove="tag">
 
 	<input type="text" id="codigoCliente" hidden="hidden"/>
+	<input type="text" id="email" hidden="hidden"/>
 
 	<label id="numeroDocumento" th:text=${numeroDocumento} hidden="hidden"></label>
 	<label id="opcion" th:text=${opcion} hidden="hidden"></label>
@@ -76,6 +77,10 @@
 						</div>
 						
 						<div class="col-md-6 alineacion-derecha">
+							<button  type="button" id="btnPdf" class="btn btn-danger" style="display: none">
+					            <span class="mr-2"><i class="far fa-file-pdf"></i></span>PDF 
+					        </button>
+					            
 				     		<button type="button" id="btnVolver" class="btn btn-primary" style="display: none">
 	                  			<span class="mr-2"><i class="fas fa-backspace"></i></span>Volver
 				            </button>
@@ -229,14 +234,20 @@
 
 								<div class="col-md-1">
 									<label class="label" for="serie">Serie:</label>
-									<input class="form-control" maxlength="250" size="50" type="text" id="serie" required="required"/>
+									<select id="serie" class="form-control" required="required">
+										<option value="" selected>-- SELECCIONAR --</option>
+										<option th:each="item : ${listaSerie}"
+									            th:value="${item.codSerie}" 
+									            th:text="${item.nroSerie}">
+									    </option>
+									</select>
 									<div class="invalid-feedback">
-										Ingrese Serie
+										Seleccione la serie
 									</div>
 								</div>
 								<div class="col-md-1">
 									<label class="label" for="correlativo">Correlativo:</label>
-									<input class="form-control" maxlength="250" size="50" type="text" id="correlativo" required="required"/>
+									<input class="form-control" maxlength="250" size="50" type="text" id="correlativo" readonly="readonly" required="required"/>
 									<div class="invalid-feedback">
 										Ingrese Correlativo
 									</div>
@@ -320,8 +331,11 @@
 												<th id="marca" width="10%">Marca</th>
 												<th id="codAlmacen" width="5%">Almacén</th>
 												<th id="cantidad" width="5%" >Cantidad</th>
-												<th id="precioUnitario" width="10%" >PU</th>
-												<th id="precioUnitarioIgv" width="10%">PU c/IGV</th>
+												<th id="precioUnitario" width="10%" >PVU</th>
+												<th id="precioUnitarioIgv" width="10%">PVU c/IGV</th>
+												<th id="precioReferencia" width="10%">Precio Ref</th>
+												<th id="porcentajeDcto" style="display: none">% Dcto.</th>
+								                <th id="precioConDcto" width="10%">Pre. c/Dcto.</th>
 												<th id="subTotal" width="10%">SubTotal</th>
 												<th id="subTotalIgv" style="display: none"></th>
 												<th class="eliminar" width="5%">Eliminar</th>
@@ -346,6 +360,9 @@
 											<td></td>
 											<td></td>
 											<td></td>
+											<td></td>
+									        <td class="d-none"></td>
+									        <td></td>
 											<td></td>
 											<td class="d-none"></td>
 											<td>
@@ -380,6 +397,7 @@
 					            </div>
 					            <div class="col-md-3">	
 					            	<div class="form-check">
+					            		<input class="form-check-input" type="checkbox" id="chkDctoTotal" disabled="disabled"/>
 							 		  	<input class="form-control" maxlength="3" type="text" id="dctoTotal" disabled="disabled" onkeypress="return soloDecimales(event, this);"/>
 									</div>
 								</div>
@@ -411,7 +429,7 @@
 							    </div>
 		            		</div>
 		            		
-		            		<div class="form-group row">
+		            		<div class="form-group row"  id="dctoGRDiv" style="display: none ">
 								<div class="col-md-4">
 									<label class="label" for="dcto">Descuento</label>
 								</div>
@@ -453,6 +471,26 @@
 
 		</div>
 	</div>
+	
+	<div class="form-content" style="display:none;">
+		   	<div class="box-body">
+		   	<form class="formEmail needs-validation" novalidate>
+		   		<div class="form-group row">
+		       		<div class="col-md-2">
+		        		<label for="emailPDF">Correo electrónico:</label>
+		        	</div>
+		        	<div class="col-md-10">	
+		        		<input type="email" class="form-control" id="emailPDF" placeholder="Ingrese correo electrónico" required="required" multiple="multiple"
+		        			   title="Puede ingresar varios correos separados por punto y coma (;)"></input>
+		        		<div class="mensaje-validado-falso invalid-feedback">
+		        			Ingrese un email o una lista de emails separados por comas
+		              	</div>
+		   			</div>
+		     	</div>
+		                		
+		  	</form>
+		  	</div>
+		</div>
 
 </div>
 

@@ -17,6 +17,7 @@
         <result property="nroDocCliente" 			column="NRO_DOC_CLIENTE" />
         <result property="nombreCliente"	 		column="NOMBRE_CLIENTE" />
         <result property="direccionFiscal" 			column="DIRECCION_FISCAL" />
+        <result property="email" 					column="EMAIL" />
         <result property="direccionDespacho" 		column="DIRECCION_DESPACHO" />
         <result property="personaContacto" 			column="PERSONA_CONTACTO" />
         <result property="fechaContabilizacion" 	column="FEC_CONTABILIZACION" />

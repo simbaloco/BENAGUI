@@ -1594,12 +1594,14 @@ public class PrincipalController {
 				List<ComboModel> listaDias = genericService.cargarCombo(Constante.CATALOGO_DIAS_PC);
 				List<ComboModel> listaEstadoPago = genericService.cargarCombo(Constante.CATALOGO_ESTADO_PAGO);
 				List<AlmacenModel> listaAlmacenModel = guiaRemisionCompraService.buscarAlmacen();
+				List<SerieModel> listaSerie = serieService.cargarComboSerie(Constante.COD_TIPO_DOCU_FACT);
 				
 				model.addAttribute("listaMoneda", listaMoneda);
 				model.addAttribute("listaCondPago", listaCondPago);
 				model.addAttribute("listaDias", listaDias);
 				model.addAttribute("listaEstadoPago", listaEstadoPago);
 				model.addAttribute("listaAlmacenModel", listaAlmacenModel);
+				model.addAttribute("listaSerie", listaSerie);
 				
 				retorno = Constante.PAGINA_NUEVA_FACTURA_VENTA_DIRECTA;
 				logger.info("saliendo del método cargarFacturaVentaDirecta");
@@ -1651,12 +1653,14 @@ public class PrincipalController {
 				List<ComboModel> listaDias = genericService.cargarCombo(Constante.CATALOGO_DIAS_PC);
 				List<ComboModel> listaEstadoPago = genericService.cargarCombo(Constante.CATALOGO_ESTADO_PAGO);
 				List<AlmacenModel> listaAlmacenModel = guiaRemisionCompraService.buscarAlmacen();
+				List<SerieModel> listaSerie = serieService.cargarComboSerie(Constante.COD_TIPO_DOCU_FACT);
 				
 				model.addAttribute("listaMoneda", listaMoneda);
 				model.addAttribute("listaCondPago", listaCondPago);
 				model.addAttribute("listaDias", listaDias);
 				model.addAttribute("listaEstadoPago", listaEstadoPago);
 				model.addAttribute("listaAlmacenModel", listaAlmacenModel);
+				model.addAttribute("listaSerie", listaSerie);
 				
 				retorno = Constante.PAGINA_NUEVA_FACTURA_VENTA_ASOCIADA;
 				logger.info("saliendo del método cargarFacturaVentaAsociada");

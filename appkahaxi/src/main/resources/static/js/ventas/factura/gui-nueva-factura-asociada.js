@@ -4,6 +4,7 @@ var codigoCliente;
 var nroDocReferencia;
 var numeroDocumento;
 var opcion;
+var email;
 var datoBuscar;
 var nroComprobantePago;
 var nroGuiaRemision;
@@ -21,7 +22,7 @@ var guiasReferencia;
 
 var formFactura;
 var formObservaciones;
-var OCReferencia;
+var OVReferencia;
 var documentoCliente;
 var nombreCliente;
 var direccion;
@@ -42,6 +43,7 @@ var divMensajeEliminado;
 var btnAnular;
 var btnLimpiar;
 var btnVolver;
+var btnPdf;
 
 var tableDetalle;
 var tableNuevoDetalle;
@@ -52,6 +54,8 @@ var igvFactura;
 var totalFactura;
 var dctoTotal;
 var dcto;
+var chkDctoTotal;
+var dctoGRDiv;
 
 var btnGrabar;
 
@@ -75,6 +79,7 @@ $(document).ready(function(){
 function inicializarVariables() {
 	titulo =  $("#titulo");
 	codigo = $("#codigo");
+	email =  $("#email");
 	codigoCliente = $("#codigoCliente");
 	nroDocReferencia = $("#nroDocReferencia");
 	numeroDocumento = $('#numeroDocumento');
@@ -93,7 +98,7 @@ function inicializarVariables() {
 	guiasReferencia = $("#guiasParam");
 	formFactura = $("#formFactura");
 	formObservaciones = $("#formObservaciones");
-	OCReferencia = $("#OCReferencia");
+	OVReferencia = $("#OVReferencia");
 	documentoCliente = $("#documentoCliente");
 	nombreCliente = $("#nombreCliente");
 	direccion = $("#direccion");
@@ -113,6 +118,7 @@ function inicializarVariables() {
 	btnAnular = $("#btnAnular");
 	btnLimpiar = $("#btnLimpiar");
 	btnVolver = $("#btnVolver");
+	btnPdf =  $("#btnPdf");
 	tableDetalle = $("#tableDetalle");
 	tableNuevoDetalle = $("#tableNuevoDetalle");
 	observaciones = $("#observaciones");
@@ -127,6 +133,8 @@ function inicializarVariables() {
 	lblAnulado = $("#lblAnulado");
 	dctoTotal = $("#dctoTotal");
 	dcto = $("#dcto");
+	chkDctoTotal = $("#chkDctoTotal");
+	dctoGRDiv = $("#dctoGRDiv")
 }
 
 function inicializarComponentes() {
@@ -263,19 +271,48 @@ function inicializarEventos() {
 	btnVolver.on("click", function() {
 		volver();
 	});
-	/*
-	tipoMoneda.on('change', function(){
-		calcularPorTipoMoneda();
-	});
-	*/
-	serie.on('keypress', function(event){
-		return soloAlfaNumericos(event);
+	
+	btnPdf.click(function(e){
+		generarPdf(e);	
+    });
+	
+	serie.on('click', function(event) {
+		if (serie.val() > 0) {
+			obtenerCorrelativo();
+		} else {
+			correlativo.val(CADENA_VACIA);
+		}
 	});
 
-	correlativo.on('keypress', function(event){
-		return soloEnteros(event);
-	});
+}
 
+function obtenerCorrelativo() {
+	console.log("obtenerCorrelativo...");
+
+	var codSerie = serie.val();
+
+	$.ajax({
+		type: "Get",
+		contentType: "application/json",
+		accept: 'text/plain',
+		url: '/appkahaxi/obtenerCorrelativo/' + codSerie,
+		data: null,
+		dataType: 'text',
+		beforeSend: function(xhr) {
+			loadding(true);
+		},
+		success: function(result, textStatus, xhr) {
+			if (xhr.status == HttpStatus.OK) {
+				correlativo.val(result);
+			}
+			loadding(false);
+		},
+		error: function(xhr, error, code) {
+
+			mostrarMensajeError(xhr.responseText);
+			loadding(false);
+		}
+	});
 }
 
 function inicializarTablaDetalle(paginacion) {
@@ -357,11 +394,12 @@ function cargarPantallaConDatosGuiaRemisionAsociadas() {
 
 function cargarPantallaHTMLFacturaConDatosGuiaRemisionAsociadas(data) {
 
-	OCReferencia.val(data.ordenVenta);
+	OVReferencia.val(data.ordenVenta);
 	codigoCliente.val(data.codigoCliente);
 	documentoCliente.val(data.nroDocCliente);
 	nombreCliente.val(data.nombreCliente);
 	direccion.val(data.direccionFiscal);
+	email.val(data.email);
 	direccionDespacho.val(data.direccionDespacho);
 	personaContacto.val(data.personaContacto);
 	tipoMoneda.val(data.codigoTipoMoneda);
@@ -379,6 +417,8 @@ function cargarPantallaHTMLFacturaConDatosGuiaRemisionAsociadas(data) {
 	
 	if (data.porcDctoTotal != null) {
 		dctoTotal.val(data.porcDctoTotal);
+		checkControl(chkDctoTotal);
+    	mostrarControl(dctoGRDiv);
 	}
 	
 	if(data.codigoCondPago == CondicionPago.CREDITO) {
@@ -401,10 +441,11 @@ function cargarPantallaHTMLFacturaConDatosGuiaRemisionAsociadas(data) {
 			$('#descripcion_' + indice).val(detalle.descripcionArticulo);
 			$('#marca_' + indice).val(detalle.marca);
 			$('#cantidad_' + indice).val(detalle.cantidadPendienteGuiaRemision);
-			//$('#cantidad_' + indice).data('val', detalle.cantidadPendienteGuiaRemision);
-			$('#cantidad_' + indice).data('temporal', detalle.cantidadPendienteGuiaRemision);
-			$('#precio_' + indice).val(detalle.precioUnitario);
-			$('#precioIgv_' + indice).val(detalle.precioUnitarioIgv);
+			$('#precioUnitario_' + i).val(convertirNumeroAMoneda(detalle.precioUnitario));
+			$('#precioUnitarioIgv_' + i).val(convertirNumeroAMoneda(detalle.precioUnitarioIgv));
+			$('#precioReferencia_' + i).val(convertirNumeroAMoneda(detalle.precioReferencia));
+			$('#porcentajeDcto_' + i).val(detalle.porcentajeDcto);
+			$('#precioConDcto_' + i).val(convertirNumeroAMoneda(detalle.precioConDcto));	
 			$('#subTotal_' + indice).val(detalle.subTotal);
 			$('#subTotalIgv_' + indice).val(detalle.subTotalIgv);
 			calcularCantidadNuevaFactura(null, $('#cantidad_' + i), i);
@@ -437,7 +478,7 @@ function habilitarPantallaConDatosGuiaRemisionAsociadas() {
 		deshabilitarControl(null, '#codigo_' + i);
 		deshabilitarControl(null, '#almacen_' + i);
 		habilitarControl(null, '#cantidad_' + i);
-		deshabilitarControl(null, '#precio_' + i);
+		deshabilitarControl(null, '#precioUnitario_' + i);
 	}
 
 	$("#tableDetalle tbody tr").find(".btn-delete").prop("disabled", false);
@@ -499,11 +540,12 @@ function cargarPantallaConDatosFactura() {
 function cargarPantallaHTMLFactura(data) {
 	
 	//codigo.html(numeroDocumento.text());	
-	OCReferencia.val(data.ordenVenta);
+	OVReferencia.val(data.ordenVenta);
 	codigoCliente.val(data.codigoCliente);
 	documentoCliente.val(data.nroDocCliente);
 	nombreCliente.val(data.nombreCliente);
 	direccion.val(data.direccionFiscal);
+	email.val(data.email);
 	direccionDespacho.val(data.direccionDespacho);
 	personaContacto.val(data.personaContacto);
 	tipoMoneda.val(data.codigoTipoMoneda);
@@ -520,6 +562,8 @@ function cargarPantallaHTMLFactura(data) {
 	
 	if (data.porcDctoTotal != null) {
 		dctoTotal.val(data.porcDctoTotal);
+		checkControl(chkDctoTotal);
+    	mostrarControl(dctoGRDiv);
 	}
 	
 	observaciones.val(data.observaciones);	
@@ -537,8 +581,11 @@ function cargarPantallaHTMLFactura(data) {
 		$('#descripcion_' + indice).val(detalle.descripcionArticulo);
 		$('#marca_' + indice).val(detalle.marca);
 		$('#cantidad_' + indice).val(detalle.cantidad);
-		$('#precio_' + indice).val(detalle.precioUnitario);
-		$('#precioIgv_' + indice).val(detalle.precioUnitarioIgv);
+		$('#precioUnitario_' + i).val(convertirNumeroAMoneda(detalle.precioUnitario));
+		$('#precioUnitarioIgv_' + i).val(convertirNumeroAMoneda(detalle.precioUnitarioIgv));
+		$('#precioReferencia_' + i).val(convertirNumeroAMoneda(detalle.precioReferencia));
+		$('#porcentajeDcto_' + i).val(detalle.porcentajeDcto);
+		$('#precioConDcto_' + i).val(convertirNumeroAMoneda(detalle.precioConDcto));		
 		$('#subTotal_' + i).val(detalle.subTotal);
 		$('#subTotalIgv_' + indice).val(detalle.subTotalIgv);		
 		indice++;
@@ -596,7 +643,7 @@ function verPantallaFactura(data) {
 	} else {
 		mostrarControl(btnVolver);
 	}
-	
+	mostrarControl(btnPdf);
 	ocultarControl(btnGrabar);
 	ocultarControl(btnLimpiar);
 	deshabilitarDetalleFactura();
@@ -690,28 +737,42 @@ function agregarHTMLColumnasDataTable(data) {
 				"id='cantidad_" + indiceFilaDataTableDetalle + "'>");
 				break;
 
-			// PRECIO UNITARIO
-			case 7:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
-				"<input class='form-control alineacion-derecha precio_table' type='text' " +
-				"onkeypress='return soloDecimales(event, this);' " +
-				"id='precio_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
+			// PVU
+			case 7: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+				"<input class='form-control alineacion-derecha' type='text' id='precioUnitario_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
 				"</span></div>");
 				break;
-			
-			// PRECIO C/IGV
+
+			// PVU C/IGV
 			case 8: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
-				"<input class='form-control alineacion-derecha' type='text' id='precioIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
+				"<input class='form-control alineacion-derecha' type='text' id='precioUnitarioIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
+				"</span></div>");
+				break;
+
+			// PRECIO REFERENCIA
+			case 9: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+				"<input class='form-control alineacion-derecha' type='text' id='precioReferencia_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
+				"</span></div>");
+				break;
+
+			// PORC DCTO (OCULTO)
+			case 10: $(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha' type='text' id='porcentajeDcto_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
+				break;
+
+			// PRECIO C/DCTO
+			case 11: $(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+				"<input class='form-control alineacion-derecha' type='text' id='precioConDcto_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
 				"</span></div>");
 				break;
 			
 			// SUBTOTAL
-			case 9:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
+			case 12:	$(this).html(CADENA_VACIA).append("<div><span class='simbolo-moneda input-symbol-dolar'>" +
 				"<input class='form-control alineacion-derecha' type='text' id='subTotal_" + indiceFilaDataTableDetalle + "' readonly='readonly'>" +
 				"</span></div>");
 				break;
 				
 			// SUBTOTAL C/IGV	 (OCULTO)
-			case 10:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha' type='text' id='subTotalIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
+			case 13:	$(this).html(CADENA_VACIA).append("<input class='form-control alineacion-derecha' type='text' id='subTotalIgv_" + indiceFilaDataTableDetalle + "' readonly='readonly'>");
 				break;
 
 		}
@@ -759,7 +820,7 @@ function calcularCantidadNuevaFactura(control1, control2, fila) {
 		cantidad = Number(control1.value);
 	}
 	
-	var precio = Number($('#precio_' + fila).val());
+	var precio = Number($('#precioUnitario_' + fila).val());
 	var subTotal = cantidad * precio;	
 	var subTotalIgv = subTotal + (subTotal * (ParametrosGenerales.IGV/100));
 	
@@ -895,7 +956,7 @@ function validarDetalleFactura(){
 function registrarFacturaVenta(){
 
 	var nroDocumento  			= codigo.html();
-	var ordenVenta  			= OCReferencia.val();
+	var ordenVenta  			= OVReferencia.val();
 	var serieVal 				= serie.val();
 	var correlativoVal 			= correlativo.val();
 	var codigoClienteVal  		= codigoCliente.val().trim();
@@ -913,10 +974,13 @@ function registrarFacturaVenta(){
 	var subTotalVal 			= convertirMonedaANumero(subTotalFactura.val().trim());
 	var igvVal 					= convertirMonedaANumero(igvFactura.val());
 	var totalVal 				= convertirMonedaANumero(totalFactura.val().trim());
-	var porcDctoTotal 			= dctoTotal.val().trim();
-	
+		
 	var detalle 				= tableToJSON(tableDetalle);
 	var diasVal					= null;
+	var porcDctoTotal = null;
+	if (chkDctoTotal.is(':checked')) {
+		porcDctoTotal = dctoTotal.val().trim();
+	}
 
 	if(condPagoVal == CondicionPago.CREDITO) {
 		diasVal					= dias.val();
@@ -994,7 +1058,7 @@ function registrarFacturaVenta(){
 					mostrarControl(btnVolver);
 					ocultarControl(btnGrabar);
 					ocultarControl(btnLimpiar);
-
+					mostrarControl(btnPdf);
 					// si se grabó con estado PENDIENTE, cambiar a opción = VER
 					opcion.text(Opcion.VER);					
 					deshabilitarDetalleFactura();
@@ -1373,3 +1437,168 @@ function calcularResumenFactura(){
 	igvFactura.val(convertirNumeroAMoneda(igv));
 	totalFactura.val(convertirNumeroAMoneda(total));
 }
+
+function generarPdf(event){
+	var nroDocumento = codigo.html();
+	var correo = email.val();
+	var box = bootbox.dialog({
+	    title: 'Enviar correo o descargar comrpobante de venta',
+		message: $(".form-content").html().replace('formEmail', 'formEmailReal'),
+		buttons: {
+	        correo: {
+	            label: '<i class="fas fa-at"></i> Enviar por correo',
+	            className: Boton.SUCCESS,
+	            callback: function(){
+									
+	                event.preventDefault();
+					var form = $(".formEmailReal")
+					
+			        if (form[0].checkValidity() == false) {
+						console.log("validado FALSE!!!....")
+			            event.stopPropagation();
+						
+						box.find('.formEmailReal #emailPDF').addClass('input-validation-error');
+						box.find('.formEmailReal #emailPDF').focus();
+						box.find('.mensaje-validado-falso').show();
+						return false;
+			        }else{
+						//event.stopPropagation();
+						console.log("todo bien....send email....")
+						var listaCorreos = $('.formEmailReal #emailPDF').val();
+						var enviarCodigo = $('.formEmailReal #chkEnviarCodigo').is(':checked');
+						console.log('listaCorreos-->' + listaCorreos);
+						console.log('enviarCodigo-->' + enviarCodigo);
+					
+						enviarMailReporte(nroDocumento, listaCorreos, enviarCodigo);
+					}
+					form.addClass('was-validated');
+	            }
+	        },
+	        descargar: {
+	            label: '<i class="fas fa-download"></i> Descargar',
+	            className: Boton.WARNING,
+	            callback: function(){
+	                console.log('boton descargar...');
+					var enviarCodigo = $('.formEmailReal #chkEnviarCodigo').is(':checked');
+					console.log('enviarCodigo-->' + enviarCodigo);
+					descargarReporte(nroDocumento, enviarCodigo);	
+	            }
+	        }
+	    }
+	});
+	
+	box.on('shown.bs.modal',function(){
+	  console.log("$$$on modal...")
+		$('.formEmailReal #emailPDF').focus();
+		//$('#emailPDF').focus();
+		console.log("correo del cliente-->" + correo + "/ NRO DOC-->" + nroDocumento);
+		$('.formEmailReal #emailPDF').val(correo);
+	});
+}
+
+function enviarMailReporte(numeroDocumento, email, enviarCodigo){
+    var objetoJson = {
+		numeroDocumento		: numeroDocumento,
+    	email				: email,
+		enviarCodigo		: enviarCodigo
+    };
+
+	var entityJsonStr = JSON.stringify(objetoJson);
+    console.log("entityJsonStr-->" + entityJsonStr);
+    var formData = new FormData();
+    formData.append('registro', new Blob([entityJsonStr], {
+        type: "application/json"
+    }));
+	
+	$.ajax({
+        type:"Post",
+        contentType: false,
+        processData: false,
+		url : '/appkahaxi/enviarEmailReporteFacturaVenta',
+        xhrFields: {
+            responseType: 'blob'
+        },
+        data : formData,
+        beforeSend: function(xhr) {
+        	loadding(true);
+        },
+        error: function (xhr, error, code){
+        	mostrarMensajeError(xhr.responseText);
+        	loadding(false);
+        },
+        success: function (result, status, xhr) {
+            mostrarNotificacion("El correo se envió correctamente.", "success");
+			loadding(false);                
+        }
+    });
+}
+
+function descargarReporte(numeroDocumento, enviarCodigo){
+    $.ajax({
+        type:"Post",
+        url : '/appkahaxi/reporteFacturaVenta/' + numeroDocumento,
+        xhrFields: {
+            responseType: 'blob'
+        },
+        data : null,
+        beforeSend: function(xhr) {
+        	loadding(true);
+        },
+        error: function (xhr, error, code){
+        	mostrarMensajeError(xhr.responseText);
+        	loadding(false);
+        },
+        success: function (result, status, xhr) {
+            if(result.size > 0){
+                var filename = "nombre.pdf";
+                var disposition = xhr.getResponseHeader('Content-Disposition');
+
+                if (disposition) {
+                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var matches = filenameRegex.exec(disposition);
+                    if (matches !== null && matches[1]) filename = matches[1].replace(/['"]/g, CADENA_VACIA);
+                }
+                var linkelem = document.createElement('a');
+                try {
+                    var blob = new Blob([result], { type: 'application/octet-stream' });
+                    
+                    if (typeof window.navigator.msSaveBlob !== 'undefined') {
+                        //   IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
+                        window.navigator.msSaveBlob(blob, null);
+                    } else {
+                        var URL = window.URL || window.webkitURL;
+                        var downloadUrl = URL.createObjectURL(blob);
+
+                        if (filename) {
+                            // use HTML5 a[download] attribute to specify filename
+                            var a = document.createElement("a");
+
+                            // safari doesn't support this yet
+                            if (typeof a.download === 'undefined') {
+                                window.location = downloadUrl;
+                            } else {
+                                a.href = downloadUrl;
+                                a.download = filename;
+                                document.body.appendChild(a);
+                                a.target = "_blank";
+                                a.click();
+
+                                window.onfocus = function () {
+                                    document.body.removeChild(a);
+                                    window.URL.revokeObjectURL(downloadUrl);
+                                }
+                            }
+                        } else {
+                            window.location = downloadUrl;
+                        }
+                    }
+                    loadding(false);
+
+                } catch (ex) {
+                    
+                }
+            }
+        }
+    });
+}
+

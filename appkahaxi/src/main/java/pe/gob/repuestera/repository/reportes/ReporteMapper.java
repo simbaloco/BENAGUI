@@ -7,6 +7,8 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import pe.gob.repuestera.model.ComprobantePagoCabModel;
+import pe.gob.repuestera.model.GuiaRemisionCabModel;
 import pe.gob.repuestera.model.VentaCabModel;
 
 @Repository
@@ -15,6 +17,10 @@ public interface ReporteMapper {
 
 	public VentaCabModel obtenerCabeceraCotizacionVenta(Map params);
 	public List<HashMap> obtenerDetalleCotizacionVenta(Map params);
+	public GuiaRemisionCabModel obtenerCabeceraGuiaRemisionVenta(Map params);
+	public List<HashMap> obtenerDetalleGuiaRemisionVenta(Map params);
+	public ComprobantePagoCabModel obtenerCabeceraFacturaVenta(Map params);
+	public List<HashMap> obtenerDetalleFacturaVenta(Map params);	
 	public List<HashMap> obtenerDetalleOrdenCompra(Map params);
 	public List<HashMap> obtenerDetalleOrdenVenta(Map params);
 	
