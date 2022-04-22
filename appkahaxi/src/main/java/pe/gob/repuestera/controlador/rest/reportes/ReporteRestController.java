@@ -179,6 +179,48 @@ public class ReporteRestController {
         logger.info("fin reporteOrdenCompra");
     }
 	
+	@PostMapping ("/reporteOrdenVenta/{numeroDocumento}")
+    public void reporteOrdenVenta(@PathVariable(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento, 
+    									 HttpServletResponse response) throws Exception{
+        
+    	logger.info("entrando reporteOrdenVenta.......");
+    	logger.info("numeroDocumento--->" + numeroDocumento);    
+    	
+    	VentaCabModel ordenVentaCab = reporteService.obtenerCabeceraOrdenVenta(numeroDocumento);
+        List<HashMap> listaDetalleOrdenVenta = reporteService.obtenerDetalleOrdenVenta(numeroDocumento);
+        
+        // GENERANDO EL REPORTE
+        String nombreJrxml = "/reportes/ventas/orden_venta.jrxml"; 		
+        
+ 		StringBuilder nombreArchivo = new StringBuilder();
+ 		nombreArchivo.append("ordenVenta-").append(numeroDocumento).append(".pdf");
+ 		// seteando parámetros
+        Map<String, Object> params = new HashMap();
+ 		params.put("NRO_DOCUMENTO", numeroDocumento);
+ 		params.put("NRO_COTIZ_VENTA", ordenVentaCab.getNroCotizVenta());
+ 		params.put("RAZON_SOCIAL", ordenVentaCab.getNombreCliente());
+ 		params.put("RUC", ordenVentaCab.getNroDocCliente() );
+ 		params.put("DIRECCION", ordenVentaCab.getDireccionFiscal());
+ 		params.put("FECHA_CONTABILIZA", ordenVentaCab.getFechaContabilizacionDmy()); 		
+ 		params.put("FECHA_ENTREGA", ordenVentaCab.getFechaEntregaDmy());
+ 		params.put("MONEDA", ordenVentaCab.getCodigoTipoMoneda());
+ 		params.put("PERSONA_CONTACTO", ordenVentaCab.getPersonaContacto());
+ 		params.put("DIRECCION_DESPACHO", ordenVentaCab.getDireccionDespacho());
+ 		params.put("FORMA_PAGO", ordenVentaCab.getDescripcionCondPago());
+ 		params.put("OBSERVACIONES", ordenVentaCab.getObservaciones());
+ 		params.put("SUB_TOTAL", ordenVentaCab.getSubTotal());
+ 		params.put("IGV", ordenVentaCab.getIgv());
+ 		params.put("TOTAL", ordenVentaCab.getTotal());
+ 		params.put("TOTAL_LETRAS", ConvertNumberLetter.convertir(ordenVentaCab.getTotal().toString(), ordenVentaCab.getCodigoTipoMoneda()));
+ 		params.put("imagen", getClass().getResourceAsStream("/static/images/logo_kahaxi.png"));
+ 		
+ 		logger.info("Hashmap:" + params);
+ 		logger.info("detalle:" + listaDetalleOrdenVenta);
+ 		reporteService.generarReporte(nombreJrxml, nombreArchivo.toString(), params, listaDetalleOrdenVenta, "PDF", response);
+     		
+        logger.info("fin reporteOrdenVenta");
+    }
+	
 	@PostMapping ("/enviarEmailReporteOrdenCompra")
     public void enviarEmailReporteOrdenCompra(@RequestPart("registro") GenericModel datos,
     												HttpServletResponse response) throws Exception{
@@ -248,6 +290,79 @@ public class ReporteRestController {
  		logger.info("enviarCodigo--->" + enviarCodigo);   
  		
  		reporteService.enviarReportePorCorreo(nombreJrxml, nombreArchivo.toString(), email, params, listaDetalleOrdenCompra, asunto, mensaje, response);
+     		
+ 		logger.info("fin enviarEmailReporteOrdenCompra");
+    }	
+	
+	@PostMapping ("/enviarEmailReporteOrdenVenta")
+    public void enviarEmailReporteOrdenVenta(@RequestPart("registro") GenericModel datos,
+    												HttpServletResponse response) throws Exception{
+		logger.info("entrando enviarEmailReporteOrdenVenta.......");
+		String numeroDocumento = datos.getNumeroDocumento();
+    	String email = datos.getEmail();
+    	String enviarCodigo = datos.getEnviarCodigo();
+    	
+    	logger.info("numeroDocumento--->" + numeroDocumento);            
+		logger.info("email--->" + email);            
+        logger.info("enviarCodigo--->" + enviarCodigo);            
+    	
+        VentaCabModel ordenVentaCab = reporteService.obtenerCabeceraOrdenVenta(numeroDocumento);
+        List<HashMap> listaDetalleOrdenVenta = reporteService.obtenerDetalleOrdenVenta(numeroDocumento);
+        
+        // GENERANDO EL REPORTE
+        String nombreJrxml = "/reportes/venta/orden_venta.jrxml"; 
+        String obs="";
+        
+        if (ordenVentaCab.getObservaciones().equals("")) {
+        	obs = "<br/>";
+        }else {
+        	obs = "" + ordenVentaCab.getObservaciones() + "<br/><br/>";
+        }
+                
+        String asunto = "ORDEN DE COMPRA " + numeroDocumento + " / SOLICITUD DE CONFIRMACION DE CORREO";
+	    String nombreUsuario = ordenVentaCab.getNombreCliente();
+	    String mensaje = "<html><head><meta http-equiv=Content-Type content=text/html; charset=utf-8/></head><body><table align=center width=610 cellspacing=0 cellpadding=0 border=0 style='position:relative; font-size:12px; font-family:Arial, Helvetica, sans-serif; color: #404040; background: #ffffff; border: solid 1px #bdcbcd; -moz-border-radius: 20px 20px 20px 20px; -ms-border-radius: 20px 20px 20px 20px; -webkit-border-radius: 20px 20px 20px 20px; border-radius: 20px 20px 20px 20px; padding:5px;''>"
+                + "<tbody><tr>"
+                + "<td align=center bgcolor=#ffffff style='text-align: left; font-size:18px; padding-left:20px; color:#404040;''><br>KAHAXI EIRL</td>"
+                + "</tr><tr><td valign=middle align=center colspan=2>"
+                + "<br><br><p style='text-align: left; font-size:14px; padding-left:20px; color:#404040;'>Estimado(a) "+ nombreUsuario +", <br/>"
+                + "Se envía adjunto la orden de compra para su atención. En caso de tener alguna consulta favor de comunicarse con su contacto directo.<br/><br/>"
+                + obs
+                + "</p>"
+                + "<p style='text-align: left; font-size:14px; padding-left:20px; color:#404040;''>Atentamente,<br>"+"KAHAXI"
+                + "<br></p><p style='text-align: left; font-size:10px; padding-left:20px; color:#DF0101;''>"
+                + "'Esta notificación ha sido enviada automáticamente. Por favor, no responda este correo.'</b></p><br/>"
+                + "</td></tr><tr></tr><tr><td valign=middle height=50 bgcolor=#c2c0c0 align=center style='font-size:11px; -moz-border-radius: 0px 0px 20px 20px; -ms-border-radius: 0px 0px 20px 20px; -webkit-border-radius: 0px 0px 20px 20px; border-radius: 0px 0px 20px 20px; padding:5px;' colspan=2 >"
+                + "<table width=570 cellspacing=0 cellpadding=0 border=0 align=center><tbody><tr>"
+                + "<td width=100% valign=middle align=left style='padding:5px; font-size:10px;'><b>KAHAXI</b><br/>"
+                + "</td><td width=100% valign=top align=right ></td></tr></tbody></table></td></tr></tbody></table></body></html>";
+	    
+ 		StringBuilder nombreArchivo = new StringBuilder();
+ 		nombreArchivo.append("ordenVenta-").append(numeroDocumento).append(".pdf");
+ 		
+ 		// seteando parámetros
+ 		Map<String, Object> params = new HashMap();
+ 		params.put("NRO_DOCUMENTO", numeroDocumento);
+ 		params.put("NRO_COTIZ_VENTA", ordenVentaCab.getNroCotizVenta());
+ 		params.put("RAZON_SOCIAL", ordenVentaCab.getNombreCliente());
+ 		params.put("RUC", ordenVentaCab.getNroDocCliente() );
+ 		params.put("DIRECCION", ordenVentaCab.getDireccionFiscal());
+ 		params.put("FECHA_CONTABILIZA", ordenVentaCab.getFechaContabilizacionDmy()); 		
+ 		params.put("FECHA_ENTREGA", ordenVentaCab.getFechaEntregaDmy());
+ 		params.put("MONEDA", ordenVentaCab.getCodigoTipoMoneda());
+ 		params.put("PERSONA_CONTACTO", ordenVentaCab.getPersonaContacto());
+ 		params.put("DIRECCION_DESPACHO", ordenVentaCab.getDireccionDespacho());
+ 		params.put("FORMA_PAGO", ordenVentaCab.getDescripcionCondPago());
+ 		params.put("OBSERVACIONES", ordenVentaCab.getObservaciones());
+ 		params.put("SUB_TOTAL", ordenVentaCab.getSubTotal());
+ 		params.put("IGV", ordenVentaCab.getIgv());
+ 		params.put("TOTAL", ordenVentaCab.getTotal());
+ 		params.put("TOTAL_LETRAS", ConvertNumberLetter.convertir(ordenVentaCab.getTotal().toString(), ordenVentaCab.getCodigoTipoMoneda()));
+ 		params.put("imagen", getClass().getResourceAsStream("/static/images/logo_kahaxi.png"));
+ 		
+ 		logger.info("enviarCodigo--->" + enviarCodigo);   
+ 		
+ 		reporteService.enviarReportePorCorreo(nombreJrxml, nombreArchivo.toString(), email, params, listaDetalleOrdenVenta, asunto, mensaje, response);
      		
  		logger.info("fin enviarEmailReporteOrdenCompra");
     }	
@@ -600,9 +715,7 @@ public class ReporteRestController {
         
         logger.info("entrando plantillaListaPrecios.......");
     	
-    	String usuario = ((UsuarioModel)session.getAttribute("usuarioLogueado")).getUsername();
-    	
-        List<HashMap> listaDetalle = reporteService.plantillaListaPrecioDet(idListaPrecio);
+    	List<HashMap> listaDetalle = reporteService.plantillaListaPrecioDet(idListaPrecio);
         
         // GENERANDO EL REPORTE
         String nombreJrxml;

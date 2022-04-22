@@ -55,6 +55,10 @@ public class VentaCabModel {
 	private String descripcionCondPago;
 	private String descripcionDias;
 	private String descripcionEstado;
+
+    private String fechaContabilizacionDmy;
+    private String fechaValidoHastaDmy;
+    private String fechaEntregaDmy;
 	
     // para los objetos que necesiten referenciare el documento base
     private String numeroDocumentoBase;

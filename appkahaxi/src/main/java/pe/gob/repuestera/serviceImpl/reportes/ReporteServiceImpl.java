@@ -45,6 +45,7 @@ import pe.gob.repuestera.model.CompraCabModel;
 import pe.gob.repuestera.model.VentaCabModel;
 import pe.gob.repuestera.repository.compra.ordencompra.OrdenCompraMapper;
 import pe.gob.repuestera.repository.reportes.ReporteMapper;
+import pe.gob.repuestera.repository.venta.ordenventa.OrdenVentaMapper;
 import pe.gob.repuestera.service.reportes.ReporteService;
 import pe.gob.repuestera.util.Constante;
 
@@ -57,6 +58,8 @@ public class ReporteServiceImpl implements ReporteService{
 	private ReporteMapper reporteMapper;
 	@Autowired
 	private OrdenCompraMapper ordenCompraMapper;
+	@Autowired
+	private OrdenVentaMapper ordenVentaMapper;
 
 	@Override
 	public VentaCabModel obtenerCabeceraCotizacionVenta(String numeroDocumento) throws Exception {
@@ -178,6 +181,66 @@ public class ReporteServiceImpl implements ReporteService{
 		return listaDetalleOrdenCompra;
 	}
 
+	@Override
+	public VentaCabModel obtenerCabeceraOrdenVenta(String numeroDocumento) throws Exception {
+		logger.info("entrando obtenerCabeceraOrdenVenta.......");
+		VentaCabModel ordenVentaCab = null;
+        logger.info("numeroDocumento--->" + numeroDocumento);            
+        // seteando parámetros
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_NRO_DOCUMENTO, numeroDocumento);
+        // ejecutando la query
+        ordenVentaCab = ordenVentaMapper.buscarOrdenVentaCab(params);
+        logger.info("obtenerCabeceraOrdenVenta........obteniendo el retorno");		
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        logger.info("obtenerCabeceraOrdenVenta.......FLAG_RESULTADO------>" + flagResultado);
+		logger.info("obtenerCabeceraOrdenVenta.......MENSAJE_RESULTADO--->" + mensajeResultado);
+        
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+ 			logger.info("obtenerCabeceraOrdenVenta ----> success!!!");
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+		
+		return ordenVentaCab;
+	}
+
+	@Override
+	public List<HashMap> obtenerDetalleOrdenVenta(String numeroDocumento) throws Exception {
+		logger.info("entrando obtenerDetalleOrdenVenta.......");
+		List<HashMap> listaDetalleOrdenVenta = null;
+        logger.info("numeroDocumento--->" + numeroDocumento);            
+        // seteando parámetros
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_NRO_DOCUMENTO, numeroDocumento);
+        // ejecutando la query
+        listaDetalleOrdenVenta = reporteMapper.obtenerDetalleOrdenVenta(params);
+        logger.info("obtenerDetalleOrdenVenta........obteniendo el retorno");		
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+        logger.info("obtenerDetalleOrdenVenta.......FLAG_RESULTADO------>" + flagResultado);
+		logger.info("obtenerDetalleOrdenVenta.......MENSAJE_RESULTADO--->" + mensajeResultado);
+        
+		if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+ 			logger.info("obtenerDetalleOrdenVenta ----> success!!!");
+
+		} else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+			throw new ErrorControladoException(mensajeResultado);
+
+		} else {
+			throw new Exception(mensajeResultado);
+
+		}
+		
+		return listaDetalleOrdenVenta;
+	}
+	
 	@Override
 	public void generarReporte(String nombreJrxml, String nombreArchivo, Map<String, Object> parametros, List<HashMap> lista, String tipoReporte, HttpServletResponse response) throws Exception {
 		logger.info("entrando generarReporte.......");

@@ -7,8 +7,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import pe.gob.repuestera.model.CompraCabModel;
-import pe.gob.repuestera.model.CompraDetModel;
-import pe.gob.repuestera.model.ListaPreciosDetModel;
 import pe.gob.repuestera.model.VentaCabModel;
 
 public interface ReporteService {
@@ -17,6 +15,9 @@ public interface ReporteService {
 	public List<HashMap> obtenerDetalleCotizacionVenta(String numeroDocumento) throws Exception;
 	public CompraCabModel obtenerCabeceraOrdenCompra(String numeroDocumento) throws Exception;
 	public List<HashMap> obtenerDetalleOrdenCompra(String numeroDocumento) throws Exception;
+	public VentaCabModel obtenerCabeceraOrdenVenta(String numeroDocumento) throws Exception;
+	public List<HashMap> obtenerDetalleOrdenVenta(String numeroDocumento) throws Exception;
+	
 	public List<HashMap> obtenerDetalleReporteCompras(String fechaInicio, String fechaFin, String datoBuscar) throws Exception;
 	public List<HashMap> obtenerDetalleReporteKardex(String fechaInicio, String fechaFin, String codAlmacen, String datoBuscar) throws Exception;
 	public List<HashMap> obtenerDetalleReporteInventario(String codAlmacen, String datoBuscar) throws Exception;

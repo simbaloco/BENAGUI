@@ -1797,7 +1797,7 @@ function cargarGuiaRemisionAsociada(numDocumento) {
 	params = "numeroDocumento=" + numDocumento + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato +
 		"&nroGuiaRemision=" + numDocumento + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +
 		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI + 
-		"&desdeDocRef=" + Respuesta.SI + "&origenMnto=" + Respuesta.NO;;
+		"&desdeDocRef=" + Respuesta.SI + "&origenMnto=" + Respuesta.NO;
 
 	window.location.href = "/appkahaxi/cargar-guia-remision-compra?" + params;
 }

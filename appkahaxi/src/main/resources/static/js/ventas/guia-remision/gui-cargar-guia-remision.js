@@ -1622,12 +1622,13 @@ function volver() {
 	var desdeDocRef = desdeDocRefParam.text();
 
 	if (desdeDocRef == Respuesta.SI) {
+		alert("si")
 		params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato + "&nroOrdenVenta=" + nroOV + 
 			"&nroCotizacion=" + nroCoti + "&nroRequerimiento=" + nroReq + "&codRepuesto=" + codRpto +
 			"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + 
 			"&volver=" + Respuesta.SI + 
-			"&desdeDocRef=" + Respuesta.SI + 
-			"&origenMnto=" + Respuesta.NO;
+			"&desdeDocRef=" + Respuesta.NO + 
+			"&origenMnto=" + origenMnto.text();
 		window.location.href = "/appkahaxi/nueva-orden-venta?" + params;
 	} else {
 		console.log("else nroDoc:" + nroDoc);

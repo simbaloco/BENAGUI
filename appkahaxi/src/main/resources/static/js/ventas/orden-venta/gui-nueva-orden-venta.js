@@ -264,10 +264,6 @@ function inicializarEventos() {
 		grabarOrdenVenta(e);
 	});
 
-	/*btnDuplicar.on("click", function() {
-		duplicarPantallaOrdenCompra(numeroDocumento.text());
-	});*/
-
 	btnLimpiar.on("click", function() {
 		limpiarOrdenVenta();
 	});
@@ -653,8 +649,6 @@ function verPantallaOrdenVenta(data) {
 			
 			estado.focus();
 			mostrarControl(btnGrabar);
-			
-			//habilitarDetalleOrdenCompra();
 		} else {
 			// estado APROBADO O RECHAZADO
 			deshabilitarControl(direccionDespacho);
@@ -1343,29 +1337,6 @@ function tableToJSON(dataTable) {
 }
 
 
-function mostrarDialogoEliminarTodo(table) {
-
-	bootbox.confirm({
-		message: "¿Está seguro que desea eliminar todos los registros?",
-		buttons: {
-			confirm: {
-				label: 'Sí',
-				className: 'btn-success'
-			},
-			cancel: {
-				label: 'No',
-				className: 'btn-danger'
-			}
-		},
-		callback: function(result) {
-			if (result == true) {
-				table.clear().draw();
-				indiceFilaDataTableDetalle = -1;
-				calcularResumenOrdenCompra();
-			}
-		}
-	});
-}
 /*
 function mostrarDialogoGenerarGuiaRemision() {
 
@@ -1421,7 +1392,7 @@ function cargarGuiaRemisionAsociada(numDocumento) {
 	params = "numeroDocumento=" + numDocumento + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato +
 		"&nroCotizacion=" + nroCoti + "&nroGuiaRemision=" + numDocumento + "&nroOrdenVenta=" + nroOV + "&codRepuesto=" + codRpto +
 		"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + 
-		"&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI + "&origenMnto=" + Respuesta.NO;;
+		"&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI + "&origenMnto=" + Respuesta.NO;
 
 	window.location.href = "/appkahaxi/cargar-guia-remision-venta?" + params;
 }
@@ -1666,7 +1637,7 @@ function generarPdf(event) {
 	var nroDocumento = codigo.html();
 	var correo = email.val();
 	var box = bootbox.dialog({
-		title: 'Enviar correo o descargar orden de compra',
+		title: 'Enviar correo o descargar orden de venta',
 		message: $(".form-content").html().replace('formEmail', 'formEmailReal'),
 		buttons: {
 			correo: {
@@ -1733,7 +1704,7 @@ function enviarMailReporte(numeroDocumento, email) {
 		type: "Post",
 		contentType: false,
 		processData: false,
-		url: '/appkahaxi/enviarEmailReporteOrdenCompra',
+		url: '/appkahaxi/enviarEmailReporteOrdenVenta',
 		xhrFields: {
 			responseType: 'blob'
 		},
@@ -1755,7 +1726,7 @@ function enviarMailReporte(numeroDocumento, email) {
 function descargarReporte(numeroDocumento) {
 	$.ajax({
 		type: "Post",
-		url: '/appkahaxi/reporteOrdenCompra/' + numeroDocumento,
+		url: '/appkahaxi/reporteOrdenVenta/' + numeroDocumento,
 		xhrFields: {
 			responseType: 'blob'
 		},

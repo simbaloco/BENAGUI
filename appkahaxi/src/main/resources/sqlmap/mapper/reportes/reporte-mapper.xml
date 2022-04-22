@@ -77,6 +77,19 @@
         <result property="SUBTOTAL_IGV"			column="SUB_TOTAL_IGV" />
     </resultMap>
     
+    <resultMap id="ordenVentaDet" type="hashmap">
+        <result property="COD_ARTICULO" 		column="COD_ARTICULO" />
+        <result property="COD_ESTANDAR" 		column="COD_ESTANDAR" />
+        <result property="DESCRIPCION" 			column="DESCRIPCION" />
+        <result property="MARCA_ARTICULO" 		column="MARCA_PRODUCTO" />
+        <result property="CANTIDAD" 			column="CANTIDAD" />
+        <result property="PRECIO_UNITARIO"		column="PRECIO_UNITARIO" />
+        <result property="PRECIO_UNITARIO_IGV"	column="PRECIO_UNITARIO_IGV" />   
+        <result property="SUB_TOTAL" 			column="SUB_TOTAL" />
+        <result property="SUBTOTAL_IGV"			column="SUB_TOTAL_IGV" />
+    </resultMap>
+    
+    
     <resultMap id="repKardexDet" type="hashmap">
         <result property="FEC_REGISTRO" 	column="FEC_REGISTRO" />
         <result property="TIPO_OPERACION" 	column="TIPO_OPERACION" />
@@ -183,6 +196,14 @@
         <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
     </parameterMap> 
     
+    <parameterMap id="ordenVentaParams" type="hashmap">
+        <parameter property="NRO_DOCUMENTO"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap> 
+    
+    
+    
     <parameterMap id="reporteComprasParams" type="hashmap">
         <parameter property="FEC_INICIO"       		jdbcType="VARCHAR"  mode="IN"/>
         <parameter property="FEC_FIN"       		jdbcType="VARCHAR"  mode="IN"/>
@@ -256,6 +277,12 @@
     <select id="obtenerDetalleOrdenCompra" parameterMap="ordenCompraParams" resultMap="ordenCompraDet" statementType="CALLABLE">
       {CALL SP_BUSCAR_ORDEN_COMPRA_DET(?,?,?) }
     </select>
+    
+    <select id="obtenerDetalleOrdenVenta" parameterMap="ordenVentaParams" resultMap="ordenVentaDet" statementType="CALLABLE">
+      {CALL SP_BUSCAR_ORDEN_VENTA_DET(?,?,?) }
+    </select>
+    
+    
     
     <select id="obtenerDetalleReporteCompras" parameterMap="reporteComprasParams" resultMap="repCompraDet" statementType="CALLABLE">
       {CALL SP_REPORTE_COMPRAS(?,?,?,?,?) }
