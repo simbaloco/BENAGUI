@@ -1,7 +1,7 @@
 // campos de formulario
 var formOrdenCompra;
 var campoBuscar;
-var nroOC;
+var nroOrdenCompra;
 var codRepuesto;
 var fecContaDesde;
 var fecContaHasta;
@@ -30,7 +30,7 @@ $(document).ready(function(){
 function inicializarVariables() {
 	formOrdenCompra = $('#formOrdenCompra');
 	campoBuscar = $('#campoBuscar');
-	nroOC = $('#nroOC');
+	nroOrdenCompra = $('#nroOrdenCompra');
 	codRepuesto = $('#codRepuesto');
 	fecContaDesde = $('#fecContaDesde');
 	fecContaHasta = $('#fecContaHasta');
@@ -142,7 +142,7 @@ function inicializarEventos(){
 		campoBuscarKeyUp(e);
 	});
 	
-	nroOC.on('keyup', function (e) {
+	nroOrdenCompra.on('keyup', function (e) {
 		nroOCKeyUp(e);
 	});
 	
@@ -187,7 +187,7 @@ function inicializarTabla(){
             // se pasa la data de esta forma para poder reinicializar luego sólo la llamada ajax sin tener que dibujar de nuevo toda la tabla
 			data: function ( d ) {
 				d.datoBuscar 		= campoBuscar.val().trim();
-            	d.nroOrdenCompra	= nroOC.val().trim();
+            	d.nroOrdenCompra	= nroOrdenCompra.val().trim();
             	d.codRepuesto		= codRepuesto.val().trim();
             	d.codEstado 		= estado.val();
             	d.fechaDesde 		= fecContaDesde.datetimepicker('date').format('YYYY-MM-DD');
@@ -321,8 +321,10 @@ function inicializarTabla(){
             	}else if(data.codigoEstado == EstadoDocumentoInicial.APROBADO){
 					if(data.codigoEstadoProceso == EstadoProceso.ABIERTO){
 						$(row).addClass("estadoAprobadoAbierto");	
-					}else{
+					}else if(data.codigoEstadoProceso == EstadoProceso.CERRADO){
 						$(row).addClass("estadoAprobadoCerrado");
+					}else{
+						$(row).addClass("estadoAprobadoIntermedio");
 					}
             	}
                 // colocando la numeración
@@ -386,20 +388,29 @@ function codRepuestoKeyUp(e){
 	}
 }
 
-function nuevaOrdenCompra(numeroDocumento, opcion){
+function nuevaOrdenCompra(nroOrdenCompraOrigen, opcion){
 	var params;
-	var datoBuscar 			= campoBuscar.val();
-	var nroOCVal 			= nroOC.val();
-	var codRpto 			= codRepuesto.val();
-	var fecContDesde 		= fecContaDesde.datetimepicker('date').format('L');
-	var fecContHasta 		= fecContaHasta.datetimepicker('date').format('L');
-	var est 				= estado.val();
-	// armando los parámetros
-	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar +  
-			 "&nroOrdenCompra=" + nroOCVal + "&codRepuesto=" + codRpto + "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + 
-		     "&estadoParam=" + est + "&volver=" + Respuesta.SI;
 	
-	window.location.href = "/appkahaxi/nueva-orden-compra?" + params;
+	var campoBuscarFiltro 		= campoBuscar.val();
+	var nroOrdenCompraFiltro 	= nroOrdenCompra.val();
+	var codRepuestoFiltro 		= codRepuesto.val();
+	var fecDesdeFiltro 			= fecContaDesde.datetimepicker('date').format('L');
+	var fecHastaFiltro 			= fecContaHasta.datetimepicker('date').format('L');
+	var estadoFiltro 			= estado.val();
+	// armando los parámetros
+	params = 
+		"campoBuscarFiltro=" + campoBuscarFiltro +  
+		"&nroOrdenCompraFiltro=" + nroOrdenCompraFiltro + 
+		"&codRepuestoFiltro=" + codRepuestoFiltro + 
+		"&fecDesdeFiltro=" + fecDesdeFiltro + 
+		"&fecHastaFiltro=" + fecHastaFiltro + 
+		"&estadoFiltro=" + estadoFiltro + 
+		
+		"&deListaOC=" + Respuesta.SI + 
+		"&opcion=" + opcion +
+		"&nroOrdenCompraOrigen=" + nroOrdenCompraOrigen;
+	
+	window.location.href = "/appkahaxi/cargar-orden-compra?" + params;
 }
 
 function buscar(event){
@@ -423,7 +434,7 @@ function limpiar(e){
 	esLimpiar = true;
 	
 	campoBuscar.val(CADENA_VACIA);
-	nroOC.val(CADENA_VACIA);
+	nroOrdenCompra.val(CADENA_VACIA);
 	codRepuesto.val(CADENA_VACIA);
 	estado.val(CADENA_VACIA);
 	

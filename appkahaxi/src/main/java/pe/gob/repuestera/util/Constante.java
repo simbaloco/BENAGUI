@@ -43,9 +43,6 @@ public class Constante {
 	public static final String PAGINA_PRINCIPAL = "paginas/principal";
 	public static final String PAGINA_ERROR = "paginas/error/error";
 	public static final String PAGINA_ACCESS_DENIED = "paginas/error/access-denied";
-	/* COMPRAS */
-	public static final String PAGINA_NUEVA_ORDEN_COMPRA = "paginas/compras/ordencompra/nueva-orden-compra";
-	public static final String PAGINA_MANTENIMIENTO_ORDEN_COMPRA = "paginas/compras/ordencompra/mantenimiento-orden-compra";
 	/* MAESTROS */
 	public static final String PAGINA_BUSCAR_ARTICULOS = "paginas/maestros/buscar-articulos";
 	public static final String PAGINA_MANTENIMIENTO_USUARIOS = "paginas/maestros/mantenimiento-usuario";
@@ -63,20 +60,30 @@ public class Constante {
 	public static final String PAGINA_BUSCAR_IGV = "paginas/maestros/buscar-igv";
 	public static final String PAGINA_MANTENIMIENTO_DATA_CATALOGO = "paginas/maestros/mantenimiento-data-catalogo";
 	public static final String PAGINA_MANTENIMIENTO_CATALOGO_DEPENDIENTE = "paginas/maestros/mantenimiento-catalogo-dependiente";
-	/* VENTAS */
-	public static final String PAGINA_MANTENIMIENTO_COTIZACION = "paginas/ventas/cotizacion/mantenimiento-cotizacion";
-	public static final String PAGINA_MANTENIMIENTO_ORDEN_VENTA= "paginas/ventas/ordenventa/mantenimiento-orden-venta";
-	public static final String PAGINA_NUEVA_COTIZACION = "paginas/ventas/cotizacion/nueva-cotizacion";
-	public static final String PAGINA_NUEVA_ORDEN_VENTA = "paginas/ventas/ordenventa/nueva-orden-venta";
-	/* GUIA REMISION */
-	public static final String PAGINA_CARGAR_GUIA_REMISION_COMPRA = "paginas/compras/guiaremision/cargar-guia-remision";
+	
+	/* ORDEN DE COMPRA */
+	public static final String PAGINA_CARGAR_ORDEN_COMPRA = "paginas/compras/ordencompra/orden-compra";
+	public static final String PAGINA_MANTENIMIENTO_ORDEN_COMPRA = "paginas/compras/ordencompra/mantenimiento-orden-compra";
+	/* GUIA REMISION COMPRAS */
+	public static final String PAGINA_CARGAR_GUIA_REMISION_COMPRA = "paginas/compras/guiaremision/guia-remision";
 	public static final String PAGINA_MANTENIMIENTO_GUIA_REMISION_COMPRA = "paginas/compras/guiaremision/mantenimiento-guia-remision";
+	/* COMPROBANTE PAGO COMPRAS */
+	public static final String PAGINA_CARGAR_FACTURA_COMPRA_DIRECTA = "paginas/compras/factura/factura-directa";
+	public static final String PAGINA_CARGAR_FACTURA_COMPRA_ASOCIADA = "paginas/compras/factura/factura-asociada";
+	public static final String PAGINA_MANTENIMIENTO_FACTURA_COMPRA = "paginas/compras/factura/mantenimiento-factura";
+		
+	
+	/* COTIZACION VENTAS */
+	public static final String PAGINA_NUEVA_COTIZACION = "paginas/ventas/cotizacion/nueva-cotizacion";
+	public static final String PAGINA_MANTENIMIENTO_COTIZACION = "paginas/ventas/cotizacion/mantenimiento-cotizacion";
+	/* ORDEN DE VENTA */
+	public static final String PAGINA_NUEVA_ORDEN_VENTA = "paginas/ventas/ordenventa/nueva-orden-venta";
+	public static final String PAGINA_MANTENIMIENTO_ORDEN_VENTA= "paginas/ventas/ordenventa/mantenimiento-orden-venta";
+	
+	/* GUIA REMISION VENTAS */
 	public static final String PAGINA_CARGAR_GUIA_REMISION_VENTA = "paginas/ventas/guiaremision/cargar-guia-remision";
 	public static final String PAGINA_MANTENIMIENTO_GUIA_REMISION_VENTA = "paginas/ventas/guiaremision/mantenimiento-guia-remision";
-	/* COMPROBANTE PAGO */
-	public static final String PAGINA_NUEVA_FACTURA_COMPRA_DIRECTA = "paginas/compras/factura/nueva-factura-directa";
-	public static final String PAGINA_NUEVA_FACTURA_COMPRA_ASOCIADA = "paginas/compras/factura/nueva-factura-asociada";
-	public static final String PAGINA_MANTENIMIENTO_FACTURA_COMPRA = "paginas/compras/factura/mantenimiento-factura";
+	/* COMPROBANTE PAGO VENTAS */
 	public static final String PAGINA_NUEVA_FACTURA_VENTA_DIRECTA = "paginas/ventas/factura/nueva-factura-directa";
 	public static final String PAGINA_NUEVA_FACTURA_VENTA_ASOCIADA = "paginas/ventas/factura/nueva-factura-asociada";
 	public static final String PAGINA_MANTENIMIENTO_FACTURA_VENTA = "paginas/ventas/factura/mantenimiento-factura";
@@ -298,10 +305,29 @@ public class Constante {
 	public static final String PARAM_NRO_DOCUMENTO = "numeroDocumento";
 	public static final String PARAM_ENVIAR_CODIGO = "enviarCodigo";	
 	public static final String PARAM_EMAIL = "email";
-	public static final String PARAM_DATO_BUSCAR = "datoBuscar";
 	public static final String PARAM_NRO_COTIZACION = "nroCotizacion";
 	public static final String PARAM_NRO_ORDEN_VENTA = "nroOrdenVenta";
 	public static final String PARAM_NRO_ORDEN_COMPRA = "nroOrdenCompra";
+	public static final String PARAM_DATO_BUSCAR = "datoBuscar";
+	
+	/* FILTROS PARA LAS PANTALLAS DE BÚSQUEDA */
+	public static final String PARAM_CAMPO_BUSCAR_FILTRO = "campoBuscarFiltro";
+	public static final String PARAM_NRO_ORDEN_COMPRA_FILTRO = "nroOrdenCompraFiltro";
+	public static final String PARAM_NRO_GUIA_REMISION_FILTRO = "nroGuiaRemisionFiltro";
+	public static final String PARAM_NRO_COMPROBANTE_PAGO_FILTRO = "nroComprobantePagoFiltro";
+	public static final String PARAM_COD_REPUESTO_FILTRO = "codRepuestoFiltro";	
+	public static final String PARAM_FEC_DESDE_FILTRO = "fecDesdeFiltro";	
+	public static final String PARAM_FEC_HASTA_FILTRO = "fecHastaFiltro";
+	public static final String PARAM_ESTADO_FILTRO = "estadoFiltro";
+	/* PARÁMETROS PARA LOS FLUJOS DE IDA Y VUELTA EN LOS BUSCADORES DE DOCUMENTOS */
+	public static final String PARAM_NRO_ORDEN_COMPRA_ORIGEN = "nroOrdenCompraOrigen";
+	public static final String PARAM_NRO_GUIA_REMISION_ORIGEN = "nroGuiaRemisionOrigen";
+	public static final String PARAM_NRO_COMPROBANTE_PAGO_ORIGEN = "nroComprobantePagoOrigen";
+	public static final String PARAM_DE_LISTA_ORDEN_COMPRA = "deListaOC";
+	public static final String PARAM_DE_LISTA_GUIA_REMISION = "deListaGR";
+	public static final String PARAM_DE_LISTA_COMPROBANTE_PAGO = "deListaCP";	
+	public static final String PARAM_DE_LISTA_GR_SELECCIONADAS = "listaGRSeleccionadas";	
+	
 	public static final String PARAM_NRO_GUIA_REMISION = "nroGuiaRemision";
 	public static final String PARAM_NRO_GR_REF = "nroGr";
 	public static final String PARAM_NRO_COMPROBANTE_PAGO = "nroComprobantePago";

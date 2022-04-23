@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <script th:src="@{/js/compras/factura/gui-nueva-factura-directa.js}" ></script>
+    <script th:src="@{/js/compras/factura/gui-factura-directa.js}" ></script>
 </head>
 
 <body>
@@ -18,18 +18,18 @@
 		<input type="text" id="email" hidden="hidden"/>
 		<input type="text" id="celular" hidden="hidden"/>
 		<input type="text" id="tipoCambioSave" hidden="hidden"/>
-		
-		<label id="numeroDocumento" th:text=${numeroDocumento} hidden="hidden"></label>
-		<label id="opcion" th:text=${opcion} hidden="hidden"></label>
-		<label id="datoBuscar" th:text=${datoBuscar} hidden="hidden"></label>
-		<label id="nroComprobantePago" th:text=${nroComprobantePago} hidden="hidden"></label>
-		<label id="nroOrdenCompra" th:text=${nroOrdenCompra} hidden="hidden"></label>
-		<label id="codRepuesto" th:text=${codRepuesto} hidden="hidden"></label>
-		<label id="fechaDesde" th:text=${fechaDesde} hidden="hidden"></label>
+				
+		<label id="campoBuscarFiltro" th:text=${campoBuscarFiltro} hidden="hidden"></label>
+		<label id="nroComprobantePagoFiltro" th:text=${nroComprobantePagoFiltro} hidden="hidden"></label>
+		<label id="nroOrdenCompraFiltro" th:text=${nroOrdenCompraFiltro} hidden="hidden"></label>
+		<label id="codRepuestoFiltro" th:text=${codRepuestoFiltro} hidden="hidden"></label>
+		<label id="fecDesdeFiltro" th:text=${fecDesdeFiltro} hidden="hidden"></label>
 		<label id="fechaHasta" th:text=${fechaHasta} hidden="hidden"></label>
-		<label id="estadoParam" th:text=${estadoParam} hidden="hidden"></label>
-		<label id="volverParam" th:text=${volver} hidden="hidden"></label>
-		<label id="desdeDocRef" th:text=${desdeDocRef} hidden="hidden"></label>
+		<label id="estadoFiltro" th:text=${estadoFiltro} hidden="hidden"></label>
+		
+		<label id="deListaCP" th:text=${deListaCP} hidden="hidden"></label>
+		<label id="nroComprobantePagoOrigen" th:text=${nroComprobantePagoOrigen} hidden="hidden"></label>
+		<label id="opcion" th:text=${opcion} hidden="hidden"></label>
 		
 		
 		

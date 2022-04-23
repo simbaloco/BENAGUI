@@ -2,18 +2,18 @@ var titulo;
 var codigo;
 var codigoProv;
 var nroDocReferencia;
-var numeroDocumento;
-var origenMnto;
 var opcion;
-var datoBuscar;
-var nroGuiaRemision;
-var nroOrdenCompra;
-var codRepuesto;
-var fechaDesde;
-var fechaHasta;
-var estadoParam;
-var volverParam;
-var desdeDocRefParam;
+var campoBuscarFiltro;
+var nroGuiaRemisionFiltro;
+var nroOrdenCompraFiltro;
+var codRepuestoFiltro;
+var fecDesdeFiltro;
+var fecHastaFiltro;
+var estadoFiltro;
+var deListaOC;
+var nroOrdenCompraOrigen;
+var deListaGR;
+var nroGuiaRemisionOrigen;
 
 var formGuiaRemision;
 var formObservaciones;
@@ -85,18 +85,18 @@ function inicializarVariables() {
 	codigo = $("#codigo");
 	codigoProv = $("#codigoProv");
 	nroDocReferencia = $("#nroDocReferencia");
-	numeroDocumento = $('#numeroDocumento');
-	origenMnto = $('#origenMnto');
 	opcion =  $("#opcion");
-	datoBuscar =  $("#datoBuscar");
-	nroGuiaRemision =  $("#nroGuiaRemision");
-	nroOrdenCompra =  $("#nroOrdenCompra");
-	codRepuesto =  $("#codRepuesto");
-	fechaDesde =  $("#fechaDesde");
-	fechaHasta =  $("#fechaHasta");
-	estadoParam =  $("#estadoParam");
-	volverParam =  $("#volverParam");
-	desdeDocRefParam =  $("#desdeDocRefParam");
+	campoBuscarFiltro =  $("#campoBuscarFiltro");
+	nroGuiaRemisionFiltro =  $("#nroGuiaRemisionFiltro");
+	nroOrdenCompraFiltro =  $("#nroOrdenCompraFiltro");
+	codRepuestoFiltro =  $("#codRepuestoFiltro");
+	fecDesdeFiltro =  $("#fecDesdeFiltro");
+	fecHastaFiltro =  $("#fecHastaFiltro");
+	estadoFiltro =  $("#estadoFiltro");
+	deListaOC =  $("#deListaOC");
+	nroOrdenCompraOrigen =  $("#nroOrdenCompraOrigen");
+	deListaGR =  $("#deListaGR");
+	nroGuiaRemisionOrigen =  $("#nroGuiaRemisionOrigen");
 	
 	formGuiaRemision = $("#formGuiaRemision");
 	formObservaciones = $("#formObservaciones");
@@ -355,7 +355,7 @@ function inicializarFechas(){
 */
 function cargarPantallaConDatosOrdenCompra() {
 	console.log("cargarPantallaConDatosOrdenCompra...");
-	var nroDocReferenciaVal = numeroDocumento.text();
+	var nroDocReferenciaVal = nroOrdenCompraOrigen.text();
 
 	$.ajax({
 		type:"Get",
@@ -452,17 +452,7 @@ function nuevaPantallaGuiaRemision() {
 function cargarPantallaConDatosGuiaRemision() {
 
 	var nroDocReferenciaVal; 
-	//var desdeDocRef = desdeDocRefParam.text();
-	
-	//if(desdeDocRef == Respuesta.SI){
-	//if(opcion.text() == Opcion.VER){
-		nroDocReferenciaVal = numeroDocumento.text();
-	/*	console.log("numeroDocumento.text():"+numeroDocumento.text());
-	}else{
-		nroDocReferenciaVal = nroGuiaRemision.text();
-		console.log("nroGuiaRemision.text():"+nroGuiaRemision.text());
-	}	
-	*/
+	nroDocReferenciaVal = nroGuiaRemisionOrigen.text();
 	
 	$.ajax({
 		type:"Get",
@@ -545,15 +535,8 @@ function cargarPantallaHTMLGuiaRemision(data) {
 
 function verPantallaGuiaRemision(data) {
 
-	titulo.text("VER");
-	
-	var desdeDocRef 	= desdeDocRefParam.text();
-	
-	if(desdeDocRef == Respuesta.SI){
-		codigo.html(nroGuiaRemision.text());
-	}else{
-		codigo.html(numeroDocumento.text());
-	}
+	titulo.text("VER");	
+	codigo.html(nroGuiaRemisionOrigen.text());
 	
 	fecConta.datetimepicker('date', moment(data.fechaContabilizacion));
 	fecDocumento.datetimepicker('date', moment(data.fechaDocumento));
@@ -573,8 +556,13 @@ function verPantallaGuiaRemision(data) {
 	controlNoRequerido(observaciones);
 	
 	if(data.codigoEstado == EstadoGuiaRemision.GENERADO){
-		if(data.codigoEstadoProceso == EstadoProceso.ABIERTO){
-			// estado proceso ABIERTO
+		if(data.codigoEstadoProceso == EstadoProceso.CERRADO){
+			// estado proceso CERRADO
+			ocultarControl(btnGenerarFactura);
+			mostrarControl(btnIrFactura);
+
+		}else{
+			// estado proceso ABIERTO o INTERMEDIO
 			mostrarControl(btnGenerarFactura);
 			if(data.cantidadFacturasAsociadas > 0) {
 				ocultarControl(btnAnular);
@@ -585,11 +573,6 @@ function verPantallaGuiaRemision(data) {
 				//habilitarControl(observaciones);
 				ocultarControl(btnIrFactura);
 			}
-
-		}else{
-			// estado proceso CERRADO
-			ocultarControl(btnGenerarFactura);
-			mostrarControl(btnIrFactura);
 		}
 
 	}else{
@@ -597,8 +580,10 @@ function verPantallaGuiaRemision(data) {
 		mostrarControl(lblAnulado);
 	}
 	
-	var volver = volverParam.text();
-	if(volver == Respuesta.SI){
+	var listaGR = deListaGR.text();
+	var nroOCSelec = nroOrdenCompraOrigen.text();
+	// si viene del listado de GR o desde una OC, mostrar VOLVER
+	if(listaGR == Respuesta.SI || nroOCSelec != CADENA_VACIA){
 		mostrarControl(btnVolver);
 	}
 	
@@ -1042,13 +1027,15 @@ function anularGuiaRemisionCompra(){
 			if(xhr.status == HttpStatus.OK){
 
 				mostrarNotificacion("El registro fué actualizado correctamente.", "success");
-
+				/*
 				window.scrollTo(0, 0);
 				mostrarControl(lblAnulado);
 				ocultarControl(btnGenerarFactura);
 				ocultarControl(btnIrFactura);
 				ocultarControl(btnAnular);				
-				deshabilitarControl(observaciones);				
+				deshabilitarControl(observaciones);
+				*/
+				volver();
 			} else if(xhr.status == HttpStatus.Accepted){
 
 				mostrarMensajeValidacion(resultado);
@@ -1475,8 +1462,7 @@ function obtenerDetalleFacturasPorGuiaRemision(event){
 		$('#tableSeleccionDocumento tbody').on('click', 'tr', function () {
 			var nTds = $('td', this);
 			var numeroDocumento = $(nTds[0]).text();
-			
-			cargarFacturaAsociada(numeroDocumento, Opcion.VER);			
+			cargarFacturaAsociada(numeroDocumento);			
 		});
 	}
 }
@@ -1517,91 +1503,120 @@ function generarFacturaAsociada() {
 
 	guiasRemision = guiasRemision.slice(0,-1);
 	
-	var nroGr = codigo.html();
-	var nroGrParam = nroGuiaRemision.text();
-	var OcRef = OCReferencia.val();
-	var dato = datoBuscar.text();
-	var fecDesde = fechaDesde.text();
-	var fecHasta = fechaHasta.text();
-	var estParam = estadoParam.text();
-	var opcion = Opcion.NUEVO;
-	
-	//var params = "numeroDocumento=" + OCReferencia.val() + "&opcion=" + opcion + "&datoBuscar=&fechaDesde=&fechaHasta=&estadoParam=&volver=0&desdeDocRef=&guias=" + guiasRemision;
-	var params = "numeroDocumento=" + OcRef + "&opcion=" + opcion + "&datoBuscar=" + dato + "&fechaDesde=" + fecDesde + 
-				 "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI + 
-				 "&nroGuiaRemision=" + nroGrParam + "&nroGr=" + nroGr + "&guias=" + guiasRemision + "&origenMnto=" + origenMnto.text();
-	window.location.href = "/appkahaxi/nueva-factura-compra-asociada?" + params;
+	var dato 		= campoBuscarFiltro.text();
+	var nroOC 		= nroOrdenCompraFiltro.text();
+	var nroGrParam 	= nroGuiaRemisionFiltro.text();
+	var codRpto 	= codRepuestoFiltro.text();
+	var fecDesde 	= fecDesdeFiltro.text();
+	var fecHasta 	= fecHastaFiltro.text();
+	var estParam 	= estadoFiltro.text();
 
+	var listaOC 	= deListaOC.text();
+	var nroOCSelec 	= OCReferencia.val();
+	var listaGR 	= deListaGR.text();	
+																   
+   	params = 
+		"campoBuscarFiltro=" + dato +
+		"&nroGuiaRemisionFiltro=" + nroGrParam +
+		"&nroOrdenCompraFiltro=" + nroOC + 
+		"&codRepuestoFiltro=" + codRpto +
+		"&fecDesdeFiltro=" + fecDesde + 
+		"&fecHastaFiltro=" + fecHasta + 
+		"&estadoFiltro=" + estParam +
+		 
+		"&nroComprobantePagoFiltro=" +
+	
+		"&deListaOC=" + listaOC +
+		"&nroOrdenCompraOrigen=" + nroOCSelec +
+		
+		"&deListaGR=" + listaGR +
+		"&nroGuiaRemisionOrigen=" + codigo.html() +
+		"&listaGRSeleccionadas=" + guiasRemision +
+		
+		"&deListaCP=" + Respuesta.NO +
+		"&nroComprobantePagoOrigen=" +
+		
+		"&opcion=" + Opcion.NUEVO;
+	
+	window.location.href = "/appkahaxi/cargar-factura-compra-asociada?" + params;
 }
 
 function volver(){
 	var params;
-	var dato 			= datoBuscar.text();
-	var nroGR 			= nroGuiaRemision.text();
-	var nroOC 			= nroOrdenCompra.text();// este debe ser el valor del campo a buscar en el filtro de oc en el mantenimiento de oc 
-	var codRpto 		= codRepuesto.text();
-	var fecDesde 		= fechaDesde.text();
-	var fecHasta 		= fechaHasta.text();
-	var estParam		= estadoParam.text();
-	var nroDoc			= OCReferencia.val(); //numeroDocumento.text(); // este debe ser la OC
-	var desdeDocRef 	= desdeDocRefParam.text();
 	
-	if(desdeDocRef == Respuesta.SI){		
-		params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
-			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI;
-		window.location.href = "/appkahaxi/nueva-orden-compra?" + params;
+	var dato 		= campoBuscarFiltro.text();
+	var nroGR 		= nroGuiaRemisionFiltro.text();
+	var nroOC 		= nroOrdenCompraFiltro.text(); 
+	var codRpto 	= codRepuestoFiltro.text();
+	var fecDesde 	= fecDesdeFiltro.text();
+	var fecHasta 	= fecHastaFiltro.text();
+	var estParam	= estadoFiltro.text();
+	
+	var listaOC		= deListaOC.text();
+	var nroOCSelec	= nroOrdenCompraOrigen.text();
+	var listaGR		= deListaGR.text();	
+	
+	if(listaGR == Respuesta.SI){
+		params = "campoBuscarFiltro=" + dato + "&nroGuiaRemisionFiltro=" + nroGR + "&nroOrdenCompraFiltro=" + nroOC + "&codRepuestoFiltro=" + codRpto + 
+			 	 "&fecDesdeFiltro=" + fecDesde + "&fecHastaFiltro=" + fecHasta + "&estadoFiltro=" + estParam;
+		window.location.href = "/appkahaxi/mantenimiento-guia-remision-compra?" + params;
+		
 	}else{
-		console.log("else nroDoc:"+nroDoc);
-		console.log("origenMnto:"+origenMnto);
-		if(origenMnto.text() == Respuesta.NO){
-			params = "numeroDocumento=" + nroDoc + "&opcion=" + Opcion.VER + "&datoBuscar=" + dato + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
-			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI;
-			window.location.href = "/appkahaxi/nueva-orden-compra?" + params;
-		}else{
-			params = "datoBuscar=" + dato + "&nroGuiaRemision=" + nroGR + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto + 
-			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam;
-			window.location.href = "/appkahaxi/mantenimiento-guia-remision-compra?" + params;	
-		}		
+		params = 
+			"campoBuscarFiltro=" + dato +  
+			"&nroOrdenCompraFiltro=" + nroOC + 
+			"&codRepuestoFiltro=" + codRpto + 
+			"&fecDesdeFiltro=" + fecDesde + 
+			"&fecHastaFiltro=" + fecHasta + 
+			"&estadoFiltro=" + estParam + 
+			
+			"&deListaOC=" + listaOC + 
+			"&opcion=" + Opcion.VER +
+			"&nroOrdenCompraOrigen=" + nroOCSelec;
+	
+		window.location.href = "/appkahaxi/cargar-orden-compra?" + params;
 	}
 }
-/*
-function reiniciarMinFechaEntrega() {
-	console.log("reiniciarMinFechaEntrega...inicio");
-	fecRecepcion.datetimepicker('minDate', false);
-}
 
-function reiniciarMaxFechas() {
-	console.log("reiniciarMaxFechas...inicio");
-	fecDocumento.datetimepicker('maxDate', false);
-	fecRecepcion.datetimepicker('maxDate', false);
-}
-*/
-function cargarFacturaAsociada(numeroDocumento, opcion) {
-
-	/*
-	var params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=&fechaDesde=&fechaHasta=&estadoParam=&guias=&volver=" + Respuesta.NO;
-
-	window.location.href = "/appkahaxi/nueva-factura-compra-asociada?" + params;
-	*/
-	console.log("cargar factura asociada--> nroDoc (GR origen)-->" + codigo.html());
-	var params;
-	var dato 		= datoBuscar.val();
-	var nroGuiaRem	= nroGuiaRemision.text();
-	var nroOC 		= nroOrdenCompra.text();
-	var codRpto 	= codRepuesto.val();
-	var fecDesde 	= fechaDesde.text();
-	var fecHasta 	= fechaHasta.text();
-	var est 		= estadoParam.val();
-	// armando los parámetros
-	//params = "numeroDocumento=" + codigo.html() + "&opcion=" + opcion + "&datoBuscar=" + dato +
-	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + dato +
-			 "&nroComprobantePago=" + numeroDocumento + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +
-			 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + 
-			 "&desdeDocRef=" + Respuesta.SI + "&nroGuiaRemision=" + nroGuiaRem + "&nroGr=" + codigo.html() + "&guias=" +
-		 	 "&origenMnto=" + origenMnto.text();
+function cargarFacturaAsociada(nroComprobantePagoOrigen) {
 	
-	window.location.href = "/appkahaxi/nueva-factura-compra-asociada?" + params;
+	var dato 		= campoBuscarFiltro.text();
+	var nroOC 		= nroOrdenCompraFiltro.text();
+	var nroGrParam 	= nroGuiaRemisionFiltro.text();
+	var codRpto 	= codRepuestoFiltro.text();
+	var fecDesde 	= fecDesdeFiltro.text();
+	var fecHasta 	= fecHastaFiltro.text();
+	var estParam 	= estadoFiltro.text();
+
+	var listaOC 	= deListaOC.text();
+	var nroOCSelec 	= nroOrdenCompraOrigen.text();
+	var nroGRSelec 	= nroGuiaRemisionOrigen.text();
+	var listaGR 	= deListaGR.text();	
+																   
+   	params = 
+		"campoBuscarFiltro=" + dato +
+		"&nroGuiaRemisionFiltro=" + nroGrParam +
+		"&nroOrdenCompraFiltro=" + nroOC + 
+		"&codRepuestoFiltro=" + codRpto +
+		"&fecDesdeFiltro=" + fecDesde + 
+		"&fecHastaFiltro=" + fecHasta + 
+		"&estadoFiltro=" + estParam +
+		 
+		"&nroComprobantePagoFiltro=" +
 	
+		"&deListaOC=" + listaOC +
+		"&nroOrdenCompraOrigen=" + nroOCSelec +
+		
+		"&deListaGR=" + listaGR +
+		"&nroGuiaRemisionOrigen=" + nroGRSelec +
+		"&listaGRSeleccionadas=" +
+		
+		"&deListaCP=" + Respuesta.NO +
+		"&nroComprobantePagoOrigen=" + nroComprobantePagoOrigen +
+		
+		"&opcion=" + Opcion.VER;
+	
+	window.location.href = "/appkahaxi/cargar-factura-compra-asociada?" + params;
 }
 
 function limpiarGuiaRemision() {

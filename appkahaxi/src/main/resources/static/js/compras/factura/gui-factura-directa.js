@@ -7,17 +7,16 @@ var codigoProv;
 var email;
 var celular;
 var nroDocReferencia;
-var numeroDocumento;
 var opcion;
-var datoBuscar;
-var nroComprobantePago;
-var nroOrdenCompra;
-var codRepuesto;
-var fechaDesde;
-var fechaHasta;
-var estadoParam;
-var volverParam;
-var desdeDocRef;
+var campoBuscarFiltro;
+var nroComprobantePagoFiltro;
+var nroOrdenCompraFiltro;
+var codRepuestoFiltro;
+var fecDesdeFiltro;
+var fecHastaFiltro;
+var estadoFiltro;
+var deListaCP;
+var nroComprobantePagoOrigen;
 
 var formFactura;
 var formObservaciones;
@@ -59,7 +58,6 @@ var igvFactura;
 var totalFactura;
 
 var btnGrabar;
-var btnNuevo;
 var btnVolver;
 
 var dataTableDetalle;
@@ -75,8 +73,6 @@ var dateTimePickerInput;
 var valorIGV;
 var lblAnulado;
 
-var limpiarVolver = false;
-
 $(document).ready(function(){
 	inicializarVariables();
 	inicializarComponentes();
@@ -90,17 +86,16 @@ function inicializarVariables() {
 	email =  $("#email");
 	celular =  $("#celular");
 	nroDocReferencia = $("#nroDocReferencia");
-	numeroDocumento = $('#numeroDocumento');
 	opcion = $("#opcion");
-	datoBuscar =  $("#datoBuscar");
-	nroComprobantePago =  $("#nroComprobantePago");
-	nroOrdenCompra =  $("#nroOrdenCompra");
-	codRepuesto =  $("#codRepuesto");
-	fechaDesde =  $("#fechaDesde");
-	fechaHasta =  $("#fechaHasta");
-	estadoParam =  $("#estadoParam");
-	volverParam =  $("#volverParam");
-	desdeDocRef = $("#desdeDocRef");
+	campoBuscarFiltro =  $("#campoBuscarFiltro");
+	nroComprobantePagoFiltro =  $("#nroComprobantePagoFiltro");
+	nroOrdenCompraFiltro =  $("#nroOrdenCompraFiltro");
+	codRepuestoFiltro =  $("#codRepuestoFiltro");
+	fecDesdeFiltro =  $("#fecDesdeFiltro");
+	fecHastaFiltro =  $("#fecHastaFiltro");
+	estadoFiltro =  $("#estadoFiltro");
+	deListaCP =  $("#deListaCP");
+	nroComprobantePagoOrigen =  $("#nroComprobantePagoOrigen");
 	
 	formFactura = $("#formFactura");
 	formObservaciones = $("#formObservaciones");
@@ -144,7 +139,6 @@ function inicializarVariables() {
 	totalFactura = $("#totalFactura");
 
 	btnGrabar = $("#btnGrabar");
-	btnNuevo = $("#btnNuevo");
 	
 	campoBuscar = $("#campoBuscar");
 	estadoPago = $("#estadoPago");
@@ -336,12 +330,8 @@ function inicializarEventos() {
 		}
 	});
 	
-	btnNuevo.click(function(){
-    	nuevaFacturaDirecta();
-	});
-	
 	btnVolver.click(function() {
-		volver(false);
+		volver();
 	});
 		
 	condPago.on('change', function(){
@@ -418,18 +408,17 @@ function cargarPantallaNueva() {
 	titulo.text("NUEVA");
 	dias.val(Dias._30);
 	
-	var volver = volverParam.text();
-	if(volver == Respuesta.SI){
+	var volver = deListaCP.text();
+	if (volver == Respuesta.SI) {
 		mostrarControl(btnVolver);
 	}
-	
 	campoBuscar.focus();
 }
 
 function cargarPantallaConDatosFactura() {
 
-	var nroDocReferenciaVal = numeroDocumento.text();
-
+	var nroDocReferenciaVal = nroComprobantePagoOrigen.text();
+	
 	$.ajax({
 		type:"Get",
 		contentType : "application/json",
@@ -523,7 +512,7 @@ function cargarPantallaHTMLFactura(data) {
 function verPantallaFactura(data) {
 
 	titulo.text("VER");
-	codigo.html(numeroDocumento.text());
+	codigo.html(nroComprobantePagoOrigen.text());
 
 	fecConta.datetimepicker('date', moment(data.fechaContabilizacion));
 	fecDocumento.datetimepicker('date', moment(data.fechaDocumento));
@@ -540,6 +529,8 @@ function verPantallaFactura(data) {
 		if(estadoPago.val() == EstadoPago.PAGADO) {
 			deshabilitarControl(estadoPago);
 			ocultarControl(btnAnular);
+			deshabilitarControl(observaciones);
+			controlNoRequerido(observaciones);
 		} else {
 			habilitarControl(estadoPago);
 			mostrarControl(btnAnular);
@@ -548,7 +539,10 @@ function verPantallaFactura(data) {
 	}else{
 		// estado ANULADO
 		deshabilitarControl(estadoPago);
+		ocultarControl(btnAnular);
 		mostrarControl(lblAnulado);
+		deshabilitarControl(observaciones);
+		controlNoRequerido(observaciones);
 	}
 	mostrarControl(btnVolver);
 	deshabilitarControl(condPago);
@@ -1149,8 +1143,6 @@ function registrarFacturaCompra(){
 
 				deshabilitarControl(dateTimePickerInput);
 
-				mostrarControl(btnNuevo);
-				
 				ocultarControl(btnGrabar);
 				ocultarControl(btnLimpiar);
 					
@@ -1166,7 +1158,6 @@ function registrarFacturaCompra(){
 					// CANCELADO
 					deshabilitarControl(observaciones);
 					ocultarControl(btnAnular);
-					limpiarVolver = true;
 				}
 
 				deshabilitarDetalleFactura();
@@ -1221,7 +1212,7 @@ function actualizarFacturaCompra() {
 
 				mostrarNotificacion("El registro fué actualizado correctamente.", "success");
 				
-				volver(true);
+				volver();
 
 			}else if(xhr.status == HttpStatus.Accepted){
 
@@ -1419,7 +1410,7 @@ function anularFacturaCompra(){
 
 			if(xhr.status == HttpStatus.OK){
 
-				volver(true);
+				volver();
 
 			} else if(xhr.status == HttpStatus.Accepted){
 
@@ -1436,49 +1427,25 @@ function anularFacturaCompra(){
 	});
 }
 
-function nuevaFacturaDirecta(){
+function volver(){
 	var params;
-	var dato 		= datoBuscar.text();
-	var nroFact 	= nroComprobantePago.text();
-	var nroOC 		= nroOrdenCompra.text();
-	var codRpto 	= codRepuesto.text();
-	var fecDesde 	= fechaDesde.text();
-	var fecHasta 	= fechaHasta.text();
-	var estParam	= estadoParam.text();
-	var desDocRef 	= desdeDocRef.text();
 	
-	var volver = volverParam.text();
-	console.log("volver: "+volver);
-	if(volver == Respuesta.SI){
-		// armando los parámetros
-		params = "numeroDocumento=&opcion=&datoBuscar=" + dato +  
-			 	 "&nroComprobantePago=" + nroFact + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +
-			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeDocRef=" + desDocRef;
-	}else{
-		params = "numeroDocumento=&opcion=&datoBuscar=&nroComprobantePago=" + 
-				 "&nroOrdenCompra=&codRepuesto=&fechaDesde=&fechaHasta=&estadoParam=&volver=0&desdeDocRef=";
-	}
-	
-	console.log("cargarFactura---> params:" + params);
-	window.location.href = "/appkahaxi/nueva-factura-compra-directa?" + params;
-}
+	var dato 		= campoBuscarFiltro.text();
+	var nroFact 	= nroComprobantePagoFiltro.text();
+	var nroOC 		= nroOrdenCompraFiltro.text();
+	var codRpto 	= codRepuestoFiltro.text();
+	var fecDesde 	= fecDesdeFiltro.text();
+	var fecHasta 	= fecHastaFiltro.text();
+	var estParam	= estadoFiltro.text();
 
-function volver(listadoTotal){
-	var params;
-	var dato 		= datoBuscar.text();
-	var nroFact 	= nroComprobantePago.text();
-	var nroOC 		= nroOrdenCompra.text();
-	var codRpto 	= codRepuesto.text();
-	var fecDesde 	= fechaDesde.text();
-	var fecHasta 	= fechaHasta.text();
-	var estParam	= estadoParam.text();
-
-	if(listadoTotal == true || limpiarVolver == true){
-		params = "datoBuscar=&nroComprobantePago=&nroOrdenCompra=&codRepuesto=&fechaDesde=&fechaHasta=&estadoParam=";
-	}else{
-		params = "datoBuscar=" + dato + "&nroComprobantePago=" + nroFact + "&nroOrdenCompra=" + nroOC + "&codRepuesto=" + codRpto +  
-			 	 "&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam;
-	}
+	params = 
+		"campoBuscarFiltro=" + dato + 
+		"&nroComprobantePagoFiltro=" + nroFact + 
+		"&nroOrdenCompraFiltro=" + nroOC + 
+		"&codRepuestoFiltro=" + codRpto +  
+		"&fecDesdeFiltro=" + fecDesde + 
+		"&fecHastaFiltro=" + fecHasta + 
+		"&estadoFiltro=" + estParam;
 	
 	window.location.href = "/appkahaxi/mantenimiento-factura-compra?" + params;
 }

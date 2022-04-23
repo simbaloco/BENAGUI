@@ -142,12 +142,16 @@ input.disabled-input {
 }
 
 .estadoAprobadoAbierto{
-	background-color: #cbffee !important; /* lightcyan aquamarine */
+	background-color: #fffacb !important; /* amarillo claro */
 }
 
 .estadoAprobadoCerrado{
 	background-color: #cbffee !important; /* lightcyan aquamarine */
 	font-weight: bold;
+}
+
+.estadoAprobadoIntermedio{
+	background-color: #cbffee !important; /* lightcyan aquamarine */	
 }
 
 .ui-autocomplete {

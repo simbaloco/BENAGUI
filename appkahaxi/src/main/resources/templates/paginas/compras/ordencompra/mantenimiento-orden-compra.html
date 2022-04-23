@@ -15,8 +15,8 @@
 
 <div layout:fragment="content" th:remove="tag">
 
-	<label id="fechaDesde" th:text=${fechaDesde} hidden="hidden"></label>
-	<label id="fechaHasta" th:text=${fechaHasta} hidden="hidden"></label>		
+	<label id="fechaDesde" th:text=${fecDesdeFiltro} hidden="hidden"></label>
+	<label id="fechaHasta" th:text=${fecHastaFiltro} hidden="hidden"></label>		
 		
 	<div class="kahaxi_titulo">
 		<div class="kahaxi_titulo_container">
@@ -52,17 +52,17 @@
 
 								<div class="col-md-2">
 									<label class="label" for="campoBuscar">Ingrese datos del proveedor:</label>
-									<input class="form-control" maxlength="20" type="text" id="campoBuscar" th:value=${datoBuscar} placeholder="Ingrese DNI/RUC o Nombre/Razón Social para buscar..."/>
+									<input class="form-control" maxlength="20" type="text" id="campoBuscar" th:value=${campoBuscarFiltro} placeholder="Ingrese DNI/RUC o Nombre/Razón Social para buscar..."/>
 								</div>
 
 								<div class="col-md-2">
-						 			<label class="label" for="nroOC">Nro. Orden de Compra:</label>
-						          	<input class="form-control" maxlength="15" type="text" id="nroOC" th:value=${nroOrdenCompra} />
+						 			<label class="label" for="nroOrdenCompra">Nro. Orden de Compra:</label>
+						          	<input class="form-control" maxlength="15" type="text" id="nroOrdenCompra" th:value=${nroOrdenCompraFiltro} />
 						 		</div>
 						 		
 						        <div class="col-md-1">
 						 			<label class="label" for="codRepuesto">Cod. Repuesto:</label>
-						          	<input class="form-control" maxlength="10" type="text" id="codRepuesto" th:value=${codRepuesto} />
+						          	<input class="form-control" maxlength="10" type="text" id="codRepuesto" th:value=${codRepuestoFiltro} />
 						 		</div>
 							 		
 								<div class="col-md-2">
@@ -92,7 +92,7 @@
 										<option th:each="item : ${listaEstado}"
 									            th:value="${item.codigo}" 
 									            th:text="${item.descripcion}"
-									            th:selected="${item.codigo} == ${estadoParam} ? true : false">
+									            th:selected="${item.codigo} == ${estadoFiltro} ? true : false">
 									    </option>
 									</select>
 								</div>

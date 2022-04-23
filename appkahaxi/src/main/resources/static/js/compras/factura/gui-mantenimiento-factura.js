@@ -2,7 +2,7 @@
 var formFactura;
 var campoBuscar;
 var nroComprobantePago;
-var nroOC;
+var nroOrdenCompra;
 var codRepuesto;
 var fecContaDesde;
 var fecContaHasta;
@@ -32,7 +32,7 @@ function inicializarVariables() {
 	formFactura = $('#formFactura');
 	campoBuscar = $('#campoBuscar');
 	nroComprobantePago = $('#nroComprobantePago');
-	nroOC = $('#nroOC');
+	nroOrdenCompra = $('#nroOrdenCompra');
 	codRepuesto = $('#codRepuesto');
 	fecContaDesde = $('#fecContaDesde');
 	fecContaHasta = $('#fecContaHasta');
@@ -145,11 +145,11 @@ function inicializarEventos(){
 	});
 	
 	nroComprobantePago.on('keyup', function (e) {
-		nroFacturaKeyUp(e);
+		nroComprobantePagoKeyUp(e);
 	});
 	
-	nroOC.on('keyup', function (e) {
-		nroOCKeyUp(e);
+	nroOrdenCompra.on('keyup', function (e) {
+		nroOrdenCompraKeyUp(e);
 	});
 	
 	codRepuesto.on('keyup', function (e) {
@@ -193,7 +193,7 @@ function inicializarTabla(){
 			data: function ( d ) {
 				d.datoBuscar 			= campoBuscar.val().trim();
             	d.nroComprobantePago	= nroComprobantePago.val().trim();
-            	d.nroOrdenCompra		= nroOC.val().trim();
+            	d.nroOrdenCompra		= nroOrdenCompra.val().trim();
             	d.codRepuesto			= codRepuesto.val().trim();
             	d.codEstado 			= estado.val();
             	d.fechaDesde 			= fecContaDesde.datetimepicker('date').format('YYYY-MM-DD');
@@ -371,7 +371,7 @@ function inicializarTabla(){
 	    if(data.ordenCompra == 'DIRECTA') {
 			cargarFacturaDirecta(data.numeroDocumento, Opcion.VER);
 		} else {
-			cargarFacturaAsociada(data.numeroDocumento, Opcion.VER);
+			cargarFacturaAsociada(data.numeroDocumento);
 		}
 	});
 }
@@ -388,14 +388,14 @@ function campoBuscarKeyUp(e){
 	}
 }
 
-function nroFacturaKeyUp(e){
+function nroComprobantePagoKeyUp(e){
 	var key = window.Event ? e.which : e.keyCode;
 	if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
 		buscar(e);
 	}
 }
 
-function nroOCKeyUp(e){
+function nroOrdenCompraKeyUp(e){
 	var key = window.Event ? e.which : e.keyCode;
 	if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
 		buscar(e);
@@ -409,41 +409,68 @@ function codRepuestoKeyUp(e){
 	}
 }
 
-function cargarFacturaDirecta(numeroDocumento, opcion) {
+function cargarFacturaAsociada(nroComprobantePagoOrigen) {
 	var params;
-	var datoBuscar 			= campoBuscar.val();
-	var nroFacturaVal 		= nroComprobantePago.val();
-	var nroOCVal 			= nroOC.val();
-	var codRpto 			= codRepuesto.val();
-	var fecContDesde 		= fecContaDesde.datetimepicker('date').format('L');
-	var fecContHasta 		= fecContaHasta.datetimepicker('date').format('L');
-	var est 				= estado.val();
-	// armando los parámetros
-	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar +  
-			 "&nroComprobantePago=" + nroFacturaVal + "&nroOrdenCompra=" + nroOCVal + "&codRepuesto=" + codRpto +
-			 "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.NO;
+	
+	var campoBuscarFiltro 			= campoBuscar.val();
+	var nroComprobantePagoFiltro 	= nroComprobantePago.val();
+	var nroOrdenCompraFiltro 		= nroOrdenCompra.val();
+	var codRepuestoFiltro 			= codRepuesto.val();
+	var fecDesdeFiltro 				= fecContaDesde.datetimepicker('date').format('L');
+	var fecHastaFiltro 				= fecContaHasta.datetimepicker('date').format('L');
+	var estadoFiltro 				= estado.val();
 		
-	window.location.href = "/appkahaxi/nueva-factura-compra-directa?" + params;
+	// armando los parámetros
+	params = 
+		"campoBuscarFiltro=" + campoBuscarFiltro +  
+		"&nroComprobantePagoFiltro=" + nroComprobantePagoFiltro + 
+		"&nroOrdenCompraFiltro=" + nroOrdenCompraFiltro + 
+		"&codRepuestoFiltro=" + codRepuestoFiltro + 
+		"&fecDesdeFiltro=" + fecDesdeFiltro + 
+		"&fecHastaFiltro=" + fecHastaFiltro + 
+		"&estadoFiltro=" + estadoFiltro + 
+	
+		"&nroGuiaRemisionFiltro=" +
+		"&deListaOC=" + 
+		"&nroOrdenCompraOrigen=" +
+		
+		"&deListaGR=" +
+		"&nroGuiaRemisionOrigen=" +
+		"&listaGRSeleccionadas=" +
+		
+		"&deListaCP=" + Respuesta.SI +
+		"&nroComprobantePagoOrigen=" + nroComprobantePagoOrigen +
+		"&opcion=" + Opcion.VER;
+
+	window.location.href = "/appkahaxi/cargar-factura-compra-asociada?" + params;
 }
 
-function cargarFacturaAsociada(numeroDocumento, opcion) {
-
+function cargarFacturaDirecta(nroComprobantePagoOrigen, opcion) {
 	var params;
-	var datoBuscar 			= campoBuscar.val();
-	var nroFacturaVal 		= nroComprobantePago.val();
-	var nroOCVal 			= nroOC.val();
-	var codRpto 			= codRepuesto.val();
-	var fecContDesde 		= fecContaDesde.datetimepicker('date').format('L');
-	var fecContHasta 		= fecContaHasta.datetimepicker('date').format('L');
-	var est 				= estado.val();
+	
+	var campoBuscarFiltro 			= campoBuscar.val();
+	var nroComprobantePagoFiltro 	= nroComprobantePago.val();
+	var nroOrdenCompraFiltro 		= nroOrdenCompra.val();
+	var codRepuestoFiltro 			= codRepuesto.val();
+	var fecDesdeFiltro 				= fecContaDesde.datetimepicker('date').format('L');
+	var fecHastaFiltro 				= fecContaHasta.datetimepicker('date').format('L');
+	var estadoFiltro 				= estado.val();
+		
 	// armando los parámetros
-	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar +
-			 "&nroComprobantePago=" + nroFacturaVal + "&nroOrdenCompra=" + nroOCVal + "&codRepuesto=" + codRpto +
-			 "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.NO + 
-			 "&nroGuiaRemision=&nroGr=" + numeroDocumento + "&guias=" + "&origenMnto=" + Respuesta.NO;
-		"&guias=";
-
-	window.location.href = "/appkahaxi/nueva-factura-compra-asociada?" + params;
+	params = 
+		"campoBuscarFiltro=" + campoBuscarFiltro +  
+		"&nroComprobantePagoFiltro=" + nroComprobantePagoFiltro + 
+		"&nroOrdenCompraFiltro=" + nroOrdenCompraFiltro + 
+		"&codRepuestoFiltro=" + codRepuestoFiltro + 
+		"&fecDesdeFiltro=" + fecDesdeFiltro + 
+		"&fecHastaFiltro=" + fecHastaFiltro + 
+		"&estadoFiltro=" + estadoFiltro + 
+	
+		"&deListaCP=" + Respuesta.SI +
+		"&nroComprobantePagoOrigen=" + nroComprobantePagoOrigen +
+		"&opcion=" + opcion;
+		
+	window.location.href = "/appkahaxi/cargar-factura-compra-directa?" + params;
 }
 
 function buscar(event){
@@ -468,7 +495,7 @@ function limpiar(e){
 	
 	campoBuscar.val(CADENA_VACIA);
 	nroComprobantePago.val(CADENA_VACIA);
-	nroOC.val(CADENA_VACIA);
+	nroOrdenCompra.val(CADENA_VACIA);
 	codRepuesto.val(CADENA_VACIA);
 	estado.val(CADENA_VACIA);
 	

@@ -1,8 +1,8 @@
 // campos de formulario
 var formGuiaRemision;
 var campoBuscar;
-var nroGuia;
-var nroOC;
+var nroGuiaRemision;
+var nroOrdenCompra;
 var codRepuesto;
 var fecContaDesde;
 var fecContaHasta;
@@ -30,8 +30,8 @@ $(document).ready(function(){
 function inicializarVariables() {
 	formGuiaRemision = $('#formGuiaRemision');
 	campoBuscar = $('#campoBuscar');
-	nroGuia = $('#nroGuia');
-	nroOC = $('#nroOC');
+	nroGuiaRemision = $('#nroGuiaRemision');
+	nroOrdenCompra = $('#nroOrdenCompra');
 	codRepuesto = $('#codRepuesto');
 	
 	fecContaDesde = $('#fecContaDesde');
@@ -143,12 +143,12 @@ function inicializarEventos(){
 		campoBuscarKeyUp(e);
 	});
 	
-	nroGuia.on('keyup', function (e) {
-		nroGuiaKeyUp(e);
+	nroGuiaRemision.on('keyup', function (e) {
+		nroGuiaRemisionKeyUp(e);
 	});
 	
-	nroOC.on('keyup', function (e) {
-		nroOCKeyUp(e);
+	nroOrdenCompra.on('keyup', function (e) {
+		nroOrdenCompraKeyUp(e);
 	});
 	
 	codRepuesto.on('keyup', function (e) {
@@ -187,8 +187,8 @@ function inicializarTabla(){
             // se pasa la data de esta forma para poder reinicializar luego sólo la llamada ajax sin tener que dibujar de nuevo toda la tabla
 			data: function ( d ) {
 				d.datoBuscar 		= campoBuscar.val().trim();
-				d.nroGuiaRemision	= nroGuia.val().trim();
-            	d.nroOrdenCompra	= nroOC.val().trim();
+				d.nroGuiaRemision	= nroGuiaRemision.val().trim();
+            	d.nroOrdenCompra	= nroOrdenCompra.val().trim();
             	d.codRepuesto		= codRepuesto.val().trim();
             	d.codEstado 		= estado.val();
             	d.fechaDesde 		= fecContaDesde.datetimepicker('date').format('YYYY-MM-DD');
@@ -317,10 +317,15 @@ function inicializarTabla(){
                 if(data.codigoEstado == EstadoGuiaRemision.ANULADO){
             		$(row).addClass("estadoRechazado");
             	}else if(data.codigoEstado == EstadoGuiaRemision.GENERADO){
-					if(data.codigoEstadoProceso == EstadoProceso.CERRADO){
+					if(data.codigoEstadoProceso == EstadoProceso.ABIERTO){
+						$(row).addClass("estadoAprobadoAbierto");	
+					}else if(data.codigoEstadoProceso == EstadoProceso.CERRADO){
 						$(row).addClass("estadoAprobadoCerrado");
+					}else{
+						$(row).addClass("estadoAprobadoIntermedio");
 					}
             	}
+
                 // colocando la numeración
                 $('td:eq(0)', row).html(index);
                  
@@ -335,7 +340,7 @@ function inicializarTabla(){
 	
 	$('#tablaGuiaRemision tbody').on('click','.btn-view', function () {
 	    var data = dataTableGuiaRemision.row( $(this).closest('tr')).data();
-	    cargarGuiaRemision(data.numeroDocumento, Opcion.VER);
+	    cargarGuiaRemision(data.numeroDocumento);
 	});
 	 
 }
@@ -351,14 +356,14 @@ function campoBuscarKeyUp(e){
 	}
 }
 
-function nroGuiaKeyUp(e){
+function nroGuiaRemisionKeyUp(e){
 	var key = window.Event ? e.which : e.keyCode;
 	if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
 		buscar(e);
 	}
 }
 
-function nroOCKeyUp(e){
+function nroOrdenCompraKeyUp(e){
 	var key = window.Event ? e.which : e.keyCode;
 	if((key >= 48 && key <= 57) || (key >= 65 && key <= 90) || (key >= 96 && key <= 105) || key == 8 || key == 46 ){ // 65-90 (letras) *** 48-57/96-105 (digitos) *** BACKSPACE *** DELETE
 		buscar(e);
@@ -372,20 +377,33 @@ function codRepuestoKeyUp(e){
 	}
 }
 
-function cargarGuiaRemision(numeroDocumento, opcion) {
+function cargarGuiaRemision(nroGuiaRemisionOrigen) {
 	var params;
-	var datoBuscar 			= campoBuscar.val();
-	var nroGuiaVal 			= nroGuia.val();
-	var nroOCVal 			= nroOC.val();
-	var codRpto 			= codRepuesto.val();
-	var fecContDesde 		= fecContaDesde.datetimepicker('date').format('L');
-	var fecContHasta 		= fecContaHasta.datetimepicker('date').format('L');
-	var est 				= estado.val();
+	
+	var campoBuscarFiltro 		= campoBuscar.val();
+	var nroGuiaRemisionFiltro 	= nroGuiaRemision.val();
+	var nroOrdenCompraFiltro 	= nroOrdenCompra.val();
+	var codRepuestoFiltro 		= codRepuesto.val();
+	var fecDesdeFiltro 			= fecContaDesde.datetimepicker('date').format('L');
+	var fecHastaFiltro 			= fecContaHasta.datetimepicker('date').format('L');
+	var estadoFiltro 			= estado.val();
+		
 	// armando los parámetros
-	params = "numeroDocumento=" + numeroDocumento + "&opcion=" + opcion + "&datoBuscar=" + datoBuscar +  
-			 "&nroGuiaRemision=" + nroGuiaVal + "&nroOrdenCompra=" + nroOCVal + "&codRepuesto=" + codRpto + 
-		     "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + 
-			 "&desdeDocRef=" + Respuesta.NO + "&origenMnto=" + Respuesta.SI;
+	params = 
+		"campoBuscarFiltro=" + campoBuscarFiltro +  
+		"&nroGuiaRemisionFiltro=" + nroGuiaRemisionFiltro + 
+		"&nroOrdenCompraFiltro=" + nroOrdenCompraFiltro + 
+		"&codRepuestoFiltro=" + codRepuestoFiltro + 
+		"&fecDesdeFiltro=" + fecDesdeFiltro + 
+		"&fecHastaFiltro=" + fecHastaFiltro + 
+		"&estadoFiltro=" + estadoFiltro + 
+		
+		"&deListaOC=" + 
+		"&nroOrdenCompraOrigen=" +
+		
+		"&deListaGR=" + Respuesta.SI +
+		"&nroGuiaRemisionOrigen=" + nroGuiaRemisionOrigen +
+		"&opcion=" + Opcion.VER;
 	
 	window.location.href = "/appkahaxi/cargar-guia-remision-compra?" + params;
 }
@@ -411,8 +429,8 @@ function limpiar(e){
 	esLimpiar = true;
 	
 	campoBuscar.val(CADENA_VACIA);
-	nroGuia.val(CADENA_VACIA);
-	nroOC.val(CADENA_VACIA);
+	nroGuiaRemision.val(CADENA_VACIA);
+	nroOrdenCompra.val(CADENA_VACIA);
 	codRepuesto.val(CADENA_VACIA);
 	estado.val(CADENA_VACIA);
 	
