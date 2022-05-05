@@ -958,7 +958,7 @@ function registrarFacturaCompra(){
 					deshabilitarControl(condPago);
 					deshabilitarControl(dias);
 					deshabilitarControl(dateTimePickerInput);
-					deshabilitarControl(observaciones);
+					habilitarControl(observaciones);
 					mostrarControl(btnAnular);
 					btnAnular.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
 					mostrarControl(btnVolver);
@@ -975,7 +975,7 @@ function registrarFacturaCompra(){
 
 			} else if(xhr.status == HttpStatus.Accepted){
 
-				mostrarMensajeValidacion(resultado);
+				mostrarMensajeValidacion(resultado, serie);
 			}
 
 			loadding(false);
@@ -1128,7 +1128,7 @@ function mostrarDialogoRegistrarFacturaPagado() {
 function mostrarDialogoAnularFactura(event) {
 
 	bootbox.confirm({
-		message: "¿Está seguro que desea anular la Factura?",
+		message: "Esta operación es IRREVERSIBLE.</br>¿Está seguro que desea anular la Factura?",
 		buttons: {
 			confirm: {
 				label: 'Sí',

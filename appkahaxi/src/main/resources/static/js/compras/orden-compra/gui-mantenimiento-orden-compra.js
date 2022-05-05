@@ -212,69 +212,87 @@ function inicializarTabla(){
 		"scrollCollapse": false,
 		"ordering"      : true,
 		"deferRender"   : true,
-		"autoWidth"		: false,
+		"autoWidth"		: true,
 		"paging"	    : true,
 		"stateSave"		: true,
+		// GENIAL! se usa esta propiedad para no perder el color de las filas al ordenar las columnas
+		"sortClasses"	: false,
 		"dom"			: '<ip<rt>lp>',
         "lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
 
         "columnDefs"    : [
             {
-                "width": "1px",
+                
                 "targets": [0],
-                "data": "id"
+                "data": "id",
+				"orderable": false
             },
             {
-                "width": "30px",
+                
                 "targets": [1],
                 "data": "numeroDocumento"
             },
             {
-                "width": "5px",
+               
                 "targets": [2],
                 "data": "codigoProv",
                 "visible": false
             },
             {
-                "width": "40px",
+                
                 "targets": [3],
                 "data": "fechaRegistro"
             },
             {
-                "width": "40px",
+                
                 "targets": [4],
                 "data": "nroDocProv"
             },
             {
-                "width": "250px",
+                
                 "targets": [5],
                 "data": "nombreProv"
             },
             {
-                "width": "30px",
+                
                 "targets": [6],
                 "data": "fechaContabilizacion"
             },
             {
-                "width": "100px",
+                
                 "targets": [7],
                 "data": "descripcionTipoMoneda"
                 
             },
             {
-                "width": "30px",
+                
                 "targets": [8],
                 "data": "descripcionCondPago"
                 
             },
             {
-                "width": "40px",
+                
                 "targets": [9],
                 "data": "descripcionEstado"
             },
             {
-                "width": "40px",
+               
                 "targets": [10],
+                "data": "codigoEstadoProceso",
+				"render":
+                    function (data, type, row ) {		
+						if(data == EstadoProceso.ABIERTO){
+							return "ABIERTO";
+						}else if(data == EstadoProceso.EN_PROCESO){
+							return "EN PROCESO";
+						}else{
+							return "CERRADO";
+						}
+                    }
+            },
+            {
+               
+                "targets": [11],
                 "data": "total",
 				"render":
                     function (data, type, row ) {
@@ -282,8 +300,7 @@ function inicializarTabla(){
                     }
             },
             {
-                "width": "100px",
-                "targets": [11],
+                "targets": [12],
                 "data": null,
                 "className": "dt-body-center",
                 "orderable": false,
@@ -310,13 +327,13 @@ function inicializarTabla(){
                 var index = iDisplayIndexFull + 1;
                 // colocando el estilo de la moneda
 				if(data.codigoTipoMoneda == Moneda.SOLES){
-					$('td:eq(9)', row).addClass('dt-body-right listado-symbol-sol');
+					$('td:eq(10)', row).addClass('dt-body-right listado-symbol-sol');
 				}else{
-					$('td:eq(9)', row).addClass('dt-body-right listado-symbol-dolar');
+					$('td:eq(10)', row).addClass('dt-body-right listado-symbol-dolar');
 				}
 				
 				// pintando las filas según estado
-                if(data.codigoEstado == EstadoDocumentoInicial.RECHAZADO){
+                if(data.codigoEstado == EstadoDocumentoInicial.ANULADO){
             		$(row).addClass("estadoRechazado");
             	}else if(data.codigoEstado == EstadoDocumentoInicial.APROBADO){
 					if(data.codigoEstadoProceso == EstadoProceso.ABIERTO){

@@ -276,4 +276,35 @@ public class OrdenCompraServiceImpl implements OrdenCompraService {
 		
 	}	
 
+	public void anularOrdenCompra(CompraCabModel compraCabModel, String usuario) throws Exception {
+
+        logger.info("compraCabModel ===> " + compraCabModel.toString());
+
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_USUARIO, usuario);
+        params.put(Constante.PARAM_SP_NRO_DOCUMENTO, compraCabModel.getNumeroDocumento());
+        params.put(Constante.PARAM_SP_OBSERVACIONES, compraCabModel.getObservaciones());
+
+        logger.info("params ===> " + params);
+
+        ordenCompraMapper.anularOrdenCompra(params);
+
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+
+        logger.info("flagResultado ===> " + flagResultado);
+        logger.info("mensajeResultado ===> " + mensajeResultado);
+
+        if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+            logger.info(mensajeResultado);
+
+        } else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+            throw new ErrorControladoException(mensajeResultado);
+
+        } else {
+            throw new Exception(mensajeResultado);
+
+        }
+
+    }
 }

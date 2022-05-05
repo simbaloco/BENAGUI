@@ -74,7 +74,7 @@ public class Constante {
 		
 	
 	/* COTIZACION VENTAS */
-	public static final String PAGINA_NUEVA_COTIZACION = "paginas/ventas/cotizacion/nueva-cotizacion";
+	public static final String PAGINA_CARGAR_COTIZACION = "paginas/ventas/cotizacion/cotizacion-venta";
 	public static final String PAGINA_MANTENIMIENTO_COTIZACION = "paginas/ventas/cotizacion/mantenimiento-cotizacion";
 	/* ORDEN DE VENTA */
 	public static final String PAGINA_NUEVA_ORDEN_VENTA = "paginas/ventas/ordenventa/nueva-orden-venta";

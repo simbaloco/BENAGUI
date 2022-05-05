@@ -216,74 +216,79 @@ function inicializarTabla(){
 		"scrollCollapse": false,
 		"ordering"      : true,
 		"deferRender"   : true,
-		"autoWidth"		: false,
+		"autoWidth"		: true,
 		"paging"	    : true,
 		"stateSave"		: true,
+		// GENIAL! se usa esta propiedad para no perder el color de las filas al ordenar las columnas
+		"sortClasses"	: false,
 		"dom"			: '<ip<rt>lp>',
         "lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
 
         "columnDefs"    : [
             {
-                "width": "1px",
                 "targets": [0],
                 "data": "id"
             },
             {
-                "width": "30px",
                 "targets": [1],
                 "data": "numeroDocumento"
             },
             {
-                "width": "50px",
                 "targets": [2],
                 "data": "nroRequerimiento"
             },
             {
-                "width": "5px",
                 "targets": [3],
                 "data": "codigoCliente",
                 "visible": false
             },
             {
-                "width": "40px",
                 "targets": [4],
                 "data": "fechaRegistro"
             },
             {
-                "width": "40px",
                 "targets": [5],
                 "data": "nroDocCliente"
             },
             {
-                "width": "300px",
                 "targets": [6],
                 "data": "nombreCliente"
             },
             {
-                "width": "30px",
                 "targets": [7],
                 "data": "fechaContabilizacion"
             },
             {
-                "width": "80px",
                 "targets": [8],
                 "data": "descripcionTipoMoneda"
                 
             },
             {
-                "width": "30px",
                 "targets": [9],
                 "data": "descripcionCondPago"
                 
             },
             {
-                "width": "50px",
                 "targets": [10],
                 "data": "descripcionEstado"
             },
             {
-                "width": "80px",
+               
                 "targets": [11],
+                "data": "codigoEstadoProceso",
+				"render":
+                    function (data, type, row ) {		
+						if(data == EstadoProceso.ABIERTO){
+							return "ABIERTO";
+						}else if(data == EstadoProceso.EN_PROCESO){
+							return "EN PROCESO";
+						}else{
+							return "CERRADO";
+						}
+                    }
+            },
+            {
+                "targets": [12],
                 "data": "total",
 				"render":
                     function (data, type, row ) {
@@ -291,8 +296,7 @@ function inicializarTabla(){
                     }
             },
             {
-                "width": "5px",
-                "targets": [12],
+                "targets": [13],
                 "data": "activo",
                 "className": "dt-body-center",
                 "orderable": false,
@@ -314,13 +318,13 @@ function inicializarTabla(){
                 var index = iDisplayIndexFull + 1;
                 // colocando el estilo de la moneda
 				if(data.codigoTipoMoneda == Moneda.SOLES){
-					$('td:eq(10)', row).addClass('dt-body-right listado-symbol-sol');
+					$('td:eq(11)', row).addClass('dt-body-right listado-symbol-sol');
 				}else{
-					$('td:eq(10)', row).addClass('dt-body-right listado-symbol-dolar');
+					$('td:eq(11)', row).addClass('dt-body-right listado-symbol-dolar');
 				}
 				
 				// pintando las filas según estado
-                if(data.codigoEstado == EstadoDocumentoInicial.RECHAZADO){
+                if(data.codigoEstado == EstadoDocumentoInicial.ANULADO){
             		$(row).addClass("estadoRechazado");
             	}else if(data.codigoEstado == EstadoDocumentoInicial.APROBADO){
 					if(data.codigoEstadoProceso == EstadoProceso.ABIERTO){
@@ -403,7 +407,7 @@ function nuevaCotizacionVenta(numeroDocumento, opcion){
 			 // indica que se debe VOLVER, ya que se invoca desde la pantalla de búsqueda
 		     "&volver=" + Respuesta.SI;
 	
-	window.location.href = "/appkahaxi/nueva-cotizacion?" + params;
+	window.location.href = "/appkahaxi/cargar-cotizacion?" + params;
 }
 
 function buscar(event){

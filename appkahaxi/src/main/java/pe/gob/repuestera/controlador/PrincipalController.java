@@ -2,6 +2,7 @@
 package pe.gob.repuestera.controlador;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
@@ -137,6 +138,9 @@ public class PrincipalController {
 			List<ComboModel> listaCondPago = genericService.cargarCombo(Constante.CATALOGO_CONDICION_PAGO);
 			List<ComboModel> listaDias = genericService.cargarCombo(Constante.CATALOGO_DIAS_PC);
 			List<ComboModel> listaEstado = genericService.cargarCombo(Constante.CATALOGO_ESTADO_COTI);
+			// nos quedamos sólo con aquellos valores diferentes a "ANULADO"
+			listaEstado = listaEstado.stream().filter(t -> !t.getCodigo().equals("03")).collect(Collectors.toList());			
+						
 			model.addAttribute("listaMoneda", listaMoneda);
 			model.addAttribute("listaCondPago", listaCondPago);
 			model.addAttribute("listaDias", listaDias);
@@ -431,7 +435,7 @@ public class PrincipalController {
 		return retorno;
 	}
 
-	@GetMapping("/nueva-cotizacion")
+	@GetMapping("/cargar-cotizacion")
     public String cargarNuevaCotizacion(Model model, @RequestParam(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento, 
     												 @RequestParam(Constante.PARAM_OPCION) String opcion,
     												 @RequestParam(Constante.PARAM_DATO_BUSCAR) String datoBuscar,
@@ -464,12 +468,15 @@ public class PrincipalController {
 			List<ComboModel> listaCondPago = genericService.cargarCombo(Constante.CATALOGO_CONDICION_PAGO);
 			List<ComboModel> listaDias = genericService.cargarCombo(Constante.CATALOGO_DIAS_PC);
 			List<ComboModel> listaEstado = genericService.cargarCombo(Constante.CATALOGO_ESTADO_COTI);
+			// nos quedamos sólo con aquellos valores diferentes a "ANULADO"
+			listaEstado = listaEstado.stream().filter(t -> !t.getCodigo().equals("03")).collect(Collectors.toList());
+						
 			model.addAttribute("listaMoneda", listaMoneda);
 			model.addAttribute("listaCondPago", listaCondPago);
 			model.addAttribute("listaDias", listaDias);
 			model.addAttribute("listaEstado", listaEstado);
 			
-			retorno = Constante.PAGINA_NUEVA_COTIZACION;
+			retorno = Constante.PAGINA_CARGAR_COTIZACION;
 			logger.info("saliendo del método cargarNuevaCotizacion");
 		}catch (Exception e) {
 			// TODO: handle exception

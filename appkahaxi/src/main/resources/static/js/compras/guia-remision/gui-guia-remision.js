@@ -552,22 +552,24 @@ function verPantallaGuiaRemision(data) {
 	deshabilitarControl(dias);
 	deshabilitarControl(serie);
 	deshabilitarControl(correlativo);
-	deshabilitarControl(observaciones);
-	controlNoRequerido(observaciones);
+	habilitarControl(observaciones);
 	
 	if(data.codigoEstado == EstadoGuiaRemision.GENERADO){
 		if(data.codigoEstadoProceso == EstadoProceso.CERRADO){
-			// estado proceso CERRADO
+			// estado proceso CERRADO: ya no se puede anular
 			ocultarControl(btnGenerarFactura);
 			mostrarControl(btnIrFactura);
-
+			deshabilitarControl(observaciones);
 		}else{
-			// estado proceso ABIERTO o INTERMEDIO
+			// estado proceso ABIERTO o EN_PROCESO
 			mostrarControl(btnGenerarFactura);
+			// EN PROCESO: ya no se puede anular
 			if(data.cantidadFacturasAsociadas > 0) {
 				ocultarControl(btnAnular);
 				mostrarControl(btnIrFactura);
+				deshabilitarControl(observaciones);
 			} else {
+				// ABIERTO: se puede anular y se deben poner observaciones
 				mostrarControl(btnAnular);
 				btnAnular.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
 				//habilitarControl(observaciones);
@@ -578,6 +580,7 @@ function verPantallaGuiaRemision(data) {
 	}else{
 		// es ANULADO
 		mostrarControl(lblAnulado);
+		deshabilitarControl(observaciones);
 	}
 	
 	var listaGR = deListaGR.text();
@@ -588,7 +591,7 @@ function verPantallaGuiaRemision(data) {
 	}
 	
 	ocultarControl(btnGrabar);
-	btnAnular.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
+	//btnAnular.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
 	
 	ocultarControl(btnLimpiar);
 
@@ -967,7 +970,7 @@ function registrarGuiaRemisionCompra(){
 				deshabilitarControl(serie);
 				deshabilitarControl(correlativo);
 				deshabilitarControl(motivoTraslado);
-				deshabilitarControl(observaciones);
+				habilitarControl(observaciones);
 				deshabilitarControl(dateTimePickerInput);
 				deshabilitarControl(direccionDespacho);
 				deshabilitarControl(personaContacto);
@@ -981,7 +984,7 @@ function registrarGuiaRemisionCompra(){
 
 			} else if(xhr.status == HttpStatus.Accepted){
 				console.log("aaaa")
-				mostrarMensajeValidacion(resultado);
+				mostrarMensajeValidacion(resultado, serie);
 			}
 
 			loadding(false);
@@ -1117,7 +1120,7 @@ function mostrarDialogoEliminarFila(table, row){
 function mostrarDialogoAnularGuiaRemision(event) {
 
 	bootbox.confirm({
-		message: "¿Está seguro que desea anular la Guía de Remisión?",
+		message: "Esta operación es IRREVERSIBLE.</br>¿Está seguro que desea anular la Guía de Remisión?",
 		buttons: {
 			confirm: {
 				label: 'Sí',

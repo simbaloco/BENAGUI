@@ -1,19 +1,26 @@
 package pe.gob.repuestera.controlador.rest.compra.ordencompra;
 
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+
 import pe.gob.repuestera.model.CompraCabModel;
 import pe.gob.repuestera.model.CompraDetModel;
 import pe.gob.repuestera.model.UsuarioModel;
 import pe.gob.repuestera.service.compra.ordencompra.OrdenCompraService;
 import pe.gob.repuestera.util.Constante;
-
-import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @RestController
 public class OrdenCompraRestController {
@@ -102,6 +109,22 @@ public class OrdenCompraRestController {
         logger.info("Fin actualizarOrdenCompra.......");
 
         return new ResponseEntity<>(HttpStatus.OK);
-    }    
+    }
+    
+    @PostMapping("/anularOrdenCompra")
+    public ResponseEntity<String> anularOrdenCompra(@RequestPart("registro") CompraCabModel compraCabModel) throws Exception {
+
+        logger.info("Inicio anularOrdenCompra.......");
+
+
+        String usuario = ((UsuarioModel)session.getAttribute("usuarioLogueado")).getUsername();
+
+        ordenCompraService.anularOrdenCompra(compraCabModel, usuario);
+
+        logger.info("Fin anularOrdenCompra.......");
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
     
 }

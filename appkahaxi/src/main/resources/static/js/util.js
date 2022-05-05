@@ -132,9 +132,9 @@ var Respuesta = {
 };
 
 var EstadoDocumentoInicial = {
-		POR_APROBAR			: "01",
-		APROBADO			: "02",
-		RECHAZADO			: "03"
+		POR_APROBAR		: "01",
+		APROBADO		: "02",
+		ANULADO			: "03"
 };
 
 var EstadoGuiaRemision = {
@@ -149,7 +149,8 @@ var EstadoFactura = {
 
 var EstadoProceso = {
 		ABIERTO			: "A",
-		CERRADO			: "C"
+		CERRADO			: "C",
+		EN_PROCESO		: "P"
 };
 
 var CondicionPago = {

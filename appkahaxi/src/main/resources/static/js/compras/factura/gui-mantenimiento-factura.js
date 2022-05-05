@@ -218,78 +218,80 @@ function inicializarTabla(){
 		"scrollCollapse": false,
 		"ordering"      : true,
 		"deferRender"   : true,
-		"autoWidth"		: false,
+		"autoWidth"		: true,
 		"paging"	    : true,
 		"stateSave"		: true,
+		// GENIAL! se usa esta propiedad para no perder el color de las filas al ordenar las columnas
+		"sortClasses"	: false,
 		"dom"			: '<ip<rt>lp>',
         "lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
 
         "columnDefs"    : [
             {
-                "width": "1px",
+                
                 "targets": [0],
                 "data": "id"
             },
             {
-                "width": "10px",
+                
                 "targets": [1],
                 "data": "numeroDocumento"
             },
 			{
-				"width": "50px",
+				
 				"targets": [2],
 				"data": "ordenCompra"
 			},
 			{
-				"width": "10px",
+				
 				"targets": [3],
 				"data": "fechaRegistroFormato"
 			},
 			{
-				"width": "5px",
+				
 				"targets": [4],
 				"data": "serieCorrelativo"
 			},
             {
-                "width": "25px",
+               
                 "targets": [5],
                 "data": "nroDocProv"
             },
             {
-                "width": "200px",
+                
                 "targets": [6],
                 "data": "nombreProv"
             },
             {
-                "width": "10px",
+                
                 "targets": [7],
                 "data": "fechaContabilizacion"
             },
             {
-                "width": "20px",
+                
                 "targets": [8],
                 "data": "descripcionTipoMoneda"
                 
             },
             {
-                "width": "10px",
+                
                 "targets": [9],
                 "data": "descripcionCondPago"
                 
             },
 			{
-				"width": "10px",
+				
 				"targets": [10],
-				"data": "descripcionEstadoPago"
+				"data": "descripcionEstado"
 
 			},
 			{
-                "width": "10px",
+                
                 "targets": [11],
-                "data": "descripcionEstado"
+                "data": "descripcionEstadoPago"
             },
             {
-				"width": "20px",
+				
 				"targets": [12],
 				"data": "total",
 				"render":
@@ -298,7 +300,7 @@ function inicializarTabla(){
 					}
 			},
             {
-                "width": "5px",
+                
                 "targets": [13],
                 "data": "activo",
                 "className": "dt-body-center",
@@ -331,12 +333,7 @@ function inicializarTabla(){
 				
 				// pintando las filas según estado
                 if(data.codigoEstado == EstadoFactura.ANULADO){
-            		// si anulamos una FACTURA DIRECTA
-					if(data.ordenCompra == 'DIRECTA'){
-						$(row).addClass('facturaDirectaAnulada');
-					}else{
-						$(row).addClass("estadoRechazado");	
-					}
+            		$(row).addClass("estadoRechazado");
             	}else if(data.codigoEstado == EstadoFactura.GENERADO){
 					
 					if(data.codigoEstadoProceso == EstadoProceso.CERRADO){

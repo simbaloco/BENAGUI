@@ -35,7 +35,10 @@
 	
 	<button type="button" id="btnGrabar" class="btn-flotante-grabar">
 		<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
-    </button>			
+    </button>
+    <button type="button" id="btnAnular" class="btn-flotante-anular" style="display: none">
+		<span class="mr-2"><i class="fas fa-trash"></i></span>Anular
+	</button>	
 	<button type="button" id="btnDuplicar" class="btn-flotante-duplicar" style="display: none">
 		<span class="mr-2"><i class="fas fa-copy"></i></span>Duplicar
     </button>
@@ -69,7 +72,7 @@
 
 										<div class="table-responsive">
 
-											<table id="tableSeleccionDocumento" class="table table-hover table-striped table-bordered dt-responsive">
+											<table id="tableSeleccionDocumento" class="table table-bordered dt-responsive">
 
 												<thead class="text-center">
 												<tr>
@@ -298,8 +301,9 @@
 							</div>
 
 							<div class="row">
-								<div class="col-md-2">
-									<label class="label" for="estado">Estado:</label> <select
+								<div class="col-md-2" id="divEstado">
+									<label class="label" for="estado">Estado:</label> 
+									<select
 										id="estado" class="form-control" disabled="disabled">
 										<option th:each="item : ${listaEstado}"
 											th:value="${item.codigo}" th:text="${item.descripcion}">
@@ -322,7 +326,7 @@
 
 								<div class="col-md-2">
 									<label class="label" for="lblAnulado">&nbsp;</label>
-									<input class="form-control etiquetaAnulado" type="text" id="lblAnulado" style="display: none" value="RECHAZADO"/>
+									<input class="form-control etiquetaAnulado" type="text" id="lblAnulado" style="display: none" value="ANULADO"/>
 								</div>
 								
 								<div class="col-md-6 alineacion-derecha">
@@ -387,7 +391,7 @@
 
 								<div class="table-responsive">
 
-									<table id="tableDetalle" class="table table-hover table-striped table-bordered dt-responsive">
+									<table id="tableDetalle" class="table table-bordered dt-responsive">
 
 										<thead class="text-center">
 											<tr>

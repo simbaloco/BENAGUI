@@ -608,7 +608,7 @@ function verPantallaOrdenVenta(data) {
 			habilitarControl(estado);
 			ocultarControl(btnGenerarGuiaRemision);
 			ocultarControl(btnIrGuiaRemision);
-		}else if (data.codigoEstado == EstadoDocumentoInicial.RECHAZADO) {
+		}else if (data.codigoEstado == EstadoDocumentoInicial.ANULADO) {
 			ocultarControl(btnGenerarGuiaRemision);
 			ocultarControl(btnIrGuiaRemision);
 			mostrarControl(lblAnulado);
@@ -694,7 +694,7 @@ function verPantallaOrdenVenta(data) {
 		habilitarControl(estado);
 		mostrarControl(btnDuplicar);
 		estado.focus();
-	} else if (data.codigoEstado == EstadoDocumentoInicial.RECHAZADO) {
+	} else if (data.codigoEstado == EstadoDocumentoInicial.ANULADO) {
 		deshabilitarControl(estado);
 		mostrarControl(btnDuplicar);
 		mostrarControl(lblAnulado);
@@ -913,7 +913,7 @@ function evaluarCambioEstado() {
 		habilitarControl(estado);
 		controlNoRequerido(observaciones);
 
-	} else if (estado.val() == EstadoDocumentoInicial.RECHAZADO) {
+	} else if (estado.val() == EstadoDocumentoInicial.ANULADO) {
 		//ocultarControl(btnDuplicar);
 		ocultarControl(btnGenerarGuiaRemision);
 		controlRequerido(observaciones);
@@ -1421,7 +1421,7 @@ function volver(){
 				 // indicador de VOLVER a la página de buscador de cotizaciones desde cotizaciones
 				 "&volver=" + Respuesta.SI;
 		
-		window.location.href = "/appkahaxi/nueva-cotizacion?" + params;
+		window.location.href = "/appkahaxi/cargar-cotizacion?" + params;
 		
 	}else{
 		console.log("else nroDoc:"+nroDoc);

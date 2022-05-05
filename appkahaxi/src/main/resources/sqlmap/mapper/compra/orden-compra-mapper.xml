@@ -129,7 +129,16 @@
         <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
         <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
     </parameterMap>
-          
+    
+    <parameterMap id="anularOrdenCompraParams" type="hashmap">
+        <parameter property="NRO_DOCUMENTO"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="USUARIO"       	    jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="OBSERVACIONES"     	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
+        
         
     <!-- ************************* QUERYS ******************************* -->
     <select id="listarOrdenCompra" parameterMap="listarOrdenCompraParams" resultMap="compraCab" statementType="CALLABLE">
@@ -151,6 +160,9 @@
     <update id="actualizarOrdenCompra" parameterMap="actualizarOrdenCompraParams" statementType="CALLABLE">
     	{CALL SP_ACTUALIZAR_ORDEN_COMPRA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
     </update>
-       
+    
+    <update id="anularOrdenCompra" parameterMap="anularOrdenCompraParams" statementType="CALLABLE">
+        {CALL SP_ANULAR_ORDEN_COMPRA(?,?,?,?,?) }
+    </update>
     
 </mapper>

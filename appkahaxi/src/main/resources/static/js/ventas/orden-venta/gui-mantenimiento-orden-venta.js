@@ -314,7 +314,7 @@ function inicializarTabla(){
 				}
 				
 				// pintando las filas según estado
-                if(data.codigoEstado == EstadoDocumentoInicial.RECHAZADO){
+                if(data.codigoEstado == EstadoDocumentoInicial.ANULADO){
             		$(row).addClass("estadoRechazado");
             	}else if(data.codigoEstado == EstadoDocumentoInicial.APROBADO){
 					if(data.codigoEstadoProceso == EstadoProceso.ABIERTO){

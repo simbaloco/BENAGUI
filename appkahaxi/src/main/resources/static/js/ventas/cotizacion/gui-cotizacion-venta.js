@@ -526,7 +526,7 @@ function verPantallaCotizacionVenta(data) {
 		habilitarControl(estado);
 		
 		estado.focus();
-	}else if(data.codigoEstado == EstadoDocumentoInicial.RECHAZADO){
+	}else if(data.codigoEstado == EstadoDocumentoInicial.ANULADO){
 		deshabilitarControl(estado);
 		
 		//btnVolver.focus();
@@ -1040,7 +1040,7 @@ function evaluarCambioEstado(){
 		habilitarControl(observaciones);
 		controlNoRequerido(observaciones);
 				
-	}else if(estado.val() == EstadoDocumentoInicial.RECHAZADO){
+	}else if(estado.val() == EstadoDocumentoInicial.ANULADO){
 		ocultarControl(btnGenerarOV);
 		ocultarControl(btnDuplicar);
 		mostrarControl(btnGrabar);
@@ -1884,7 +1884,7 @@ function nuevaCotizacionVenta(){
 	var params;
 	// armando los parámetros
 	params = "numeroDocumento=&opcion=&datoBuscar=&nroCotizacion=&nroRequerimiento=&codRepuesto=&fechaDesde=&fechaHasta=&estadoParam=&volver=0";
-	window.location.href = "/appkahaxi/nueva-cotizacion?" + params;
+	window.location.href = "/appkahaxi/cargar-cotizacion?" + params;
 }
 
 function volver(){
