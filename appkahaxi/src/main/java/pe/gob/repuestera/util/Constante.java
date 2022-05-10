@@ -61,6 +61,7 @@ public class Constante {
 	public static final String PAGINA_MANTENIMIENTO_DATA_CATALOGO = "paginas/maestros/mantenimiento-data-catalogo";
 	public static final String PAGINA_MANTENIMIENTO_CATALOGO_DEPENDIENTE = "paginas/maestros/mantenimiento-catalogo-dependiente";
 	
+	/***** COMPRAS *****/
 	/* ORDEN DE COMPRA */
 	public static final String PAGINA_CARGAR_ORDEN_COMPRA = "paginas/compras/ordencompra/orden-compra";
 	public static final String PAGINA_MANTENIMIENTO_ORDEN_COMPRA = "paginas/compras/ordencompra/mantenimiento-orden-compra";
@@ -72,21 +73,21 @@ public class Constante {
 	public static final String PAGINA_CARGAR_FACTURA_COMPRA_ASOCIADA = "paginas/compras/factura/factura-asociada";
 	public static final String PAGINA_MANTENIMIENTO_FACTURA_COMPRA = "paginas/compras/factura/mantenimiento-factura";
 		
-	
+	/***** VENTAS *****/
 	/* COTIZACION VENTAS */
-	public static final String PAGINA_CARGAR_COTIZACION = "paginas/ventas/cotizacion/cotizacion-venta";
+	public static final String PAGINA_CARGAR_COTIZACION_VENTA = "paginas/ventas/cotizacion/cotizacion";
 	public static final String PAGINA_MANTENIMIENTO_COTIZACION = "paginas/ventas/cotizacion/mantenimiento-cotizacion";
 	/* ORDEN DE VENTA */
-	public static final String PAGINA_NUEVA_ORDEN_VENTA = "paginas/ventas/ordenventa/nueva-orden-venta";
+	public static final String PAGINA_CARGAR_ORDEN_VENTA = "paginas/ventas/ordenventa/orden-venta";
 	public static final String PAGINA_MANTENIMIENTO_ORDEN_VENTA= "paginas/ventas/ordenventa/mantenimiento-orden-venta";
-	
 	/* GUIA REMISION VENTAS */
-	public static final String PAGINA_CARGAR_GUIA_REMISION_VENTA = "paginas/ventas/guiaremision/cargar-guia-remision";
+	public static final String PAGINA_CARGAR_GUIA_REMISION_VENTA = "paginas/ventas/guiaremision/guia-remision";
 	public static final String PAGINA_MANTENIMIENTO_GUIA_REMISION_VENTA = "paginas/ventas/guiaremision/mantenimiento-guia-remision";
 	/* COMPROBANTE PAGO VENTAS */
-	public static final String PAGINA_NUEVA_FACTURA_VENTA_DIRECTA = "paginas/ventas/factura/nueva-factura-directa";
-	public static final String PAGINA_NUEVA_FACTURA_VENTA_ASOCIADA = "paginas/ventas/factura/nueva-factura-asociada";
+	public static final String PAGINA_CARGAR_FACTURA_VENTA_DIRECTA = "paginas/ventas/factura/factura-directa";
+	public static final String PAGINA_CARGAR_FACTURA_VENTA_ASOCIADA = "paginas/ventas/factura/factura-asociada";
 	public static final String PAGINA_MANTENIMIENTO_FACTURA_VENTA = "paginas/ventas/factura/mantenimiento-factura";
+	
 	/* REPORTES */
 	public static final String PAGINA_REPORTE_COMPRAS = "paginas/reportes/reporte-compras";
 	public static final String PAGINA_REPORTE_VENTAS = "paginas/reportes/reporte-ventas";

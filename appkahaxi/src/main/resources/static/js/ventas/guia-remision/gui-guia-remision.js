@@ -453,6 +453,7 @@ function cargarPantallaHTMLOrdenVenta(data) {
 	subTotalGR.val(data.subTotal);
 	igvGR.val(data.igv);
 	totalGR.val(data.total);
+	observaciones.val(data.observaciones);
 
 	if(data.porcDctoTotal != null){
 		console.log("dentro del if...");
@@ -1234,7 +1235,7 @@ function mostrarDialogoEliminarFila(table, row) {
 function mostrarDialogoAnularGuiaRemision(event) {
 
 	bootbox.confirm({
-		message: "¿Está seguro que desea anular la Guía de Remisión?",
+		message: "Esta operación es IRREVERSIBLE.</br>¿Está seguro que desea anular la Guía de Remisión?",
 		buttons: {
 			confirm: {
 				label: 'Sí',
@@ -1614,7 +1615,7 @@ function generarFacturaAsociada() {
 	var params = "numeroDocumento=" + OvRef + "&opcion=" + opcion + "&datoBuscar=" + dato + "&fechaDesde=" + fecDesde +
 		"&fechaHasta=" + fecHasta + "&estadoParam=" + estParam + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.SI +
 		"&nroGuiaRemision=" + nroGrParam + "&nroGr=" + nroGr + "&guias=" + guiasRemision + "&origenMnto=" + origenMnto.text();
-	window.location.href = "/appkahaxi/nueva-factura-venta-asociada?" + params;
+	window.location.href = "/appkahaxi/cargar-factura-venta-asociada?" + params;
 
 }
 
@@ -1640,7 +1641,7 @@ function volver() {
 			"&volver=" + Respuesta.SI + 
 			"&desdeDocRef=" + Respuesta.NO + 
 			"&origenMnto=" + origenMnto.text();
-		window.location.href = "/appkahaxi/nueva-orden-venta?" + params;
+		window.location.href = "/appkahaxi/cargar-orden-venta?" + params;
 	} else {
 		console.log("else nroDoc:" + nroDoc);
 		console.log("origenMnto:" + origenMnto.text());
@@ -1651,7 +1652,7 @@ function volver() {
 				"&volver=" + Respuesta.SI + 
 				"&desdeDocRef=" + Respuesta.NO + 
 				"&origenMnto=" + Respuesta.SI;
-			window.location.href = "/appkahaxi/nueva-orden-venta?" + params;
+			window.location.href = "/appkahaxi/cargar-orden-venta?" + params;
 		} else {
 			params = "datoBuscar=" + dato + "&nroGuiaRemision=" + nroGR + "&nroOrdenVenta=" + nroOV + "&codRepuesto=" + codRpto +
 				"&fechaDesde=" + fecDesde + "&fechaHasta=" + fecHasta + "&estadoParam=" + estParam;
@@ -1685,7 +1686,7 @@ function cargarFacturaAsociada(numeroDocumento, opcion) {
 		"&desdeDocRef=" + Respuesta.SI + "&nroGuiaRemision=" + nroGuiaRem + "&nroGr=" + codigo.html() + "&guias=" +
 		"&origenMnto=" + origenMnto.text();
 
-	window.location.href = "/appkahaxi/nueva-factura-venta-asociada?" + params;
+	window.location.href = "/appkahaxi/cargar-factura-venta-asociada?" + params;
 
 }
 

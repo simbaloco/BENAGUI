@@ -23,4 +23,5 @@ public interface OrdenVentaMapper {
 		
 	void actualizarOrdenVenta(Map params);
 	
+	void anularOrdenVenta(Map params);
 }

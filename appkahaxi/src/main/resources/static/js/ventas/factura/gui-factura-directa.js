@@ -1710,7 +1710,7 @@ function nuevaFacturaDirecta(){
 	}
 	
 	console.log("cargarFactura---> params:" + params);
-	window.location.href = "/appkahaxi/nueva-factura-venta-directa?" + params;
+	window.location.href = "/appkahaxi/cargar-factura-venta-directa?" + params;
 }
 
 function volver(listadoTotal){

@@ -96,5 +96,21 @@ public class CotizacionVentaRestController {
 
         return new ResponseEntity<>(ventaCabModel, HttpStatus.OK);
     }
+	
+	@PostMapping("/anularCotizacionVenta")
+    public ResponseEntity<String> anularCotizacionVenta(@RequestPart("registro") VentaCabModel registro) throws Exception {
+
+        logger.info("Inicio anularCotizacionVenta.......");
+
+
+        String usuario = ((UsuarioModel)session.getAttribute("usuarioLogueado")).getUsername();
+
+        cotizacionVentaService.anularCotizacionVenta(registro, usuario);
+
+        logger.info("Fin anularCotizacionVenta.......");
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
     
 }

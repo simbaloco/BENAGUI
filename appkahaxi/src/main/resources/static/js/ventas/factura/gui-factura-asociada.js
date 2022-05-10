@@ -414,6 +414,7 @@ function cargarPantallaHTMLFacturaConDatosGuiaRemisionAsociadas(data) {
 	subTotalFactura.val(data.subTotal);
 	igvFactura.val(data.igv);
 	totalFactura.val(data.total);
+	observaciones.val(data.observaciones);
 	
 	if (data.porcDctoTotal != null) {
 		dctoTotal.val(data.porcDctoTotal);
@@ -1316,7 +1317,7 @@ function anularFacturaVenta(){
 
 				if (opcion.text() == Opcion.NUEVO) {
 					var params = "numeroDocumento=" + numeroDocumento.text() + "&opcion=" + Opcion.VER + "&datoBuscar=&fechaDesde=&fechaHasta=&estadoParam=&volver=0";
-					window.location.href = "/appkahaxi/nueva-factura-venta-directa?" + params;
+					window.location.href = "/appkahaxi/cargar-factura-venta-directa?" + params;
 				}
 
 				if(opcion.text() == Opcion.VER) {

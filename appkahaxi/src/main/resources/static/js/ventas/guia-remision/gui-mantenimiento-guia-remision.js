@@ -213,73 +213,63 @@ function inicializarTabla(){
 		"scrollCollapse": false,
 		"ordering"      : true,
 		"deferRender"   : true,
-		"autoWidth"		: false,
+		"autoWidth"		: true,
 		"paging"	    : true,
 		"stateSave"		: true,
+		// GENIAL! se usa esta propiedad para no perder el color de las filas al ordenar las columnas
+		"sortClasses"	: false,
 		"dom"			: '<ip<rt>lp>',
         "lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
 
         "columnDefs"    : [
             {
-                "width": "1px",
                 "targets": [0],
                 "data": "id"
             },
             {
-                "width": "10px",
                 "targets": [1],
                 "data": "numeroDocumento"
             },
 			{
-				"width": "10px",
 				"targets": [2],
 				"data": "ordenVenta"
 			},
 			{
-				"width": "10px",
 				"targets": [3],
 				"data": "fechaRegistroFormato"
 			},
             {
-                "width": "5px",
                 "targets": [4],
                 "data": "codigoCliente",
 				"visible": false
             },
             {
-                "width": "20px",
                 "targets": [5],
                 "data": "nroDocCliente"
             },
             {
-                "width": "100px",
                 "targets": [6],
                 "data": "nombreCliente"
             },
             {
-                "width": "30px",
                 "targets": [7],
                 "data": "fechaContabilizacion"
             },
             {
-                "width": "100px",
                 "targets": [8],
                 "data": "descripcionTipoMoneda"
                 
             },
             {
-                "width": "10px",
                 "targets": [9],
                 "data": "descripcionCondPago"
                 
             },
             {
-                "width": "10px",
                 "targets": [10],
                 "data": "descripcionEstado"
             },
             {
-                "width": "10px",
                 "targets": [11],
                 "data": "total",
 				"render":
@@ -288,7 +278,6 @@ function inicializarTabla(){
                     }
             },
             {
-                "width": "5px",
                 "targets": [12],
                 "data": "activo",
                 "className": "dt-body-center",

@@ -11,4 +11,5 @@ public interface CotizacionVentaService {
 	public String registrarCotizacionVenta(VentaCabModel registro, String usuario) throws Exception;
 	public void actualizarCotizacionVenta(VentaCabModel registro, String usuario) throws Exception;	
 	List<VentaDetModel> buscarCotizacionDetalleParaOrdenVenta(String numeroDocumento) throws Exception;
+	void anularCotizacionVenta(VentaCabModel registro, String usuario) throws Exception;
 }

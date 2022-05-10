@@ -18,4 +18,6 @@ public interface OrdenVentaService {
 	List<VentaDetModel> buscarOrdenVentaDetalleParaGuiaRemision(String numeroDocumento) throws Exception;
 
 	void actualizarOrdenVenta(VentaCabModel ventaCabModel, String usuario) throws Exception;
+	
+	void anularOrdenVenta(VentaCabModel registro, String usuario) throws Exception;
 }

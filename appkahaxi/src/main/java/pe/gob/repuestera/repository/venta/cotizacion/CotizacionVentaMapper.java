@@ -17,4 +17,6 @@ public interface CotizacionVentaMapper {
 	public List<VentaDetModel> buscarCotizacionVentaDet(Map params);
 	public void registrarCotizacionVenta(Map params);
 	public void actualizarCotizacionVenta(Map params);
+	
+	void anularCotizacionVenta(Map params);
 }

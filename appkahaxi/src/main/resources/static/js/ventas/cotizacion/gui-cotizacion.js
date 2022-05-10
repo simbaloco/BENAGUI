@@ -32,6 +32,7 @@ var condPago;
 var dias;
 var divDias;
 var estado;
+var divEstado;
 var chkDctoTotal;
 var dctoTotal;
 var nroRequerimiento;
@@ -61,6 +62,9 @@ var btnGrabar;
 var btnDuplicar;
 var btnNuevo;
 var btnLimpiar;
+var btnAnular;
+
+var lblAnulado;
 
 var chkEnviarCodigo;
 //********************
@@ -106,6 +110,7 @@ function inicializarVariables() {
 	dias =  $("#dias");
 	divDias =  $("#divDias");
 	estado =  $("#estado");
+	divEstado = $("#divEstado");
 	chkDctoTotal =  $("#chkDctoTotal");
 	dctoTotal =  $("#dctoTotal");
 	nroRequerimiento =  $("#nroRequerimiento");
@@ -134,7 +139,9 @@ function inicializarVariables() {
 	btnDuplicar =  $("#btnDuplicar");
 	btnNuevo = $('#btnNuevo');
 	btnLimpiar = $("#btnLimpiar");
+	btnAnular = $("#btnAnular");
 	
+	lblAnulado = $("#lblAnulado");
 	chkEnviarCodigo = $("#chkEnviarCodigo");
 }
 
@@ -290,6 +297,16 @@ function inicializarEventos(){
 	
 	btnVolver.click(function() {
 		volver();
+	});
+	
+	btnAnular.on("click", function(event) {
+		if (observaciones.val().trim() == CADENA_VACIA){
+			controlRequerido(observaciones);
+			habilitarControl(observaciones);
+			mostrarMensajeValidacion("Debe ingresar observaciones antes de anular.", observaciones);
+		}else{
+			mostrarDialogoAnularCotizacion(event);
+		}		
 	});
 	
 	btnPdf.click(function(e){
@@ -521,19 +538,34 @@ function verPantallaCotizacionVenta(data) {
 	deshabilitarControl(tipoMoneda);
 	deshabilitarControl(condPago);
 	deshabilitarControl(dias);
+	mostrarControl(btnDuplicar);
+	habilitarControl(observaciones);
 	
 	if(data.codigoEstado == EstadoDocumentoInicial.POR_APROBAR){
+		mostrarControl(divEstado);
 		habilitarControl(estado);
+		mostrarControl(btnAnular);
 		
 		estado.focus();
 	}else if(data.codigoEstado == EstadoDocumentoInicial.ANULADO){
 		deshabilitarControl(estado);
 		
-		//btnVolver.focus();
+		ocultarControl(btnGenerarOV);
+		ocultarControl(btnIrOV);
+		mostrarControl(lblAnulado);
+		
+		ocultarControl(btnDuplicar);
+		ocultarControl(btnAnular);
+		ocultarControl(divEstado);
+		
+		ocultarControl(btnDuplicar);
+		deshabilitarControl(observaciones);
 	}else{
 		
 		// estado APROBADO
 		deshabilitarControl(estado);
+		ocultarControl(btnAnular);
+		deshabilitarControl(observaciones);
 		
 		if(data.codigoEstadoProceso == EstadoProceso.ABIERTO){
 			// estado proceso ABIERTO
@@ -552,7 +584,6 @@ function verPantallaCotizacionVenta(data) {
 	
 	deshabilitarControl(dctoTotal);
 	deshabilitarControl(chkDctoTotal);
-	deshabilitarControl(observaciones);
 	deshabilitarControl(nroRequerimiento);
 	deshabilitarControl(asunto);
 	
@@ -561,8 +592,7 @@ function verPantallaCotizacionVenta(data) {
 	ocultarControl(btnEliminarTodosArticulos);
 	ocultarControl(btnLimpiar);
 	mostrarControl(btnPdf);
-	
-	mostrarControl(btnDuplicar);
+		
 	btnDuplicar.removeClass('btn-flotante-duplicar').addClass('btn-flotante-grabar');
 		
 	deshabilitarDetalleCotizacion();
@@ -611,6 +641,7 @@ function duplicarPantallaCotizacionVenta(numDocReferencia) {
 	ocultarControl(btnGenerarOV);
 	ocultarControl(btnIrOV);
 	ocultarControl(btnPdf);
+	ocultarControl(lblAnulado);
 	
 	// ******* DETALLE
     habilitarDetalleCotizacion();
@@ -1032,15 +1063,16 @@ function evaluarCambioTipoMoneda(){
 function evaluarCambioEstado(){
 	habilitarControl(nroRequerimiento);
 	habilitarControl(asunto);
-
+	habilitarControl(observaciones);
+	controlNoRequerido(observaciones);
+	
 	if(estado.val() == EstadoDocumentoInicial.APROBADO){
 		//mostrarControl(btnGenerarOV);
 		mostrarControl(btnGrabar);
 		ocultarControl(btnDuplicar);
-		habilitarControl(observaciones);
-		controlNoRequerido(observaciones);
+		
 				
-	}else if(estado.val() == EstadoDocumentoInicial.ANULADO){
+	}/*else if(estado.val() == EstadoDocumentoInicial.ANULADO){
 		ocultarControl(btnGenerarOV);
 		ocultarControl(btnDuplicar);
 		mostrarControl(btnGrabar);
@@ -1048,7 +1080,7 @@ function evaluarCambioEstado(){
 		habilitarControl(observaciones);
 		mostrarMensajeValidacion("Debe ingresar observaciones antes de grabar.", observaciones);
 		
-	}else{ 
+	}*/else{ 
 		// POR APROBAR
 		ocultarControl(btnGenerarOV);
 		ocultarControl(btnGrabar);
@@ -1057,9 +1089,6 @@ function evaluarCambioEstado(){
 		
 		deshabilitarControl(nroRequerimiento);
 		deshabilitarControl(asunto);
-		
-		controlNoRequerido(observaciones);
-		deshabilitarControl(observaciones);
 	}
 }
 
@@ -1567,6 +1596,55 @@ function actualizarCotizacionVenta(){
     });
 }
 
+function anularCotizacionVenta(){
+	
+	var nroDocumento  		= codigo.html();
+	var observacionesVal 	= observaciones.val().trim();
+	var objetoJson = {
+		numeroDocumento:	nroDocumento,
+		observaciones:  	observacionesVal
+	};
+
+	var entityJsonStr = JSON.stringify(objetoJson);
+
+	var formData = new FormData();
+
+	formData.append('registro', new Blob([entityJsonStr], {
+		type: "application/json"
+	}));
+
+
+	$.ajax({
+		type:"POST",
+		contentType: false,
+		processData: false,
+		url : '/appkahaxi/anularCotizacionVenta/',
+		data: formData,
+		beforeSend: function(xhr) {
+			loadding(true);
+		},
+		success:function(resultado,textStatus,xhr){
+
+			if(xhr.status == HttpStatus.OK){
+
+				mostrarNotificacion("El registro fué actualizado correctamente.", "success");
+				volver();
+				
+			} else if(xhr.status == HttpStatus.Accepted){
+
+				mostrarMensajeValidacion(resultado);
+			}
+
+			loadding(false);
+		},
+		error: function (xhr, error, code){
+
+			mostrarMensajeError(xhr.responseText);
+			loadding(false);
+		}
+	});
+}
+
 function tableToJSON(dataTable){
 	var data = [];
 	var $headers = dataTable.find("th").not(':first').not(':last');
@@ -1828,6 +1906,33 @@ function mostrarDialogoEliminarTodo(table){
 	});
 }
 
+function mostrarDialogoAnularCotizacion(event) {
+
+	bootbox.confirm({
+		message: "Esta operación es IRREVERSIBLE.</br>¿Está seguro que desea anular la Cotización?",
+		buttons: {
+			confirm: {
+				label: 'Sí',
+				className: 'btn-success'
+			},
+			cancel: {
+				label: 'No',
+				className: 'btn-danger'
+			}
+		},
+		callback: function (result) {
+			if(result == true){				
+				if (formObservaciones[0].checkValidity() == true) {
+					anularCotizacionVenta();
+				}else {
+					event.stopPropagation();
+				}
+				formObservaciones.addClass('was-validated');
+			}
+		}
+	});
+}
+
 function generarOrdenVenta(){
 	var params;
 	var nroDoc = numeroDocumento.text();
@@ -1851,7 +1956,7 @@ function generarOrdenVenta(){
 		"&desdeDocRef=" + Respuesta.SI + 
 		// indica que no se va desde la pantalla de mantenimiento de cotizaciones
 		"&origenMnto=" + Respuesta.NO;
-	window.location.href = "/appkahaxi/nueva-orden-venta?" + params;
+	window.location.href = "/appkahaxi/cargar-orden-venta?" + params;
 }
 
 function irOrdenVenta(){
@@ -1877,7 +1982,7 @@ function irOrdenVenta(){
 		"&desdeDocRef=" + Respuesta.SI + 
 		// indica que no se va desde la pantalla de mantenimiento de cotizaciones
 		"&origenMnto=" + Respuesta.NO;
-	window.location.href = "/appkahaxi/nueva-orden-venta?" + params;
+	window.location.href = "/appkahaxi/cargar-orden-venta?" + params;
 }
 
 function nuevaCotizacionVenta(){

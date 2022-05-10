@@ -110,6 +110,21 @@ public class OrdenVentaRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     
+    @PostMapping("/anularOrdenVenta")
+    public ResponseEntity<String> anularCotizacionVenta(@RequestPart("registro") VentaCabModel registro) throws Exception {
+
+        logger.info("Inicio anularOrdenVenta.......");
+
+
+        String usuario = ((UsuarioModel)session.getAttribute("usuarioLogueado")).getUsername();
+
+        ordenVentaService.anularOrdenVenta(registro, usuario);
+
+        logger.info("Fin anularOrdenVenta.......");
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
     /*
     @GetMapping ("/buscarOrdenCompraParaGuiaRemision/{numeroDocumento}")
     public ResponseEntity<CompraCabModel> buscarOrdenCompraParaGuiaRemision(@PathVariable(Constante.PARAM_NRO_DOCUMENTO) String numeroDocumento) throws Exception {

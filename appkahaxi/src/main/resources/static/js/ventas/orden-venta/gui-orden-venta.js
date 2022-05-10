@@ -38,6 +38,7 @@ var condPago;
 var dias;
 var lblDias;
 var estado;
+var divEstado;
 var chkDctoTotal;
 var dctoTotal;
 var fecEntrega;
@@ -54,7 +55,6 @@ var btnIrGuiaRemision;
 var btnGenerarGuiaRemision;
 var btnLimpiar;
 var btnVolver;
-var btnNuevo;
 
 var tableDetalle;
 var tableNuevoDetalle;
@@ -68,6 +68,7 @@ var totalOV;
 
 var btnGrabar;
 var btnPdf;
+var btnAnular;
 
 var dataTableDetalle;
 var indiceFilaDataTableDetalle;
@@ -125,6 +126,7 @@ function inicializarVariables() {
 	dias = $("#dias");
 	lblDias = $("#lblDias");
 	estado = $("#estado");
+	divEstado = $("#divEstado");
 	chkDctoTotal = $("#chkDctoTotal");
 	dctoTotal = $("#dctoTotal");
 	fecEntrega = $("#fecEntrega");
@@ -139,7 +141,6 @@ function inicializarVariables() {
 	btnGenerarGuiaRemision = $("#btnGenerarGuiaRemision");
 	btnLimpiar = $("#btnLimpiar");
 	btnVolver = $("#btnVolver");
-	btnNuevo = $('#btnNuevo');
 	
 	tableDetalle = $("#tableDetalle");
 	tableNuevoDetalle = $("#tableNuevoDetalle");
@@ -153,7 +154,8 @@ function inicializarVariables() {
 
 	btnGrabar = $("#btnGrabar");
 	btnPdf = $("#btnPdf");
-
+	btnAnular = $("#btnAnular");
+	
 	guiasPorOrdenVentaModal = $("#guiasPorOrdenVentaModal");
 	modalCodigoOrdenVenta = $("#modalCodigoOrdenVenta");
 	tableSeleccionDocumento = $("#tableSeleccionDocumento");
@@ -277,14 +279,20 @@ function inicializarEventos() {
 		generarGuiaRemisionPorOrden();
 	});
 
-	btnNuevo.click(function() {
-		nuevaOrdenVenta();
-	});
-
 	btnVolver.on("click", function() {
 		volver();
 	});
 
+	btnAnular.on("click", function(event) {
+		if (observaciones.val().trim() == CADENA_VACIA){
+			controlRequerido(observaciones);
+			habilitarControl(observaciones);
+			mostrarMensajeValidacion("Debe ingresar observaciones antes de anular.", observaciones);
+		}else{
+			mostrarDialogoAnularOrdenVenta(event);
+		}		
+	});
+	
 	btnPdf.click(function(e) {
 		generarPdf(e);
 	});
@@ -572,7 +580,6 @@ function verPantallaOrdenVenta(data) {
 
 	deshabilitarControl(campoBuscar);
 	controlNoRequerido(observaciones);			
-	ocultarControl(btnNuevo);
 	mostrarControl(btnPdf);
 	//ocultarControl(btnLimpiar);
 	if (data.codigoCondPago == CondicionPago.CREDITO) {
@@ -605,16 +612,28 @@ function verPantallaOrdenVenta(data) {
 		mostrarControl(btnIrGuiaRemision);
 
 		if (data.codigoEstado == EstadoDocumentoInicial.POR_APROBAR) {
-			habilitarControl(estado);
 			ocultarControl(btnGenerarGuiaRemision);
 			ocultarControl(btnIrGuiaRemision);
+			
+			mostrarControl(divEstado);
+			habilitarControl(estado);
+			mostrarControl(btnAnular);
 		}else if (data.codigoEstado == EstadoDocumentoInicial.ANULADO) {
 			ocultarControl(btnGenerarGuiaRemision);
 			ocultarControl(btnIrGuiaRemision);
 			mostrarControl(lblAnulado);
+			
+			deshabilitarControl(estado);
+			ocultarControl(btnAnular);
+			ocultarControl(divEstado);
+			
+			deshabilitarControl(observaciones);
 		}else{
 			// APROBADO
-			console.log("data.codigoEstadoProceso--->" + data.codigoEstadoProceso)
+			deshabilitarControl(estado);
+			ocultarControl(btnAnular);
+			deshabilitarControl(observaciones);
+			
 			if (data.codigoEstadoProceso == EstadoProceso.ABIERTO) {
 				// estado proceso ABIERTO
 				habilitarControl(btnGenerarGuiaRemision);
@@ -635,22 +654,26 @@ function verPantallaOrdenVenta(data) {
 	}else if (opcion.text() == Opcion.MODIFICAR) {
 		titulo.text("MODIFICAR");
 				
-		if (data.codigoEstado == EstadoDocumentoInicial.POR_APROBAR) {
-			
-			fecConta.datetimepicker('maxDate', moment());			
-			habilitarControl(direccionDespacho);
-			habilitarControl(personaContacto);			
-			habilitarControl(dateTimePickerInput);
-			deshabilitarControl(tipoMoneda);
-			deshabilitarControl(condPago);
-			deshabilitarControl(dias);
-			deshabilitarControl(tipoCambio);
-			habilitarControl(estado);
-			
-			estado.focus();
-			mostrarControl(btnGrabar);
-		} else {
-			// estado APROBADO O RECHAZADO
+		//if (data.codigoEstado == EstadoDocumentoInicial.POR_APROBAR) {
+		// el estado siempre va a ser EstadoDocumentoInicial.POR_APROBAR	
+		fecConta.datetimepicker('maxDate', moment());			
+		habilitarControl(direccionDespacho);
+		habilitarControl(personaContacto);			
+		habilitarControl(dateTimePickerInput);
+		deshabilitarControl(tipoMoneda);
+		deshabilitarControl(condPago);
+		deshabilitarControl(dias);
+		deshabilitarControl(tipoCambio);
+		
+		mostrarControl(divEstado);
+		habilitarControl(estado);
+		mostrarControl(btnAnular);
+		
+		estado.focus();
+		mostrarControl(btnGrabar);
+		//} 
+		/*else {
+			// estado APROBADO O ANULADO
 			deshabilitarControl(direccionDespacho);
 			deshabilitarControl(personaContacto);			
 			deshabilitarControl(dateTimePickerInput);
@@ -686,41 +709,8 @@ function verPantallaOrdenVenta(data) {
 				ocultarControl(btnIrGuiaRemision);				
 			}
 				
-		}
+		}*/
 	}
-
-
-	/*if (data.codigoEstado == EstadoDocumentoInicial.POR_APROBAR) {
-		habilitarControl(estado);
-		mostrarControl(btnDuplicar);
-		estado.focus();
-	} else if (data.codigoEstado == EstadoDocumentoInicial.ANULADO) {
-		deshabilitarControl(estado);
-		mostrarControl(btnDuplicar);
-		mostrarControl(lblAnulado);
-	} else {
-		// estado APROBADO
-		deshabilitarControl(estado);
-		mostrarControl(btnDuplicar);
-		mostrarControl(btnGenerarGuiaRemision);
-		mostrarControl(btnIrGuiaRemision);
-
-		if (data.codigoEstadoProceso == EstadoProceso.ABIERTO) {
-			// estado proceso ABIERTO
-			habilitarControl(btnGenerarGuiaRemision);
-			if (data.cantidadGrAsociadas > 0) {
-				mostrarControl(btnIrGuiaRemision);
-			} else {
-				ocultarControl(btnIrGuiaRemision);
-			}
-		} else {
-			// estado proceso CERRADO
-			ocultarControl(btnGenerarGuiaRemision);
-			mostrarControl(btnIrGuiaRemision);
-		}
-	}*/
-
-	
 }
 
 function deshabilitarDetalleOrdenVenta() {
@@ -908,13 +898,11 @@ function evaluarCambioEstado() {
 	mostrarControl(btnGrabar);
 
 	if (estado.val() == EstadoDocumentoInicial.APROBADO) {
-		//ocultarControl(btnDuplicar);
 		habilitarControl(observaciones);
 		habilitarControl(estado);
 		controlNoRequerido(observaciones);
 
 	} else if (estado.val() == EstadoDocumentoInicial.ANULADO) {
-		//ocultarControl(btnDuplicar);
 		ocultarControl(btnGenerarGuiaRemision);
 		controlRequerido(observaciones);
 		habilitarControl(observaciones);
@@ -1159,11 +1147,11 @@ function registrarOrdenVenta() {
 			if (xhr.status == HttpStatus.OK) {
 
 				mostrarNotificacion("El registro fue grabado correctamente.", "success");
-				//mostrarControl(btnNuevo);
 				//mostrarControl(btnGenerarGuiaRemision);
 				ocultarControl(btnLimpiar);
 				ocultarControl(btnGrabar);				
 				mostrarControl(btnPdf);
+				
 				deshabilitarControl(direccionDespacho);
 				deshabilitarControl(personaContacto);
 				deshabilitarControl(campoBuscar);
@@ -1295,6 +1283,55 @@ function actualizarOrdenVenta() {
 	});
 }
 
+function anularOrdenVenta(){
+	
+	var nroDocumento  		= codigo.html();
+	var observacionesVal 	= observaciones.val().trim();
+	var objetoJson = {
+		numeroDocumento:	nroDocumento,
+		observaciones:  	observacionesVal
+	};
+
+	var entityJsonStr = JSON.stringify(objetoJson);
+
+	var formData = new FormData();
+
+	formData.append('registro', new Blob([entityJsonStr], {
+		type: "application/json"
+	}));
+
+
+	$.ajax({
+		type:"POST",
+		contentType: false,
+		processData: false,
+		url : '/appkahaxi/anularOrdenVenta/',
+		data: formData,
+		beforeSend: function(xhr) {
+			loadding(true);
+		},
+		success:function(resultado,textStatus,xhr){
+
+			if(xhr.status == HttpStatus.OK){
+
+				mostrarNotificacion("El registro fué actualizado correctamente.", "success");
+				volver();
+				
+			} else if(xhr.status == HttpStatus.Accepted){
+
+				mostrarMensajeValidacion(resultado);
+			}
+
+			loadding(false);
+		},
+		error: function (xhr, error, code){
+
+			mostrarMensajeError(xhr.responseText);
+			loadding(false);
+		}
+	});
+}
+
 function tableToJSON(dataTable) {
 	var data = [];
 	var $headers = dataTable.find("th").not(':first');
@@ -1336,6 +1373,32 @@ function tableToJSON(dataTable) {
 	return newData;
 }
 
+function mostrarDialogoAnularOrdenVenta(event) {
+
+	bootbox.confirm({
+		message: "Esta operación es IRREVERSIBLE.</br>¿Está seguro que desea anular la Orden de Venta?",
+		buttons: {
+			confirm: {
+				label: 'Sí',
+				className: 'btn-success'
+			},
+			cancel: {
+				label: 'No',
+				className: 'btn-danger'
+			}
+		},
+		callback: function (result) {
+			if(result == true){				
+				if (formObservaciones[0].checkValidity() == true) {
+					anularOrdenVenta();
+				}else {
+					event.stopPropagation();
+				}
+				formObservaciones.addClass('was-validated');
+			}
+		}
+	});
+}
 
 /*
 function mostrarDialogoGenerarGuiaRemision() {

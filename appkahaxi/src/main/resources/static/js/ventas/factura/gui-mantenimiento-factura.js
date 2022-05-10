@@ -218,78 +218,67 @@ function inicializarTabla(){
 		"scrollCollapse": false,
 		"ordering"      : true,
 		"deferRender"   : true,
-		"autoWidth"		: false,
+		"autoWidth"		: true,
 		"paging"	    : true,
 		"stateSave"		: true,
+		// GENIAL! se usa esta propiedad para no perder el color de las filas al ordenar las columnas
+		"sortClasses"	: false,
 		"dom"			: '<ip<rt>lp>',
         "lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
 
         "columnDefs"    : [
             {
-                "width": "1px",
                 "targets": [0],
                 "data": "id"
             },
             {
-                "width": "10px",
                 "targets": [1],
                 "data": "numeroDocumento"
             },
 			{
-				"width": "5px",
 				"targets": [2],
 				"data": "ordenVenta"
 			},
 			{
-				"width": "5px",
 				"targets": [3],
 				"data": "fechaRegistroFormato"
 			},
 			{
-				"width": "5px",
 				"targets": [4],
 				"data": "serieCorrelativo"
 			},
             {
-                "width": "25px",
                 "targets": [5],
                 "data": "nroDocCliente"
             },
             {
-                "width": "50px",
                 "targets": [6],
                 "data": "nombreCliente"
             },
             {
-                "width": "10px",
                 "targets": [7],
                 "data": "fechaContabilizacion"
             },
             {
-                "width": "10px",
                 "targets": [8],
                 "data": "descripcionTipoMoneda"
                 
             },
             {
-                "width": "10px",
                 "targets": [9],
                 "data": "descripcionCondPago"
                 
             },
 			{
-				"width": "10px",
 				"targets": [10],
 				"data": "descripcionEstadoPago"
 
 			},
 			{
-                "width": "10px",
                 "targets": [11],
                 "data": "descripcionEstado"
             },
             {
-				"width": "10px",
 				"targets": [12],
 				"data": "total",
 				"render":
@@ -298,7 +287,6 @@ function inicializarTabla(){
 					}
 			},
             {
-                "width": "5px",
                 "targets": [13],
                 "data": "activo",
                 "className": "dt-body-center",
@@ -432,7 +420,7 @@ function cargarFacturaDirecta(numeroDocumento, opcion) {
 			 "&nroComprobantePago=" + nroFacturaVal + "&nroOrdenVenta=" + nroOVVal + "&codRepuesto=" + codRpto +
 			 "&fechaDesde=" + fecContDesde + "&fechaHasta=" + fecContHasta + "&estadoParam=" + est + "&volver=" + Respuesta.SI + "&desdeDocRef=" + Respuesta.NO;
 		
-	window.location.href = "/appkahaxi/nueva-factura-venta-directa?" + params;
+	window.location.href = "/appkahaxi/cargar-factura-venta-directa?" + params;
 }
 
 function cargarFacturaAsociada(numeroDocumento, opcion) {
@@ -452,7 +440,7 @@ function cargarFacturaAsociada(numeroDocumento, opcion) {
 			 "&nroGuiaRemision=&nroGr=" + numeroDocumento + "&guias=" + "&origenMnto=" + Respuesta.NO;
 		"&guias=";
 
-	window.location.href = "/appkahaxi/nueva-factura-venta-asociada?" + params;
+	window.location.href = "/appkahaxi/cargar-factura-venta-asociada?" + params;
 }
 
 function buscar(event){

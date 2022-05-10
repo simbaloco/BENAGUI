@@ -633,33 +633,6 @@ function verPantallaOrdenCompra(data) {
 			ocultarControl(btnAnular);
 			ocultarControl(divEstado);
 		}
-		
-		//habilitarControl(estado);
-		/*
-		if (data.codigoEstado == EstadoDocumentoInicial.ANULADO) {
-			//deshabilitarControl(estado);
-			controlRequerido(observaciones);
-			mostrarControl(lblAnulado);
-		} else if (data.codigoEstado == EstadoDocumentoInicial.APROBADO) {
-			//habilitarControl(estado);
-			mostrarControl(btnGenerarGuiaRemision);
-			mostrarControl(btnIrGuiaRemision);
-
-			if (data.codigoEstadoProceso == EstadoProceso.ABIERTO) {
-				// estado proceso ABIERTO
-				habilitarControl(btnGenerarGuiaRemision);
-				if (data.cantidadGrAsociadas > 0) {
-					mostrarControl(btnIrGuiaRemision);
-				} else {
-					ocultarControl(btnIrGuiaRemision);
-				}
-			} else {
-				// estado proceso CERRADO
-				ocultarControl(btnGenerarGuiaRemision);
-				mostrarControl(btnIrGuiaRemision);
-			}
-		}
-		*/
 	}else if (opcion.text() == Opcion.MODIFICAR) {
 		titulo.text("MODIFICAR");
 				

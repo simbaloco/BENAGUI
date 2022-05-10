@@ -12,7 +12,6 @@ var fechaDesde;
 var fechaHasta;
 // botones
 var btnLimpiar;
-var btnNuevo;
 // tablas
 var tablaOrdenVenta;
 var dataTableOrdenVenta;
@@ -44,7 +43,6 @@ function inicializarVariables() {
 		
 	btnBuscar = $('#btnBuscar');
 	btnLimpiar = $('#btnLimpiar');
-	btnNuevo = $('#btnNuevo');
 
 	tablaOrdenVenta  = $('#tablaOrdenVenta');
 }
@@ -158,11 +156,7 @@ function inicializarEventos(){
 		limpiar(e);
 	});
     
-    btnNuevo.click(function(){
-    	nuevaOrdenVenta(null, Opcion.NUEVO);
-	});
-	
-	fContaDesde.on('keydown', function(e){
+    fContaDesde.on('keydown', function(e){
 		var key = window.Event ? e.which : e.keyCode;
 		// si es <>TAB, cancelar
 		if(key != 9){
@@ -213,68 +207,59 @@ function inicializarTabla(){
 		"scrollCollapse": false,
 		"ordering"      : true,
 		"deferRender"   : true,
-		"autoWidth"		: false,
+		"autoWidth"		: true,
 		"paging"	    : true,
 		"stateSave"		: true,
+		// GENIAL! se usa esta propiedad para no perder el color de las filas al ordenar las columnas
+		"sortClasses"	: false,
 		"dom"			: '<ip<rt>lp>',
         "lengthMenu"	: [[15, 30, 45, -1], [15, 30, 45, "Todos"]],
 
         "columnDefs"    : [
             {
-                "width": "1px",
                 "targets": [0],
                 "data": "id"
             },
             {
-                "width": "30px",
                 "targets": [1],
                 "data": "numeroDocumento"
             },
             {
-                "width": "5px",
                 "targets": [2],
                 "data": "codigoCliente",
                 "visible": false
             },
             {
-                "width": "40px",
                 "targets": [3],
                 "data": "fechaRegistro"
             },
             {
-                "width": "40px",
                 "targets": [4],
                 "data": "nroDocCliente"
             },
             {
-                "width": "250px",
                 "targets": [5],
                 "data": "nombreCliente"
             },
             {
-                "width": "30px",
                 "targets": [6],
                 "data": "fechaContabilizacion"
             },
             {
-                "width": "100px",
                 "targets": [7],
                 "data": "descripcionTipoMoneda"
                 
             },
             {
-                "width": "30px",
                 "targets": [8],
                 "data": "descripcionCondPago"
                 
             },
             {
-                "width": "40px",
                 "targets": [9],
                 "data": "descripcionEstado"
             },
             {
-                "width": "40px",
                 "targets": [10],
                 "data": "total",
 				"render":
@@ -283,7 +268,6 @@ function inicializarTabla(){
                     }
             },
             {
-                "width": "100px",
                 "targets": [11],
                 "data": null,
                 "className": "dt-body-center",
@@ -399,7 +383,7 @@ function nuevaOrdenVenta(numeroDocumento, opcion){
 		"&desdeDocRef=" + Respuesta.NO + 
 		// indica que no se va desde la pantalla de mantenimiento de cotizaciones
 		"&origenMnto=" + Respuesta.SI;
-	window.location.href = "/appkahaxi/nueva-orden-venta?" + params;
+	window.location.href = "/appkahaxi/cargar-orden-venta?" + params;
 }
 
 function buscar(event){

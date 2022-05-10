@@ -119,6 +119,14 @@
         <parameter property="MENSAJE_RESULTADO"    	jdbcType="VARCHAR"  mode="OUT"/>
     </parameterMap>
      
+    <parameterMap id="anularOrdenVentaParams" type="hashmap">
+        <parameter property="NRO_DOCUMENTO"       	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="USUARIO"       	    jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="OBSERVACIONES"     	jdbcType="VARCHAR"  mode="IN"/>
+        <parameter property="FLAG_RESULTADO"   		jdbcType="VARCHAR"  mode="OUT"/>
+        <parameter property="MENSAJE_RESULTADO" 	jdbcType="VARCHAR"  mode="OUT"/>
+    </parameterMap>
+    
         
     <!-- ************************* QUERYS ******************************* -->
     <!-- este SP es invocado desde el buscador de cotizaciones de venta -->
@@ -141,17 +149,12 @@
     	{CALL SP_REGISTRAR_ORDEN_VENTA(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }
     </insert> 
     
-    
-    
-    
-   	
    	<!-- este SP es invocado al grabar una cotización. Graba la cabecera -->
     <update id="actualizarOrdenVenta" parameterMap="actualizarOrdenVentaParams" statementType="CALLABLE">
     	{CALL SP_ACTUALIZAR_ORDEN_VENTA(?,?,?,?,?,?,?,?,?,?,?) }
     </update> 
-   	   	
-   	<!-- este SP es invocado al grabar una cotización (al editar el estado) -->
-    <update id="eliminarOrdenVenta" parameterMap="eliminarOrdenVentaParams" statementType="CALLABLE">
-    	{CALL SP_ELIMINAR_ORDEN_VTA(?,?,?,?) }
+   	    
+    <update id="anularOrdenVenta" parameterMap="anularOrdenVentaParams" statementType="CALLABLE">
+        {CALL SP_ANULAR_ORDEN_VENTA(?,?,?,?,?) }
     </update>
 </mapper>

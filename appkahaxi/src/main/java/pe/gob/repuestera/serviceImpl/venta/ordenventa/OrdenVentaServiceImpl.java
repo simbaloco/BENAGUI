@@ -268,5 +268,36 @@ public class OrdenVentaServiceImpl implements OrdenVentaService{
 		}
 	}
 
+	public void anularOrdenVenta(VentaCabModel ventaCabModel, String usuario) throws Exception {
+
+        logger.info("ventaCabModel ===> " + ventaCabModel.toString());
+
+        Map<String, Object> params = new HashMap();
+        params.put(Constante.PARAM_SP_USUARIO, usuario);
+        params.put(Constante.PARAM_SP_NRO_DOCUMENTO, ventaCabModel.getNumeroDocumento());
+        params.put(Constante.PARAM_SP_OBSERVACIONES, ventaCabModel.getObservaciones());
+
+        logger.info("params ===> " + params);
+
+        ordenVentaMapper.anularOrdenVenta(params);
+
+        String flagResultado = (String) params.get(Constante.PARAM_FLAG_RESULTADO);
+        String mensajeResultado = (String) params.get(Constante.PARAM_MENSAJE_RESULTADO);
+
+        logger.info("flagResultado ===> " + flagResultado);
+        logger.info("mensajeResultado ===> " + mensajeResultado);
+
+        if(flagResultado.equals(Constante.RESULTADO_EXITOSO)) {
+            logger.info(mensajeResultado);
+
+        } else if(flagResultado.equals(Constante.RESULTADO_ALTERNATIVO)) {
+            throw new ErrorControladoException(mensajeResultado);
+
+        } else {
+            throw new Exception(mensajeResultado);
+
+        }
+
+    }
 	
 }

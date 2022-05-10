@@ -8,7 +8,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<script th:src="@{/js/ventas/orden-venta/gui-nueva-orden-venta.js}" ></script>
+	<script th:src="@{/js/ventas/orden-venta/gui-orden-venta.js}" ></script>
 </head>
 
 <body>
@@ -37,7 +37,10 @@
 	<button type="button" id="btnGrabar" class="btn-flotante-grabar">
 		<span class="mr-2"><i class="fas fa-save"></i></span>Grabar
     </button>			
-	
+	<button type="button" id="btnAnular" class="btn-flotante-anular-2" style="display: none">
+		<span class="mr-2"><i class="fas fa-trash"></i></span>Anular
+	</button>	
+		
      		            
 	<div class="modal fade" id="guiasPorOrdenVentaModal" role="dialog" aria-labelledby="guiasPorOrdenVentaModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-personalizado-medium modal-lg" role="document" >
@@ -153,7 +156,7 @@
 							</button>
 
 			 				<button type="button" id="btnGenerarGuiaRemision" class="btn btn-primary my-1" style="display: none">
-								<span class="mr-2"><i class="fas fa-coins"></i></span>Registrar Guía de Remisión
+								<span class="mr-2"><i class="fas fa-coins"></i></span>Generar Guía de Remisión
 							</button>
 						
 							<button type="button" id="btnVolver" class="btn btn-primary" style="display: none">
@@ -286,31 +289,29 @@
 							</div>
 
 							<div class="row">
-								<div class="col-md-2">
-									<label class="label" for="estado">Estado:</label> <select
-										id="estado" class="form-control" disabled="disabled">
+								<div class="col-md-2" id="divEstado">
+									<label class="label" for="estado">Estado:</label> 
+									<select id="estado" class="form-control" disabled="disabled">
 										<option th:each="item : ${listaEstado}"
 											th:value="${item.codigo}" th:text="${item.descripcion}">
 										</option>
 									</select>
 								</div>
 								
-								<div class="col-md-10 alineacion-derecha">
+								<div class="col-md-2">
+									<label class="label" for="lblAnulado">&nbsp;</label>
+									<input class="form-control etiquetaAnulado" type="text" id="lblAnulado" style="display: none" value="ANULADO"/>
+								</div>
+								
+								<div class="col-md-8 alineacion-derecha">
 						 			<label class="label"></label>
 						 			<div>
 										<button type="button" id="btnLimpiar" class="btn btn-primary">
 				                  			<span class="mr-2"><i class="fas fa-eraser"></i></span>Limpiar
 							            </button>
 							        </div>
-					 			</div>				 										
-
+					 			</div>		
 							</div>
-							
-							<div class="row">
-						 		<div class="col-md-12">
-						 			<label class="label"></label>
-						 		</div>
-						    </div>
 
 						</form>
 
